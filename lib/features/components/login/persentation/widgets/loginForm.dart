@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import '../../data/datasources/aut_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -27,6 +28,10 @@ class _LoginFormState extends State<LoginForm> {
 
     setState(() {
       _result = 'Welcome ${user.name}!';
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     });
   }
 
