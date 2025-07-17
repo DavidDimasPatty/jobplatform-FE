@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/shared/TopAppLayout.dart';
 import '../../domain/usecases/get_products_usecase.dart';
 import '../../data/datasources/product_remote_datasource.dart';
 import '../../data/repositories/product_repository_impl.dart';
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Products')),
+      appBar: TopApplayout(),
       body: ListView.builder(
         itemCount: products.length,
         itemBuilder: (context, index) {
