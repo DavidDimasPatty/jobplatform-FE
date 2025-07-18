@@ -37,7 +37,10 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _handleSignUp() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignUp()),
+    );
   }
 
   @override

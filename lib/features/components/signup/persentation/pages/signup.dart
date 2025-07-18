@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
+import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -12,7 +15,28 @@ class _SignUp extends State<SignUp> {
   final _passwordController = TextEditingController();
 
   void _handleLogin() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
+  }
+
+  Future<void> _handleSignUp() async {
+    final dataSource = AuthRemoteDatasource();
+    final repository = AuthRepositoryImpl(dataSource);
+    final usecase = SignupUseCase(repository);
+
+    final result = await usecase.SignUpAction(
+      _emailController.text,
+      _passwordController.text,
+    );
+
+    setState(() {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    });
   }
 
   @override
@@ -39,7 +63,10 @@ class _SignUp extends State<SignUp> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // ElevatedButton(onPressed: _handleSignUp, child: Text('Sign Up')),
+                  ElevatedButton(
+                    onPressed: _handleSignUp,
+                    child: Text('Sign Up'),
+                  ),
                   ElevatedButton(
                     onPressed: _handleLogin,
                     child: Text('Cancel'),
