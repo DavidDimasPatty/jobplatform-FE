@@ -42,7 +42,6 @@ class _SignUp extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sign Up Page")),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -65,11 +64,18 @@ class _SignUp extends State<SignUp> {
                 children: [
                   ElevatedButton(
                     onPressed: _handleSignUp,
-                    child: Text('Sign Up'),
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
+                  SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: _handleLogin,
-                    child: Text('Cancel'),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ],
               ),

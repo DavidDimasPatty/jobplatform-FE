@@ -66,6 +66,7 @@ class _LoginFormState extends State<LoginForm> {
               hintText: 'Email',
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
+              suffixIcon: Icon(Icons.email),
             ),
           ),
         ),
@@ -77,7 +78,6 @@ class _LoginFormState extends State<LoginForm> {
             controller: _passwordController,
             decoration: InputDecoration(
               hintText: 'Password',
-              isDense: true,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
               suffixIcon: Icon(Icons.lock),
@@ -88,8 +88,17 @@ class _LoginFormState extends State<LoginForm> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ElevatedButton(onPressed: _handleLogin, child: Text('Login')),
-            ElevatedButton(onPressed: _handleSignUp, child: Text('Sign Up')),
+            ElevatedButton(
+              onPressed: _handleLogin,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.white70),
+              child: Text('Login', style: TextStyle(color: Colors.black)),
+            ),
+            SizedBox(width: 15),
+            ElevatedButton(
+              onPressed: _handleSignUp,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.white70),
+              child: Text('Sign Up', style: TextStyle(color: Colors.black)),
+            ),
           ],
         ),
         SizedBox(height: 20),
