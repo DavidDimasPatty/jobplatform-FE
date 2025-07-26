@@ -37,10 +37,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _handleSignUp() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignUp()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
   }
 
   @override
@@ -63,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
           child: TextField(
             controller: _emailController,
             decoration: InputDecoration(
-              hintText: 'Email',
+              hintText: 'Email/ Username',
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
               suffixIcon: Icon(Icons.email),
