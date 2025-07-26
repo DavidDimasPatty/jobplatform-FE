@@ -50,6 +50,15 @@ class _LoginFormState extends State<LoginForm> {
       children: [
         SizedBox(
           height: 70,
+          width: 600,
+          child: Text(
+            "Welcome To Yuk Kerja",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ),
+        SizedBox(
+          height: 70,
           width: 300,
           child: TextField(
             controller: _emailController,
