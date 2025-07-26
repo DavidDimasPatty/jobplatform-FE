@@ -55,7 +55,6 @@ class _SignUp extends State<SignUp> {
         );
       }
     } else {
-      // Ada field yang tidak valid
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Harap lengkapi semua field!'),
@@ -168,7 +167,7 @@ class _SignUp extends State<SignUp> {
                     ElevatedButton(
                       onPressed: _handleSignUp,
                       child: Text(
-                        'Sign Up',
+                        'Next',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),

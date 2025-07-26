@@ -16,8 +16,17 @@ class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String _result = '';
+  final _formKey = GlobalKey<FormState>();
 
-  Future<void> _handleLogin() async {
+  Future _handleLogin() async {
+    if (!_formKey.currentState!.validate()) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Harap lengkapi semua field!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
     final dataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(dataSource);
     final usecase = LoginUseCase(repository);
@@ -45,61 +54,85 @@ class _LoginFormState extends State<LoginForm> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          height: 70,
-          width: 600,
-          child: Text(
-            "Welcome To Yuk Kerja",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 70,
+                width: 600,
+                child: Text(
+                  "Welcome To Yuk Kerja",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+              SizedBox(
+                height: 70,
+                width: 300,
+                child: TextFormField(
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    hintText: 'Email/ Username',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 11,
+                    ),
+                    suffixIcon: Icon(Icons.email),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 70,
+                width: 300,
+                child: TextFormField(
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  obscureText: true,
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 11,
+                    ),
+                    suffixIcon: Icon(Icons.lock),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: _handleLogin,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white70,
+                    ),
+                    child: Text('Login', style: TextStyle(color: Colors.black)),
+                  ),
+                  SizedBox(width: 15),
+                  ElevatedButton(
+                    onPressed: _handleSignUp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white70,
+                    ),
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Text(_result),
+            ],
           ),
         ),
-        SizedBox(
-          height: 70,
-          width: 300,
-          child: TextField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              hintText: 'Email/ Username',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
-              suffixIcon: Icon(Icons.email),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 70,
-          width: 300,
-          child: TextField(
-            obscureText: true,
-            controller: _passwordController,
-            decoration: InputDecoration(
-              hintText: 'Password',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
-              suffixIcon: Icon(Icons.lock),
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: _handleLogin,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.white70),
-              child: Text('Login', style: TextStyle(color: Colors.black)),
-            ),
-            SizedBox(width: 15),
-            ElevatedButton(
-              onPressed: _handleSignUp,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.white70),
-              child: Text('Sign Up', style: TextStyle(color: Colors.black)),
-            ),
-          ],
-        ),
-        SizedBox(height: 20),
-        Text(_result),
       ],
     );
   }
