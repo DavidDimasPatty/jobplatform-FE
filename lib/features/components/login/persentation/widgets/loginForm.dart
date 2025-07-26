@@ -48,13 +48,32 @@ class _LoginFormState extends State<LoginForm> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextField(
-          controller: _emailController,
-          decoration: InputDecoration(hintText: 'Email'),
+        SizedBox(
+          height: 70,
+          width: 300,
+          child: TextField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              hintText: 'Email',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
+            ),
+          ),
         ),
-        TextField(
-          controller: _passwordController,
-          decoration: InputDecoration(hintText: 'Password'),
+        SizedBox(
+          height: 70,
+          width: 300,
+          child: TextField(
+            obscureText: true,
+            controller: _passwordController,
+            decoration: InputDecoration(
+              hintText: 'Password',
+              isDense: true,
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
+              suffixIcon: Icon(Icons.lock),
+            ),
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
