@@ -10,7 +10,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User?> login(String email, String password) async {
     final userModel = await remoteDataSource.login(email, password);
-    print(userModel!.id);
+    //print(userModel!.id);
     if (userModel == null || userModel.id == null) {
       return null;
     }
