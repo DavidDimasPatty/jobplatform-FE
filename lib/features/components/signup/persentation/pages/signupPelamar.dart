@@ -82,48 +82,48 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 70,
-                width: 300,
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Name',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 11,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 70,
-                width: 300,
-                child: DropdownButtonFormField<String>(
-                  value: selectedValue == 'Pilih Role' ? null : selectedValue,
-                  hint: Text('Pilih Role'),
-                  decoration: InputDecoration(
-                    labelText: 'Role',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 14,
-                    ),
-                  ),
-                  items: options.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedValue = newValue!;
-                    });
-                  },
-                ),
-              ),
+              // SizedBox(
+              //   height: 70,
+              //   width: 300,
+              //   child: TextField(
+              //     controller: _emailController,
+              //     decoration: InputDecoration(
+              //       hintText: 'Name',
+              //       border: OutlineInputBorder(),
+              //       contentPadding: EdgeInsets.symmetric(
+              //         vertical: 8,
+              //         horizontal: 11,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 70,
+              //   width: 300,
+              //   child: DropdownButtonFormField<String>(
+              //     value: selectedValue == 'Pilih Role' ? null : selectedValue,
+              //     hint: Text('Pilih Role'),
+              //     decoration: InputDecoration(
+              //       labelText: 'Role',
+              //       border: OutlineInputBorder(),
+              //       contentPadding: EdgeInsets.symmetric(
+              //         horizontal: 5,
+              //         vertical: 14,
+              //       ),
+              //     ),
+              //     items: options.map((String value) {
+              //       return DropdownMenuItem<String>(
+              //         value: value,
+              //         child: Text(value),
+              //       );
+              //     }).toList(),
+              //     onChanged: (newValue) {
+              //       setState(() {
+              //         selectedValue = newValue!;
+              //       });
+              //     },
+              //   ),
+              // ),
               // TextField(
               //   controller: _passwordController,
               //   decoration: InputDecoration(hintText: "Password"),

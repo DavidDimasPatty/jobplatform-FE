@@ -35,14 +35,23 @@ class _LoginFormState extends State<LoginForm> {
       _emailController.text,
       _passwordController.text,
     );
-
-    setState(() {
-      _result = 'Welcome ${user.name}!';
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+    //print(user);
+    if (user != null) {
+      setState(() {
+        _result = 'Welcome ${user!.nama}!';
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      });
+    } else {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Username/ Password Salah'),
+          backgroundColor: Colors.red,
+        ),
       );
-    });
+    }
   }
 
   void _handleSignUp() {

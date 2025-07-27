@@ -1,10 +1,10 @@
 class UserModel {
-  final String id;
-  final String name;
+  final String? id;
+  final String? nama;
 
-  UserModel({required this.id, required this.name});
+  UserModel({this.id, this.nama});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(id: json['id'], name: json['name']);
+    return UserModel(id: json['user']['_id'], nama: json['user']['nama']);
   }
 }
