@@ -7,12 +7,20 @@ import 'package:job_platform/features/components/signup/persentation/pages/signu
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+  final String? name;
+  final String? email;
+  final String? photoUrl;
+
+  SignUp(this.name, this.email, this.photoUrl);
   @override
-  State<SignUp> createState() => _SignUp();
+  State<SignUp> createState() => _SignUp(this.name, this.email, this.photoUrl);
 }
 
 class _SignUp extends State<SignUp> {
+  final String? name;
+  final String? email;
+  final String? photoUrl;
+  _SignUp(this.name, this.email, this.photoUrl);
   final _emailController = TextEditingController();
   final _namaController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -95,25 +103,34 @@ class _SignUp extends State<SignUp> {
                 SizedBox(
                   height: 90,
                   width: 300,
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Username',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 11,
-                      ),
-                    ),
-                    validator: (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(photoUrl!),
                   ),
                 ),
                 SizedBox(
                   height: 90,
                   width: 300,
                   child: TextFormField(
-                    controller: _namaController,
+                    //controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: 'Email',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 11,
+                      ),
+                    ),
+                    initialValue: email,
+                    // validator: (value) =>
+                    //     value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  ),
+                ),
+                SizedBox(
+                  height: 90,
+                  width: 300,
+                  child: TextFormField(
+                    //controller: _namaController,
                     decoration: InputDecoration(
                       hintText: 'Name',
                       border: OutlineInputBorder(),
@@ -122,6 +139,7 @@ class _SignUp extends State<SignUp> {
                         horizontal: 11,
                       ),
                     ),
+                    initialValue: name,
                     validator: (value) =>
                         value == null || value.isEmpty ? 'Wajib diisi' : null,
                   ),
