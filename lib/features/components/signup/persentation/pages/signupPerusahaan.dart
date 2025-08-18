@@ -3,18 +3,74 @@ import 'package:job_platform/features/components/login/persentation/pages/login.
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
+import 'package:job_platform/responsive.dart';
 
-class SignUpPerusahaan extends StatefulWidget {
+class SignUpPerusahaan extends StatelessWidget {
   const SignUpPerusahaan({super.key});
+
   @override
-  State<SignUpPerusahaan> createState() => _SignUpPerusahaan();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Responsive.isMobile(context)
+            ? const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [_Logo(), _FormContent()],
+              )
+            : Container(
+                padding: const EdgeInsets.all(32.0),
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: const Row(
+                  children: [
+                    Expanded(child: _Logo()),
+                    Expanded(child: Center(child: _FormContent())),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
 }
 
-class _SignUpPerusahaan extends State<SignUpPerusahaan> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String selectedValue = 'Pilih Role';
-  final List<String> options = ['Pelamar', 'Perusahaan'];
+class _Logo extends StatelessWidget {
+  const _Logo();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        FlutterLogo(size: Responsive.isMobile(context) ? 100 : 200),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Welcome to Yuk Kerja!",
+            textAlign: TextAlign.center,
+            style: Responsive.isMobile(context)
+                ? Theme.of(context).textTheme.titleMedium
+                : Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _FormContent extends StatefulWidget {
+  const _FormContent();
+
+  @override
+  State<_FormContent> createState() => __FormContentState();
+}
+
+class __FormContentState extends State<_FormContent> {
+  final _nameController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _domainController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   void _handleLogin() {
     Navigator.pushReplacement(
       context,
@@ -28,8 +84,8 @@ class _SignUpPerusahaan extends State<SignUpPerusahaan> {
     final usecase = SignupUseCase(repository);
 
     final result = await usecase.SignUpAction(
-      _emailController.text,
-      _passwordController.text,
+      _nameController.text,
+      _addressController.text,
     );
 
     setState(() {
@@ -42,106 +98,121 @@ class _SignUpPerusahaan extends State<SignUpPerusahaan> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 70,
-                width: 600,
-                child: Text(
-                  "Form Sign Up Perusahaan",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
+    return Container(
+      constraints: Responsive.isMobile(context)
+          ? const BoxConstraints(maxWidth: 400)
+          : const BoxConstraints(maxWidth: 800),
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Sign Up Perusahaan",
+              style: Responsive.isMobile(context)
+                  ? Theme.of(context).textTheme.titleMedium
+                  : Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Nama',
+                hintText: 'Masukkan nama perusahaan Anda',
+                prefixIcon: Icon(Icons.business),
+                border: OutlineInputBorder(),
               ),
-              SizedBox(
-                height: 70,
-                width: 300,
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Username',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 11,
-                    ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama tidak boleh kosong';
+                }
+                return null;
+              },
+            ),
+            _gap(),
+            TextFormField(
+              controller: _addressController,
+              decoration: const InputDecoration(
+                labelText: 'Alamat',
+                hintText: 'Masukkan alamat perusahaan Anda',
+                prefixIcon: Icon(Icons.room),
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Alamat tidak boleh kosong';
+                }
+                return null;
+              },
+            ),
+            _gap(),
+            TextFormField(
+              controller: _phoneController,
+              decoration: const InputDecoration(
+                labelText: 'Nomor Telepon',
+                hintText: 'Masukkan nomor telepon perusahaan Anda',
+                prefixIcon: Icon(Icons.phone),
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nomor telepon tidak boleh kosong';
+                }
+                if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
+                  return 'Masukkan nomor telepon yang valid';
+                }
+                return null;
+              },
+            ),
+            _gap(),
+            TextFormField(
+              controller: _domainController,
+              decoration: const InputDecoration(
+                labelText: 'Domain',
+                hintText: 'Masukkan domain perusahaan Anda',
+                prefixIcon: Icon(Icons.public),
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Domain tidak boleh kosong';
+                }
+                if (!RegExp(r'^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$').hasMatch(value)) {
+                  return 'Masukkan domain yang valid';
+                }
+                return null;
+              },
+            ),
+            _gap(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 70,
-                width: 300,
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Name',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 11,
-                    ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    _handleSignUp();
+                  }
+                },
               ),
-              SizedBox(
-                height: 70,
-                width: 300,
-                child: DropdownButtonFormField<String>(
-                  value: selectedValue == 'Pilih Role' ? null : selectedValue,
-                  hint: Text('Pilih Role'),
-                  decoration: InputDecoration(
-                    labelText: 'Role',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 14,
-                    ),
-                  ),
-                  items: options.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedValue = newValue!;
-                    });
-                  },
-                ),
-              ),
-              // TextField(
-              //   controller: _passwordController,
-              //   decoration: InputDecoration(hintText: "Password"),
-              //   obscureText: true,
-              // ),
-              SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: _handleSignUp,
-                    child: Text('Next', style: TextStyle(color: Colors.black)),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  Widget _gap() => const SizedBox(height: 16);
 }
