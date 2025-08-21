@@ -30,6 +30,15 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   bool _loadingPhoto = false;
 
   Future<void> _handleSignUp() async {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Harap lengkapi semua field!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+
     // final dataSource = AuthRemoteDatasource();
     // final repository = AuthRepositoryImpl(dataSource);
     // final usecase = SignupUseCase(repository);
@@ -46,26 +55,13 @@ class _SignUpPelamar extends State<SignUpPelamar> {
     //   );
     // });
     // print(selectedValue);
-    // if (_formKey.currentState!.validate()) {
-    //   if (selectedValue == "Pelamar") {
-    //     Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => SignUpPelamar()),
-    //     );
-    //   } else {
-    //     Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => SignUpPerusahaan()),
-    //     );
-    //   }
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text('Harap lengkapi semua field!'),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-    // }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text = email!;
+    _namaController.text = name!;
   }
 
   @override
@@ -116,7 +112,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                         height: 90,
                         width: 300,
                         child: TextFormField(
-                          //controller: _emailController,
+                          controller: _emailController,
                           decoration: InputDecoration(
                             hintText: 'Email',
                             border: OutlineInputBorder(),
@@ -125,16 +121,17 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                               horizontal: 11,
                             ),
                           ),
-                          initialValue: email,
-                          // validator: (value) =>
-                          //     value == null || value.isEmpty ? 'Wajib diisi' : null,
+                          // initialValue: email,
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Wajib diisi'
+                              : null,
                         ),
                       ),
                       SizedBox(
                         height: 90,
                         width: 300,
                         child: TextFormField(
-                          //controller: _namaController,
+                          controller: _namaController,
                           decoration: InputDecoration(
                             hintText: 'Name',
                             border: OutlineInputBorder(),
@@ -143,7 +140,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                               horizontal: 11,
                             ),
                           ),
-                          initialValue: name,
+                          // initialValue: name,
                           validator: (value) => value == null || value.isEmpty
                               ? 'Wajib diisi'
                               : null,
