@@ -1,75 +1,82 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class SignUp extends StatefulWidget {
   final String? name;
   final String? email;
   final String? photoUrl;
+  final String? token;
 
-  SignUp(this.name, this.email, this.photoUrl);
+  SignUp(this.name, this.email, this.photoUrl, this.token);
   @override
-  State<SignUp> createState() => _SignUp(this.name, this.email, this.photoUrl);
+  State<SignUp> createState() =>
+      _SignUp(this.name, this.email, this.photoUrl, this.token);
 }
 
 class _SignUp extends State<SignUp> {
   final String? name;
   final String? email;
   final String? photoUrl;
-  _SignUp(this.name, this.email, this.photoUrl);
+  final String? token;
+  _SignUp(this.name, this.email, this.photoUrl, this.token);
   final _emailController = TextEditingController();
   final _namaController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String? selectedValue;
-  final List<String> options = ['Pelamar', 'Perusahaan'];
+
+  Uint8List? _photoBytes;
+  bool _loadingPhoto = false;
+  Future<void> fetchPhoto(String url, String accessToken) async {
+    if (_loadingPhoto || _photoBytes != null) return;
+    _loadingPhoto = true;
+    try {
+      final resp = await http.get(
+        Uri.parse(url),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+      print('status: ${resp.statusCode}');
+      if (resp.statusCode == 200) {
+        setState(() => _photoBytes = resp.bodyBytes);
+      } else {
+        print('photo fetch failed: ${resp.statusCode} ${resp.body}');
+      }
+    } catch (e) {
+      print('fetch error: $e');
+    } finally {
+      _loadingPhoto = false;
+    }
+  }
+
+  void _handleSignUpPelamar() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignUpPelamar(name, email, photoUrl, token),
+      ),
+    );
+  }
+
+  void _handleSignUpPerusahaan() {
+    //  Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => SignUpPelamar(name, email, photoUrl, token),
+    //       ),
+    //     );
+  }
+
   void _handleLogin() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Login()),
     );
-  }
-
-  Future<void> _handleSignUp() async {
-    // final dataSource = AuthRemoteDatasource();
-    // final repository = AuthRepositoryImpl(dataSource);
-    // final usecase = SignupUseCase(repository);
-
-    // final result = await usecase.SignUpAction(
-    //   _emailController.text,
-    //   _passwordController.text,
-    // );
-
-    // setState(() {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => Login()),
-    //   );
-    // });
-    print(selectedValue);
-    if (_formKey.currentState!.validate()) {
-      if (selectedValue == "Pelamar") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SignUpPelamar()),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SignUpPerusahaan()),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Harap lengkapi semua field!'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   @override
@@ -86,113 +93,35 @@ class _SignUp extends State<SignUp> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 70,
-                  width: 600,
-                  child: Text(
-                    "Sign Up",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 70,
+                width: 600,
+                child: Text(
+                  "Sign Up Sebagai",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                SizedBox(
-                  height: 90,
-                  width: 300,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(photoUrl!),
-                  ),
+              ),
+              ElevatedButton(
+                onPressed: _handleSignUpPelamar,
+                child: Text(
+                  'Sign Up Pelamar',
+                  style: TextStyle(color: Colors.black),
                 ),
-                SizedBox(
-                  height: 90,
-                  width: 300,
-                  child: TextFormField(
-                    //controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 11,
-                      ),
-                    ),
-                    initialValue: email,
-                    // validator: (value) =>
-                    //     value == null || value.isEmpty ? 'Wajib diisi' : null,
-                  ),
+              ),
+              SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: _handleSignUpPerusahaan,
+                child: Text(
+                  'Sign Up Perusahaan',
+                  style: TextStyle(color: Colors.black),
                 ),
-                SizedBox(
-                  height: 90,
-                  width: 300,
-                  child: TextFormField(
-                    //controller: _namaController,
-                    decoration: InputDecoration(
-                      hintText: 'Name',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 11,
-                      ),
-                    ),
-                    initialValue: name,
-                    validator: (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
-                  ),
-                ),
-                SizedBox(
-                  height: 90,
-                  width: 300,
-                  child: DropdownButtonFormField<String>(
-                    value: selectedValue == '' ? null : selectedValue,
-                    validator: (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
-                    hint: Text('Pilih Role'),
-                    decoration: InputDecoration(
-                      labelText: 'Role',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 14,
-                      ),
-                    ),
-                    items: options.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedValue = newValue!;
-                      });
-                    },
-                  ),
-                ),
-                // TextField(
-                //   controller: _passwordController,
-                //   decoration: InputDecoration(hintText: "Password"),
-                //   obscureText: true,
-                // ),
-                SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _handleSignUp,
-                      child: Text(
-                        'Next',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

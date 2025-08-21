@@ -36,6 +36,7 @@ class _LoginFormState extends State<LoginForm> {
   String? name;
   String? userEmail;
   String? imageUrl;
+  String? token;
   // Fungsi ini dipanggil saat tombol ditekan
   Future<void> _handleLogin() async {
     await Firebase.initializeApp();
@@ -58,6 +59,7 @@ class _LoginFormState extends State<LoginForm> {
       if (googleSignInAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSignInAccount.authentication;
+        token = googleSignInAuthentication.accessToken;
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken,
@@ -83,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SignUp(name, userEmail, imageUrl),
+          builder: (context) => SignUp(name, userEmail, imageUrl, token),
         ),
       );
     }

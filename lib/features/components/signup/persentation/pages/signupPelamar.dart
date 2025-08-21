@@ -4,41 +4,68 @@ import 'package:job_platform/features/components/signup/data/datasources/aut_rem
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
+import 'dart:typed_data';
 
 class SignUpPelamar extends StatefulWidget {
-  const SignUpPelamar({super.key});
+  final String? name;
+  final String? email;
+  final String? photoUrl;
+  final String? token;
+  SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
   @override
-  State<SignUpPelamar> createState() => _SignUpPelamar();
+  State<SignUpPelamar> createState() =>
+      _SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
 }
 
 class _SignUpPelamar extends State<SignUpPelamar> {
+  final String? name;
+  final String? email;
+  final String? photoUrl;
+  final String? token;
+  _SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String selectedValue = 'Pilih Role';
-  final List<String> options = ['Pelamar', 'Perusahaan'];
-  void _handleLogin() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-    );
-  }
+  final _namaController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  Uint8List? _photoBytes;
+  bool _loadingPhoto = false;
 
   Future<void> _handleSignUp() async {
-    final dataSource = AuthRemoteDatasource();
-    final repository = AuthRepositoryImpl(dataSource);
-    final usecase = SignupUseCase(repository);
+    // final dataSource = AuthRemoteDatasource();
+    // final repository = AuthRepositoryImpl(dataSource);
+    // final usecase = SignupUseCase(repository);
 
-    final result = await usecase.SignUpAction(
-      _emailController.text,
-      _passwordController.text,
-    );
+    // final result = await usecase.SignUpAction(
+    //   _emailController.text,
+    //   _passwordController.text,
+    // );
 
-    setState(() {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Login()),
-      );
-    });
+    // setState(() {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => Login()),
+    //   );
+    // });
+    // print(selectedValue);
+    // if (_formKey.currentState!.validate()) {
+    //   if (selectedValue == "Pelamar") {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(builder: (context) => SignUpPelamar()),
+    //     );
+    //   } else {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(builder: (context) => SignUpPerusahaan()),
+    //     );
+    //   }
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text('Harap lengkapi semua field!'),
+    //       backgroundColor: Colors.red,
+    //     ),
+    //   );
+    // }
   }
 
   @override
@@ -58,89 +85,87 @@ class _SignUpPelamar extends State<SignUpPelamar> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 70,
-                width: 600,
-                child: Text(
-                  "Form Sign Up Pelamar",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ),
-              SizedBox(
-                height: 70,
-                width: 300,
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Username',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 11,
-                    ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 70,
+                        width: 600,
+                        child: Text(
+                          "Form Sign Up Pelamar",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: _photoBytes != null
+                            ? MemoryImage(_photoBytes!)
+                            : null,
+                        child: _photoBytes == null ? Icon(Icons.person) : null,
+                      ),
+                      SizedBox(height: 40),
+                      SizedBox(
+                        height: 90,
+                        width: 300,
+                        child: TextFormField(
+                          //controller: _emailController,
+                          decoration: InputDecoration(
+                            hintText: 'Email',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 11,
+                            ),
+                          ),
+                          initialValue: email,
+                          // validator: (value) =>
+                          //     value == null || value.isEmpty ? 'Wajib diisi' : null,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 90,
+                        width: 300,
+                        child: TextFormField(
+                          //controller: _namaController,
+                          decoration: InputDecoration(
+                            hintText: 'Name',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 11,
+                            ),
+                          ),
+                          initialValue: name,
+                          validator: (value) => value == null || value.isEmpty
+                              ? 'Wajib diisi'
+                              : null,
+                        ),
+                      ),
+
+                      SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: _handleSignUp,
+                            child: Text(
+                              'Daftar',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              // SizedBox(
-              //   height: 70,
-              //   width: 300,
-              //   child: TextField(
-              //     controller: _emailController,
-              //     decoration: InputDecoration(
-              //       hintText: 'Name',
-              //       border: OutlineInputBorder(),
-              //       contentPadding: EdgeInsets.symmetric(
-              //         vertical: 8,
-              //         horizontal: 11,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 70,
-              //   width: 300,
-              //   child: DropdownButtonFormField<String>(
-              //     value: selectedValue == 'Pilih Role' ? null : selectedValue,
-              //     hint: Text('Pilih Role'),
-              //     decoration: InputDecoration(
-              //       labelText: 'Role',
-              //       border: OutlineInputBorder(),
-              //       contentPadding: EdgeInsets.symmetric(
-              //         horizontal: 5,
-              //         vertical: 14,
-              //       ),
-              //     ),
-              //     items: options.map((String value) {
-              //       return DropdownMenuItem<String>(
-              //         value: value,
-              //         child: Text(value),
-              //       );
-              //     }).toList(),
-              //     onChanged: (newValue) {
-              //       setState(() {
-              //         selectedValue = newValue!;
-              //       });
-              //     },
-              //   ),
-              // ),
-              // TextField(
-              //   controller: _passwordController,
-              //   decoration: InputDecoration(hintText: "Password"),
-              //   obscureText: true,
-              // ),
-              SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: _handleSignUp,
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
