@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
@@ -74,7 +75,7 @@ class __FormContentState extends State<_FormContent> {
   void _handleLogin() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => HomePage()),
     );
   }
 
@@ -148,23 +149,55 @@ class __FormContentState extends State<_FormContent> {
               },
             ),
             _gap(),
-            TextFormField(
-              controller: _phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Nomor Telepon',
-                hintText: 'Masukkan nomor telepon perusahaan Anda',
-                prefixIcon: Icon(Icons.phone),
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Nomor telepon tidak boleh kosong';
-                }
-                if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
-                  return 'Masukkan nomor telepon yang valid';
-                }
-                return null;
-              },
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 8.0),
+                  child: Icon(Icons.phone),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: BorderSide(color: Colors.grey.shade400),
+                    ),
+                  ),
+                  child: const Text("+62", style: TextStyle(fontSize: 16)),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextFormField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      labelText: 'Nomor Telepon',
+                      hintText: 'Masukkan nomor telepon perusahaan Anda',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nomor telepon tidak boleh kosong';
+                      }
+                      if (!RegExp(r'^[0-9]{8,13}$').hasMatch(value)) {
+                        return 'Masukkan nomor telepon yang valid';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      // Remove leading zeros as user types
+                      if (value.startsWith('0')) {
+                        final newValue = value.replaceFirst(RegExp(r'^0+'), '');
+                        _phoneController.value = TextEditingValue(
+                          text: newValue,
+                          selection: TextSelection.collapsed(
+                            offset: newValue.length,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
             _gap(),
             TextFormField(
@@ -179,7 +212,9 @@ class __FormContentState extends State<_FormContent> {
                 if (value == null || value.isEmpty) {
                   return 'Domain tidak boleh kosong';
                 }
-                if (!RegExp(r'^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$').hasMatch(value)) {
+                if (!RegExp(
+                  r'^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$',
+                ).hasMatch(value)) {
                   return 'Masukkan domain yang valid';
                 }
                 return null;
