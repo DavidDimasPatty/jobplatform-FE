@@ -41,6 +41,7 @@ dependencies:
   google_sign_in: ^6.1.1
   shared_preferences: ^2.1.1
   cached_network_image: ^3.4.1
+  syncfusion_flutter_datepicker: ^30.2.7
 
 dev_dependencies:
   flutter_test:
