@@ -41,6 +41,7 @@ class AuthRemoteDatasource {
     try {
       final proxyUrl =
           'https://api.allorigins.win/raw?url=${Uri.encodeComponent('https://wilayah.id/api/provinces.json')}';
+      //final proxyUrl = " https://open-api.my.id/api/wilayah/provinces";
       final uri = Uri.parse(proxyUrl);
 
       final response = await http.get(uri);
@@ -64,6 +65,7 @@ class AuthRemoteDatasource {
     try {
       final proxyUrl =
           'https://api.allorigins.win/raw?url=${Uri.encodeComponent('https://wilayah.id/api/regencies/$code.json')}';
+      //final proxyUrl = " https://open-api.my.id/api/wilayah/provinces";
       final uri = Uri.parse(proxyUrl);
 
       final response = await http.get(uri);

@@ -21,13 +21,18 @@ class SignUpPelamar extends StatefulWidget {
 }
 
 class _SignUpPelamar extends State<SignUpPelamar> {
-  List<ProvinsiModel> provinsi = [];
-  List<KotaModel> kota = [];
   final String? name;
   final String? email;
   final String? photoUrl;
   final String? token;
   _SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
+  List<ProvinsiModel> provinsi = [];
+  List<KotaModel> kota = [];
+  bool isLoadingKota = false;
+  int _kotaRequestId = 0;
+  bool isLoadingProvinsi = false;
+  int _ProvinsiRequestId = 0;
+  final _alamatController = TextEditingController();
   final _emailController = TextEditingController();
   final _namaController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -52,19 +57,30 @@ class _SignUpPelamar extends State<SignUpPelamar> {
     }
   }
 
-  void fetchDataProvinsi() async {
+  Future<List<ProvinsiModel>> fetchDataProvinsi() async {
     final result = await signupUseCase.getProvinsi();
     setState(() {
       provinsi = result;
     });
+    return provinsi;
   }
 
-  void fetchDataKota() async {
-    kota.clear();
-    final result = await signupUseCase.getKota(selectedProvinsi!.code);
+  Future<List<KotaModel>> fetchDataKota(String provinceCode) async {
     setState(() {
-      kota = result;
+      kota = [];
+      isLoadingKota = true;
     });
+
+    try {
+      final result = await signupUseCase.getKota(provinceCode);
+      setState(() {
+        kota = result;
+      });
+      return kota;
+    } catch (e, st) {
+      debugPrint('Error fetchDataKota: $e\n$st');
+      return kota;
+    }
   }
 
   @override
@@ -308,11 +324,20 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 child: Text(prov.nama),
                               );
                             }).toList(),
-                            onChanged: (value) {
+                            onChanged: (value) async {
                               setState(() {
+                                kota = [];
+                                selectedKota = null;
                                 selectedProvinsi = value;
-                                fetchDataKota();
                               });
+
+                              if (value != null) {
+                                await fetchDataKota(selectedProvinsi!.code);
+                              } else {
+                                setState(() {
+                                  kota = [];
+                                });
+                              }
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -350,6 +375,29 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                           ),
                         ),
                       ],
+                    ),
+
+                    SizedBox(
+                      height: 90,
+                      width: 700,
+                      child: TextFormField(
+                        controller: _alamatController,
+                        decoration: InputDecoration(
+                          labelText: 'Alamat Lengkap',
+                          hintText: 'Masukan Alamat Lengkap',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 11,
+                          ),
+                        ),
+                        keyboardType: TextInputType.multiline,
+                        minLines: 3,
+                        maxLines: 5,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Wajib diisi'
+                            : null,
+                      ),
                     ),
 
                     SizedBox(height: 24),
