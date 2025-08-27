@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/signup/data/models/country.dart';
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
@@ -8,6 +9,8 @@ import 'package:job_platform/features/components/signup/domain/usecases/signup_u
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'dart:typed_data';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class SignUpPelamar extends StatefulWidget {
   final String? name;
@@ -28,6 +31,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   _SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
   List<ProvinsiModel> provinsi = [];
   List<KotaModel> kota = [];
+  List<Country> countries = [];
   bool isLoadingKota = false;
   int _kotaRequestId = 0;
   bool isLoadingProvinsi = false;
@@ -41,6 +45,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   final _formKey = GlobalKey<FormState>();
   ProvinsiModel? selectedProvinsi = null;
   KotaModel? selectedKota = null;
+  Country? selectedCountry = null;
   Uint8List? _photoBytes;
   late SignupUseCase signupUseCase;
   //bool _loadingPhoto = false;
@@ -83,6 +88,35 @@ class _SignUpPelamar extends State<SignUpPelamar> {
     }
   }
 
+  Future<List<Country>> loadCountries() async {
+    try {
+      final jsonString = await rootBundle.loadString(
+        'lib/core/constant/phoneNumber.json',
+      );
+      print("masuk");
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+      final loaded = jsonList
+          .map((e) => Country.fromJson(e as Map<String, dynamic>))
+          .toList();
+      setState(() {
+        if (!countries.isNotEmpty) {
+          countries = loaded;
+          selectedCountry = countries.firstWhere(
+            (c) => c.code.toUpperCase() == 'ID' || c.dialCode == '+62',
+            orElse: () => countries.first,
+          );
+          print(selectedCountry!.dialCode);
+        } else {
+          selectedCountry = null;
+        }
+      });
+      return countries;
+    } catch (e) {
+      debugPrint('Error load countries: $e');
+      return countries;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -90,9 +124,10 @@ class _SignUpPelamar extends State<SignUpPelamar> {
     final repository = AuthRepositoryImpl(remoteDataSource);
     signupUseCase = SignupUseCase(repository);
     fetchDataProvinsi();
+    loadCountries();
     _emailController.text = email!;
     _namaController.text = name!;
-    _phoneController.text = "+62";
+    _phoneController.text = "";
   }
 
   @override
@@ -140,9 +175,8 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        SizedBox(
-                          height: 90,
-                          width: 300,
+                        Expanded(
+                          flex: 2,
                           child: TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
@@ -160,16 +194,61 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 : null,
                           ),
                         ),
-                        SizedBox(
-                          height: 90,
-                          width: 300,
+                        SizedBox(width: 10), // spacing antar kolom
+                        Expanded(
+                          flex: 1,
+                          child: DropdownButtonFormField<Country>(
+                            value: selectedCountry,
+                            isExpanded: true,
+                            hint: Text("Pilih Negara"),
+                            items: countries.map((country) {
+                              return DropdownMenuItem<Country>(
+                                value: country,
+                                child: Text(
+                                  country.name.trim(),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCountry = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          flex: 2,
                           child: TextFormField(
+                            key: ValueKey(selectedCountry?.dialCode),
                             controller: _phoneController,
                             keyboardType: TextInputType.phone,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Nomor Telepon',
                               hintText: 'Masukkan nomor telepon Anda',
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
+                              prefixIcon: IntrinsicWidth(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Text(
+                                    selectedCountry?.dialCode ?? '+62',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -199,7 +278,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                         ),
                       ],
                     ),
-
+                    SizedBox(height: 30),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -286,26 +365,6 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                       ),
                     ),
 
-                    // SizedBox(
-                    //   height: 90,
-                    //   width: 300,
-                    //   child: TextFormField(
-                    //     controller: _tempatLahirController,
-                    //     decoration: InputDecoration(
-                    //       labelText: 'Tempat Lahir',
-                    //       hintText: 'Masukan Tempat Lahir',
-                    //       border: OutlineInputBorder(),
-                    //       contentPadding: EdgeInsets.symmetric(
-                    //         vertical: 8,
-                    //         horizontal: 11,
-                    //       ),
-                    //     ),
-                    //     // initialValue: name,
-                    //     validator: (value) => value == null || value.isEmpty
-                    //         ? 'Wajib diisi'
-                    //         : null,
-                    //   ),
-                    // ),
                     SizedBox(height: 90, width: 300),
 
                     Row(
