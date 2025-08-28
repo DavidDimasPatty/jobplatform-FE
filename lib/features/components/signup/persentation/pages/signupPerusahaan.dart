@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/signup/data/models/country.dart';
 import 'package:job_platform/features/components/signup/data/models/kota.dart';
 import 'package:job_platform/features/components/signup/data/models/provinsi.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:job_platform/responsive.dart';
 
 class SignUpPerusahaan extends StatelessWidget {
@@ -78,10 +81,13 @@ class __FormContentState extends State<_FormContent> {
   late SignupUseCase _signupUseCase;
 
   // State variables
+  List<Country> _countryList = [];
   List<ProvinsiModel> _provinsiList = [];
   List<KotaModel> _kotaList = [];
+  Country? _selectedCountry;
   ProvinsiModel? _selectedProvinsi;
   KotaModel? _selectedKota;
+  bool _isLoadingCountries = false;
   bool _isLoadingKota = false;
 
   @override
@@ -89,6 +95,7 @@ class __FormContentState extends State<_FormContent> {
     super.initState();
     _initializeUseCase();
     _fetchProvinsiData();
+    _fetchCountryData();
   }
 
   @override
@@ -107,6 +114,50 @@ class __FormContentState extends State<_FormContent> {
     _signupUseCase = SignupUseCase(repository);
   }
 
+  Future<void> _fetchCountryData() async {
+    setState(() {
+      _isLoadingCountries = true;
+    });
+
+    try {
+      final jsonString = await rootBundle.loadString(
+        'lib/core/constant/phoneNumber.json',
+      );
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+
+      if (mounted) {
+        _countryList = jsonList
+            .map((e) => Country.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        // Set Indonesia as default, or first country if Indonesia not found
+        _selectedCountry = _countryList.firstWhere(
+          (c) => c.code.toUpperCase() == 'ID' || c.dialCode == '+62',
+          orElse: () => _countryList.first,
+        );
+
+        _isLoadingCountries = false;
+      }
+    } catch (e) {
+      debugPrint('Error load countries: $e');
+      if (mounted) {
+        setState(() {
+          _countryList = [];
+          _selectedCountry = null;
+          _isLoadingCountries = false;
+        });
+        
+        // Show error message to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to load country data'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _fetchProvinsiData() async {
     try {
       final result = await _signupUseCase.getProvinsi();
@@ -119,11 +170,19 @@ class __FormContentState extends State<_FormContent> {
       }
     } catch (e) {
       debugPrint('Error fetching provinsi: $e');
-      // You might want to show a snackbar or error message here
       if (mounted) {
         setState(() {
           _provinsiList = [];
+          _selectedProvinsi = null;
         });
+
+        // Show error message to user
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to load provinsi data'),
+            backgroundColor: Colors.orange,
+          ),
+        );
       }
     }
   }
@@ -149,10 +208,26 @@ class __FormContentState extends State<_FormContent> {
       debugPrint('Error fetching kota: $e');
       if (mounted) {
         setState(() {
+          _kotaList = [];
+          _selectedKota = null;
           _isLoadingKota = false;
         });
       }
+
+      // Show error message to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to load kota data'),
+          backgroundColor: Colors.orange,
+        ),
+      );
     }
+  }
+
+  void _onCountryChanged(Country? value) {
+    setState(() {
+      _selectedCountry = value;
+    });
   }
 
   void _onProvinsiChanged(ProvinsiModel? value) {
@@ -206,10 +281,7 @@ class __FormContentState extends State<_FormContent> {
       final repository = AuthRepositoryImpl(dataSource);
       final usecase = SignupUseCase(repository);
 
-      await usecase.SignUpAction(
-        _nameController.text,
-        _addressController.text,
-      );
+      await usecase.SignUpAction(_nameController.text, _addressController.text);
 
       if (mounted) {
         Navigator.pushReplacement(
@@ -379,43 +451,125 @@ class __FormContentState extends State<_FormContent> {
     );
   }
 
+  // Widget _buildPhoneField() {
+  //   return TextFormField(
+  //     controller: _phoneController,
+  //     keyboardType: TextInputType.phone,
+  //     decoration: InputDecoration(
+  //       prefixIcon: IntrinsicWidth(
+  //         child: Container(
+  //           alignment: Alignment.center,
+  //           padding: const EdgeInsets.symmetric(horizontal: 8),
+  //           child: Row(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               const Icon(Icons.phone),
+  //               const SizedBox(width: 8),
+  //               const Text(
+  //                 '+62',
+  //                 style: TextStyle(fontWeight: FontWeight.bold),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //       labelText: 'Nomor Telepon',
+  //       hintText: 'Masukkan nomor telepon perusahaan Anda',
+  //       border: OutlineInputBorder(),
+  //     ),
+  //     validator: (value) {
+  //       if (value == null || value.isEmpty) {
+  //         return 'Nomor telepon tidak boleh kosong';
+  //       }
+  //       if (!RegExp(r'^[0-9]{8,13}$').hasMatch(value)) {
+  //         return 'Masukkan nomor telepon yang valid';
+  //       }
+  //       return null;
+  //     },
+  //     onChanged: _onPhoneChanged,
+  //   );
+  // }
+
   Widget _buildPhoneField() {
-    return TextFormField(
-        controller: _phoneController,
-        keyboardType: TextInputType.phone,
-        decoration: InputDecoration(
-          prefixIcon: IntrinsicWidth(
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.phone),
-                  const SizedBox(width: 8),
-                  const Text(
-                    '+62',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Country Code Dropdown
+        Container(
+          width: 120,
+          child: DropdownButtonFormField<Country>(
+            initialValue: _selectedCountry,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(4),
+                  bottomLeft: Radius.circular(4),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            ),
+            items: _countryList.map((country) {
+              return DropdownMenuItem(
+                value: country,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      country.flag,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        country.code,
+                        style: const TextStyle(fontSize: 14),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: _onCountryChanged,
+            validator: (value) {
+              if (value == null) {
+                return 'Required';
+              }
+              return null;
+            },
+            isExpanded: true,
+            isDense: true,
+          ),
+        ),
+        // Phone Number Field
+        Expanded(
+          child: TextFormField(
+            controller: _phoneController,
+            keyboardType: TextInputType.phone,
+            decoration: const InputDecoration(
+              labelText: 'Nomor Telepon',
+              hintText: 'Masukkan nomor telepon',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(4),
+                  bottomRight: Radius.circular(4),
+                ),
               ),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Nomor telepon tidak boleh kosong';
+              }
+              if (!RegExp(r'^[0-9]{7,15}$').hasMatch(value)) {
+                return 'Masukkan nomor telepon yang valid';
+              }
+              return null;
+            },
+            onChanged: _onPhoneChanged,
           ),
-          labelText: 'Nomor Telepon',
-          hintText: 'Masukkan nomor telepon perusahaan Anda',
-          border: OutlineInputBorder(),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Nomor telepon tidak boleh kosong';
-          }
-          if (!RegExp(r'^[0-9]{8,13}$').hasMatch(value)) {
-            return 'Masukkan nomor telepon yang valid';
-          }
-          return null;
-        },
-        onChanged: _onPhoneChanged,
-      );
+        )
+      ],
+    );
   }
 
   Widget _buildDomainField() {
