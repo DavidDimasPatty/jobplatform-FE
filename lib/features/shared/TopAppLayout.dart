@@ -14,17 +14,26 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       ),
       actions: [
-        IconButton(
-          onPressed: onToggleNotification,
-          icon: const Icon(Icons.notifications, color: Colors.white),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.chat, color: Colors.white),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.settings, color: Colors.white),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              onPressed: onToggleNotification,
+              icon: const Icon(Icons.notifications, color: Colors.white),
+            ),
+            const SizedBox(width: 10),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.chat, color: Colors.white),
+            ),
+            const SizedBox(width: 10),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.settings, color: Colors.white),
+            ),
+            const SizedBox(width: 25),
+          ],
         ),
       ],
     );
