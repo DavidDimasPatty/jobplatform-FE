@@ -64,12 +64,12 @@ class _SignUp extends State<SignUp> {
   }
 
   void _handleSignUpPerusahaan() {
-    //  Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => SignUpPelamar(name, email, photoUrl, token),
-    //       ),
-    //     );
+    Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpPerusahaan(),
+          ),
+        );
   }
 
   void _handleLogin() {
