@@ -87,7 +87,6 @@ class __FormContentState extends State<_FormContent> {
   Country? _selectedCountry;
   ProvinsiModel? _selectedProvinsi;
   KotaModel? _selectedKota;
-  bool _isLoadingCountries = false;
   bool _isLoadingKota = false;
 
   @override
@@ -115,10 +114,6 @@ class __FormContentState extends State<_FormContent> {
   }
 
   Future<void> _fetchCountryData() async {
-    setState(() {
-      _isLoadingCountries = true;
-    });
-
     try {
       final jsonString = await rootBundle.loadString(
         'lib/core/constant/phoneNumber.json',
@@ -135,8 +130,6 @@ class __FormContentState extends State<_FormContent> {
           (c) => c.code.toUpperCase() == 'ID' || c.dialCode == '+62',
           orElse: () => _countryList.first,
         );
-
-        _isLoadingCountries = false;
       }
     } catch (e) {
       debugPrint('Error load countries: $e');
@@ -144,7 +137,6 @@ class __FormContentState extends State<_FormContent> {
         setState(() {
           _countryList = [];
           _selectedCountry = null;
-          _isLoadingCountries = false;
         });
         
         // Show error message to user
@@ -265,13 +257,6 @@ class __FormContentState extends State<_FormContent> {
       );
     }
   }
-
-  // void _navigateToLogin() {
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const HomePage()),
-  //   );
-  // }
 
   Future<void> _handleSignUp() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
@@ -451,52 +436,13 @@ class __FormContentState extends State<_FormContent> {
     );
   }
 
-  // Widget _buildPhoneField() {
-  //   return TextFormField(
-  //     controller: _phoneController,
-  //     keyboardType: TextInputType.phone,
-  //     decoration: InputDecoration(
-  //       prefixIcon: IntrinsicWidth(
-  //         child: Container(
-  //           alignment: Alignment.center,
-  //           padding: const EdgeInsets.symmetric(horizontal: 8),
-  //           child: Row(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               const Icon(Icons.phone),
-  //               const SizedBox(width: 8),
-  //               const Text(
-  //                 '+62',
-  //                 style: TextStyle(fontWeight: FontWeight.bold),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //       labelText: 'Nomor Telepon',
-  //       hintText: 'Masukkan nomor telepon perusahaan Anda',
-  //       border: OutlineInputBorder(),
-  //     ),
-  //     validator: (value) {
-  //       if (value == null || value.isEmpty) {
-  //         return 'Nomor telepon tidak boleh kosong';
-  //       }
-  //       if (!RegExp(r'^[0-9]{8,13}$').hasMatch(value)) {
-  //         return 'Masukkan nomor telepon yang valid';
-  //       }
-  //       return null;
-  //     },
-  //     onChanged: _onPhoneChanged,
-  //   );
-  // }
-
   Widget _buildPhoneField() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Country Code Dropdown
         Container(
-          width: 120,
+          width: 150,
           child: DropdownButtonFormField<Country>(
             initialValue: _selectedCountry,
             decoration: const InputDecoration(
@@ -522,6 +468,14 @@ class __FormContentState extends State<_FormContent> {
                     Flexible(
                       child: Text(
                         country.code,
+                        style: const TextStyle(fontSize: 14),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        country.dialCode,
                         style: const TextStyle(fontSize: 14),
                         overflow: TextOverflow.ellipsis,
                       ),
