@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
+import 'package:job_platform/features/shared/bottomAppLayout.dart';
+import 'package:job_platform/features/shared/layout.dart';
 import '../../domain/usecases/get_products_usecase.dart';
 import '../../data/datasources/product_remote_datasource.dart';
 import '../../data/repositories/product_repository_impl.dart';
@@ -13,8 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late GetProductsUseCase getProductsUseCase;
-  List products = [];
-
   @override
   void initState() {
     super.initState();
@@ -25,25 +25,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   void fetchData() async {
-    final result = await getProductsUseCase.execute();
-    setState(() {
-      products = result;
-    });
+    // final result = await getProductsUseCase.execute();
+    // setState(() {
+    //   products = result;
+    // });
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TopApplayout(),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return ListTile(
-            title: Text(product.name),
-            subtitle: Text('Rp ${product.price}'),
-          );
-        },
+    return Layout(
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "Welcome To Skillen",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

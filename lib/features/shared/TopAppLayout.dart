@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 
-class TopApplayout extends StatefulWidget implements PreferredSizeWidget {
-  const TopApplayout({super.key});
+class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
+  final VoidCallback onToggleNotification;
 
-  @override
-  State<TopApplayout> createState() => _TopAppLayout();
-  @override
-  Size get preferredSize => Size.fromHeight(60);
-}
-
-class _TopAppLayout extends State<TopApplayout> {
-  void _LogOut() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-    );
-  }
+  const TopApplayout({super.key, required this.onToggleNotification});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text("Yuk Kerja"),
-        ElevatedButton(onPressed: _LogOut, child: Text("Log Out")),
+    return AppBar(
+      backgroundColor: Colors.blueAccent,
+      title: const Text(
+        "Skillen",
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+      actions: [
+        IconButton(
+          onPressed: onToggleNotification,
+          icon: const Icon(Icons.notifications, color: Colors.white),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.chat, color: Colors.white),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.settings, color: Colors.white),
+        ),
       ],
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
