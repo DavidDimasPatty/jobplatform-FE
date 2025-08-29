@@ -138,7 +138,7 @@ class __FormContentState extends State<_FormContent> {
           _countryList = [];
           _selectedCountry = null;
         });
-        
+
         // Show error message to user
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -444,7 +444,7 @@ class __FormContentState extends State<_FormContent> {
         Container(
           width: 150,
           child: DropdownButtonFormField<Country>(
-            initialValue: _selectedCountry,
+            // initialValue: _selectedCountry,
             decoration: const InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.only(
@@ -460,10 +460,7 @@ class __FormContentState extends State<_FormContent> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      country.flag,
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                    Text(country.flag, style: const TextStyle(fontSize: 16)),
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
@@ -521,7 +518,7 @@ class __FormContentState extends State<_FormContent> {
             },
             onChanged: _onPhoneChanged,
           ),
-        )
+        ),
       ],
     );
   }
