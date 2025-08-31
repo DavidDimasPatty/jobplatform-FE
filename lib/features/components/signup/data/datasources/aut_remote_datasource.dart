@@ -2,39 +2,33 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/signup/data/models/kota.dart';
 import 'package:job_platform/features/components/signup/data/models/provinsi.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
 
-import '../models/signup.dart';
+import '../models/signupResponse.dart';
 
 class AuthRemoteDatasource {
-  Future<SignupModel> signup(String email, String password) async {
-    //    final response = await http.get(
-    //   Uri.parse('https://api.example.com/products'),
-    // );
+  Future<SignupResponseModel> signup(SignupRequestModel data) async {
+    final url = Uri.parse('https://localhost:7104/api/v1/account/register');
 
-    // final List<dynamic> data = jsonDecode(response.body);
-    //   final url = Uri.parse('https://api.example.com/products');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(data.toJson()),
+    );
 
-    // final response = await http.post(
-    //   url,
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json',
-    //   },
-    //   body: jsonEncode({
-    //     'name': 'Produk Baru',
-    //     'price': 12000,
-    //   }),
-    // );
-
-    // if (response.statusCode == 200 || response.statusCode == 201) {
-    //   final data = jsonDecode(response.body);
-    //   print('Berhasil: $data');
-    // } else {
-    //   print('Gagal: ${response.statusCode}');
-    // }
-    await Future.delayed(Duration(seconds: 1));
-    final response = {"status": "Ok", "responseMessages": "Success"};
-    return SignupModel.fromJson(response);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final json = jsonDecode(response.body);
+      final signupResponse = SignupResponseModel.fromJson(json);
+      print('Berhasil: ${signupResponse.toString()}');
+      return signupResponse;
+    } else {
+      throw Exception(
+        'Gagal signup: ${response.statusCode} - ${response.body}',
+      );
+    }
   }
 
   Future<List<ProvinsiModel>> getProvinsi() async {

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/user_model.dart';
+import '../models/user.dart';
 
 class AuthRemoteDataSource {
-  Future<UserModel?> login(String email, String password) async {
+  Future<UserModel?> login(String email) async {
     // Dummy API simulation
-    final url = Uri.parse('https://jobplatform-be.vercel.app/api/login');
+    final url = Uri.parse('https://localhost:7104/api/v1/account/login');
     UserModel? data = null;
     final response = await http.post(
       url,
@@ -13,7 +13,7 @@ class AuthRemoteDataSource {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: jsonEncode({'username': email, 'password': password}),
+      body: jsonEncode({'username': email}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {

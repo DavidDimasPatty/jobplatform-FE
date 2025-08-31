@@ -5,6 +5,7 @@ import 'package:job_platform/features/components/signup/data/models/country.dart
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -46,20 +47,54 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   ProvinsiModel? selectedProvinsi = null;
   KotaModel? selectedKota = null;
   Country? selectedCountry = null;
+  String gender = "";
   Uint8List? _photoBytes;
   late SignupUseCase signupUseCase;
   //bool _loadingPhoto = false;
   ////////////////////////////////////////////////////////////
 
   Future<void> _handleSignUp() async {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Harap lengkapi semua field!'),
-          backgroundColor: Colors.red,
-        ),
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    try {
+      final dataSource = AuthRemoteDatasource();
+      final repository = AuthRepositoryImpl(dataSource);
+      final usecase = SignupUseCase(repository);
+      SignupRequestModel data = SignupRequestModel(
+        registerAs: "user",
+        email: _emailController.text,
+        nama: _namaController.text,
+        alamat: _alamatController.text,
+        tanggalLahir: _tanggalLahirController.selectedDates!.first,
+        noTelp: _phoneController.text,
+        jenisKelamin: gender,
       );
+      await usecase.SignUpAction(data);
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Login()),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during signup: $e');
+      // Show error message to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Signup failed. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
+  }
+
+  void _changeGender(String genderSelect) {
+    setState(() {
+      gender = genderSelect;
+    });
   }
 
   Future<List<ProvinsiModel>> fetchDataProvinsi() async {
@@ -141,7 +176,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
           },
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -175,8 +210,9 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Expanded(
-                          flex: 2,
+                        SizedBox(
+                          height: 90,
+                          width: 300,
                           child: TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
@@ -194,9 +230,19 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 : null,
                           ),
                         ),
-                        SizedBox(width: 10), // spacing antar kolom
-                        Expanded(
-                          flex: 1,
+                      ],
+                    ),
+
+                    SizedBox(width: 90),
+
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          height: 40,
                           child: DropdownButtonFormField<Country>(
                             value: selectedCountry,
                             isExpanded: true,
@@ -224,9 +270,10 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          flex: 2,
+                        SizedBox(width: 20),
+                        SizedBox(
+                          width: 250,
+                          height: 40,
                           child: TextFormField(
                             key: ValueKey(selectedCountry?.dialCode),
                             controller: _phoneController,
@@ -278,7 +325,66 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 90),
+
+                    // Row(
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     SizedBox(
+                    //       height: 90,
+                    //       width: 300,
+                    //       child: TextFormField(
+                    //         key: ValueKey(selectedCountry?.dialCode),
+                    //         controller: _phoneController,
+                    //         keyboardType: TextInputType.phone,
+                    //         decoration: InputDecoration(
+                    //           labelText: 'Nomor Telepon',
+                    //           hintText: 'Masukkan nomor telepon Anda',
+                    //           border: const OutlineInputBorder(),
+                    //           prefixIcon: IntrinsicWidth(
+                    //             child: Container(
+                    //               alignment: Alignment.center,
+                    //               padding: const EdgeInsets.symmetric(
+                    //                 horizontal: 8,
+                    //               ),
+                    //               child: Text(
+                    //                 selectedCountry?.dialCode ?? '+62',
+                    //                 style: const TextStyle(
+                    //                   fontWeight: FontWeight.bold,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         validator: (value) {
+                    //           if (value == null || value.isEmpty) {
+                    //             return 'Nomor telepon tidak boleh kosong';
+                    //           }
+                    //           if (!RegExp(r'^[0-9]{8,13}$').hasMatch(value)) {
+                    //             return 'Masukkan nomor telepon yang valid';
+                    //           }
+                    //           return null;
+                    //         },
+                    //         onChanged: (value) {
+                    //           // Remove leading zeros as user types
+                    //           if (value.startsWith('0')) {
+                    //             final newValue = value.replaceFirst(
+                    //               RegExp(r'^0+'),
+                    //               '',
+                    //             );
+                    //             _phoneController.value = TextEditingValue(
+                    //               text: newValue,
+                    //               selection: TextSelection.collapsed(
+                    //                 offset: newValue.length,
+                    //               ),
+                    //             );
+                    //           }
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -303,42 +409,56 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 : null,
                           ),
                         ),
-                        Column(
+                      ],
+                    ),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Jenis Kelamin", // ini label
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              "Jenis Kelamin", // ini label
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            ElevatedButton(
+                              onPressed: () => _changeGender("L"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: gender == "L"
+                                    ? Colors.blue
+                                    : Colors.grey[300],
+                              ),
+                              child: const Text(
+                                'Laki Laki',
+                                style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: _handleSignUp,
-                                  child: Text(
-                                    'Laki Laki',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                                SizedBox(width: 50),
-                                ElevatedButton(
-                                  onPressed: _handleSignUp,
-                                  child: Text(
-                                    'Perempuan',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                              ],
+                            SizedBox(width: 50),
+                            ElevatedButton(
+                              onPressed: () => _changeGender("P"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: gender == "P"
+                                    ? Colors.pink
+                                    : Colors.grey[300],
+                              ),
+                              child: const Text(
+                                'Perempuan',
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                           ],
                         ),
                       ],
                     ),
+
+                    SizedBox(height: 90, width: 300),
 
                     SizedBox(
                       height: 250,
@@ -459,7 +579,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                       ),
                     ),
 
-                    SizedBox(height: 24),
+                    SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

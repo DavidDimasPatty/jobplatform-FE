@@ -13,8 +13,16 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   bool _showNotification = false;
+  bool _showSettings = false;
 
   void toggleNotification() {
+    print(_showNotification);
+    setState(() {
+      _showNotification = !_showNotification;
+    });
+  }
+
+  void toggleSettings() {
     print(_showNotification);
     setState(() {
       _showNotification = !_showNotification;

@@ -1,6 +1,7 @@
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
-import 'package:job_platform/features/components/signup/domain/entities/signup.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signupResponse.dart';
 import '../repositories/auth_repository.dart';
 
 class SignupUseCase {
@@ -8,8 +9,8 @@ class SignupUseCase {
 
   SignupUseCase(this.repository);
 
-  Future<SignupModel> SignUpAction(String email, String password) {
-    return repository.signup(email, password);
+  Future<SignupResponseModel> SignUpAction(SignupRequestModel data) {
+    return repository.signup(data);
   }
 
   Future<List<ProvinsiModel>> getProvinsi() {
