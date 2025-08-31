@@ -1,3 +1,5 @@
+import 'package:job_platform/features/components/login/data/models/loginModel.dart';
+
 import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
 
@@ -6,7 +8,7 @@ class LoginUseCase {
 
   LoginUseCase(this.repository);
 
-  Future<User?> execute(String email) {
+  Future<loginModel?> execute(String email) {
     return repository.login(email);
   }
 }

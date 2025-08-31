@@ -1,5 +1,7 @@
+import 'package:job_platform/features/components/login/data/models/loginModel.dart';
+
 import '../entities/user.dart';
 
 abstract class AuthRepository {
-  Future<User?> login(String email);
+  Future<loginModel?> login(String email);
 }

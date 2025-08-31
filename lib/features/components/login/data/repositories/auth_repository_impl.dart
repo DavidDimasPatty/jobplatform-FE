@@ -1,3 +1,5 @@
+import 'package:job_platform/features/components/login/data/models/loginModel.dart';
+
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/aut_remote_datasource.dart';
@@ -8,14 +10,9 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<User?> login(String email) async {
+  Future<loginModel?> login(String email) async {
     final userModel = await remoteDataSource.login(email);
-    //print(userModel!.id);
-    if (userModel == null || userModel.id == null) {
-      return null;
-    }
-
     //print(userModel);
-    return User(id: userModel.id!, nama: userModel.nama ?? '');
+    return userModel;
   }
 }

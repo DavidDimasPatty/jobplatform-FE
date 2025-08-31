@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import '../models/user.dart';
 
 class AuthRemoteDataSource {
-  Future<UserModel?> login(String email) async {
+  Future<loginModel?> login(String email) async {
     // Dummy API simulation
     final url = Uri.parse('https://localhost:7104/api/v1/account/login');
-    UserModel? data = null;
+    loginModel? data = null;
     final response = await http.post(
       url,
       headers: {
@@ -21,9 +22,9 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
       //print('Berhasil: $jsonData');
 
-      final dataRes = UserModel.fromJson(jsonData);
+      data = loginModel.fromJson(jsonData);
       //print(dataRes.id);
-      return dataRes;
+      return data;
     } else {
       final dataFailed = jsonDecode(response.body);
       print('Gagal: ${response.statusCode} ${dataFailed}');
