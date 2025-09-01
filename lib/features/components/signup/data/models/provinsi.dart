@@ -1,10 +1,10 @@
 class ProvinsiModel {
-  final String code;
+  final String id;
   final String nama;
 
-  ProvinsiModel({required this.code, required this.nama});
+  ProvinsiModel({required this.id, required this.nama});
 
   factory ProvinsiModel.fromJson(Map<String, dynamic> json) {
-    return ProvinsiModel(code: json["code"], nama: json["name"]);
+    return ProvinsiModel(id: json["id"], nama: json["name"]);
   }
 }

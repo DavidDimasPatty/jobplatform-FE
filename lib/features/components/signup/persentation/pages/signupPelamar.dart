@@ -6,8 +6,9 @@ import 'package:job_platform/features/components/signup/domain/entities/kota.dar
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signupResponse.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
-import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
@@ -53,36 +54,57 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   //bool _loadingPhoto = false;
   ////////////////////////////////////////////////////////////
 
-  Future<void> _handleSignUp() async {
+  Future _handleSignUp() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     try {
-      final dataSource = AuthRemoteDatasource();
-      final repository = AuthRepositoryImpl(dataSource);
-      final usecase = SignupUseCase(repository);
+      // print(_tanggalLahirController.selectedDates);
+      // print(selectedProvinsi!.nama);
+      // print(selectedKota!.nama);
+      DateTime? tanggalLahir = _tanggalLahirController.selectedDate;
       SignupRequestModel data = SignupRequestModel(
         registerAs: "user",
         email: _emailController.text,
         nama: _namaController.text,
-        alamat: _alamatController.text,
-        tanggalLahir: _tanggalLahirController.selectedDates!.first,
-        noTelp: _phoneController.text,
+        alamat:
+            selectedProvinsi!.nama +
+            "," +
+            selectedKota!.nama +
+            "," +
+            _alamatController.text,
+        tanggalLahir: tanggalLahir!,
+        noTelp: selectedCountry!.dialCode + _phoneController.text,
         jenisKelamin: gender,
       );
-      await usecase.SignUpAction(data);
+      SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
 
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Login()),
+      // if (mounted) {
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const Login()),
+      //   );
+      // }
+      if (dataRes.responseMessages == "Sukses") {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("loginAs", "user");
+        await prefs.setString("idUser", dataRes.user!.id);
+        await prefs.setString("nama", dataRes.user!.nama);
+        await prefs.setString("email", dataRes.user!.email);
+        await prefs.setString("noTelp", dataRes.user!.noTelp);
+      } else {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(dataRes.responseMessages),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {
       debugPrint('Error during signup: $e');
       // Show error message to user
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text('Signup failed. Please try again.'),
             backgroundColor: Colors.red,
           ),
@@ -477,6 +499,8 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                           Expanded(
                             child: SfDateRangePicker(
                               controller: _tanggalLahirController,
+                              selectionMode:
+                                  DateRangePickerSelectionMode.single,
                               maxDate: DateTime.now(),
                               view: DateRangePickerView.year,
                             ),
@@ -511,7 +535,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                               });
 
                               if (value != null) {
-                                await fetchDataKota(selectedProvinsi!.code);
+                                await fetchDataKota(selectedProvinsi!.id);
                               } else {
                                 setState(() {
                                   kota = [];

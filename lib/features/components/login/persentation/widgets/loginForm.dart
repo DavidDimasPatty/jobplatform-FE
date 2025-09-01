@@ -7,7 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
-import 'package:job_platform/features/components/login/domain/entities/user.dart'
+import 'package:job_platform/features/components/login/data/models/loginModel.dart';
+import 'package:job_platform/features/components/login/domain/entities/loginData.dart'
     hide User;
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,7 +39,7 @@ class _LoginFormState extends State<LoginForm> {
   String? imageUrl;
   String? token;
   // Fungsi ini dipanggil saat tombol ditekan
-  Future<void> _handleLogin() async {
+  Future _handleLogin() async {
     await Firebase.initializeApp();
 
     if (kIsWeb) {
@@ -48,7 +49,7 @@ class _LoginFormState extends State<LoginForm> {
           authProvider,
         );
         user = userCredential.user;
-        print(user);
+        // print(user);
       } catch (e) {
         print(e);
       }
@@ -76,16 +77,79 @@ class _LoginFormState extends State<LoginForm> {
     }
 
     if (user != null) {
-      uid = user!.uid;
-      name = user!.displayName;
-      userEmail = user!.email;
-      imageUrl = user!.photoURL;
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool("auth", true);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SignUp(name, userEmail, imageUrl, token),
+      try {
+        final dataSource = AuthRemoteDataSource();
+        final repository = AuthRepositoryImpl(dataSource);
+        final usecase = LoginUseCase(repository);
+        loginModel? data = await usecase.execute(user!.email!);
+
+        if (data!.exists != false) {
+          if (data!.collection == "user") {
+            await prefs.setString("loginAs", "user");
+            await prefs.setString("idUser", data!.user!.id);
+            await prefs.setString("nama", data!.user!.nama);
+            await prefs.setString("email", data!.user!.email);
+            await prefs.setString("noTelp", data!.user!.noTelp);
+            return Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } else if (data!.collection == "companies") {
+            await prefs.setString("loginAs", "company");
+            await prefs.setString("idCompany", data!.company!.id);
+            await prefs.setString("nama", data!.company!.nama);
+            await prefs.setString("domain", data!.company!.email);
+            await prefs.setString("noTelp", data!.company!.noTelp);
+            return Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          }
+        } else {
+          uid = user!.uid;
+          name = user!.displayName;
+          userEmail = user!.email;
+          imageUrl = user!.photoURL;
+          return Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUp(name, userEmail, imageUrl, token),
+            ),
+          );
+        }
+
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        // prefs.setBool("auth", true);
+
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => SignUp(name, userEmail, imageUrl, token),
+        //   ),
+        // );
+        return ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login failed. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } catch (e) {
+        debugPrint('Error during login: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login failed. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login Google failed. Please try again.'),
+          backgroundColor: Colors.red,
         ),
       );
     }

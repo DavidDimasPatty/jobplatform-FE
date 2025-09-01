@@ -6,6 +6,7 @@ class SignupRequestModel {
   final String noTelp;
   final DateTime tanggalLahir;
   final String jenisKelamin;
+  final String? domainPerusahaan;
 
   SignupRequestModel({
     required this.registerAs,
@@ -15,6 +16,7 @@ class SignupRequestModel {
     required this.tanggalLahir,
     required this.noTelp,
     required this.jenisKelamin,
+    this.domainPerusahaan,
   });
 
   Map<String, dynamic> toJson() {
@@ -26,6 +28,7 @@ class SignupRequestModel {
       "noTelp": noTelp,
       "tanggalLahir": tanggalLahir.toIso8601String(),
       "jenisKelamin": jenisKelamin,
+      "domainPerusahaan": domainPerusahaan,
     };
   }
 }

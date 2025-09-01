@@ -1,6 +1,6 @@
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 
-import '../entities/user.dart';
+import '../entities/loginData.dart';
 import '../repositories/auth_repository.dart';
 
 class LoginUseCase {
