@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
@@ -91,6 +92,10 @@ class _SignUpPelamar extends State<SignUpPelamar> {
         await prefs.setString("nama", dataRes.user!.nama);
         await prefs.setString("email", dataRes.user!.email);
         await prefs.setString("noTelp", dataRes.user!.noTelp);
+        return Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
       } else {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -8,7 +8,7 @@ class UserModel {
   final DateTime lastLogin;
   final String statusAccount;
   final DateTime addTime;
-  final DateTime updTime;
+  final DateTime? updTime;
   final String noTelp;
 
   UserModel({
@@ -21,7 +21,7 @@ class UserModel {
     required this.lastLogin,
     required this.statusAccount,
     required this.addTime,
-    required this.updTime,
+    this.updTime,
     required this.noTelp,
   });
 
@@ -36,7 +36,7 @@ class UserModel {
       lastLogin: DateTime.parse(json["lastLogin"]),
       statusAccount: json["statusAccount"],
       addTime: DateTime.parse(json["addTime"]),
-      updTime: DateTime.parse(json["updTime"]),
+      updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
       noTelp: json["noTelp"],
     );
   }
@@ -52,7 +52,7 @@ class UserModel {
       "lastLogin": lastLogin.toIso8601String(),
       "statusAccount": statusAccount,
       "addTime": addTime.toIso8601String(),
-      "updTime": updTime.toIso8601String(),
+      "updTime": updTime?.toIso8601String(),
       "noTelp": noTelp,
     };
   }

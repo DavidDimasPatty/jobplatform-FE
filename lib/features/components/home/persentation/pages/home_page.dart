@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             ),
             if (loginAs == "user") Text("Welcome User ${namaUser}"),
             if (loginAs == "company") Text("Welcome Company ${namaCompany}"),
-            if (loginAs != "user" && loginAs != "company") Text("Sesi Habis"),
+            // if (loginAs != "user" && loginAs != "company") Text("Sesi Habis"),
           ],
         ),
       ),

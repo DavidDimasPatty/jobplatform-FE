@@ -21,7 +21,7 @@ class UserData {
     required this.lastLogin,
     required this.statusAccount,
     required this.addTime,
-    required this.updTime,
+    this.updTime,
     required this.noTelp,
   });
 }
