@@ -85,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
         loginModel? data = await usecase.execute(user!.email!);
 
         if (data!.exists != false) {
-          if (data!.collection == "user") {
+          if (data!.collection == "users") {
             await prefs.setString("loginAs", "user");
             await prefs.setString("idUser", data!.user!.id);
             await prefs.setString("nama", data!.user!.nama);

@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
-import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
 import 'package:job_platform/features/components/signup/data/models/kota.dart';
 import 'package:job_platform/features/components/signup/data/models/provinsi.dart';
+import 'package:job_platform/features/components/signup/data/models/signupResponse.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:job_platform/responsive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPerusahaan extends StatelessWidget {
   const SignUpPerusahaan({super.key});
@@ -73,6 +75,7 @@ class __FormContentState extends State<_FormContent> {
   // Controllers
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
+  final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _domainController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -156,7 +159,7 @@ class __FormContentState extends State<_FormContent> {
       if (mounted) {
         setState(() {
           _provinsiList = result
-              .map((e) => ProvinsiModel(code: e.code, nama: e.nama))
+              .map((e) => ProvinsiModel(id: e.id, nama: e.nama))
               .toList();
         });
       }
@@ -191,7 +194,7 @@ class __FormContentState extends State<_FormContent> {
       if (mounted) {
         setState(() {
           _kotaList = result
-              .map((e) => KotaModel(code: e.code, nama: e.nama))
+              .map((e) => KotaModel(id: e.id, nama: e.nama))
               .toList();
           _isLoadingKota = false;
         });
@@ -229,7 +232,7 @@ class __FormContentState extends State<_FormContent> {
     });
 
     if (value != null) {
-      _fetchKotaData(value.code);
+      _fetchKotaData(value.id);
     } else {
       setState(() {
         _kotaList = [];
@@ -262,16 +265,35 @@ class __FormContentState extends State<_FormContent> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     try {
-      final dataSource = AuthRemoteDatasource();
-      final repository = AuthRepositoryImpl(dataSource);
-      final usecase = SignupUseCase(repository);
+      SignupRequestModel data = SignupRequestModel(
+        registerAs: "company",
+        email: _emailController.text,
+        nama: _nameController.text,
+        alamat: "${_addressController.text}, ${_selectedKota!.nama}, ${_selectedProvinsi!.nama}",
+        noTelp: _selectedCountry!.dialCode + _phoneController.text,
+        domainPerusahaan: _domainController.text,
+      );
 
-      await usecase.SignUpAction(_nameController.text, _addressController.text);
+      SignupResponseModel response = (await _signupUseCase.SignUpAction(data)) as SignupResponseModel;
 
-      if (mounted) {
+      if (response.responseMessages == "Sukses") {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("loginAs", "company");
+        await prefs.setString("idCompany", response.company!.id);
+        await prefs.setString("nama", response.company!.nama);
+        await prefs.setString("email", response.company!.email);
+        await prefs.setString("noTelp", response.company!.noTelp);
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Login()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.responseMessages),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {
@@ -308,6 +330,8 @@ class __FormContentState extends State<_FormContent> {
             _buildLocationDropdowns(),
             _buildGap(),
             _buildAddressField(),
+            _buildGap(),
+            _buildEmailField(),
             _buildGap(),
             _buildPhoneField(),
             _buildGap(),
@@ -436,6 +460,27 @@ class __FormContentState extends State<_FormContent> {
     );
   }
 
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: _emailController,
+      decoration: const InputDecoration(
+        labelText: 'Email',
+        hintText: 'Masukkan email perusahaan Anda',
+        prefixIcon: Icon(Icons.mail),
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Email perusahaan tidak boleh kosong';
+        }
+        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+          return 'Format email tidak valid!';
+        }
+        return null;
+      },
+    );
+  }
+
   Widget _buildPhoneField() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -444,7 +489,7 @@ class __FormContentState extends State<_FormContent> {
         Container(
           width: 150,
           child: DropdownButtonFormField<Country>(
-            // initialValue: _selectedCountry,
+            initialValue: _selectedCountry,
             decoration: const InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.only(
