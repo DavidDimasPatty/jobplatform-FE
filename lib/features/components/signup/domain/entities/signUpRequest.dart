@@ -4,8 +4,8 @@ class SignupRequestModel {
   final String nama;
   final String alamat;
   final String noTelp;
-  final DateTime tanggalLahir;
-  final String jenisKelamin;
+  final DateTime? tanggalLahir;
+  final String? jenisKelamin;
   final String? domainPerusahaan;
 
   SignupRequestModel({
@@ -13,9 +13,9 @@ class SignupRequestModel {
     required this.email,
     required this.nama,
     required this.alamat,
-    required this.tanggalLahir,
     required this.noTelp,
-    required this.jenisKelamin,
+    this.tanggalLahir,
+    this.jenisKelamin,
     this.domainPerusahaan,
   });
 
@@ -26,7 +26,7 @@ class SignupRequestModel {
       "nama": nama,
       "alamat": alamat,
       "noTelp": noTelp,
-      "tanggalLahir": tanggalLahir.toIso8601String(),
+      "tanggalLahir": tanggalLahir!.toIso8601String(),
       "jenisKelamin": jenisKelamin,
       "domainPerusahaan": domainPerusahaan,
     };
