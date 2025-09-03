@@ -26,10 +26,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   String _result = '';
-  final _formKey = GlobalKey<FormState>();
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? user;
@@ -85,7 +82,7 @@ class _LoginFormState extends State<LoginForm> {
         loginModel? data = await usecase.execute(user!.email!);
 
         if (data!.exists != false) {
-          if (data!.collection == "user") {
+          if (data!.collection == "users") {
             await prefs.setString("loginAs", "user");
             await prefs.setString("idUser", data!.user!.id);
             await prefs.setString("nama", data!.user!.nama);
@@ -161,14 +158,13 @@ class _LoginFormState extends State<LoginForm> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Form(
-          key: _formKey,
           child: Column(
             children: [
               SizedBox(
                 height: 70,
                 width: 600,
                 child: Text(
-                  "Welcome To Yuk Kerja",
+                  "Welcome To Skillen",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),

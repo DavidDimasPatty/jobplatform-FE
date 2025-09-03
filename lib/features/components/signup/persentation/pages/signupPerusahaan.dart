@@ -156,7 +156,7 @@ class __FormContentState extends State<_FormContent> {
       if (mounted) {
         setState(() {
           _provinsiList = result
-              .map((e) => ProvinsiModel(code: e.code, nama: e.nama))
+              .map((e) => ProvinsiModel(id: e.id, nama: e.nama))
               .toList();
         });
       }
@@ -191,7 +191,7 @@ class __FormContentState extends State<_FormContent> {
       if (mounted) {
         setState(() {
           _kotaList = result
-              .map((e) => KotaModel(code: e.code, nama: e.nama))
+              .map((e) => KotaModel(id: e.id, nama: e.nama))
               .toList();
           _isLoadingKota = false;
         });
@@ -229,7 +229,7 @@ class __FormContentState extends State<_FormContent> {
     });
 
     if (value != null) {
-      _fetchKotaData(value.code);
+      _fetchKotaData(value.id);
     } else {
       setState(() {
         _kotaList = [];
@@ -266,7 +266,7 @@ class __FormContentState extends State<_FormContent> {
       final repository = AuthRepositoryImpl(dataSource);
       final usecase = SignupUseCase(repository);
 
-      await usecase.SignUpAction(_nameController.text, _addressController.text);
+      // await usecase.SignUpAction(_nameController.text, _addressController.text);
 
       if (mounted) {
         Navigator.pushReplacement(

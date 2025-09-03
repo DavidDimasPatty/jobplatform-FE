@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^2.1.1
   cached_network_image: ^3.4.1
   syncfusion_flutter_datepicker: ^30.2.7
+  responsive_framework: ^1.5.1
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +70,7 @@ flutter:
   assets:
       - .env
       - lib/core/constant/phoneNumber.json
+      - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

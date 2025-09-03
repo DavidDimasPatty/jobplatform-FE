@@ -9,6 +9,7 @@ import 'package:job_platform/features/components/signup/domain/entities/provinsi
 import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
 import 'package:job_platform/features/components/signup/domain/entities/signupResponse.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'dart:typed_data';
@@ -195,56 +196,103 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
+          color: Colors.black,
         ),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Form(
-                key: _formKey,
+        padding: EdgeInsets.all(20),
+        child: ResponsiveRowColumn(
+          columnCrossAxisAlignment: CrossAxisAlignment.center,
+          rowMainAxisAlignment: MainAxisAlignment.center,
+          columnMainAxisAlignment: MainAxisAlignment.center,
+          rowCrossAxisAlignment: CrossAxisAlignment.center,
+          layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+              ? ResponsiveRowColumnType.COLUMN
+              : ResponsiveRowColumnType.ROW,
+          rowSpacing: 100,
+          columnSpacing: 20,
+          children: [
+            ResponsiveRowColumnItem(
+              rowFlex: 3,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                height: MediaQuery.of(context).size.height + 200,
+                width: double.infinity - 100,
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 70,
-                      width: 600,
-                      child: Text(
-                        "Form Sign Up Pelamar",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
+                    Text(
+                      "Set Your Initial Profile",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    // CircleAvatar(
-                    //   radius: 40,
-                    //   backgroundImage: _photoBytes != null
-                    //       ? MemoryImage(_photoBytes!)
-                    //       : null,
-                    //   child: _photoBytes == null ? Icon(Icons.person) : null,
-                    // ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    SizedBox(height: 10),
+                    Image.asset(
+                      'assets/images/BG_SignUpPelamar.png',
+                      width: 500,
+                      height: 500,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Isi data awalmu untuk melanjutkan registrasi.",
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            ResponsiveRowColumnItem(
+              rowFlex: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(
-                          height: 90,
-                          width: 300,
+                          child: Text(
+                            "Form Sign Up Pelamar",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+
+                        Container(
+                          // height: 90,
+                          margin: EdgeInsets.symmetric(vertical: 20),
                           child: TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
                               labelText: 'Email',
                               hintText: 'Masukan Email',
+                              prefixIcon: Icon(Icons.email),
                               border: OutlineInputBorder(),
                               contentPadding: EdgeInsets.symmetric(
                                 vertical: 8,
@@ -257,375 +305,609 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 : null,
                           ),
                         ),
-                      ],
-                    ),
 
-                    SizedBox(width: 90),
-
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        SizedBox(
-                          width: 120,
-                          height: 40,
-                          child: DropdownButtonFormField<Country>(
-                            value: selectedCountry,
-                            isExpanded: true,
-                            hint: Text("Pilih Negara"),
-                            items: countries.map((country) {
-                              return DropdownMenuItem<Country>(
-                                value: country,
-                                child: Text(
-                                  country.name.trim(),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCountry = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        SizedBox(
-                          width: 250,
-                          height: 40,
-                          child: TextFormField(
-                            key: ValueKey(selectedCountry?.dialCode),
-                            controller: _phoneController,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              labelText: 'Nomor Telepon',
-                              hintText: 'Masukkan nomor telepon Anda',
-                              border: const OutlineInputBorder(),
-                              prefixIcon: IntrinsicWidth(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
-                                  child: Text(
-                                    selectedCountry?.dialCode ?? '+62',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                        // SizedBox(width: 90),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                // height: 40,
+                                child: DropdownButtonFormField<Country>(
+                                  value: selectedCountry,
+                                  isExpanded: true,
+                                  hint: Text("Pilih Negara"),
+                                  items: countries.map((country) {
+                                    return DropdownMenuItem<Country>(
+                                      value: country,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            country.flag,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Flexible(
+                                            child: Text(
+                                              country.code,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Flexible(
+                                            child: Text(
+                                              country.dialCode,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedCountry = value;
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Nomor telepon tidak boleh kosong';
-                              }
-                              if (!RegExp(r'^[0-9]{8,13}$').hasMatch(value)) {
-                                return 'Masukkan nomor telepon yang valid';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              // Remove leading zeros as user types
-                              if (value.startsWith('0')) {
-                                final newValue = value.replaceFirst(
-                                  RegExp(r'^0+'),
-                                  '',
-                                );
-                                _phoneController.value = TextEditingValue(
-                                  text: newValue,
-                                  selection: TextSelection.collapsed(
-                                    offset: newValue.length,
+                              SizedBox(width: 10),
+                              Flexible(
+                                flex: 2,
+                                // height: 40,
+                                child: TextFormField(
+                                  key: ValueKey(selectedCountry?.dialCode),
+                                  controller: _phoneController,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: InputDecoration(
+                                    labelText: 'Nomor Telepon',
+                                    hintText: 'Masukkan nomor telepon Anda',
+                                    border: const OutlineInputBorder(),
+                                    prefixIcon: IntrinsicWidth(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
+                                        child: Text(
+                                          selectedCountry?.dialCode ?? '+62',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                );
-                              }
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Nomor telepon tidak boleh kosong';
+                                    }
+                                    if (!RegExp(
+                                      r'^[0-9]{8,13}$',
+                                    ).hasMatch(value)) {
+                                      return 'Masukkan nomor telepon yang valid';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    // Remove leading zeros as user types
+                                    if (value.startsWith('0')) {
+                                      final newValue = value.replaceFirst(
+                                        RegExp(r'^0+'),
+                                        '',
+                                      );
+                                      _phoneController.value = TextEditingValue(
+                                        text: newValue,
+                                        selection: TextSelection.collapsed(
+                                          offset: newValue.length,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // SizedBox(height: 90),
+                        Container(
+                          // height: 90,
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(
+                                // height: 90,
+                                //width: 300,
+                                child: TextFormField(
+                                  controller: _namaController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Nama Lengkap',
+                                    hintText: 'Masukan Nama Lengkap',
+                                    border: OutlineInputBorder(),
+                                    prefixIcon: Icon(Icons.account_circle),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 11,
+                                    ),
+                                  ),
+                                  // initialValue: name,
+                                  validator: (value) =>
+                                      value == null || value.isEmpty
+                                      ? 'Wajib diisi'
+                                      : null,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          // height: 90,
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              bool isMobile = ResponsiveBreakpoints.of(
+                                context,
+                              ).smallerThan(TABLET);
+                              return isMobile
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          child: Text(
+                                            "Pilih Jenis Kelamin ",
+                                            style: TextStyle(fontSize: 16),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: ElevatedButton.icon(
+                                                onPressed: () =>
+                                                    _changeGender("L"),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: gender == "L"
+                                                      ? Colors.green
+                                                      : Colors.blue,
+                                                ),
+                                                icon: const Icon(
+                                                  Icons.boy,
+                                                  color: Colors.white,
+                                                ),
+                                                label: const Text(
+                                                  'Laki Laki',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: ElevatedButton.icon(
+                                                onPressed: () =>
+                                                    _changeGender("P"),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: gender == "P"
+                                                      ? Colors.pink
+                                                      : Colors.blue,
+                                                ),
+                                                icon: const Icon(
+                                                  Icons.girl,
+                                                  color: Colors.white,
+                                                ),
+                                                label: const Text(
+                                                  'Perempuan',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 20),
+                                          child: Text(
+                                            "Pilih Jenis Kelamin ",
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            ElevatedButton.icon(
+                                              onPressed: () =>
+                                                  _changeGender("L"),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: gender == "L"
+                                                    ? Colors.green
+                                                    : Colors.blue,
+                                              ),
+                                              icon: const Icon(
+                                                Icons.boy,
+                                                color: Colors.white,
+                                              ),
+                                              label: const Text(
+                                                'Laki Laki',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 50),
+                                            ElevatedButton.icon(
+                                              onPressed: () =>
+                                                  _changeGender("P"),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: gender == "P"
+                                                    ? Colors.pink
+                                                    : Colors.blue,
+                                              ),
+                                              icon: const Icon(
+                                                Icons.girl,
+                                                color: Colors.white,
+                                              ),
+                                              label: const Text(
+                                                'Perempuan',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
                             },
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 90),
 
-                    // Row(
-                    //   crossAxisAlignment: CrossAxisAlignment.center,
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     SizedBox(
-                    //       height: 90,
-                    //       width: 300,
-                    //       child: TextFormField(
-                    //         key: ValueKey(selectedCountry?.dialCode),
-                    //         controller: _phoneController,
-                    //         keyboardType: TextInputType.phone,
-                    //         decoration: InputDecoration(
-                    //           labelText: 'Nomor Telepon',
-                    //           hintText: 'Masukkan nomor telepon Anda',
-                    //           border: const OutlineInputBorder(),
-                    //           prefixIcon: IntrinsicWidth(
-                    //             child: Container(
-                    //               alignment: Alignment.center,
-                    //               padding: const EdgeInsets.symmetric(
-                    //                 horizontal: 8,
-                    //               ),
-                    //               child: Text(
-                    //                 selectedCountry?.dialCode ?? '+62',
-                    //                 style: const TextStyle(
-                    //                   fontWeight: FontWeight.bold,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         validator: (value) {
-                    //           if (value == null || value.isEmpty) {
-                    //             return 'Nomor telepon tidak boleh kosong';
-                    //           }
-                    //           if (!RegExp(r'^[0-9]{8,13}$').hasMatch(value)) {
-                    //             return 'Masukkan nomor telepon yang valid';
-                    //           }
-                    //           return null;
-                    //         },
-                    //         onChanged: (value) {
-                    //           // Remove leading zeros as user types
-                    //           if (value.startsWith('0')) {
-                    //             final newValue = value.replaceFirst(
-                    //               RegExp(r'^0+'),
-                    //               '',
-                    //             );
-                    //             _phoneController.value = TextEditingValue(
-                    //               text: newValue,
-                    //               selection: TextSelection.collapsed(
-                    //                 offset: newValue.length,
-                    //               ),
-                    //             );
-                    //           }
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          height: 90,
-                          width: 300,
-                          child: TextFormField(
-                            controller: _namaController,
-                            decoration: InputDecoration(
-                              labelText: 'Nama Lengkap',
-                              hintText: 'Masukan Nama Lengkap',
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 11,
+                        // SizedBox(height: 90, width: 300),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 500,
+                            minWidth: 200,
+                            maxHeight: 400,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Tanggal Lahir", // ini label
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center,
                               ),
-                            ),
-                            // initialValue: name,
-                            validator: (value) => value == null || value.isEmpty
-                                ? 'Wajib diisi'
-                                : null,
+                              SizedBox(height: 8),
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: SfDateRangePicker(
+                                    monthCellStyle:
+                                        DateRangePickerMonthCellStyle(
+                                          todayTextStyle: TextStyle(
+                                            color: Colors
+                                                .black, // warna teks hari ini
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                    yearCellStyle: DateRangePickerYearCellStyle(
+                                      todayTextStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    selectionTextStyle: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    startRangeSelectionColor: Colors.blue,
+                                    selectionColor: Colors.white,
+                                    todayHighlightColor: Colors.transparent,
+                                    backgroundColor: Colors.blue.shade50,
+                                    headerStyle: DateRangePickerHeaderStyle(
+                                      textAlign: TextAlign.center,
+                                      backgroundColor: Colors.blue.shade50,
+                                      textStyle: TextStyle(
+                                        backgroundColor: Colors.blue.shade50,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    controller: _tanggalLahirController,
+                                    selectionMode:
+                                        DateRangePickerSelectionMode.single,
+                                    maxDate: DateTime.now(),
+                                    view: DateRangePickerView.year,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
 
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Jenis Kelamin", // ini label
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          // height: 90,
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsGeometry.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: Text(
+                                  "Tempat Lahir", // ini label
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Flexible(
+                                    // height: 90,
+                                    flex: 1,
+                                    child: DropdownButtonFormField<ProvinsiModel>(
+                                      isExpanded: true,
+                                      value: selectedProvinsi,
+                                      hint: Text("Pilih Provinsi"),
+                                      items: provinsi.map((prov) {
+                                        return DropdownMenuItem<ProvinsiModel>(
+                                          value: prov,
+                                          child: Text(prov.nama),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) async {
+                                        setState(() {
+                                          kota = [];
+                                          selectedKota = null;
+                                          selectedProvinsi = value;
+                                        });
+
+                                        if (value != null) {
+                                          await fetchDataKota(
+                                            selectedProvinsi!.id,
+                                          );
+                                        } else {
+                                          setState(() {
+                                            kota = [];
+                                          });
+                                        }
+                                      },
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        // contentPadding: EdgeInsets.symmetric(
+                                        //   horizontal: 12,
+                                        //   vertical: 8,
+                                        // ),
+                                        prefixIcon: Icon(Icons.gps_fixed),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Flexible(
+                                    // height: 90,
+                                    flex: 1,
+                                    child: DropdownButtonFormField<KotaModel>(
+                                      isExpanded: true,
+                                      value: selectedKota,
+                                      hint: Text("Pilih Kota"),
+
+                                      items: kota.map((kota) {
+                                        return DropdownMenuItem<KotaModel>(
+                                          value: kota,
+                                          child: Text(kota.nama),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedKota = value;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        // contentPadding: EdgeInsets.symmetric(
+                                        //   horizontal: 12,
+                                        //   vertical: 8,
+                                        // ),
+                                        prefixIcon: Icon(Icons.location_city),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 20),
+
+                        // SizedBox(height: 90, width: 300),
+                        Container(
+                          // height: 90,
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsGeometry.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: Text(
+                                  "Domisili Sekarang", // ini label
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Flexible(
+                                    // height: 90,
+                                    flex: 1,
+                                    child: DropdownButtonFormField<ProvinsiModel>(
+                                      isExpanded: true,
+                                      value: selectedProvinsi,
+                                      hint: Text("Pilih Provinsi"),
+                                      items: provinsi.map((prov) {
+                                        return DropdownMenuItem<ProvinsiModel>(
+                                          value: prov,
+                                          child: Text(prov.nama),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) async {
+                                        setState(() {
+                                          kota = [];
+                                          selectedKota = null;
+                                          selectedProvinsi = value;
+                                        });
+
+                                        if (value != null) {
+                                          await fetchDataKota(
+                                            selectedProvinsi!.id,
+                                          );
+                                        } else {
+                                          setState(() {
+                                            kota = [];
+                                          });
+                                        }
+                                      },
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        // contentPadding: EdgeInsets.symmetric(
+                                        //   horizontal: 12,
+                                        //   vertical: 8,
+                                        // ),
+                                        prefixIcon: Icon(Icons.gps_fixed),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Flexible(
+                                    // height: 90,
+                                    flex: 1,
+                                    child: DropdownButtonFormField<KotaModel>(
+                                      isExpanded: true,
+                                      value: selectedKota,
+                                      hint: Text("Pilih Kota"),
+
+                                      items: kota.map((kota) {
+                                        return DropdownMenuItem<KotaModel>(
+                                          value: kota,
+                                          child: Text(kota.nama),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedKota = value;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        // contentPadding: EdgeInsets.symmetric(
+                                        //   horizontal: 12,
+                                        //   vertical: 8,
+                                        // ),
+                                        prefixIcon: Icon(Icons.location_city),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 20),
+                                // height: 90,
+                                child: TextFormField(
+                                  controller: _alamatController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Alamat Lengkap',
+                                    hintText: 'Masukan Alamat Lengkap',
+                                    border: OutlineInputBorder(),
+                                    prefixIcon: Icon(Icons.location_pin),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 11,
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 3,
+                                  maxLines: 5,
+                                  validator: (value) =>
+                                      value == null || value.isEmpty
+                                      ? 'Wajib diisi'
+                                      : null,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(
-                              onPressed: () => _changeGender("L"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: gender == "L"
-                                    ? Colors.blue
-                                    : Colors.grey[300],
-                              ),
-                              child: const Text(
-                                'Laki Laki',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            SizedBox(width: 50),
-                            ElevatedButton(
-                              onPressed: () => _changeGender("P"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: gender == "P"
-                                    ? Colors.pink
-                                    : Colors.grey[300],
-                              ),
-                              child: const Text(
-                                'Perempuan',
-                                style: TextStyle(color: Colors.black),
+                            // ElevatedButton(
+                            //   onPressed: _handleSignUp,
+                            //   child: Text(
+                            //     'Daftar',
+                            //     style: TextStyle(color: Colors.black),
+                            //   ),
+                            // ),
+                            Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                ),
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                ),
+                                label: const Text(
+                                  'Submit',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-
-                    SizedBox(height: 90, width: 300),
-
-                    SizedBox(
-                      height: 250,
-                      width: 300,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Tanggal Lahir", // ini label
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Expanded(
-                            child: SfDateRangePicker(
-                              controller: _tanggalLahirController,
-                              selectionMode:
-                                  DateRangePickerSelectionMode.single,
-                              maxDate: DateTime.now(),
-                              view: DateRangePickerView.year,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 90, width: 300),
-
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          height: 90,
-                          width: 300,
-                          child: DropdownButtonFormField<ProvinsiModel>(
-                            value: selectedProvinsi,
-                            hint: Text("Pilih Provinsi"),
-                            items: provinsi.map((prov) {
-                              return DropdownMenuItem<ProvinsiModel>(
-                                value: prov,
-                                child: Text(prov.nama),
-                              );
-                            }).toList(),
-                            onChanged: (value) async {
-                              setState(() {
-                                kota = [];
-                                selectedKota = null;
-                                selectedProvinsi = value;
-                              });
-
-                              if (value != null) {
-                                await fetchDataKota(selectedProvinsi!.id);
-                              } else {
-                                setState(() {
-                                  kota = [];
-                                });
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 90,
-                          width: 300,
-                          child: DropdownButtonFormField<KotaModel>(
-                            value: selectedKota,
-                            hint: Text("Pilih Kota"),
-                            items: kota.map((kota) {
-                              return DropdownMenuItem<KotaModel>(
-                                value: kota,
-                                child: Text(kota.nama),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedKota = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(
-                      height: 90,
-                      width: 700,
-                      child: TextFormField(
-                        controller: _alamatController,
-                        decoration: InputDecoration(
-                          labelText: 'Alamat Lengkap',
-                          hintText: 'Masukan Alamat Lengkap',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 11,
-                          ),
-                        ),
-                        keyboardType: TextInputType.multiline,
-                        minLines: 3,
-                        maxLines: 5,
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'Wajib diisi'
-                            : null,
-                      ),
-                    ),
-
-                    SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: _handleSignUp,
-                          child: Text(
-                            'Daftar',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

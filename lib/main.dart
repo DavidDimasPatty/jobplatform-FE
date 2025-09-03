@@ -16,12 +16,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Login());
+    //return MaterialApp(home: Login());
+    return MaterialApp(
+      builder: (context, child) => ResponsiveBreakpoints.builder(
+        child: child!,
+        breakpoints: [
+          const Breakpoint(start: 0, end: 600, name: MOBILE),
+          const Breakpoint(start: 601, end: 1024, name: TABLET),
+          const Breakpoint(start: 1025, end: double.infinity, name: DESKTOP),
+          const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+        ],
+      ),
+      home: SignUpPelamar("David Dimas", "daviddimas80@gmail.com", "", ""),
+    );
   }
 }
 // class MyApp extends StatelessWidget {
 //   const MyApp({super.key});
-//   @override
+//   @overrider
 //   Widget build(BuildContext context) {
 //     return MaterialApp(
 //       title: 'Job Seeker',

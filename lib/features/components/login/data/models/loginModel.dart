@@ -21,6 +21,8 @@ class loginModel {
   });
 
   factory loginModel.fromJson(Map<String, dynamic> json) {
+    print(json['data']['collection']);
+    print(json['data']['exists']);
     return loginModel(
       collection: json['data']['collection'] != null
           ? json['data']['collection']
