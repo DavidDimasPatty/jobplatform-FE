@@ -1,148 +1,135 @@
 class Progress {
-  final LastSurvey lastSurvey;
-  final LastAdmin lastAdmin;
-  final String stage;
+  final LastSurvey? lastSurvey;
+  final LastAdmin? lastAdmin;
+  final String? stage;
 
-  Progress({
-    required this.lastSurvey,
-    required this.lastAdmin,
-    required this.stage,
-  });
+  Progress({this.lastSurvey, this.lastAdmin, this.stage});
 
   factory Progress.fromJson(Map<String, dynamic> json) {
     return Progress(
-      lastSurvey: LastSurvey.fromJson(json['lastSurvey']),
-      lastAdmin: LastAdmin.fromJson(json['lastAdmin']),
-      stage: json['stage'],
+      lastSurvey: json['lastSurvey'] != null
+          ? LastSurvey.fromJson(json['lastSurvey'])
+          : null,
+      lastAdmin: json['lastAdmin'] != null
+          ? LastAdmin.fromJson(json['lastAdmin'])
+          : null,
+      stage: json['stage'] != null ? json['stage'] : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'lastSurvey': lastSurvey.toJson(),
-      'lastAdmin': lastAdmin.toJson(),
+      'lastSurvey': lastSurvey?.toJson(),
+      'lastAdmin': lastAdmin?.toJson(),
       'stage': stage,
     };
   }
 }
 
 class LastSurvey {
-  final ObjectId id;
-  final ObjectId idPerusahaan;
-  final ObjectId idSurveyer;
-  final DateTime dateSurvey;
-  final String statusSurvey;
-  final DateTime statusDate;
-  final DateTime addTime;
-  final DateTime updTime;
-  final String alasanReject;
+  final String? id;
+  final String? idPerusahaan;
+  final String? idSurveyer;
+  final DateTime? dateSurvey;
+  final String? statusSurvey;
+  final DateTime? statusDate;
+  final DateTime? addTime;
+  final DateTime? updTime;
+  final String? alasanReject;
 
   LastSurvey({
-    required this.id,
-    required this.idPerusahaan,
-    required this.idSurveyer,
-    required this.dateSurvey,
-    required this.statusSurvey,
-    required this.statusDate,
-    required this.addTime,
-    required this.updTime,
-    required this.alasanReject,
+    this.id,
+    this.idPerusahaan,
+    this.idSurveyer,
+    this.dateSurvey,
+    this.statusSurvey,
+    this.statusDate,
+    this.addTime,
+    this.updTime,
+    this.alasanReject,
   });
 
   factory LastSurvey.fromJson(Map<String, dynamic> json) {
     return LastSurvey(
-      id: ObjectId.fromJson(json['_id']),
-      idPerusahaan: ObjectId.fromJson(json['idPerusahaan']),
-      idSurveyer: ObjectId.fromJson(json['idSurveyer']),
-      dateSurvey: DateTime.parse(json['dateSurvey']),
-      statusSurvey: json['statusSurvey'],
-      statusDate: DateTime.parse(json['statusDate']),
-      addTime: DateTime.parse(json['addTime']),
-      updTime: DateTime.parse(json['updTime']),
-      alasanReject: json['alasanReject'],
+      id: json['_id'] != null ? json['_id'] : null,
+      idPerusahaan: json['idPerusahaan'] != null ? json['idPerusahaan'] : null,
+      idSurveyer: json['idSurveyer'] != null ? json['idSurveyer'] : null,
+      dateSurvey: json['dateSurvey'] != null
+          ? DateTime.parse(json['dateSurvey'])
+          : null,
+      statusSurvey: json['statusSurvey'] != null ? json['statusSurvey'] : null,
+      statusDate: json['statusDate'] != null
+          ? DateTime.parse(json['statusDate'])
+          : null,
+      addTime: json['addTime'] != null ? DateTime.parse(json['addTime']) : null,
+      updTime: json['updTime'] != null ? DateTime.parse(json['updTime']) : null,
+      alasanReject: json['alasanReject'] != null ? json['alasanReject'] : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id.toJson(),
-      'idPerusahaan': idPerusahaan.toJson(),
-      'idSurveyer': idSurveyer.toJson(),
-      'dateSurvey': dateSurvey.toIso8601String(),
+      '_id': id,
+      'idPerusahaan': idPerusahaan,
+      'idSurveyer': idSurveyer,
+      'dateSurvey': dateSurvey?.toIso8601String(),
       'statusSurvey': statusSurvey,
-      'statusDate': statusDate.toIso8601String(),
-      'addTime': addTime.toIso8601String(),
-      'updTime': updTime.toIso8601String(),
+      'statusDate': statusDate?.toIso8601String(),
+      'addTime': addTime?.toIso8601String(),
+      'updTime': updTime?.toIso8601String(),
       'alasanReject': alasanReject,
     };
   }
 }
 
 class LastAdmin {
-  final ObjectId id;
-  final ObjectId idPerusahaanSurvey;
-  final ObjectId idAdmin;
-  final String status;
-  final DateTime statusDate;
-  final DateTime addTime;
-  final DateTime updTime;
-  final String alasanReject;
+  final String? id;
+  final String? idPerusahaanSurvey;
+  final String? idAdmin;
+  final String? status;
+  final DateTime? statusDate;
+  final DateTime? addTime;
+  final DateTime? updTime;
+  final String? alasanReject;
 
   LastAdmin({
-    required this.id,
-    required this.idPerusahaanSurvey,
-    required this.idAdmin,
-    required this.status,
-    required this.statusDate,
-    required this.addTime,
-    required this.updTime,
-    required this.alasanReject,
+    this.id,
+    this.idPerusahaanSurvey,
+    this.idAdmin,
+    this.status,
+    this.statusDate,
+    this.addTime,
+    this.updTime,
+    this.alasanReject,
   });
 
   factory LastAdmin.fromJson(Map<String, dynamic> json) {
     return LastAdmin(
-      id: ObjectId.fromJson(json['_id']),
-      idPerusahaanSurvey: ObjectId.fromJson(json['idPerusahaanSurvey']),
-      idAdmin: ObjectId.fromJson(json['idAdmin']),
-      status: json['status'],
-      statusDate: DateTime.parse(json['statusDate']),
-      addTime: DateTime.parse(json['addTime']),
-      updTime: DateTime.parse(json['updTime']),
-      alasanReject: json['alasanReject'],
+      id: json['_id'] != null ? json['_id'] : null,
+      idPerusahaanSurvey: json['idPerusahaanSurvey'] != null
+          ? json['idPerusahaanSurvey']
+          : null,
+      idAdmin: json['idAdmin'] != null ? json['idAdmin'] : null,
+      status: json['status'] != null ? json['status'] : null,
+      statusDate: json['statusDate'] != null
+          ? DateTime.parse(json['statusDate'])
+          : null,
+      addTime: json['addTime'] != null ? DateTime.parse(json['addTime']) : null,
+      updTime: json['updTime'] != null ? DateTime.parse(json['updTime']) : null,
+      alasanReject: json['alasanReject'] != null ? json['alasanReject'] : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id.toJson(),
-      'idPerusahaanSurvey': idPerusahaanSurvey.toJson(),
-      'idAdmin': idAdmin.toJson(),
+      '_id': id,
+      'idPerusahaanSurvey': idPerusahaanSurvey,
+      'idAdmin': idAdmin,
       'status': status,
-      'statusDate': statusDate.toIso8601String(),
-      'addTime': addTime.toIso8601String(),
-      'updTime': updTime.toIso8601String(),
+      'statusDate': statusDate?.toIso8601String(),
+      'addTime': addTime?.toIso8601String(),
+      'updTime': updTime?.toIso8601String(),
       'alasanReject': alasanReject,
-    };
-  }
-}
-
-class ObjectId {
-  final int timestamp;
-  final DateTime creationTime;
-
-  ObjectId({required this.timestamp, required this.creationTime});
-
-  factory ObjectId.fromJson(Map<String, dynamic> json) {
-    return ObjectId(
-      timestamp: json['timestamp'],
-      creationTime: DateTime.parse(json['creationTime']),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'timestamp': timestamp,
-      'creationTime': creationTime.toIso8601String(),
     };
   }
 }

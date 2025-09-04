@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
@@ -240,22 +241,34 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Set Your Initial Profile",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                      "Lengkapi Form Pendaftaran",
+                      style: GoogleFonts.figtree(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          letterSpacing: 2,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 10),
                     Image.asset(
-                      'assets/images/BG_SignUpPelamar.png',
+                      'assets/images/BG_Pelamar.png',
                       width: 500,
                       height: 500,
                     ),
                     SizedBox(height: 10),
                     Text(
                       "Isi data awalmu untuk melanjutkan registrasi.",
+                      style: GoogleFonts.figtree(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          letterSpacing: 2,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -277,9 +290,12 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                           child: Text(
                             "Form Sign Up Pelamar",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                            style: GoogleFonts.dancingScript(
+                              textStyle: TextStyle(
+                                color: Colors.blue,
+                                letterSpacing: 2,
+                                fontSize: 30,
+                              ),
                             ),
                           ),
                         ),
@@ -470,17 +486,25 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                             builder: (context, constraints) {
                               bool isMobile = ResponsiveBreakpoints.of(
                                 context,
-                              ).smallerThan(TABLET);
+                              ).smallerThan(DESKTOP);
                               return isMobile
                                   ? Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        const Padding(
-                                          padding: EdgeInsets.only(bottom: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 10,
+                                          ),
                                           child: Text(
                                             "Pilih Jenis Kelamin ",
-                                            style: TextStyle(fontSize: 16),
+                                            style: GoogleFonts.figtree(
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                letterSpacing: 2,
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
@@ -537,11 +561,17 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 20),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 10),
                                           child: Text(
                                             "Pilih Jenis Kelamin ",
-                                            style: TextStyle(fontSize: 16),
+                                            style: GoogleFonts.figtree(
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                letterSpacing: 2,
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                         Row(
@@ -565,7 +595,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(width: 50),
+                                            const SizedBox(width: 20),
                                             ElevatedButton.icon(
                                               onPressed: () =>
                                                   _changeGender("P"),
@@ -604,8 +634,14 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Tanggal Lahir", // ini label
-                                style: TextStyle(fontSize: 16),
+                                "Tanggal Lahir",
+                                style: GoogleFonts.figtree(
+                                  textStyle: TextStyle(
+                                    color: Colors.black,
+                                    letterSpacing: 2,
+                                    fontSize: 16,
+                                  ),
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                               SizedBox(height: 8),
@@ -669,8 +705,14 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                   vertical: 10,
                                 ),
                                 child: Text(
-                                  "Tempat Lahir", // ini label
-                                  style: TextStyle(fontSize: 16),
+                                  "Tempat Lahir",
+                                  style: GoogleFonts.figtree(
+                                    textStyle: TextStyle(
+                                      color: Colors.black,
+                                      letterSpacing: 2,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -765,8 +807,14 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                   vertical: 10,
                                 ),
                                 child: Text(
-                                  "Domisili Sekarang", // ini label
-                                  style: TextStyle(fontSize: 16),
+                                  "Domisili Sekarang",
+                                  style: GoogleFonts.figtree(
+                                    textStyle: TextStyle(
+                                      color: Colors.black,
+                                      letterSpacing: 2,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),

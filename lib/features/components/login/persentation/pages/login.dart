@@ -12,6 +12,9 @@ class Login extends StatefulWidget {
 class _Login extends State<Login> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: LoginForm()));
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(child: LoginForm()),
+    );
   }
 }

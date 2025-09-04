@@ -11,7 +11,7 @@ class AuthRemoteDataSource {
       ).replace(queryParameters: {'email': email});
       loginModel? data = null;
       final response = await http.get(url);
-      print(response);
+      print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         //print(response.body);

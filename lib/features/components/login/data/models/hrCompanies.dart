@@ -19,30 +19,30 @@ class HrCompanies {
 }
 
 class UserCompany {
-  final String id;
-  final String idCompany;
-  final String idUser;
-  final DateTime addTime;
-  final DateTime updTime;
-  final String status;
+  final String? id;
+  final String? idCompany;
+  final String? idUser;
+  final DateTime? addTime;
+  final DateTime? updTime;
+  final String? status;
 
   UserCompany({
-    required this.id,
-    required this.idCompany,
-    required this.idUser,
-    required this.addTime,
-    required this.updTime,
-    required this.status,
+    this.id,
+    this.idCompany,
+    this.idUser,
+    this.addTime,
+    this.updTime,
+    this.status,
   });
 
   factory UserCompany.fromJson(Map<String, dynamic> json) {
     return UserCompany(
-      id: json['_id'],
-      idCompany: json['idCompany'],
-      idUser: json['idUser'],
-      addTime: DateTime.parse(json['addTime']),
-      updTime: DateTime.parse(json['updTime']),
-      status: json['status'],
+      id: json["_id"] != null ? json["_id"] : null,
+      idCompany: json["idCompany"] != null ? json["idCompany"] : null,
+      idUser: json["idUser"] != null ? json["idUser"] : null,
+      addTime: json["addTime"] != null ? DateTime.parse(json["addTime"]) : null,
+      updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
+      status: json["status"] != null ? json["status"] : null,
     );
   }
 
@@ -51,8 +51,8 @@ class UserCompany {
       "_id": id,
       "idCompany": idCompany,
       "idUser": idUser,
-      "addTime": addTime.toIso8601String(),
-      "updTime": updTime.toIso8601String(),
+      "addTime": addTime?.toIso8601String(),
+      "updTime": updTime?.toIso8601String(),
       "status": status,
     };
   }

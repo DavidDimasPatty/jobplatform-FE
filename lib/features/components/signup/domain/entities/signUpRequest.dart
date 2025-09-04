@@ -28,7 +28,6 @@ class SignupRequestModel {
       "noTelp": noTelp,
       "tanggalLahir": tanggalLahir!.toIso8601String(),
       "jenisKelamin": jenisKelamin,
-      "domainPerusahaan": domainPerusahaan,
     };
   }
 }

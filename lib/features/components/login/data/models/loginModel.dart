@@ -21,26 +21,31 @@ class loginModel {
   });
 
   factory loginModel.fromJson(Map<String, dynamic> json) {
-    print(json['data']['collection']);
-    print(json['data']['exists']);
-    return loginModel(
+    loginModel dataLogin = loginModel(
       collection: json['data']['collection'] != null
           ? json['data']['collection']
           : null,
       exists: json['data']['exists'] != false ? json['data']['exists'] : false,
-      user: json['data']['dataLengkap']['user'] != null
-          ? UserModel.fromJson(json['data']['dataLengkap']['user'])
-          : null,
-      hrCompanies: json['data']['dataLengkap']['hrCompanies'] != null
-          ? HrCompanies.fromJson(json['data']['dataLengkap']['hrCompanies'][0])
-          : null,
-      company: json['data']['dataLengkap']['company'] != null
-          ? Company.fromJson(json['data']['dataLengkap']['company'])
-          : null,
-      progress: json['data']['dataLengkap']['progress'] != null
-          ? Progress.fromJson(json['data']['dataLengkap']['progress'])
-          : null,
     );
+
+    if (dataLogin.exists == true &&
+        dataLogin.collection != "Admin" &&
+        dataLogin.collection != "Surveyers") {
+      dataLogin.user = json['data']['dataLengkap']['user'] != null
+          ? UserModel.fromJson(json['data']['dataLengkap']['user'])
+          : null;
+      dataLogin.hrCompanies = json['data']['dataLengkap']['hrCompanies'] != null
+          ? HrCompanies.fromJson(json['data']['dataLengkap']['hrCompanies'][0])
+          : null;
+      dataLogin.company = json['data']['dataLengkap']['company'] != null
+          ? Company.fromJson(json['data']['dataLengkap']['company'])
+          : null;
+      dataLogin.progress = json['data']['dataLengkap']['progress'] != null
+          ? Progress.fromJson(json['data']['dataLengkap']['progress'])
+          : null;
+    }
+
+    return dataLogin;
   }
 
   Map<String, dynamic> toJson() {

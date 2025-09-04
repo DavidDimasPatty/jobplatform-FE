@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
@@ -8,6 +9,7 @@ import 'package:job_platform/features/components/signup/domain/usecases/signup_u
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 class SignUp extends StatefulWidget {
   final String? name;
@@ -65,11 +67,9 @@ class _SignUp extends State<SignUp> {
 
   void _handleSignUpPerusahaan() {
     Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SignUpPerusahaan(),
-          ),
-        );
+      context,
+      MaterialPageRoute(builder: (context) => SignUpPerusahaan()),
+    );
   }
 
   void _handleLogin() {
@@ -82,48 +82,205 @@ class _SignUp extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 70,
-                width: 600,
-                child: Text(
-                  "Sign Up Sebagai",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isMobile = ResponsiveBreakpoints.of(
+            context,
+          ).smallerThan(DESKTOP);
+          // return !isMobile
+          //     ? Center(
+          //         child: Padding(
+          //           padding: const EdgeInsets.all(16.0),
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: [
+          //               Container(
+          //                 padding: EdgeInsets.all(20),
+          //                 child: Text(
+          //                   "Sign Up Sebagai",
+          //                   textAlign: TextAlign.center,
+          //                   style: TextStyle(
+          //                     fontWeight: FontWeight.bold,
+          //                     fontSize: 20,
+          //                   ),
+          //                 ),
+          //               ),
+          //               ElevatedButton(
+          //                 onPressed: _handleSignUpPelamar,
+          //                 child: Text(
+          //                   'Sign Up Pelamar',
+          //                   style: TextStyle(color: Colors.black),
+          //                 ),
+          //               ),
+          //               SizedBox(height: 50),
+          //               ElevatedButton(
+          //                 onPressed: _handleSignUpPerusahaan,
+          //                 child: Text(
+          //                   'Sign Up Perusahaan',
+          //                   style: TextStyle(color: Colors.black),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       )
+          //     :
+          return Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    "Sign Up",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.dancingScript(
+                      textStyle: TextStyle(
+                        color: Colors.blue,
+                        letterSpacing: 5,
+                        fontSize: 60,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: _handleSignUpPelamar,
-                child: Text(
-                  'Sign Up Pelamar',
-                  style: TextStyle(color: Colors.black),
+
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height - 200,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Container(
+                        child: ElevatedButton(
+                          onPressed: _handleSignUpPelamar,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(bottom: 40),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/BG_Pelamar.png',
+                                  width: 500,
+                                  height: 500,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'Signup Pelamar',
+                                  style: GoogleFonts.figtree(
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      letterSpacing: 2,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            elevation: 0,
+                            shape: StadiumBorder(),
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height - 200,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Container(
+                        child: ElevatedButton(
+                          onPressed: _handleSignUpPerusahaan,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(bottom: 40),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/BG_HRD.png',
+                                  width: 500,
+                                  height: 500,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'Signup Perusahaan',
+                                  style: GoogleFonts.figtree(
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      letterSpacing: 2,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            elevation: 0,
+                            shape: StadiumBorder(),
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: _handleSignUpPerusahaan,
-                child: Text(
-                  'Sign Up Perusahaan',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
