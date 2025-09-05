@@ -11,6 +11,7 @@ import 'package:job_platform/features/components/home/persentation/pages/home_pa
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/login/domain/entities/loginData.dart'
     hide User;
+import 'package:job_platform/features/components/login/persentation/pages/companyWaiting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -97,15 +98,62 @@ class _LoginFormState extends State<LoginForm> {
                 MaterialPageRoute(builder: (context) => HomePage()),
               );
             } else if (data!.collection == "companies") {
-              await prefs.setString("loginAs", "company");
-              await prefs.setString("idCompany", data!.company!.id!);
-              await prefs.setString("nama", data!.company!.nama!);
-              await prefs.setString("domain", data!.company!.email!);
-              await prefs.setString("noTelp", data!.company!.noTelp!);
-              return Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
+              if (data.progress!.stage! == "Accept") {
+                if (data.progress!.lastAdmin!.status == "Accept") {
+                  await prefs.setString("loginAs", "company");
+                  await prefs.setString("idCompany", data!.company!.id!);
+                  await prefs.setString("nama", data!.company!.nama!);
+                  await prefs.setString("domain", data!.company!.email!);
+                  await prefs.setString("noTelp", data!.company!.noTelp!);
+                  return Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                } else if (data.progress!.lastAdmin!.status == "Reject") {
+                  String? alasan = data.progress!.lastAdmin!.alasanReject;
+                  return ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Pendaftaran Perusahaan Gagal. Alasan: $alasan, Mohon Mencoba Pendaftaran Kembali Besok!',
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  return Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CompanyWaiting(
+                        data.progress!.stage!,
+                        data.company!.id!,
+                        data.company!.nama!,
+                      ),
+                    ),
+                  );
+                }
+              }
+              if (data.progress!.stage! == "Reject oleh Surveyer") {
+                String? alasan = data.progress!.lastSurvey!.alasanReject;
+                return ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Pendaftaran Perusahaan Gagal. Alasan: $alasan, Mohon Mencoba Pendaftaran Kembali Besok!',
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              } else {
+                return Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CompanyWaiting(
+                      data.progress!.stage!,
+                      data.company!.id!,
+                      data.company!.nama!,
+                    ),
+                  ),
+                );
+              }
             } else {
               return ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
