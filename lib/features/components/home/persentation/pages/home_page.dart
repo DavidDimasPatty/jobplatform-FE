@@ -26,21 +26,25 @@ class _HomePageState extends State<HomePage> {
   String? namaCompany = null;
   String? domainCompany = null;
   String? noTelpCompany = null;
+  bool isLoading = true;
 
-  Future<String?> getDataPref() async {
+  void getDataPref() async {
     final prefs = await SharedPreferences.getInstance();
     loginAs = prefs.getString('loginAs');
-    if (loginAs == "user") {
-      idUser = prefs.getString('idUser');
-      namaUser = prefs.getString('nama');
-      emailUser = prefs.getString('email');
-      noTelpUser = prefs.getString('noTelp');
-    } else if (loginAs == "company") {
-      idCompany = prefs.getString('idCompany');
-      namaCompany = prefs.getString('nama');
-      domainCompany = prefs.getString('domain');
-      noTelpCompany = prefs.getString('noTelp');
-    }
+    setState(() {
+      if (loginAs == "user") {
+        idUser = prefs.getString('idUser');
+        namaUser = prefs.getString('nama');
+        emailUser = prefs.getString('email');
+        noTelpUser = prefs.getString('noTelp');
+      } else if (loginAs == "company") {
+        idCompany = prefs.getString('idCompany');
+        namaCompany = prefs.getString('nama');
+        domainCompany = prefs.getString('domain');
+        noTelpCompany = prefs.getString('noTelp');
+      }
+      isLoading = false;
+    });
   }
 
   @override
@@ -67,25 +71,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Layout(
-      body: Container(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Welcome To Skillen",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+      body: Center(
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Welcome To Skillen",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (loginAs == "user") Text("Welcome User $namaUser"),
+                    if (loginAs == "company")
+                      Text("Welcome Company $namaCompany"),
+                    if (loginAs != "user" && loginAs != "company")
+                      Text("Sesi Habis"),
+                  ],
+                ),
               ),
-            ),
-            if (loginAs == "user") Text("Welcome User ${namaUser}"),
-            if (loginAs == "company") Text("Welcome Company ${namaCompany}"),
-            // if (loginAs != "user" && loginAs != "company") Text("Sesi Habis"),
-          ],
-        ),
       ),
     );
   }

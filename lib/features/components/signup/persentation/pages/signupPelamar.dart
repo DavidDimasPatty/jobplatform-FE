@@ -36,23 +36,25 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   _SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
   List<ProvinsiModel> provinsi = [];
   List<KotaModel> kota = [];
+  List<ProvinsiModel> provinsiLahir = [];
+  List<KotaModel> kotaLahir = [];
   List<Country> countries = [];
   bool isLoadingKota = false;
-  int _kotaRequestId = 0;
+  bool isLoadingKotaLahir = false;
   bool isLoadingProvinsi = false;
-  int _ProvinsiRequestId = 0;
+  bool isLoadingProvinsiLahir = false;
   final _alamatController = TextEditingController();
   final _emailController = TextEditingController();
   final _namaController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _tempatLahirController = TextEditingController();
   final _tanggalLahirController = DateRangePickerController();
   final _formKey = GlobalKey<FormState>();
   ProvinsiModel? selectedProvinsi = null;
   KotaModel? selectedKota = null;
+  ProvinsiModel? selectedProvinsiLahir = null;
+  KotaModel? selectedKotaLahir = null;
   Country? selectedCountry = null;
   String gender = "";
-  Uint8List? _photoBytes;
   late SignupUseCase signupUseCase;
   //bool _loadingPhoto = false;
   ////////////////////////////////////////////////////////////
@@ -69,7 +71,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
         registerAs: "user",
         email: _emailController.text,
         nama: _namaController.text,
-        alamat:
+        domisili:
             selectedProvinsi!.nama +
             "," +
             selectedKota!.nama +
@@ -78,6 +80,8 @@ class _SignUpPelamar extends State<SignUpPelamar> {
         tanggalLahir: tanggalLahir!,
         noTelp: selectedCountry!.dialCode + _phoneController.text,
         jenisKelamin: gender,
+        tempatLahir:
+            selectedProvinsiLahir!.nama + "," + selectedKotaLahir!.nama,
       );
       SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
 
@@ -130,6 +134,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
     final result = await signupUseCase.getProvinsi();
     setState(() {
       provinsi = result;
+      isLoadingProvinsi = false;
     });
     return provinsi;
   }
@@ -144,11 +149,40 @@ class _SignUpPelamar extends State<SignUpPelamar> {
       final result = await signupUseCase.getKota(provinceCode);
       setState(() {
         kota = result;
+        isLoadingKota = false;
       });
       return kota;
     } catch (e, st) {
       debugPrint('Error fetchDataKota: $e\n$st');
       return kota;
+    }
+  }
+
+  Future<List<ProvinsiModel>> fetchDataProvinsiLahir() async {
+    final result = await signupUseCase.getProvinsi();
+    setState(() {
+      provinsiLahir = result;
+      isLoadingProvinsiLahir = false;
+    });
+    return provinsiLahir;
+  }
+
+  Future<List<KotaModel>> fetchDataKotaLahir(String provinceCode) async {
+    setState(() {
+      kotaLahir = [];
+      isLoadingKotaLahir = true;
+    });
+
+    try {
+      final result = await signupUseCase.getKota(provinceCode);
+      setState(() {
+        kotaLahir = result;
+        isLoadingKotaLahir = false;
+      });
+      return kotaLahir;
+    } catch (e, st) {
+      debugPrint('Error fetchDataKota: $e\n$st');
+      return kotaLahir;
     }
   }
 
@@ -188,6 +222,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
     final repository = AuthRepositoryImpl(remoteDataSource);
     signupUseCase = SignupUseCase(repository);
     fetchDataProvinsi();
+    fetchDataProvinsiLahir();
     loadCountries();
     _emailController.text = email!;
     _namaController.text = name!;
@@ -304,6 +339,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                           // height: 90,
                           margin: EdgeInsets.symmetric(vertical: 20),
                           child: TextFormField(
+                            readOnly: true,
                             controller: _emailController,
                             decoration: InputDecoration(
                               labelText: 'Email',
@@ -457,6 +493,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 // height: 90,
                                 //width: 300,
                                 child: TextFormField(
+                                  readOnly: true,
                                   controller: _namaController,
                                   decoration: InputDecoration(
                                     labelText: 'Nama Lengkap',
@@ -721,72 +758,88 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                   Flexible(
                                     // height: 90,
                                     flex: 1,
-                                    child: DropdownButtonFormField<ProvinsiModel>(
-                                      isExpanded: true,
-                                      value: selectedProvinsi,
-                                      hint: Text("Pilih Provinsi"),
-                                      items: provinsi.map((prov) {
-                                        return DropdownMenuItem<ProvinsiModel>(
-                                          value: prov,
-                                          child: Text(prov.nama),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) async {
-                                        setState(() {
-                                          kota = [];
-                                          selectedKota = null;
-                                          selectedProvinsi = value;
-                                        });
+                                    child: isLoadingProvinsiLahir
+                                        ? CircularProgressIndicator(
+                                            color: Colors.blue.shade400,
+                                          )
+                                        : DropdownButtonFormField<
+                                            ProvinsiModel
+                                          >(
+                                            isExpanded: true,
+                                            value: selectedProvinsiLahir,
+                                            hint: Text("Pilih Provinsi"),
+                                            items: provinsiLahir.map((prov) {
+                                              return DropdownMenuItem<
+                                                ProvinsiModel
+                                              >(
+                                                value: prov,
+                                                child: Text(prov.nama),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) async {
+                                              setState(() {
+                                                kotaLahir = [];
+                                                selectedKotaLahir = null;
+                                                selectedProvinsiLahir = value;
+                                              });
 
-                                        if (value != null) {
-                                          await fetchDataKota(
-                                            selectedProvinsi!.id,
-                                          );
-                                        } else {
-                                          setState(() {
-                                            kota = [];
-                                          });
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        // contentPadding: EdgeInsets.symmetric(
-                                        //   horizontal: 12,
-                                        //   vertical: 8,
-                                        // ),
-                                        prefixIcon: Icon(Icons.gps_fixed),
-                                      ),
-                                    ),
+                                              if (value != null) {
+                                                await fetchDataKotaLahir(
+                                                  value!.id,
+                                                );
+                                              } else {
+                                                setState(() {
+                                                  kotaLahir = [];
+                                                });
+                                              }
+                                            },
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              // contentPadding: EdgeInsets.symmetric(
+                                              //   horizontal: 12,
+                                              //   vertical: 8,
+                                              // ),
+                                              prefixIcon: Icon(Icons.gps_fixed),
+                                            ),
+                                          ),
                                   ),
                                   SizedBox(width: 10),
                                   Flexible(
                                     // height: 90,
                                     flex: 1,
-                                    child: DropdownButtonFormField<KotaModel>(
-                                      isExpanded: true,
-                                      value: selectedKota,
-                                      hint: Text("Pilih Kota"),
+                                    child: isLoadingKotaLahir
+                                        ? CircularProgressIndicator(
+                                            color: Colors.blue.shade400,
+                                          )
+                                        : DropdownButtonFormField<KotaModel>(
+                                            isExpanded: true,
+                                            value: selectedKotaLahir,
+                                            hint: Text("Pilih Kota"),
 
-                                      items: kota.map((kota) {
-                                        return DropdownMenuItem<KotaModel>(
-                                          value: kota,
-                                          child: Text(kota.nama),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedKota = value;
-                                        });
-                                      },
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        // contentPadding: EdgeInsets.symmetric(
-                                        //   horizontal: 12,
-                                        //   vertical: 8,
-                                        // ),
-                                        prefixIcon: Icon(Icons.location_city),
-                                      ),
-                                    ),
+                                            items: kotaLahir.map((kota) {
+                                              return DropdownMenuItem<
+                                                KotaModel
+                                              >(
+                                                value: kota,
+                                                child: Text(kota.nama),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedKotaLahir = value;
+                                              });
+                                            },
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              // contentPadding: EdgeInsets.symmetric(
+                                              //   horizontal: 12,
+                                              //   vertical: 8,
+                                              // ),
+                                              prefixIcon: Icon(
+                                                Icons.location_city,
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ],
                               ),
@@ -823,72 +876,90 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                   Flexible(
                                     // height: 90,
                                     flex: 1,
-                                    child: DropdownButtonFormField<ProvinsiModel>(
-                                      isExpanded: true,
-                                      value: selectedProvinsi,
-                                      hint: Text("Pilih Provinsi"),
-                                      items: provinsi.map((prov) {
-                                        return DropdownMenuItem<ProvinsiModel>(
-                                          value: prov,
-                                          child: Text(prov.nama),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) async {
-                                        setState(() {
-                                          kota = [];
-                                          selectedKota = null;
-                                          selectedProvinsi = value;
-                                        });
+                                    child: isLoadingProvinsi
+                                        ? CircularProgressIndicator(
+                                            color: Colors.blue.shade400,
+                                          )
+                                        : DropdownButtonFormField<
+                                            ProvinsiModel
+                                          >(
+                                            isExpanded: true,
+                                            value: selectedProvinsi,
+                                            hint: Text("Pilih Provinsi"),
+                                            items: provinsi.map((prov) {
+                                              return DropdownMenuItem<
+                                                ProvinsiModel
+                                              >(
+                                                value: prov,
+                                                child: Text(prov.nama),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) async {
+                                              setState(() {
+                                                isLoadingKota = true;
+                                                kota = [];
+                                                selectedKota = null;
+                                                selectedProvinsi = value;
+                                              });
 
-                                        if (value != null) {
-                                          await fetchDataKota(
-                                            selectedProvinsi!.id,
-                                          );
-                                        } else {
-                                          setState(() {
-                                            kota = [];
-                                          });
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        // contentPadding: EdgeInsets.symmetric(
-                                        //   horizontal: 12,
-                                        //   vertical: 8,
-                                        // ),
-                                        prefixIcon: Icon(Icons.gps_fixed),
-                                      ),
-                                    ),
+                                              if (value != null) {
+                                                await fetchDataKota(value!.id);
+                                              } else {
+                                                setState(() {
+                                                  kota = [];
+                                                  selectedKota = null;
+                                                });
+                                              }
+                                            },
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              // contentPadding: EdgeInsets.symmetric(
+                                              //   horizontal: 12,
+                                              //   vertical: 8,
+                                              // ),
+                                              prefixIcon: Icon(Icons.gps_fixed),
+                                            ),
+                                          ),
                                   ),
                                   SizedBox(width: 10),
                                   Flexible(
                                     // height: 90,
                                     flex: 1,
-                                    child: DropdownButtonFormField<KotaModel>(
-                                      isExpanded: true,
-                                      value: selectedKota,
-                                      hint: Text("Pilih Kota"),
+                                    child: isLoadingKota
+                                        ? CircularProgressIndicator(
+                                            color: Colors.blue.shade400,
+                                          )
+                                        : DropdownButtonFormField<KotaModel>(
+                                            isExpanded: true,
+                                            value: kota.contains(selectedKota)
+                                                ? selectedKota
+                                                : null,
+                                            hint: Text("Pilih Kota"),
 
-                                      items: kota.map((kota) {
-                                        return DropdownMenuItem<KotaModel>(
-                                          value: kota,
-                                          child: Text(kota.nama),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedKota = value;
-                                        });
-                                      },
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        // contentPadding: EdgeInsets.symmetric(
-                                        //   horizontal: 12,
-                                        //   vertical: 8,
-                                        // ),
-                                        prefixIcon: Icon(Icons.location_city),
-                                      ),
-                                    ),
+                                            items: kota.map((kota) {
+                                              return DropdownMenuItem<
+                                                KotaModel
+                                              >(
+                                                value: kota,
+                                                child: Text(kota.nama),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedKota = value;
+                                              });
+                                            },
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              // contentPadding: EdgeInsets.symmetric(
+                                              //   horizontal: 12,
+                                              //   vertical: 8,
+                                              // ),
+                                              prefixIcon: Icon(
+                                                Icons.location_city,
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ],
                               ),
@@ -936,7 +1007,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue,
                                 ),
-                                onPressed: () {},
+                                onPressed: _handleSignUp,
                                 icon: const Icon(
                                   Icons.check,
                                   color: Colors.white,

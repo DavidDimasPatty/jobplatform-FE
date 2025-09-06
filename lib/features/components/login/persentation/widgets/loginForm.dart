@@ -93,6 +93,16 @@ class _LoginFormState extends State<LoginForm> {
               await prefs.setString("nama", data!.user!.nama!);
               await prefs.setString("email", data!.user!.email!);
               await prefs.setString("noTelp", data!.user!.noTelp!);
+              if (data!.hrCompanies != null) {
+                await prefs.setString(
+                  "hrCompanyName",
+                  data!.hrCompanies!.company!.nama!,
+                );
+                await prefs.setString(
+                  "hrCompanyId",
+                  data!.hrCompanies!.company!.id!,
+                );
+              }
               return Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomePage()),

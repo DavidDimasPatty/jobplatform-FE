@@ -43,6 +43,7 @@ dependencies:
   cached_network_image: ^3.4.1
   syncfusion_flutter_datepicker: ^30.2.7
   responsive_framework: ^1.5.1
+  google_fonts: ^6.3.1
 
 dev_dependencies:
   flutter_test:
