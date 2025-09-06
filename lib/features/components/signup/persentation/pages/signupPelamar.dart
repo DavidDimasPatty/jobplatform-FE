@@ -13,7 +13,6 @@ import 'package:job_platform/features/components/signup/domain/usecases/signup_u
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 

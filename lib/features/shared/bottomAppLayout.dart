@@ -20,8 +20,14 @@ class _BottomApplayout extends State<BottomApplayout> {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Colors.blueAccent,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(

@@ -13,19 +13,24 @@ class Layout extends StatefulWidget {
 
 class _LayoutState extends State<Layout> {
   bool _showNotification = false;
-  bool _showSettings = false;
+  bool _showMessages = false;
 
   void toggleNotification() {
     print(_showNotification);
     setState(() {
       _showNotification = !_showNotification;
+      if (_showMessages == true) {
+        _showMessages = !_showMessages;
+      }
     });
   }
 
-  void toggleSettings() {
-    print(_showNotification);
+  void toggleMessages() {
     setState(() {
-      _showNotification = !_showNotification;
+      _showMessages = !_showMessages;
+      if (_showNotification == true) {
+        _showNotification = !_showNotification;
+      }
     });
   }
 
@@ -34,14 +39,15 @@ class _LayoutState extends State<Layout> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: TopApplayout(
-        onToggleNotification: toggleNotification, // kasih callback
+        onToggleNotification: toggleNotification,
+        onToggleMessages: toggleMessages,
       ),
       body: Stack(
         children: [
           widget.body,
           if (_showNotification)
             Positioned(
-              top: 0, // di atas body, langsung di bawah appbar
+              top: 0,
               left: 0,
               right: 0,
               child: Material(
@@ -59,6 +65,29 @@ class _LayoutState extends State<Layout> {
                       IconButton(
                         icon: const Icon(Icons.close),
                         onPressed: toggleNotification,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          if (_showMessages)
+            Positioned(
+              top: 0, // di atas body, langsung di bawah appbar
+              left: 0,
+              right: 0,
+              child: Material(
+                elevation: 6,
+                child: Container(
+                  color: Colors.blueGrey,
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 8),
+                      const Expanded(child: Text("Belum ada Notifikasi!")),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: toggleMessages,
                       ),
                     ],
                   ),

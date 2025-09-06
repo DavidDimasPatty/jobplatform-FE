@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onToggleNotification;
+  final VoidCallback onToggleMessages;
 
-  const TopApplayout({super.key, required this.onToggleNotification});
+  const TopApplayout({
+    super.key,
+    required this.onToggleNotification,
+    required this.onToggleMessages,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +17,9 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
       title: const Text(
         "Skillen",
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
       ),
       actions: [
         Row(
@@ -24,7 +32,7 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
             ),
             const SizedBox(width: 10),
             IconButton(
-              onPressed: () {},
+              onPressed: onToggleMessages,
               icon: const Icon(Icons.chat, color: Colors.white),
             ),
             const SizedBox(width: 10),

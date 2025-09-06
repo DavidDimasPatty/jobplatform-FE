@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/shared/TopAppLayout.dart';
-import 'package:job_platform/features/shared/bottomAppLayout.dart';
 import 'package:job_platform/features/shared/layout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/usecases/get_products_usecase.dart';
