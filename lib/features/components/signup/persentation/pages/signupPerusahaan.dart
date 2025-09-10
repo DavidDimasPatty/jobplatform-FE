@@ -1,38 +1,59 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
 import 'package:job_platform/features/components/signup/data/models/kota.dart';
 import 'package:job_platform/features/components/signup/data/models/provinsi.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
+import 'package:job_platform/features/components/signup/domain/entities/signupResponse.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:job_platform/responsive.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPerusahaan extends StatelessWidget {
-  const SignUpPerusahaan({super.key});
+  final String? email;
+
+  const SignUpPerusahaan(this.email, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Responsive.isMobile(context)
-            ? const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [_Logo(), _FormContent()],
-              )
-            : Container(
-                padding: const EdgeInsets.all(32.0),
-                constraints: const BoxConstraints(maxWidth: 1200),
-                child: const Row(
-                  children: [
-                    Expanded(child: _Logo()),
-                    Expanded(child: Center(child: _FormContent())),
-                  ],
-                ),
-              ),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: ResponsiveRowColumn(
+          layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+              ? ResponsiveRowColumnType.COLUMN
+              : ResponsiveRowColumnType.ROW,
+          columnCrossAxisAlignment: CrossAxisAlignment.center,
+          rowMainAxisAlignment: MainAxisAlignment.center,
+          columnMainAxisAlignment: MainAxisAlignment.center,
+          rowCrossAxisAlignment: CrossAxisAlignment.center,
+          rowSpacing: 100,
+          columnSpacing: 20,
+          children: [
+            ResponsiveRowColumnItem(rowFlex: 3, child: _Logo()),
+            ResponsiveRowColumnItem(rowFlex: 2, child: _FormContent(email)),
+          ],
+        ),
       ),
     );
   }
@@ -43,36 +64,69 @@ class _Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        FlutterLogo(size: Responsive.isMobile(context) ? 100 : 200),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "Welcome to Yuk Kerja!",
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      height: MediaQuery.of(context).size.height + 200,
+      width: double.infinity - 100,
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "Lengkapi Form Pendaftaran",
+            style: GoogleFonts.figtree(
+              textStyle: TextStyle(
+                color: Colors.black,
+                letterSpacing: 2,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             textAlign: TextAlign.center,
-            style: Responsive.isMobile(context)
-                ? Theme.of(context).textTheme.titleMedium
-                : Theme.of(context).textTheme.titleSmall,
           ),
-        ),
-      ],
+          SizedBox(height: 10),
+          Image.asset('assets/images/BG_HRD.png', width: 500, height: 500),
+          SizedBox(height: 10),
+          Text(
+            "Isi data awalmu untuk melanjutkan registrasi.",
+            style: GoogleFonts.figtree(
+              textStyle: TextStyle(
+                color: Colors.black,
+                letterSpacing: 2,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _FormContent extends StatefulWidget {
-  const _FormContent();
+  final String? email;
+
+  const _FormContent(this.email);
 
   @override
-  State<_FormContent> createState() => __FormContentState();
+  State<_FormContent> createState() => __FormContentState(this.email);
 }
 
 class __FormContentState extends State<_FormContent> {
+  final String? email;
+
+  __FormContentState(this.email);
+
   // Controllers
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
+  final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _domainController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -95,6 +149,7 @@ class __FormContentState extends State<_FormContent> {
     _initializeUseCase();
     _fetchProvinsiData();
     _fetchCountryData();
+    _emailController.text = email!;
   }
 
   @override
@@ -104,6 +159,7 @@ class __FormContentState extends State<_FormContent> {
     _addressController.dispose();
     _phoneController.dispose();
     _domainController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -262,16 +318,36 @@ class __FormContentState extends State<_FormContent> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     try {
-      final dataSource = AuthRemoteDatasource();
-      final repository = AuthRepositoryImpl(dataSource);
-      final usecase = SignupUseCase(repository);
+      SignupRequestModel data = SignupRequestModel(
+        registerAs: "company",
+        email: _emailController.text,
+        nama: _nameController.text,
+        alamat:
+            "${_addressController.text}, ${_selectedKota!.nama}, ${_selectedProvinsi!.nama}",
+        noTelp: _selectedCountry!.dialCode + _phoneController.text,
+        domainPerusahaan: _domainController.text,
+      );
 
-      // await usecase.SignUpAction(_nameController.text, _addressController.text);
+      SignupResponseModel response = await _signupUseCase.SignUpAction(data);
 
-      if (mounted) {
+      if (response.responseMessages == "Sukses") {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("loginAs", "company");
+        await prefs.setString("idCompany", response.company!.id);
+        await prefs.setString("nama", response.company!.nama);
+        await prefs.setString("email", response.company!.email);
+        await prefs.setString("noTelp", response.company!.noTelp);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Login()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.responseMessages),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {
@@ -290,42 +366,47 @@ class __FormContentState extends State<_FormContent> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
-
-    return Container(
-      constraints: BoxConstraints(maxWidth: isMobile ? 400 : 800),
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildTitle(isMobile),
-            _buildGap(),
-            _buildNameField(),
-            _buildGap(),
-            _buildLocationDropdowns(),
-            _buildGap(),
-            _buildAddressField(),
-            _buildGap(),
-            _buildPhoneField(),
-            _buildGap(),
-            _buildDomainField(),
-            _buildGap(),
-            _buildSignUpButton(),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTitle(),
+              _buildGap(),
+              _buildNameField(),
+              _buildGap(),
+              _buildLocationDropdowns(),
+              _buildGap(),
+              _buildAddressField(),
+              _buildGap(),
+              _buildPhoneField(),
+              _buildGap(),
+              _buildEmailField(),
+              _buildGap(),
+              _buildDomainField(),
+              _buildGap(),
+              _buildSignUpButton(),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
-  Widget _buildTitle(bool isMobile) {
+  Widget _buildTitle() {
     return Text(
       "Sign Up Perusahaan",
-      style: isMobile
-          ? Theme.of(context).textTheme.titleMedium
-          : Theme.of(context).textTheme.titleLarge,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.dancingScript(
+        textStyle: TextStyle(
+          color: Colors.blue,
+          letterSpacing: 2,
+          fontSize: 30,
+        ),
+      ),
     );
   }
 
@@ -363,6 +444,7 @@ class __FormContentState extends State<_FormContent> {
       decoration: const InputDecoration(
         labelText: 'Provinsi',
         border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.map),
       ),
       items: _provinsiList.map((provinsi) {
         return DropdownMenuItem(value: provinsi, child: Text(provinsi.nama));
@@ -384,6 +466,7 @@ class __FormContentState extends State<_FormContent> {
       decoration: InputDecoration(
         labelText: 'Kota',
         border: const OutlineInputBorder(),
+        prefixIcon: const Icon(Icons.location_city),
         suffixIcon: _isLoadingKota
             ? const SizedBox(
                 width: 20,
@@ -436,6 +519,28 @@ class __FormContentState extends State<_FormContent> {
     );
   }
 
+  Widget _buildEmailField() {
+    return TextFormField(
+      readOnly: true,
+      controller: _emailController,
+      decoration: const InputDecoration(
+        labelText: 'Email',
+        hintText: 'Masukkan email perusahaan Anda',
+        prefixIcon: Icon(Icons.mail),
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Email perusahaan tidak boleh kosong';
+        }
+        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+          return 'Format email tidak valid!';
+        }
+        return null;
+      },
+    );
+  }
+
   Widget _buildPhoneField() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -444,7 +549,7 @@ class __FormContentState extends State<_FormContent> {
         Container(
           width: 150,
           child: DropdownButtonFormField<Country>(
-            // initialValue: _selectedCountry,
+            initialValue: _selectedCountry,
             decoration: const InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.only(
@@ -546,19 +651,19 @@ class __FormContentState extends State<_FormContent> {
   }
 
   Widget _buildSignUpButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: _handleSignUp,
+            icon: const Icon(Icons.check, color: Colors.white),
+            label: const Text('Sign Up', style: TextStyle(color: Colors.white)),
+          ),
         ),
-        onPressed: _handleSignUp,
-        child: const Text(
-          'Sign Up',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
+      ],
     );
   }
 

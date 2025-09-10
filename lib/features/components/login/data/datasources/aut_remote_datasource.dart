@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 
@@ -6,8 +7,9 @@ class AuthRemoteDataSource {
   Future<loginModel?> login(String email) async {
     try {
       // Dummy API simulation
+      await dotenv.load(fileName: '.env');
       final url = Uri.parse(
-        'https://localhost:7104/api/v1/account/login',
+        '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/login',
       ).replace(queryParameters: {'email': email});
       loginModel? data = null;
       final response = await http.get(url);

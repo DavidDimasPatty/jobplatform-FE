@@ -68,7 +68,7 @@ class _SignUp extends State<SignUp> {
   void _handleSignUpPerusahaan() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SignUpPerusahaan()),
+      MaterialPageRoute(builder: (context) => SignUpPerusahaan(email)),
     );
   }
 

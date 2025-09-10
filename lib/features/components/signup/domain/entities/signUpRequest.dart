@@ -36,4 +36,15 @@ class SignupRequestModel {
       "tempatLahir": tempatLahir,
     };
   }
+
+  Map<String, dynamic> toJsonCompany() {
+    return {
+      "registerAs": registerAs,
+      "email": email,
+      "nama": nama,
+      "alamat": alamat,
+      "noTelp": noTelp,
+      "domain": domainPerusahaan,
+    };
+  }
 }

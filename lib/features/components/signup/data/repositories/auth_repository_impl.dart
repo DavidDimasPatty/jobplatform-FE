@@ -1,3 +1,4 @@
+import 'package:job_platform/features/components/signup/domain/entities/companyData.dart';
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/entities/signUpRequest.dart';
@@ -29,6 +30,20 @@ class AuthRepositoryImpl implements AuthRepository {
               addTime: userModel.user!.addTime,
               updTime: userModel.user!.updTime,
               noTelp: userModel.user!.noTelp,
+            )
+          : null,
+      company: userModel.company != null
+          ? CompanyData(
+              id: userModel.company!.id,
+              nama: userModel.company!.nama,
+              email: userModel.company!.email,
+              alamat: userModel.company!.alamat,
+              domain: userModel.company!.domain,
+              lastLogin: userModel.company!.lastLogin,
+              statusAccount: userModel.company!.statusAccount,
+              addTime: userModel.company!.addTime,
+              updTime: userModel.company!.updTime,
+              noTelp: userModel.company!.noTelp,
             )
           : null,
     );

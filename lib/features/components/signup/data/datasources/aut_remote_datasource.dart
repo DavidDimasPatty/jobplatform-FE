@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/signup/data/models/kota.dart';
 import 'package:job_platform/features/components/signup/data/models/provinsi.dart';
@@ -8,7 +9,8 @@ import '../models/signupResponse.dart';
 
 class AuthRemoteDatasource {
   Future<SignupResponseModel> signup(SignupRequestModel data) async {
-    final url = Uri.parse('https://localhost:7104/api/v1/account/register');
+    await dotenv.load(fileName: '.env');
+    final url = Uri.parse('${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/register');
     // print("registerAs: ${data.registerAs}");
     // print("email: ${data.email}");
     // print("nama: ${data.nama}");
@@ -18,13 +20,25 @@ class AuthRemoteDatasource {
     // print("jenisKelamin: ${data.jenisKelamin}");
 
     // print("JSON: ${jsonEncode(data.toJson())}");
+    var jsonBody = null;
+    final registerAs = data.registerAs;
+    if (registerAs == 'company') {
+      print("Using toJsonCompany");
+      print("JSON Company: ${jsonEncode(data.toJsonCompany())}");
+      jsonBody = jsonEncode(data.toJsonCompany());
+    } else {
+      print("Using toJson");
+      print("JSON Pelamar: ${jsonEncode(data.toJson())}");
+      jsonBody = jsonEncode(data.toJson());
+    }
+    
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: jsonEncode(data.toJson()),
+      body: jsonBody,
     );
     print("Response body: ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
