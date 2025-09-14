@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
@@ -18,9 +19,8 @@ class _LayoutState extends State<Layout> {
   bool _showNotification = false;
   bool _showMessages = false;
   int _selectedIndex = 0;
-  final List<Widget> _pages = [const HomePage(), const Cart(), const Profile()];
-
-  void toggleNotification() {
+  late List<Widget> _pages;
+  toggleNotification() {
     print(_showNotification);
     setState(() {
       _showNotification = !_showNotification;
@@ -30,19 +30,30 @@ class _LayoutState extends State<Layout> {
     });
   }
 
-  void _onTabSelected(int index) {
+  _onTabSelected(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  void toggleMessages() {
+  toggleMessages() {
     setState(() {
       _showMessages = !_showMessages;
       if (_showNotification == true) {
         _showNotification = !_showNotification;
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomePage(),
+      const Cart(),
+      Profile(onTabSelected: _onTabSelected),
+      Personalinfo(),
+    ];
   }
 
   @override

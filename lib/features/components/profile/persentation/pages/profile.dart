@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
+import 'package:job_platform/features/components/profile/persentation/widgets/profile/organizational.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/workExperience.dart';
 import 'package:job_platform/features/shared/layout.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final Function(int page) onTabSelected;
+  Profile({super.key, required this.onTabSelected});
 
   @override
-  State<Profile> createState() => _Profile();
+  State<Profile> createState() => _Profile(onTabSelected);
 }
 
 class _Profile extends State<Profile> {
+  final Function(int page) onTabSelected;
+  _Profile(this.onTabSelected);
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -57,7 +61,9 @@ class _Profile extends State<Profile> {
                         color: Colors.white,
                         size: 20,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        onTabSelected(3);
+                      },
                     ),
                   ),
                 ),
@@ -138,6 +144,7 @@ class _Profile extends State<Profile> {
             ),
           ),
           ResponsiveRowColumnItem(child: Workexperience()),
+          ResponsiveRowColumnItem(child: Organizational()),
         ],
       ),
     );
