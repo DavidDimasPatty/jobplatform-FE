@@ -13,6 +13,7 @@ import 'package:job_platform/features/components/login/domain/entities/loginData
     hide User;
 import 'package:job_platform/features/components/login/persentation/pages/companyWaiting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
+import 'package:job_platform/features/shared/layout.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/datasources/aut_remote_datasource.dart';
@@ -105,7 +106,7 @@ class _LoginFormState extends State<LoginForm> {
               }
               return Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => const Layout()),
               );
             } else if (data!.collection == "companies") {
               if (data.progress!.stage! == "Accept") {
@@ -117,7 +118,7 @@ class _LoginFormState extends State<LoginForm> {
                   await prefs.setString("noTelp", data!.company!.noTelp!);
                   return Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => Layout()),
                   );
                 } else if (data.progress!.lastAdmin!.status == "Reject") {
                   String? alasan = data.progress!.lastAdmin!.alasanReject;

@@ -12,9 +12,6 @@ class Cart extends StatefulWidget {
 class _Cart extends State<Cart> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(child: LoginForm()),
-    );
+    return Center();
   }
 }

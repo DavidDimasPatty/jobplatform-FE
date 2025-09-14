@@ -1,50 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
 
-class BottomApplayout extends StatefulWidget implements PreferredSizeWidget {
-  const BottomApplayout({super.key});
+class BottomApplayout extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTabSelected;
 
-  @override
-  State<BottomApplayout> createState() => _BottomApplayout();
-  @override
-  Size get preferredSize => Size.fromHeight(60);
-}
-
-class _BottomApplayout extends State<BottomApplayout> {
-  void _LogOut() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-    );
-  }
+  const BottomApplayout({
+    super.key,
+    required this.currentIndex,
+    required this.onTabSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue,
+      decoration: const BoxDecoration(
+        color: Colors.blueAccent,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(25),
           topRight: Radius.circular(25),
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.home, color: Colors.white),
+            Expanded(
+              child: InkWell(
+                onTap: () => onTabSelected(0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.home,
+                      color: currentIndex == 0
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                    ),
+                    Text(
+                      "Home",
+                      style: TextStyle(
+                        color: currentIndex == 0
+                            ? Colors.lightBlueAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.shopping_bag, color: Colors.white),
+            Expanded(
+              child: InkWell(
+                onTap: () => onTabSelected(1),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.shopping_bag,
+                      color: currentIndex == 1
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                    ),
+                    Text(
+                      "Candidate",
+                      style: TextStyle(
+                        color: currentIndex == 1
+                            ? Colors.lightBlueAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.account_circle, color: Colors.white),
+            Expanded(
+              child: InkWell(
+                onTap: () => onTabSelected(2),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.account_circle,
+                      color: currentIndex == 2
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                    ),
+                    Text(
+                      "Profile",
+                      style: TextStyle(
+                        color: currentIndex == 2
+                            ? Colors.lightBlueAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
