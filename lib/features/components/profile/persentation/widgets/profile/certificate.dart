@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Certificate extends StatefulWidget {
-  const Certificate({ super.key });
+  const Certificate({super.key});
 
   @override
   _CertificateState createState() => _CertificateState();
@@ -13,10 +13,16 @@ class _CertificateState extends State<Certificate> {
     print("Add Certificate button pressed");
   }
 
-  void _viewCertificateDetails(int index) {
+  void _viewCertificateDetails(String title) {
     // Logic to view certificate details
-    print("View details for Certificate $index");
+    print("View details for Certificate $title");
   }
+
+  final Map<String, String> certificateDescriptions = {
+    "Certificate 1": "Description for Certificate 1",
+    "Certificate 2": "Description for Certificate 2",
+    "Certificate 3": "Description for Certificate 3",
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -47,25 +53,20 @@ class _CertificateState extends State<Certificate> {
             ],
           ),
           SizedBox(height: 20),
-          ...List.generate(
-            3,
-            (i) => Column(
-              children: [
-                CertificateCard(
-                  title: "Certificate ${i + 1}",
-                  description: "Description for Certificate ${i + 1}",
-                  onPressed: () => _viewCertificateDetails(i + 1),
-                ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  height: 20,
-                  indent: 0,
-                  endIndent: 0,
-                ),
-              ],
+          for (var entry in certificateDescriptions.entries) ...[
+            CertificateCard(
+              title: entry.key,
+              description: entry.value,
+              onPressed: () => _viewCertificateDetails(entry.key),
             ),
-          ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
+              height: 20,
+              indent: 0,
+              endIndent: 0,
+            ),
+          ],
         ],
       ),
     );

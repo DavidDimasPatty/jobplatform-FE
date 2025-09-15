@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Skill extends StatefulWidget {
-  const Skill({ super.key });
+  const Skill({super.key});
 
   @override
   _SkillState createState() => _SkillState();
@@ -13,10 +13,16 @@ class _SkillState extends State<Skill> {
     print("Add Skill button pressed");
   }
 
-  void _viewSkillDetails(int index) {
+  void _viewSkillDetails(String title) {
     // Logic to view skill details
-    print("View details for Skill $index");
+    print("View details for Skill $title");
   }
+
+  final Map<String, String> skillDescriptions = {
+    "Skill 1": "Description for Skill 1",
+    "Skill 2": "Description for Skill 2",
+    "Skill 3": "Description for Skill 3",
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -47,25 +53,20 @@ class _SkillState extends State<Skill> {
             ],
           ),
           SizedBox(height: 20),
-          ...List.generate(
-            3,
-            (i) => Column(
-              children: [
-                SkillCard(
-                  title: "Skill ${i + 1}",
-                  description: "Description for Skill ${i + 1}",
-                  onPressed: () => _viewSkillDetails(i + 1),
-                ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  height: 20,
-                  indent: 0,
-                  endIndent: 0,
-                ),
-              ],
+          for (var entry in skillDescriptions.entries) ...[
+            SkillCard(
+              title: entry.key,
+              description: entry.value,
+              onPressed: () => _viewSkillDetails(entry.key),
             ),
-          ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
+              height: 20,
+              indent: 0,
+              endIndent: 0,
+            ),
+          ],
         ],
       ),
     );
