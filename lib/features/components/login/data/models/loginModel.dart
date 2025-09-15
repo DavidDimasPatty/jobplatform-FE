@@ -22,9 +22,7 @@ class loginModel {
 
   factory loginModel.fromJson(Map<String, dynamic> json) {
     loginModel dataLogin = loginModel(
-      collection: json['data']['collection'] != null
-          ? json['data']['collection']
-          : null,
+      collection: json['data']['collection'],
       exists: json['data']['exists'] != false ? json['data']['exists'] : false,
     );
 

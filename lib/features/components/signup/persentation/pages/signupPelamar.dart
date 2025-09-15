@@ -22,10 +22,16 @@ class SignUpPelamar extends StatefulWidget {
   final String? email;
   final String? photoUrl;
   final String? token;
-  SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
+  const SignUpPelamar(
+    this.name,
+    this.email,
+    this.photoUrl,
+    this.token, {
+    super.key,
+  });
   @override
   State<SignUpPelamar> createState() =>
-      _SignUpPelamar(this.name, this.email, this.photoUrl, this.token);
+      _SignUpPelamar(name, email, photoUrl, token);
 }
 
 class _SignUpPelamar extends State<SignUpPelamar> {
@@ -49,11 +55,11 @@ class _SignUpPelamar extends State<SignUpPelamar> {
   final _phoneController = TextEditingController();
   final _tanggalLahirController = DateRangePickerController();
   final _formKey = GlobalKey<FormState>();
-  ProvinsiModel? selectedProvinsi = null;
-  KotaModel? selectedKota = null;
-  ProvinsiModel? selectedProvinsiLahir = null;
-  KotaModel? selectedKotaLahir = null;
-  Country? selectedCountry = null;
+  ProvinsiModel? selectedProvinsi;
+  KotaModel? selectedKota;
+  ProvinsiModel? selectedProvinsiLahir;
+  KotaModel? selectedKotaLahir;
+  Country? selectedCountry;
   String gender = "";
   late SignupUseCase signupUseCase;
   //bool _loadingPhoto = false;
@@ -72,16 +78,12 @@ class _SignUpPelamar extends State<SignUpPelamar> {
         email: _emailController.text,
         nama: _namaController.text,
         domisili:
-            selectedProvinsi!.nama +
-            "," +
-            selectedKota!.nama +
-            "," +
-            _alamatController.text,
+            "${selectedProvinsi!.nama},${selectedKota!.nama},${_alamatController.text}",
         tanggalLahir: tanggalLahir!,
         noTelp: selectedCountry!.dialCode + _phoneController.text,
         jenisKelamin: gender,
         tempatLahir:
-            selectedProvinsiLahir!.nama + "," + selectedKotaLahir!.nama,
+            "${selectedProvinsiLahir!.nama},${selectedKotaLahir!.nama}",
       );
       SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
 
@@ -785,7 +787,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
 
                                               if (value != null) {
                                                 await fetchDataKotaLahir(
-                                                  value!.id,
+                                                  value.id,
                                                 );
                                               } else {
                                                 setState(() {
@@ -903,7 +905,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                               });
 
                                               if (value != null) {
-                                                await fetchDataKota(value!.id);
+                                                await fetchDataKota(value.id);
                                               } else {
                                                 setState(() {
                                                   kota = [];

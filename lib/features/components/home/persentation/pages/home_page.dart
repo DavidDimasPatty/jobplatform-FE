@@ -14,16 +14,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late GetProductsUseCase getProductsUseCase;
-  String? loginAs = null;
-  String? idUser = null;
-  String? namaUser = null;
-  String? emailUser = null;
-  String? noTelpUser = null;
+  String? loginAs;
+  String? idUser;
+  String? namaUser;
+  String? emailUser;
+  String? noTelpUser;
 
-  String? idCompany = null;
-  String? namaCompany = null;
-  String? domainCompany = null;
-  String? noTelpCompany = null;
+  String? idCompany;
+  String? namaCompany;
+  String? domainCompany;
+  String? noTelpCompany;
   bool isLoading = true;
 
   void getDataPref() async {
@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
     return Center(
       child: isLoading
           ? CircularProgressIndicator()
-          : Container(
+          : SizedBox(
               width: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

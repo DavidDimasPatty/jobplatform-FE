@@ -11,7 +11,7 @@ class AuthRemoteDataSource {
       final url = Uri.parse(
         '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/login',
       ).replace(queryParameters: {'email': email});
-      loginModel? data = null;
+      loginModel? data;
       final response = await http.get(url);
       print(response.body.toString());
 
@@ -25,7 +25,7 @@ class AuthRemoteDataSource {
         return data;
       } else {
         final dataFailed = jsonDecode(response.body);
-        print('Gagal: ${response.statusCode} ${dataFailed}');
+        print('Gagal: ${response.statusCode} $dataFailed');
         return null;
       }
     } catch (e) {

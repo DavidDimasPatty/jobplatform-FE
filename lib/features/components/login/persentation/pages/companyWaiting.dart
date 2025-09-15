@@ -8,11 +8,16 @@ class CompanyWaiting extends StatefulWidget {
   final String idPerusahaan;
   final String namaPerusahaan;
   final String stage;
-  CompanyWaiting(this.stage, this.idPerusahaan, this.namaPerusahaan);
+  const CompanyWaiting(
+    this.stage,
+    this.idPerusahaan,
+    this.namaPerusahaan, {
+    super.key,
+  });
 
   @override
   State<CompanyWaiting> createState() =>
-      _CompanyWaiting(this.stage, this.idPerusahaan, this.namaPerusahaan);
+      _CompanyWaiting(stage, idPerusahaan, namaPerusahaan);
 }
 
 class _CompanyWaiting extends State<CompanyWaiting> {
@@ -60,7 +65,7 @@ class _CompanyWaiting extends State<CompanyWaiting> {
               context,
             ).smallerThan(TABLET);
             if (!isMobile) {
-              return Container(
+              return SizedBox(
                 width: 800,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -83,7 +88,7 @@ class _CompanyWaiting extends State<CompanyWaiting> {
                       padding: EdgeInsets.all(20),
                       width: 400,
                       child: Text(
-                        "Mohon menunggu validasi dari Skillen untuk perusahaan ${namaPerusahaan}",
+                        "Mohon menunggu validasi dari Skillen untuk perusahaan $namaPerusahaan",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.ptSerif(
                           textStyle: TextStyle(
@@ -178,7 +183,7 @@ class _CompanyWaiting extends State<CompanyWaiting> {
                     padding: EdgeInsets.all(20),
                     width: 400,
                     child: Text(
-                      "Mohon menunggu validasi dari Skillen untuk perusahaan ${namaPerusahaan}",
+                      "Mohon menunggu validasi dari Skillen untuk perusahaan $namaPerusahaan",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.ptSerif(
                         textStyle: TextStyle(

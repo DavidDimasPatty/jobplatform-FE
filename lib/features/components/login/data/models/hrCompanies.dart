@@ -37,12 +37,12 @@ class UserCompany {
 
   factory UserCompany.fromJson(Map<String, dynamic> json) {
     return UserCompany(
-      id: json["_id"] != null ? json["_id"] : null,
-      idCompany: json["idCompany"] != null ? json["idCompany"] : null,
-      idUser: json["idUser"] != null ? json["idUser"] : null,
+      id: json["_id"],
+      idCompany: json["idCompany"],
+      idUser: json["idUser"],
       addTime: json["addTime"] != null ? DateTime.parse(json["addTime"]) : null,
       updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
-      status: json["status"] != null ? json["status"] : null,
+      status: json["status"],
     );
   }
 

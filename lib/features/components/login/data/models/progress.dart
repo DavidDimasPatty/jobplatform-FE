@@ -13,7 +13,7 @@ class Progress {
       lastAdmin: json['lastAdmin'] != null
           ? LastAdmin.fromJson(json['lastAdmin'])
           : null,
-      stage: json['stage'] != null ? json['stage'] : null,
+      stage: json['stage'],
     );
   }
 
@@ -51,19 +51,19 @@ class LastSurvey {
 
   factory LastSurvey.fromJson(Map<String, dynamic> json) {
     return LastSurvey(
-      id: json['_id'] != null ? json['_id'] : null,
-      idPerusahaan: json['idPerusahaan'] != null ? json['idPerusahaan'] : null,
-      idSurveyer: json['idSurveyer'] != null ? json['idSurveyer'] : null,
+      id: json['_id'],
+      idPerusahaan: json['idPerusahaan'],
+      idSurveyer: json['idSurveyer'],
       dateSurvey: json['dateSurvey'] != null
           ? DateTime.parse(json['dateSurvey'])
           : null,
-      statusSurvey: json['statusSurvey'] != null ? json['statusSurvey'] : null,
+      statusSurvey: json['statusSurvey'],
       statusDate: json['statusDate'] != null
           ? DateTime.parse(json['statusDate'])
           : null,
       addTime: json['addTime'] != null ? DateTime.parse(json['addTime']) : null,
       updTime: json['updTime'] != null ? DateTime.parse(json['updTime']) : null,
-      alasanReject: json['alasanReject'] != null ? json['alasanReject'] : null,
+      alasanReject: json['alasanReject'],
     );
   }
 
@@ -105,18 +105,16 @@ class LastAdmin {
 
   factory LastAdmin.fromJson(Map<String, dynamic> json) {
     return LastAdmin(
-      id: json['_id'] != null ? json['_id'] : null,
-      idPerusahaanSurvey: json['idPerusahaanSurvey'] != null
-          ? json['idPerusahaanSurvey']
-          : null,
-      idAdmin: json['idAdmin'] != null ? json['idAdmin'] : null,
-      status: json['status'] != null ? json['status'] : null,
+      id: json['_id'],
+      idPerusahaanSurvey: json['idPerusahaanSurvey'],
+      idAdmin: json['idAdmin'],
+      status: json['status'],
       statusDate: json['statusDate'] != null
           ? DateTime.parse(json['statusDate'])
           : null,
       addTime: json['addTime'] != null ? DateTime.parse(json['addTime']) : null,
       updTime: json['updTime'] != null ? DateTime.parse(json['updTime']) : null,
-      alasanReject: json['alasanReject'] != null ? json['alasanReject'] : null,
+      alasanReject: json['alasanReject'],
     );
   }
 

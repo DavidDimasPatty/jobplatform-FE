@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:intl/intl.dart';
 
-class Organizational extends StatefulWidget {
-  List<OrganizationMV>? dataOrg;
+class Education extends StatefulWidget {
+  List<EducationMV>? dataEdu;
   final Function(int page) onTabSelected;
-  Organizational({super.key, this.dataOrg, required this.onTabSelected});
+  Education({super.key, this.dataEdu, required this.onTabSelected});
 
   @override
-  State<Organizational> createState() =>
-      _Organizational(dataOrg, this.onTabSelected);
+  State<Education> createState() => _Education(dataEdu, this.onTabSelected);
 }
 
-class _Organizational extends State<Organizational> {
-  List<OrganizationMV>? dataOrg;
+class _Education extends State<Education> {
+  List<EducationMV>? dataEdu;
   final Function(int page) onTabSelected;
-  _Organizational(this.dataOrg, this.onTabSelected);
+  _Education(this.dataEdu, this.onTabSelected);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,7 +33,7 @@ class _Organizational extends State<Organizational> {
             children: [
               Container(
                 child: Text(
-                  "Organizational Experience",
+                  "Educational",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
@@ -45,7 +44,7 @@ class _Organizational extends State<Organizational> {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  onTabSelected!(8);
+                  onTabSelected!(6);
                 },
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
@@ -61,12 +60,12 @@ class _Organizational extends State<Organizational> {
           ),
           SizedBox(height: 10),
           Column(
-            children: dataOrg!.asMap().entries.map((entry) {
+            children: dataEdu!.asMap().entries.map((entry) {
               int idx = entry.key + 1;
               var data = entry.value;
               return InkWell(
                 onTap: () {
-                  onTabSelected(9);
+                  onTabSelected(7);
                 },
                 child: Container(
                   margin: EdgeInsets.all(5),
@@ -96,7 +95,7 @@ class _Organizational extends State<Organizational> {
                       Column(
                         children: [
                           Text(data.nama!),
-                          Text(data.jabatan!),
+                          Text(data.tingkat! + " - " + data.penjurusan!),
                           // Text(data.penjurusan!),
                         ],
                       ),

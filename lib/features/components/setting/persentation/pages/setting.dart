@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
 
 class Setting extends StatefulWidget {

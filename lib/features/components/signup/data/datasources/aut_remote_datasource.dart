@@ -10,7 +10,9 @@ import '../models/signupResponse.dart';
 class AuthRemoteDatasource {
   Future<SignupResponseModel> signup(SignupRequestModel data) async {
     await dotenv.load(fileName: '.env');
-    final url = Uri.parse('${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/register');
+    final url = Uri.parse(
+      '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/register',
+    );
     // print("registerAs: ${data.registerAs}");
     // print("email: ${data.email}");
     // print("nama: ${data.nama}");
@@ -20,7 +22,7 @@ class AuthRemoteDatasource {
     // print("jenisKelamin: ${data.jenisKelamin}");
 
     // print("JSON: ${jsonEncode(data.toJson())}");
-    var jsonBody = null;
+    var jsonBody;
     final registerAs = data.registerAs;
     if (registerAs == 'company') {
       print("Using toJsonCompany");
@@ -31,7 +33,7 @@ class AuthRemoteDatasource {
       print("JSON Pelamar: ${jsonEncode(data.toJson())}");
       jsonBody = jsonEncode(data.toJson());
     }
-    
+
     final response = await http.post(
       url,
       headers: {

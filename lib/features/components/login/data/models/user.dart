@@ -29,24 +29,22 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json["_id"] != null ? json["_id"] : null,
-      nama: json["nama"] != null ? json["nama"] : null,
-      email: json["email"] != null ? json["email"] : null,
+      id: json["_id"],
+      nama: json["nama"],
+      email: json["email"],
       tanggalLahir: json["tanggalLahir"] != null
           ? DateTime.parse(json["tanggalLahir"])
           : null,
-      tempatLahir: json["tempatLahir"] != null ? json["tempatLahir"] : null,
-      jenisKelamin: json["jenisKelamin"] != null ? json["jenisKelamin"] : null,
+      tempatLahir: json["tempatLahir"],
+      jenisKelamin: json["jenisKelamin"],
       lastLogin: json["lastLogin"] != null
           ? DateTime.parse(json["lastLogin"])
           : null,
-      statusAccount: json["statusAccount"] != null
-          ? json["statusAccount"]
-          : null,
+      statusAccount: json["statusAccount"],
       addTime: json["addTime"] != null ? DateTime.parse(json["addTime"]) : null,
       updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
-      noTelp: json["noTelp"] != null ? json["noTelp"] : null,
-      domisili: json["domisili"] != null ? json["domisili"] : null,
+      noTelp: json["noTelp"],
+      domisili: json["domisili"],
     );
   }
 

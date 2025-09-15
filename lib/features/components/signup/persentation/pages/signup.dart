@@ -17,10 +17,9 @@ class SignUp extends StatefulWidget {
   final String? photoUrl;
   final String? token;
 
-  SignUp(this.name, this.email, this.photoUrl, this.token);
+  const SignUp(this.name, this.email, this.photoUrl, this.token, {super.key});
   @override
-  State<SignUp> createState() =>
-      _SignUp(this.name, this.email, this.photoUrl, this.token);
+  State<SignUp> createState() => _SignUp(name, email, photoUrl, token);
 }
 
 class _SignUp extends State<SignUp> {
@@ -175,6 +174,13 @@ class _SignUp extends State<SignUp> {
                       child: Container(
                         child: ElevatedButton(
                           onPressed: _handleSignUpPelamar,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            elevation: 0,
+                            shape: StadiumBorder(),
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -210,13 +216,6 @@ class _SignUp extends State<SignUp> {
                               ),
                             ],
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            elevation: 0,
-                            shape: StadiumBorder(),
-                            shadowColor: Colors.transparent,
-                            overlayColor: Colors.transparent,
-                          ),
                         ),
                       ),
                     ),
@@ -230,6 +229,13 @@ class _SignUp extends State<SignUp> {
                       child: Container(
                         child: ElevatedButton(
                           onPressed: _handleSignUpPerusahaan,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            elevation: 0,
+                            shape: StadiumBorder(),
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -264,13 +270,6 @@ class _SignUp extends State<SignUp> {
                                 ),
                               ),
                             ],
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            elevation: 0,
-                            shape: StadiumBorder(),
-                            shadowColor: Colors.transparent,
-                            overlayColor: Colors.transparent,
                           ),
                         ),
                       ),

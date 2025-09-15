@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
-import 'package:job_platform/features/components/login/persentation/pages/login.dart';
-import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
-import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
 
 class BottomApplayout extends StatelessWidget {
   final int currentIndex;

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
-import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
-import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/educationalAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/educationalEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/experienceAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/experienceEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
 import 'package:job_platform/features/shared/bottomAppLayout.dart';
 
@@ -53,6 +57,12 @@ class _LayoutState extends State<Layout> {
       const Cart(),
       Profile(onTabSelected: _onTabSelected),
       Personalinfo(),
+      ExperienceAdd(),
+      ExperienceEdit(),
+      EducationalAdd(),
+      EducationalEdit(),
+      OrganizationAdd(),
+      OrganizationEdit(),
     ];
   }
 

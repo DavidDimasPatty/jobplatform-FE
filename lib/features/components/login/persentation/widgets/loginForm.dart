@@ -31,7 +31,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  String _result = '';
+  final String _result = '';
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? user;
@@ -87,35 +87,35 @@ class _LoginFormState extends State<LoginForm> {
         loginModel? data = await usecase.execute(user!.email!);
 
         if (data!.exists != null) {
-          if (data!.exists != false) {
-            if (data!.collection == "users") {
+          if (data.exists != false) {
+            if (data.collection == "users") {
               await prefs.setString("loginAs", "user");
-              await prefs.setString("idUser", data!.user!.id!);
-              await prefs.setString("nama", data!.user!.nama!);
-              await prefs.setString("email", data!.user!.email!);
-              await prefs.setString("noTelp", data!.user!.noTelp!);
-              if (data!.hrCompanies != null) {
+              await prefs.setString("idUser", data.user!.id!);
+              await prefs.setString("nama", data.user!.nama!);
+              await prefs.setString("email", data.user!.email!);
+              await prefs.setString("noTelp", data.user!.noTelp!);
+              if (data.hrCompanies != null) {
                 await prefs.setString(
                   "hrCompanyName",
-                  data!.hrCompanies!.company!.nama!,
+                  data.hrCompanies!.company.nama!,
                 );
                 await prefs.setString(
                   "hrCompanyId",
-                  data!.hrCompanies!.company!.id!,
+                  data.hrCompanies!.company.id!,
                 );
               }
               return Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Layout()),
               );
-            } else if (data!.collection == "companies") {
+            } else if (data.collection == "companies") {
               if (data.progress!.stage! == "Accept") {
                 if (data.progress!.lastAdmin!.status == "Accept") {
                   await prefs.setString("loginAs", "company");
-                  await prefs.setString("idCompany", data!.company!.id!);
-                  await prefs.setString("nama", data!.company!.nama!);
-                  await prefs.setString("domain", data!.company!.email!);
-                  await prefs.setString("noTelp", data!.company!.noTelp!);
+                  await prefs.setString("idCompany", data.company!.id!);
+                  await prefs.setString("nama", data.company!.nama!);
+                  await prefs.setString("domain", data.company!.email!);
+                  await prefs.setString("noTelp", data.company!.noTelp!);
                   return Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Layout()),
@@ -280,7 +280,7 @@ class _LoginFormState extends State<LoginForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 200,
                     height: 50,
                     child: ElevatedButton.icon(
