@@ -1,4 +1,4 @@
-import 'package:job_platform/features/components/login/data/models/loginModel.dart';
+import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 
 import '../repositories/auth_repository.dart';
 
@@ -7,7 +7,7 @@ class ProfileUsecase {
 
   ProfileUsecase(this.repository);
 
-  Future<loginModel?> execute(String email) {
-    return repository.login(email);
+  Future<ProfileModel?> getProfile(String id) {
+    return repository.profile(id);
   }
 }

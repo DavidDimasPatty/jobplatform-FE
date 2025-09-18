@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
+import 'package:intl/intl.dart';
 
 class Certificate extends StatefulWidget {
-  const Certificate({super.key});
+  final List<CertificateMV> dataCertificates;
+  final Function(int page) onTabSelected;
+  Certificate({
+    super.key,
+    required this.dataCertificates,
+    required this.onTabSelected,
+  });
 
   @override
-  _CertificateState createState() => _CertificateState();
+  _CertificateState createState() =>
+      _CertificateState(dataCertificates, this.onTabSelected);
 }
 
 class _CertificateState extends State<Certificate> {
+  final List<CertificateMV> dataCertificates;
+  final Function(int page) onTabSelected;
+
+  _CertificateState(this.dataCertificates, this.onTabSelected);
+
   void _addCertificate() {
     // Logic to add a new certificate
     print("Add Certificate button pressed");
@@ -18,17 +32,16 @@ class _CertificateState extends State<Certificate> {
     print("View details for Certificate $title");
   }
 
-  final Map<String, String> certificateDescriptions = {
-    "Certificate 1": "Description for Certificate 1",
-    "Certificate 2": "Description for Certificate 2",
-    "Certificate 3": "Description for Certificate 3",
-  };
-
   @override
   Widget build(BuildContext context) {
+    int idx = 1;
+
     return Container(
-      width: 700,
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,15 +50,20 @@ class _CertificateState extends State<Certificate> {
             children: [
               Text(
                 "Certifications",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 15,
+                  letterSpacing: 1,
+                  color: Colors.black,
+                ),
               ),
               ElevatedButton.icon(
                 onPressed: _addCertificate,
                 style: ElevatedButton.styleFrom(
-                  shape: StadiumBorder(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   backgroundColor: Colors.blue, // Button color
                   foregroundColor: Colors.white, // Icon/text color
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
                 icon: Icon(Icons.add),
                 label: Text("Add"),
@@ -53,19 +71,16 @@ class _CertificateState extends State<Certificate> {
             ],
           ),
           SizedBox(height: 20),
-          for (var entry in certificateDescriptions.entries) ...[
+          for (var cert in dataCertificates) ...[
             CertificateCard(
-              title: entry.key,
-              description: entry.value,
-              onPressed: () => _viewCertificateDetails(entry.key),
+              idx: idx++,
+              title: cert.nama!,
+              description: cert.publisher!,
+              dateRange:
+                  "${DateFormat('yyyy-MM-dd').format(cert.publishDate ?? DateTime.now())} - ${DateFormat('yyyy-MM-dd').format(cert.expiredDate ?? DateTime.now())}",
+              onPressed: () => _viewCertificateDetails(cert.nama!),
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              height: 20,
-              indent: 0,
-              endIndent: 0,
-            ),
+            SizedBox(height: 10),
           ],
         ],
       ),
@@ -74,35 +89,72 @@ class _CertificateState extends State<Certificate> {
 }
 
 class CertificateCard extends StatelessWidget {
+  final int idx;
   final String title;
   final String description;
+  final String dateRange;
   final VoidCallback onPressed;
 
   const CertificateCard({
+    required this.idx,
     required this.title,
     required this.description,
+    required this.dateRange,
     required this.onPressed,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onPressed,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        margin: EdgeInsets.all(5.0),
+        padding: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Center(
+                child: Text(
+                  idx.toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
-            SizedBox(height: 8),
-            Text(
-              description,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  description,
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+            Flexible(
+              flex: 2,
+              child: Text(
+                softWrap: true,
+                textAlign: TextAlign.center,
+                dateRange,
+              ),
             ),
           ],
         ),

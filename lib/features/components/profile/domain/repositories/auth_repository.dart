@@ -1,5 +1,5 @@
-import 'package:job_platform/features/components/login/data/models/loginModel.dart';
+import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 
 abstract class AuthRepository {
-  Future<loginModel?> login(String email);
+  Future<ProfileModel?> profile(String id);
 }

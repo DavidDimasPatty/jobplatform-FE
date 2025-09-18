@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
+import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:job_platform/features/components/profile/persentation/widgets/profile/careerPreference.dart';
+import 'package:job_platform/features/components/profile/persentation/widgets/profile/certificate.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/education.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/organizational.dart';
+import 'package:job_platform/features/components/profile/persentation/widgets/profile/skill.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/workExperience.dart';
-import 'package:job_platform/features/shared/layout.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   final Function(int page) onTabSelected;
@@ -22,110 +30,106 @@ class Profile extends StatefulWidget {
 class _Profile extends State<Profile> {
   final Function(int page) onTabSelected;
   _Profile(this.onTabSelected);
+
+  // Data
   List<EducationMV> dataEdu = [];
   List<OrganizationMV> dataOrg = [];
   List<WorkexperienceMV> dataWork = [];
+  List<CertificateMV> dataCertificate = [];
+  List<SkillMV> dataSkill = [];
+  List<PreferenceMV> dataPreference = [];
+
+  // Loading state
+  bool isLoading = true;
+  String? errorMessage;
+
+  // Usecase
+  late ProfileUsecase _profileUseCase;
+
   @override
   void initState() {
-    dataLoadDummy();
+    super.initState();
+    _initializeUseCase();
+    _loadProfileData();
   }
 
-  void dataLoadDummy() {
-    dataEdu.add(
-      EducationMV(
-        "1",
-        "SMAN 13 BANDUNG",
-        "SMA",
-        DateTime.now(),
-        DateTime.now(),
-        "Belajar Matematika",
-        "IPA",
-        "3.0",
-      ),
-    );
-    dataEdu.add(
-      EducationMV(
-        "2",
-        "UNPAR",
-        "Kuliah",
-        DateTime.now(),
-        DateTime.now(),
-        "Belajar Komputer",
-        "Informatika",
-        "3.0",
-      ),
-    );
-    dataOrg.add(
-      OrganizationMV(
-        "1",
-        "Unpar Radio Station",
-        DateTime.parse("2020-05-02"),
-        DateTime.parse("2023-05-02"),
-        "Belajar Operator",
-        "Operator Staff",
-      ),
-    );
-    dataOrg.add(
-      OrganizationMV(
-        "2",
-        "Unpar Runner",
-        DateTime.parse("2020-05-02"),
-        DateTime.parse("2023-05-02"),
-        "Olahraga",
-        "Staff",
-      ),
-    );
+  void _initializeUseCase() {
+    final dataSource = AuthRemoteDataSource();
+    final repository = AuthRepositoryImpl(dataSource);
+    _profileUseCase = ProfileUsecase(repository);
+  }
 
-    dataWork.add(
-      WorkexperienceMV(
-        "1",
-        "PT. YOGYA AKUR PRATAMA",
-        "Back End Developer",
-        DateTime.now(),
-        DateTime.now(),
-        "Mengerjakan 123",
-        "IT",
-        "Retail",
-        "Bandung",
-        "WFO",
-        "Magang",
-      ),
-    );
+  Future<void> _loadProfileData() async {
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString('idUser');
 
-    dataWork.add(
-      WorkexperienceMV(
-        "2",
-        "PT. Indomarco",
-        "Back End Developer",
-        DateTime.now(),
-        DateTime.now(),
-        "Mengerjakan 123",
-        "IT",
-        "Retail",
-        "Bandung",
-        "WFO",
-        "Magang",
-      ),
-    );
-    dataWork.add(
-      WorkexperienceMV(
-        "2",
-        "PT. Inti Dunia Sukses",
-        "Back End Developer",
-        DateTime.now(),
-        DateTime.now(),
-        "Mengerjakan 123",
-        "IT",
-        "Retail",
-        "Bandung",
-        "WFO",
-        "Magang",
-      ),
-    );
+      if (userId != null) {
+        var profile = await _profileUseCase.getProfile(userId);
+        if (profile != null) {
+          setState(() {
+            dataEdu = profile.educations ?? [];
+            dataOrg = profile.organizations ?? [];
+            dataWork = profile.experiences ?? [];
+            dataCertificate = profile.certificates ?? [];
+            dataSkill = profile.skills ?? [];
+            dataPreference = profile.preferences ?? [];
+            isLoading = false;
+          });
+        }
+      } else {
+        print("User ID not found in SharedPreferences");
+      }
+    } catch (e) {
+      print("Error loading profile data: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = "Error loading profile: $e";
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading profile data...'),
+          ],
+        ),
+      );
+    }
+
+    // Show error message if there's an error
+    if (errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: Colors.red),
+            SizedBox(height: 16),
+            Text(
+              errorMessage!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.red),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
+          ],
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 10, right: 10, top: 10),
       child: Center(
@@ -272,6 +276,21 @@ class _Profile extends State<Profile> {
                   dataEdu: dataEdu,
                   onTabSelected: onTabSelected,
                 ),
+              ),
+              ResponsiveRowColumnItem(
+                child: Certificate(
+                  dataCertificates: dataCertificate,
+                  onTabSelected: onTabSelected,
+                ),
+              ),
+              ResponsiveRowColumnItem(
+                child: Skill(
+                  dataSkills: dataSkill,
+                  onTabSelected: onTabSelected,
+                ),
+              ),
+              ResponsiveRowColumnItem(
+                child: CareerPreference(dataPreferences: dataPreference),
               ),
               ResponsiveRowColumnItem(
                 child: Container(

@@ -1,51 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:intl/intl.dart';
 
 class CareerPreference extends StatefulWidget {
-  const CareerPreference({super.key});
+  final List<PreferenceMV> dataPreferences;
+  const CareerPreference({super.key, required this.dataPreferences});
 
   @override
-  _CareerPreferenceState createState() => _CareerPreferenceState();
+  _CareerPreferenceState createState() =>
+      _CareerPreferenceState(dataPreferences);
 }
 
 class _CareerPreferenceState extends State<CareerPreference> {
-  final Map<String, String> careerDescriptions = {
-    "Preferred Job Title": "Software Engineer",
-    "Location": "Remote",
-    "Salary Expectation": "\$100,000 - \$120,000",
-    "Job Type": "Full-time",
-    "Industry": "Technology",
-    "Work Environment": List<String>.from(["Remote", "Hybrid"]).join(", "),
-    "Availability": "Immediate",
-    "Willingness to Relocate": "Yes",
-    "Career Level": "Mid-level",
-    "Preferred Company Size": "50-200 employees",
+  final List<PreferenceMV> dataPreferences;
+
+  _CareerPreferenceState(this.dataPreferences);
+
+  // Sample data for career preferences
+  Map<String, String> get careerDescriptions => {
+    "Salary Expectation": dataPreferences.isNotEmpty
+        ? "${dataPreferences[0].gajiMin.toString()} - ${dataPreferences[0].gajiMax.toString()}"
+        : "Not specified",
+    "Industry": dataPreferences.isNotEmpty
+        ? dataPreferences[0].industri ?? "Not specified"
+        : "Not specified",
+    "Job Type": dataPreferences.isNotEmpty
+        ? dataPreferences[0].tipePekerjaan ?? "Not specified"
+        : "Not specified",
+    "Location": dataPreferences.isNotEmpty
+        ? dataPreferences[0].lokasi ?? "Not specified"
+        : "Not specified",
+    "Career Level": dataPreferences.isNotEmpty
+        ? dataPreferences[0].levelJabatan ?? "Not specified"
+        : "Not specified",
+    "Availability": dataPreferences.isNotEmpty
+        ? "${DateFormat('dd/MM/yyyy').format(dataPreferences[0].dateWork ?? DateTime.now())}"
+        : "Not specified",
   };
 
   // Map to store icon preferences for each career preference key
   final Map<String, IconData> careerIcons = {
-    "Preferred Job Title": Icons.work,
     "Location": Icons.location_on,
     "Salary Expectation": Icons.attach_money,
     "Job Type": Icons.access_time,
     "Industry": Icons.business,
-    "Work Environment": Icons.home_work,
     "Availability": Icons.event_available,
-    "Willingness to Relocate": Icons.flight_takeoff,
     "Career Level": Icons.trending_up,
-    "Preferred Company Size": Icons.people,
   };
+
+  void _editPreferences() {
+    // Logic to edit career preferences
+    print("Edit Career Preferences button pressed");
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 700,
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Career Preferences",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Career Preferences",
+                style: TextStyle(
+                  fontSize: 15,
+                  letterSpacing: 1,
+                  color: Colors.black,
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: _editPreferences,
+                icon: Icon(Icons.edit, size: 16),
+                label: Text("Edit"),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  backgroundColor: Colors.blue, // Button color
+                  foregroundColor: Colors.white, // Icon/text color
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 20),
           for (var entry in careerDescriptions.entries) ...[
@@ -54,13 +96,7 @@ class _CareerPreferenceState extends State<CareerPreference> {
               title: entry.key,
               description: entry.value,
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              height: 20,
-              indent: 0,
-              endIndent: 0,
-            ),
+            SizedBox(height: 10),
           ],
         ],
       ),
@@ -72,36 +108,50 @@ class CareerPreferenceCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
-  // final VoidCallback onPressed;
 
   const CareerPreferenceCard({
     required this.icon,
     required this.title,
     required this.description,
-    // required this.onPressed,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // onTap: onPressed,
+    return InkWell(
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        margin: EdgeInsets.all(5.0),
+        padding: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(icon, size: 40, color: Colors.blueAccent),
-            SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Container(
+              width: 30,
+              height: 30,
+              child: Center(
+                child: Icon(icon, size: 30, color: Colors.blueAccent),
+              ),
             ),
-            SizedBox(height: 8),
-            Text(
-              description,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            SizedBox(width: 15),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 8),
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  description,
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                ),
+              ],
             ),
           ],
         ),

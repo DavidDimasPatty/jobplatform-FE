@@ -1,57 +1,73 @@
+import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
+import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
+
 class ProfileModel {
-  final String? id;
-  final String? nama;
-  final String? alamat;
-  final String? domain;
-  final DateTime? addTime;
-  final DateTime? updTime;
-  final String? noTelp;
-  final DateTime? lastLogin;
-  final String? email;
-  final String? statusAccount;
+  // final Profiledata? user;
+  final List<PreferenceMV>? preferences;
+  final List<WorkexperienceMV>? experiences;
+  final List<SkillMV>? skills;
+  final List<CertificateMV>? certificates;
+  final List<EducationMV>? educations;
+  final List<OrganizationMV>? organizations;
+  // final List<CompanyMV>? companies;
 
   ProfileModel({
-    this.id,
-    this.nama,
-    this.alamat,
-    this.domain,
-    this.addTime,
-    this.updTime,
-    this.noTelp,
-    this.lastLogin,
-    this.email,
-    this.statusAccount,
+    // this.user,
+    this.preferences,
+    this.experiences,
+    this.skills,
+    this.certificates,
+    this.educations,
+    this.organizations,
+    // this.companies,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      id: json["_id"],
-      nama: json["nama"],
-      alamat: json["alamat"],
-      domain: json["domain"],
-      addTime: json["addTime"] != null ? DateTime.parse(json["addTime"]) : null,
-      updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
-      noTelp: json["noTelp"],
-      lastLogin: json["lastLogin"] != null
-          ? DateTime.parse(json["lastLogin"])
-          : null,
-      email: json["email"],
-      statusAccount: json["statusAccount"],
+      // user: json["data"]["user"],
+      preferences: json["data"]["linkPreference"]
+          .map<PreferenceMV>((item) => PreferenceMV.fromJson(item))
+          .toList()
+          .cast<PreferenceMV>(),
+      experiences: json["data"]["linkExperience"]
+          .map<WorkexperienceMV>((item) => WorkexperienceMV.fromJson(item))
+          .toList()
+          .cast<WorkexperienceMV>(),
+      certificates: json["data"]["linkCertificate"]
+          .map<CertificateMV>((item) => CertificateMV.fromJson(item))
+          .toList()
+          .cast<CertificateMV>(),
+      skills: json["data"]["linkSkill"]
+          .map<SkillMV>((item) => SkillMV.fromJson(item))
+          .toList()
+          .cast<SkillMV>(),
+      educations: json["data"]["linkEducation"]
+          .map<EducationMV>((item) => EducationMV.fromJson(item))
+          .toList()
+          .cast<EducationMV>(),
+      organizations: json["data"]["linkOrganization"]
+          .map<OrganizationMV>((item) => OrganizationMV.fromJson(item))
+          .toList()
+          .cast<OrganizationMV>(),
+      // companies: json["data"]["linkCompany"],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "_id": id,
-      "nama": nama,
-      "alamat": alamat,
-      "domain": domain,
-      "addTime": addTime?.toIso8601String(),
-      "updTime": updTime?.toIso8601String(),
-      "noTelp": noTelp,
-      "lastLogin": lastLogin?.toIso8601String(),
-      "email": email,
-      "statusAccount": statusAccount,
+      // "user": user,
+      "certificates": certificates ?? [],
+      "educations": educations ?? [],
+      "experiences": experiences ?? [],
+      "organizations": organizations ?? [],
+      "preferences": preferences ?? [],
+      "skills": skills ?? [],
+      // "companies": companies ?? [],
     };
   }
 }
