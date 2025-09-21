@@ -22,11 +22,6 @@ class _CertificateState extends State<Certificate> {
 
   _CertificateState(this.dataCertificates, this.onTabSelected);
 
-  void _addCertificate() {
-    // Logic to add a new certificate
-    print("Add Certificate button pressed");
-  }
-
   void _viewCertificateDetails(String title) {
     // Logic to view certificate details
     print("View details for Certificate $title");
@@ -57,7 +52,7 @@ class _CertificateState extends State<Certificate> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: _addCertificate,
+                onPressed: () => onTabSelected(10),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

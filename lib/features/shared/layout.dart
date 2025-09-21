@@ -3,6 +3,8 @@ import 'package:job_platform/features/components/cart/persentation/pages/cart.da
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/certificateAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/certificateEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/educationalAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/educationalEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/experienceAdd.dart';
@@ -63,6 +65,8 @@ class _LayoutState extends State<Layout> {
       EducationalEdit(),
       OrganizationAdd(),
       OrganizationEdit(),
+      CertificateAdd(),
+      CertificateEdit(),
     ];
   }
 
