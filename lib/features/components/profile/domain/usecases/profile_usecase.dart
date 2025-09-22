@@ -22,7 +22,7 @@ class ProfileUsecase {
     return repository.certificateEdit(certificate);
   }
 
-  Future<bool> deleteCertificate(String id) {
+  Future<CertificateResponse> deleteCertificate(String id) {
     return repository.certificateDelete(id);
   }
 }

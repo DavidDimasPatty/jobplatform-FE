@@ -111,7 +111,7 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<bool> certificateDelete(String id) async {
+  Future<CertificateResponse> certificateDelete(String id) async {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
@@ -123,15 +123,22 @@ class AuthRemoteDataSource {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
 
-        return true;
+        CertificateResponse certificateResponse = CertificateResponse.fromJson(
+          jsonData,
+        );
+        return certificateResponse;
       } else {
         final dataFailed = jsonDecode(response.body);
         print('Gagal: ${response.statusCode} $dataFailed');
-        return false;
+        return CertificateResponse.fromJson(dataFailed);
       }
     } catch (e) {
       print('Error during delete certificate: $e');
-      return false;
+      return CertificateResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
     }
   }
 }

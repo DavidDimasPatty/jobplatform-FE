@@ -14,7 +14,8 @@ class CertificateEdit extends StatefulWidget {
   const CertificateEdit({super.key, this.idUserCertificate});
 
   @override
-  _CertificateEditState createState() => _CertificateEditState(idUserCertificate: idUserCertificate);
+  _CertificateEditState createState() =>
+      _CertificateEditState(idUserCertificate: idUserCertificate);
 }
 
 class _CertificateEditState extends State<CertificateEdit> {
@@ -133,6 +134,45 @@ class _CertificateEditState extends State<CertificateEdit> {
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _deleteCertificate() async {
+    if (idUserCertificate == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      CertificateResponse response = await _profileUseCase.deleteCertificate(
+        idUserCertificate!,
+      );
+
+      if (response.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Certificate deleted successfully!')),
+        );
+        // Navigator.of(context).pop(); // Navigate back after deletion
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete certificate. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete certificate. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -284,15 +324,34 @@ class _CertificateEditState extends State<CertificateEdit> {
                       SizedBox(height: 20),
                       _isLoading
                           ? CircularProgressIndicator()
-                          : ElevatedButton.icon(
-                              onPressed: _submitForm,
-                              icon: Icon(Icons.check),
-                              iconAlignment: IconAlignment.end,
-                              label: Text('Submit'),
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue,
-                              ),
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: _deleteCertificate,
+                                  label: Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    foregroundColor: Colors.grey,
+                                    shadowColor: Colors.transparent,
+                                    surfaceTintColor: Colors.transparent,
+                                  ),
+                                ),
+                                SizedBox(width: 20),
+                                ElevatedButton.icon(
+                                  onPressed: _submitForm,
+                                  icon: Icon(Icons.check),
+                                  iconAlignment: IconAlignment.end,
+                                  label: Text('Submit'),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.blue,
+                                  ),
+                                ),
+                              ],
                             ),
                     ],
                   ),

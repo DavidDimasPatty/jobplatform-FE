@@ -7,5 +7,5 @@ abstract class AuthRepository {
   // Certificate
   Future<CertificateResponse> certificateAdd(CertificateModel certificate);
   Future<CertificateResponse> certificateEdit(CertificateModel certificate);
-  Future<bool> certificateDelete(String id);
+  Future<CertificateResponse> certificateDelete(String id);
 }

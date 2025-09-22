@@ -34,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<bool> certificateDelete(String id) async {
+  Future<CertificateResponse> certificateDelete(String id) async {
     final result = await remoteDataSource.certificateDelete(id);
     return result;
   }
