@@ -74,8 +74,9 @@ class _CertificateState extends State<Certificate> {
               idx: idx++,
               title: cert.nama!,
               description: cert.publisher!,
-              dateRange:
-                  "${DateFormat('yyyy-MM-dd').format(cert.publishDate ?? DateTime.now())} - ${DateFormat('yyyy-MM-dd').format(cert.expiredDate ?? DateTime.now())}",
+              dateRange: (cert.expiredDate == null)
+                  ? "${DateFormat('MMM yyyy').format(cert.publishDate ?? DateTime.now())} - Present"
+                  : "${DateFormat('MMM yyyy').format(cert.publishDate ?? DateTime.now())} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
               onPressed: () => _viewCertificateEdits(cert),
             ),
             SizedBox(height: 10),

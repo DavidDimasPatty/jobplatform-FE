@@ -163,7 +163,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                     children: [
                       SizedBox(
                         child: Text(
-                          'Add Certificate',
+                          'Edit Certificate',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,

@@ -7,6 +7,7 @@ import 'package:job_platform/features/components/profile/domain/entities/Certifi
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
@@ -32,6 +33,7 @@ class _Profile extends State<Profile> {
   _Profile(this.onTabSelected);
 
   // Data
+  Profiledata? dataUser;
   List<EducationMV> dataEdu = [];
   List<OrganizationMV> dataOrg = [];
   List<WorkexperienceMV> dataWork = [];
@@ -72,6 +74,7 @@ class _Profile extends State<Profile> {
         var profile = await _profileUseCase.getProfile(userId);
         if (profile != null) {
           setState(() {
+            dataUser = profile.user;
             dataEdu = profile.educations ?? [];
             dataOrg = profile.organizations ?? [];
             dataWork = profile.experiences ?? [];
@@ -229,7 +232,7 @@ class _Profile extends State<Profile> {
 
                         Container(
                           child: Text(
-                            "Nama",
+                            dataUser!.nama,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
@@ -243,7 +246,7 @@ class _Profile extends State<Profile> {
 
                         Container(
                           child: Text(
-                            "Headline1|Headline2|Headline3",
+                            dataUser!.headline,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(

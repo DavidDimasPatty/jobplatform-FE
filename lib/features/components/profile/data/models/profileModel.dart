@@ -7,7 +7,7 @@ import 'package:job_platform/features/components/profile/domain/entities/SkillMV
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 
 class ProfileModel {
-  // final Profiledata? user;
+  final Profiledata? user;
   final List<PreferenceMV>? preferences;
   final List<WorkexperienceMV>? experiences;
   final List<SkillMV>? skills;
@@ -17,7 +17,7 @@ class ProfileModel {
   // final List<CompanyMV>? companies;
 
   ProfileModel({
-    // this.user,
+    this.user,
     this.preferences,
     this.experiences,
     this.skills,
@@ -29,7 +29,9 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      // user: json["data"]["user"],
+      user: json["data"]["user"] != null
+          ? Profiledata.fromJson(json["data"]["user"])
+          : null,
       preferences: json["data"]["linkPreference"]
           .map<PreferenceMV>((item) => PreferenceMV.fromJson(item))
           .toList()
@@ -60,7 +62,7 @@ class ProfileModel {
 
   Map<String, dynamic> toJson() {
     return {
-      // "user": user,
+      "user": user ?? {},
       "certificates": certificates ?? [],
       "educations": educations ?? [],
       "experiences": experiences ?? [],
