@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class CertificateEdit extends StatefulWidget {
-  const CertificateEdit({super.key});
+  final String? idUserCertificate;
+
+  const CertificateEdit({super.key, this.idUserCertificate});
 
   @override
-  _CertificateEditState createState() => _CertificateEditState();
+  _CertificateEditState createState() => _CertificateEditState(idUserCertificate: idUserCertificate);
 }
 
 class _CertificateEditState extends State<CertificateEdit> {
+  final String? idUserCertificate;
+
+  _CertificateEditState({this.idUserCertificate});
+
+  // Form key
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for form fields
@@ -27,6 +39,9 @@ class _CertificateEditState extends State<CertificateEdit> {
   // Helper variables
   bool _isLoading = false;
   DateTime? _selectedIssueDate;
+
+  // Use case instance
+  late ProfileUsecase _profileUseCase;
 
   @override
   void initState() {
@@ -49,7 +64,7 @@ class _CertificateEditState extends State<CertificateEdit> {
   void _initializeUseCase() {
     final dataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(dataSource);
-    // _profileUseCase = ProfileUsecase(repository);
+    _profileUseCase = ProfileUsecase(repository);
   }
 
   Future<void> _submitForm() async {
@@ -59,19 +74,57 @@ class _CertificateEditState extends State<CertificateEdit> {
       });
 
       try {
-        // Simulate a network call
-        await Future.delayed(Duration(seconds: 2));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idUser');
+
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        // Format dates to 'yyyy-MM-dd'
+        final issueDate = DateFormat('yyyy-MM-dd').format(
+          DateFormat('dd MMMM yyyy', 'en_US').parse(_issueDateController.text),
+        );
+        final expiryDate = DateFormat('yyyy-MM-dd').format(
+          DateFormat('dd MMMM yyyy', 'en_US').parse(_expiryDateController.text),
+        );
+
+        CertificateModel newCertificate = CertificateModel(
+          idUser: idUser,
+          idUserCertificate: idUserCertificate,
+          nama: _certificateNameController.text,
+          deskripsi: _descriptionController.text,
+          publisher: _issuedByController.text,
+          // Assuming skills are handled elsewhere or not required here
+          skill: [],
+          publishDate: DateTime.parse(issueDate),
+          expiredDate: DateTime.parse(expiryDate),
+          code: _credentialIdController.text,
+          codeURL: _credentialUrlController.text,
+        );
+
+        CertificateResponse response = await _profileUseCase.addCertificate(
+          newCertificate,
+        );
 
         // On success, clear the form or navigate away
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Certificate added successfully!')),
-        );
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Certificate edited successfully!')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to edit certificate. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
         _formKey.currentState!.reset();
       } catch (e) {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add certificate. Please try again.'),
+            content: Text('Failed to edit certificate. Please try again.'),
             backgroundColor: Colors.red,
           ),
         );

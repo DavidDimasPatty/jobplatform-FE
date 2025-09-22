@@ -22,9 +22,12 @@ class _CertificateState extends State<Certificate> {
 
   _CertificateState(this.dataCertificates, this.onTabSelected);
 
-  void _viewCertificateDetails(String title) {
-    // Logic to view certificate details
-    print("View details for Certificate $title");
+  void _viewCertificateAdd() {
+    onTabSelected(10); // Navigate to add page
+  }
+
+  void _viewCertificateEdits(CertificateMV certificate) {
+    onTabSelected(11); // Navigate to edit page
   }
 
   @override
@@ -52,7 +55,7 @@ class _CertificateState extends State<Certificate> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () => onTabSelected(10),
+                onPressed: _viewCertificateAdd,
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -73,7 +76,7 @@ class _CertificateState extends State<Certificate> {
               description: cert.publisher!,
               dateRange:
                   "${DateFormat('yyyy-MM-dd').format(cert.publishDate ?? DateTime.now())} - ${DateFormat('yyyy-MM-dd').format(cert.expiredDate ?? DateTime.now())}",
-              onPressed: () => _viewCertificateDetails(cert.nama!),
+              onPressed: () => _viewCertificateEdits(cert),
             ),
             SizedBox(height: 10),
           ],

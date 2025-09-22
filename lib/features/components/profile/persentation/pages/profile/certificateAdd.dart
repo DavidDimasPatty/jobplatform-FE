@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class CertificateAdd extends StatefulWidget {
   const CertificateAdd({super.key});
@@ -17,6 +22,7 @@ class _CertificateAddState extends State<CertificateAdd> {
   final TextEditingController _certificateNameController =
       TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _skillsController = TextEditingController();
   final TextEditingController _issuedByController = TextEditingController();
   final TextEditingController _issueDateController = TextEditingController();
   final TextEditingController _expiryDateController = TextEditingController();
@@ -27,6 +33,10 @@ class _CertificateAddState extends State<CertificateAdd> {
   // Helper variables
   bool _isLoading = false;
   DateTime? _selectedIssueDate;
+  List<String> _selectedSkills = [];
+
+  // Use case instance
+  late ProfileUsecase _profileUseCase;
 
   @override
   void initState() {
@@ -49,7 +59,7 @@ class _CertificateAddState extends State<CertificateAdd> {
   void _initializeUseCase() {
     final dataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(dataSource);
-    // _profileUseCase = ProfileUsecase(repository);
+    _profileUseCase = ProfileUsecase(repository);
   }
 
   Future<void> _submitForm() async {
@@ -59,13 +69,50 @@ class _CertificateAddState extends State<CertificateAdd> {
       });
 
       try {
-        // Simulate a network call
-        await Future.delayed(Duration(seconds: 2));
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idUser');
+
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        // Format dates to 'yyyy-MM-dd'
+        final issueDate = DateFormat('yyyy-MM-dd').format(
+          DateFormat('dd MMMM yyyy', 'en_US').parse(_issueDateController.text),
+        );
+        final expiryDate = DateFormat('yyyy-MM-dd').format(
+          DateFormat('dd MMMM yyyy', 'en_US').parse(_expiryDateController.text),
+        );
+
+        CertificateModel newCertificate = CertificateModel(
+          idUser: idUser,
+          nama: _certificateNameController.text,
+          deskripsi: _descriptionController.text,
+          publisher: _issuedByController.text,
+          // Assuming skills are handled elsewhere or not required here
+          skill: [],
+          publishDate: DateTime.parse(issueDate),
+          expiredDate: DateTime.parse(expiryDate),
+          code: _credentialIdController.text,
+          codeURL: _credentialUrlController.text,
+        );
+
+        CertificateResponse response = await _profileUseCase.addCertificate(
+          newCertificate,
+        );
 
         // On success, clear the form or navigate away
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Certificate added successfully!')),
-        );
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Certificate added successfully!')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to add certificate. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
         _formKey.currentState!.reset();
       } catch (e) {
         // Handle errors
@@ -82,6 +129,21 @@ class _CertificateAddState extends State<CertificateAdd> {
       }
     }
   }
+
+  // Future<void> _getSkills() async {
+  //   try {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     String? idUser = prefs.getString('idUser');
+
+  //     if (idUser == null) throw Exception("User ID not found in preferences");
+
+  //     // Fetch skills from the use case
+  //     final skills = await _profileUseCase.getSkills();
+  //     _skillsController.text = skills.join(", ");
+  //   } catch (e) {
+  //     print('Error fetching skills: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +205,20 @@ class _CertificateAddState extends State<CertificateAdd> {
                           return null;
                         },
                       ),
+                      buildDropdownField(
+                        'Skills',
+                        null,
+                        ['Skill 1', 'Skill 2', 'Skill 3'], // Example skills
+                        (value) {
+                          _skillsController.text = value ?? '';
+                        },
+                        (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a skill';
+                          }
+                          return null;
+                        },
+                      ),
                       buildTextField(
                         'Issued By',
                         _issuedByController,
@@ -171,7 +247,7 @@ class _CertificateAddState extends State<CertificateAdd> {
                                 setState(() {
                                   _selectedIssueDate = date;
                                   _issueDateController.text = date != null
-                                      ? date.toLocal().toString().split(' ')[0]
+                                      ? DateFormat('dd MMMM yyyy').format(date)
                                       : '';
                                   if (_expiryDateController.text.isNotEmpty &&
                                       _selectedIssueDate != null &&
@@ -224,6 +300,8 @@ class _CertificateAddState extends State<CertificateAdd> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter credential URL';
+                          } else if (!Uri.parse(value).isAbsolute) {
+                            return 'Please enter a valid URL';
                           }
                           return null;
                         },
@@ -274,6 +352,34 @@ class _CertificateAddState extends State<CertificateAdd> {
     );
   }
 
+  Widget buildDropdownField(
+    String label,
+    String? value,
+    List<String> items,
+    void Function(String?) onChanged,
+    String? Function(String?) validator,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField<String>(
+        value: value,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          prefixIcon: Icon(Icons.arrow_drop_down),
+        ),
+        items: items
+            .map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item),
+                ))
+            .toList(),
+        onChanged: onChanged,
+        validator: validator,
+      ),
+    );
+  }
+
   Widget buildDateField(
     String label,
     TextEditingController controller,
@@ -304,9 +410,9 @@ class _CertificateAddState extends State<CertificateAdd> {
                   lastDate: DateTime(2100),
                 );
                 if (pickedDate != null) {
-                  controller.text = pickedDate.toLocal().toString().split(
-                    ' ',
-                  )[0];
+                  controller.text = DateFormat(
+                    'dd MMMM yyyy',
+                  ).format(pickedDate);
                   if (onDateSelected != null) onDateSelected(pickedDate);
                 }
               }

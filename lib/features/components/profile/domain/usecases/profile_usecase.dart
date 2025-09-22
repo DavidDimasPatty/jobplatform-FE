@@ -1,4 +1,5 @@
 import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 
 import '../repositories/auth_repository.dart';
@@ -12,11 +13,12 @@ class ProfileUsecase {
     return repository.profile(id);
   }
 
-  Future<CertificateModel?> addCertificate(CertificateModel certificate) {
+  // Certificate
+  Future<CertificateResponse> addCertificate(CertificateModel certificate) {
     return repository.certificateAdd(certificate);
   }
 
-  Future<CertificateModel?> editCertificate(CertificateModel certificate) {
+  Future<CertificateResponse> editCertificate(CertificateModel certificate) {
     return repository.certificateEdit(certificate);
   }
 

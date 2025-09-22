@@ -1,4 +1,5 @@
 import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/aut_remote_datasource.dart';
@@ -15,14 +16,19 @@ class AuthRepositoryImpl implements AuthRepository {
     return profileModel;
   }
 
+  // Certificate
   @override
-  Future<CertificateModel?> certificateAdd(CertificateModel certificate) async {
+  Future<CertificateResponse> certificateAdd(
+    CertificateModel certificate,
+  ) async {
     final result = await remoteDataSource.certificateAdd(certificate);
     return result;
   }
 
   @override
-  Future<CertificateModel?> certificateEdit(CertificateModel certificate) async {
+  Future<CertificateResponse> certificateEdit(
+    CertificateModel certificate,
+  ) async {
     final result = await remoteDataSource.certificateEdit(certificate);
     return result;
   }

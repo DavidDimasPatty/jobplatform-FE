@@ -2,23 +2,27 @@ import 'package:job_platform/features/components/profile/data/models/skillModel.
 
 class CertificateModel {
   String idUser;
+  String? idUserCertificate;
+  String? idCertificate;
   String nama;
   String publisher;
   List<SkillModel> skill;
   String code;
   String codeURL;
-  String deskripsi;
+  String? deskripsi;
   DateTime publishDate;
   DateTime expiredDate;
 
   CertificateModel({
     required this.idUser,
+    this.idUserCertificate,
+    this.idCertificate,
     required this.nama,
     required this.publisher,
     required this.skill,
     required this.code,
     required this.codeURL,
-    this.deskripsi = '',
+    this.deskripsi,
     required this.publishDate,
     required this.expiredDate,
   });
@@ -44,8 +48,9 @@ class CertificateModel {
   Map<String, dynamic> toJson() {
     return {
       'idUser': idUser,
+      'idUserCertificate': idUserCertificate,
       'certificate': {
-        'idCertificate': null,
+        'idCertificate': idCertificate,
         'nama': nama,
         'publisher': publisher,
       },
@@ -53,8 +58,8 @@ class CertificateModel {
       'code': code,
       'codeURL': codeURL,
       'deskripsi': deskripsi,
-      'publishDate': publishDate,
-      'expiredDate': expiredDate,
+      'publishDate': publishDate.toIso8601String(),
+      'expiredDate': expiredDate.toIso8601String(),
     };
   }
 }
