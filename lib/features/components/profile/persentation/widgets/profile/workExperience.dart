@@ -95,8 +95,20 @@ class _Workexperience extends State<Workexperience> {
                       ),
                       Column(
                         children: [
-                          Text(data.namaPerusahaan!),
-                          Text(data.namaJabatan! + " - " + data.sistemKerja!),
+                          Text(
+                            data.namaPerusahaan!,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            data.namaJabatan! + " - " + data.sistemKerja!,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
                           // Text(data.penjurusan!),
                         ],
                       ),
@@ -107,11 +119,11 @@ class _Workexperience extends State<Workexperience> {
                           softWrap: true,
                           textAlign: TextAlign.center,
                           DateFormat(
-                                'yyyy-MM-dd',
+                                'MMM yyyy',
                               ).format(data.startDate!).toString() +
                               " - " +
                               DateFormat(
-                                'yyyy-MM-dd',
+                                'MMM yyyy',
                               ).format(data.endDate!).toString(),
                         ),
                       ),

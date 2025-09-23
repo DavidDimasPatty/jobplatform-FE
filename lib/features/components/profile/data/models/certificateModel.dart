@@ -11,7 +11,7 @@ class CertificateModel {
   String codeURL;
   String? deskripsi;
   DateTime publishDate;
-  DateTime expiredDate;
+  DateTime? expiredDate;
 
   CertificateModel({
     required this.idUser,
@@ -59,7 +59,7 @@ class CertificateModel {
       'codeURL': codeURL,
       'deskripsi': deskripsi,
       'publishDate': publishDate.toIso8601String(),
-      'expiredDate': expiredDate.toIso8601String(),
+      'expiredDate': expiredDate?.toIso8601String() ?? null,
     };
   }
 }

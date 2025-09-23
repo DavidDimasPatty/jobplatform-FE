@@ -193,7 +193,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               decoration: InputDecoration(
                                 labelText: 'Nama Sekolah',
                                 hintText: 'Masukan Nama Sekolah',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.school),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -216,7 +216,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               decoration: InputDecoration(
                                 labelText: 'Lokasi Sekolah',
                                 hintText: 'Masukan Lokasi Sekolah',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.location_pin),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -239,7 +239,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               decoration: InputDecoration(
                                 labelText: 'Tingkatan',
                                 hintText: 'Masukan Tingkatan',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.show_chart),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -262,7 +262,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               decoration: InputDecoration(
                                 labelText: 'Penjurusan',
                                 hintText: 'Masukan Penjurusan',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.local_library),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -286,7 +286,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                 labelText: 'Deskripsi Pekerjaan',
                                 hintText: 'Masukan Deskripsi Pekerjaan',
                                 border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.location_pin),
+                                prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 10,
                                   horizontal: 11,
@@ -309,6 +309,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                   onTap: () => _pickStartDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "Start Date",
                                       border: OutlineInputBorder(),
                                     ),
@@ -328,6 +329,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                       : () => _pickEndDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "End Date",
                                       border: OutlineInputBorder(),
                                     ),
@@ -358,7 +360,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                       labelText: 'GPA',
                                       hintText: 'Masukan GPA',
                                       border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.account_circle),
+                                      prefixIcon: Icon(Icons.bar_chart),
                                       contentPadding: EdgeInsets.symmetric(
                                         vertical: 8,
                                         horizontal: 11,

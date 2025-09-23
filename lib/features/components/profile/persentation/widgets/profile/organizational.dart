@@ -95,8 +95,20 @@ class _Organizational extends State<Organizational> {
                       ),
                       Column(
                         children: [
-                          Text(data.nama!),
-                          Text(data.jabatan!),
+                          Text(
+                            data.nama!,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            data.jabatan!,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
                           // Text(data.penjurusan!),
                         ],
                       ),
@@ -107,11 +119,11 @@ class _Organizational extends State<Organizational> {
                           softWrap: true,
                           textAlign: TextAlign.center,
                           DateFormat(
-                                'yyyy-MM-dd',
+                                'MMM yyyy',
                               ).format(data.startDate!).toString() +
                               " - " +
                               DateFormat(
-                                'yyyy-MM-dd',
+                                'MMM yyyy',
                               ).format(data.endDate!).toString(),
                         ),
                       ),

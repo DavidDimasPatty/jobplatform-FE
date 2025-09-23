@@ -33,6 +33,7 @@ class _CertificateAddState extends State<CertificateAdd> {
   // Helper variables
   bool _isLoading = false;
   DateTime? _selectedIssueDate;
+  bool _hasExpiredDate = false;
   List<String> _selectedSkills = [];
 
   // Use case instance
@@ -79,9 +80,16 @@ class _CertificateAddState extends State<CertificateAdd> {
         final issueDate = DateFormat('yyyy-MM-dd').format(
           DateFormat('dd MMMM yyyy', 'en_US').parse(_issueDateController.text),
         );
-        final expiryDate = DateFormat('yyyy-MM-dd').format(
-          DateFormat('dd MMMM yyyy', 'en_US').parse(_expiryDateController.text),
-        );
+
+        var expiryDate;
+        if (_hasExpiredDate) {
+          expiryDate = DateFormat('yyyy-MM-dd').format(
+            DateFormat(
+              'dd MMMM yyyy',
+              'en_US',
+            ).parse(_expiryDateController.text),
+          );
+        }
 
         CertificateModel newCertificate = CertificateModel(
           idUser: idUser,
@@ -91,7 +99,7 @@ class _CertificateAddState extends State<CertificateAdd> {
           // Assuming skills are handled elsewhere or not required here
           skill: [],
           publishDate: DateTime.parse(issueDate),
-          expiredDate: DateTime.parse(expiryDate),
+          expiredDate: _hasExpiredDate ? DateTime.parse(expiryDate) : null,
           code: _credentialIdController.text,
           codeURL: _credentialUrlController.text,
         );
@@ -231,58 +239,60 @@ class _CertificateAddState extends State<CertificateAdd> {
                           return null;
                         },
                       ),
+                      buildDateField(
+                        'Issue Date',
+                        _issueDateController,
+                        (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter issue date';
+                          }
+                          return null;
+                        },
+                        context,
+                        onDateSelected: (date) {
+                          setState(() {
+                            _selectedIssueDate = date;
+                            _issueDateController.text = date != null
+                                ? DateFormat('dd MMMM yyyy').format(date)
+                                : '';
+                            if (_expiryDateController.text.isNotEmpty &&
+                                _selectedIssueDate != null &&
+                                DateTime.tryParse(_expiryDateController.text) !=
+                                    null &&
+                                DateTime.parse(
+                                  _expiryDateController.text,
+                                ).isBefore(_selectedIssueDate!)) {
+                              _expiryDateController.clear();
+                            }
+                          });
+                        },
+                      ),
                       Row(
                         children: [
-                          Expanded(
-                            child: buildDateField(
-                              'Issue Date',
-                              _issueDateController,
-                              (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter issue date';
+                          Checkbox(
+                            value: _hasExpiredDate,
+                            onChanged: (checked) {
+                              setState(() {
+                                _hasExpiredDate = checked ?? false;
+                                if (!_hasExpiredDate) {
+                                  _expiryDateController.clear();
                                 }
-                                return null;
-                              },
-                              context,
-                              onDateSelected: (date) {
-                                setState(() {
-                                  _selectedIssueDate = date;
-                                  _issueDateController.text = date != null
-                                      ? DateFormat('dd MMMM yyyy').format(date)
-                                      : '';
-                                  if (_expiryDateController.text.isNotEmpty &&
-                                      _selectedIssueDate != null &&
-                                      DateTime.tryParse(
-                                            _expiryDateController.text,
-                                          ) !=
-                                          null &&
-                                      DateTime.parse(
-                                        _expiryDateController.text,
-                                      ).isBefore(_selectedIssueDate!)) {
-                                    _expiryDateController.clear();
-                                  }
-                                });
-                              },
-                            ),
+                              });
+                            },
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: buildDateField(
-                              'Expiry Date',
-                              _expiryDateController,
-                              (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter expiry date';
-                                }
-                                return null;
-                              },
-                              context,
-                              enabled: _selectedIssueDate != null,
-                              firstDate: _selectedIssueDate,
-                            ),
-                          ),
+                          Text('Has Expiry Date'),
                         ],
                       ),
+                      if (_hasExpiredDate)
+                        buildDateField(
+                          'Expiry Date',
+                          _expiryDateController,
+                          (value) {
+                            return null;
+                          },
+                          context,
+                          firstDate: _selectedIssueDate,
+                        ),
                       buildTextField(
                         'Credential ID',
                         _credentialIdController,
@@ -370,10 +380,10 @@ class _CertificateAddState extends State<CertificateAdd> {
           prefixIcon: Icon(Icons.arrow_drop_down),
         ),
         items: items
-            .map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item),
-                ))
+            .map(
+              (item) =>
+                  DropdownMenuItem<String>(value: item, child: Text(item)),
+            )
             .toList(),
         onChanged: onChanged,
         validator: validator,

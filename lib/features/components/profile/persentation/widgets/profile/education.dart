@@ -94,8 +94,20 @@ class _Education extends State<Education> {
                       ),
                       Column(
                         children: [
-                          Text(data.nama!),
-                          Text(data.tingkat! + " - " + data.penjurusan!),
+                          Text(
+                            data.nama!,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            data.tingkat! + " - " + data.penjurusan!,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
                           // Text(data.penjurusan!),
                         ],
                       ),
@@ -106,11 +118,11 @@ class _Education extends State<Education> {
                           softWrap: true,
                           textAlign: TextAlign.center,
                           DateFormat(
-                                'yyyy-MM-dd',
+                                'MMM yyyy',
                               ).format(data.startDate!).toString() +
                               " - " +
                               DateFormat(
-                                'yyyy-MM-dd',
+                                'MMM yyyy',
                               ).format(data.endDate!).toString(),
                         ),
                       ),
