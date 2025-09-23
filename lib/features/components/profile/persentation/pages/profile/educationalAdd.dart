@@ -1,17 +1,15 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/signup/data/models/country.dart';
-
-import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
-import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
-import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
-import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
+import 'dart:ui' as ui;
+import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
+import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class EducationalAdd extends StatefulWidget {
   const EducationalAdd({super.key});
@@ -21,14 +19,22 @@ class EducationalAdd extends StatefulWidget {
 }
 
 class _EducationalAdd extends State<EducationalAdd> {
-  final _headLineController = TextEditingController();
   final _deskripsiController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _lokasiController = TextEditingController();
+  final _penjurusanController = TextEditingController();
+  final _tingkatController = TextEditingController();
+  final _gpaController = TextEditingController();
   final _namaController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  late SignupUseCase signupUseCase;
+
+  // Helper variables
+  bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+  List<String> _selectedSkills = [];
+
+  // Use case instance
+  late ProfileUsecase _profileUseCase;
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -63,76 +69,77 @@ class _EducationalAdd extends State<EducationalAdd> {
   }
 
   Future _handleAddEducation() async {
-    // if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    // try {
-    //   // print(_tanggalLahirController.selectedDates);
-    //   // print(selectedProvinsi!.nama);
-    //   // print(selectedKota!.nama);
-    //   DateTime? tanggalLahir = _tanggalLahirController.selectedDate;
-    //   SignupRequestModel data = SignupRequestModel(
-    //     registerAs: "user",
-    //     email: _emailController.text,
-    //     nama: _namaController.text,
-    //     domisili:
-    //         selectedProvinsi!.nama +
-    //         "," +
-    //         selectedKota!.nama +
-    //         "," +
-    //         _alamatController.text,
-    //     tanggalLahir: tanggalLahir!,
-    //     noTelp: selectedCountry!.dialCode + _phoneController.text,
-    //     jenisKelamin: gender,
-    //     tempatLahir:
-    //         selectedProvinsiLahir!.nama + "," + selectedKotaLahir!.nama,
-    //   );
-    //   SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
+      try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idUser');
 
-    //   // if (mounted) {
-    //   //   Navigator.pushReplacement(
-    //   //     context,
-    //   //     MaterialPageRoute(builder: (context) => const Login()),
-    //   //   );
-    //   // }
-    //   if (dataRes.responseMessages == "Sukses") {
-    //     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString("loginAs", "user");
-    //     await prefs.setString("idUser", dataRes.user!.id);
-    //     await prefs.setString("nama", dataRes.user!.nama);
-    //     await prefs.setString("email", dataRes.user!.email);
-    //     await prefs.setString("noTelp", dataRes.user!.noTelp);
-    //     return Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => Layout()),
-    //     );
-    //   } else {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(dataRes.responseMessages),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // } catch (e) {
-    //   debugPrint('Error during signup: $e');
-    //   // Show error message to user
-    //   if (mounted) {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Signup failed. Please try again.'),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // }
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        // Format dates to 'yyyy-MM-dd'
+        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
+        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
+
+        EducationModel newEducation = EducationModel(
+          idUser: idUser,
+          nama: _namaController.text,
+          deskripsi: _deskripsiController.text,
+          lokasi: _lokasiController.text,
+          tingkat: _tingkatController.text,
+          penjurusan: _penjurusanController.text,
+          gpa: _gpaController.text,
+          // Assuming skills are handled elsewhere or not required here
+          skill: [],
+          startDate: DateTime.parse(issueDate),
+          endDate: DateTime.parse(expiryDate),
+        );
+
+        EducationResponse response = await _profileUseCase.addEducation(
+          newEducation,
+        );
+
+        // On success, clear the form or navigate away
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Education added successfully!')),
+          );
+          // Navigator.pop(context); // Go back to the previous screen
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to add education. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        _formKey.currentState!.reset();
+      } catch (e) {
+        // Handle errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to add education. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    final remoteDataSource = AuthRemoteDatasource();
+    final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
-    signupUseCase = SignupUseCase(repository);
+    _profileUseCase = ProfileUsecase(repository);
   }
 
   @override
@@ -205,7 +212,30 @@ class _EducationalAdd extends State<EducationalAdd> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _headLineController,
+                              controller: _lokasiController,
+                              decoration: InputDecoration(
+                                labelText: 'Lokasi Sekolah',
+                                hintText: 'Masukan Lokasi Sekolah',
+                                prefixIcon: Icon(Icons.info),
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 11,
+                                ),
+                              ),
+                              // initialValue: email,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
+                            ),
+                          ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: TextFormField(
+                              controller: _tingkatController,
                               decoration: InputDecoration(
                                 labelText: 'Tingkatan',
                                 hintText: 'Masukan Tingkatan',
@@ -228,7 +258,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _headLineController,
+                              controller: _penjurusanController,
                               decoration: InputDecoration(
                                 labelText: 'Penjurusan',
                                 hintText: 'Masukan Penjurusan',
@@ -323,8 +353,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                   // height: 90,
                                   //width: 300,
                                   child: TextFormField(
-                                    readOnly: true,
-                                    controller: _namaController,
+                                    controller: _gpaController,
                                     decoration: InputDecoration(
                                       labelText: 'GPA',
                                       hintText: 'Masukan GPA',
@@ -357,7 +386,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               //   ),
                               // ),
                               Directionality(
-                                textDirection: TextDirection.rtl,
+                                textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
