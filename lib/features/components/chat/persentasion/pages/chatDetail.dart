@@ -80,6 +80,78 @@ class _ChatDetail extends State<ChatDetail> {
             message: "Baik",
             nama: "David",
           ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo David",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo Bu",
+            nama: "David",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Gimana Kabar?",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Baik",
+            nama: "David",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo David",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo Bu",
+            nama: "David",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Gimana Kabar?",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Baik",
+            nama: "David",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo David",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo Bu",
+            nama: "David",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Gimana Kabar?",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Baik",
+            nama: "David",
+          ),
         ];
       });
     } catch (e) {
@@ -136,6 +208,7 @@ class _ChatDetail extends State<ChatDetail> {
 
     return Center(
       child: Container(
+        margin: EdgeInsets.only(bottom: 20),
         width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
             ? double.infinity
             : MediaQuery.of(context).size.width * 0.45,
@@ -151,6 +224,7 @@ class _ChatDetail extends State<ChatDetail> {
           layout: ResponsiveRowColumnType.COLUMN,
           rowSpacing: 100,
           columnSpacing: 20,
+
           children: [
             ResponsiveRowColumnItem(
               rowFlex: 2,
@@ -158,7 +232,7 @@ class _ChatDetail extends State<ChatDetail> {
             ),
             ResponsiveRowColumnItem(
               rowFlex: 2,
-              child: Chatdetailbody(dataChat: dataChat),
+              child: Expanded(child: Chatdetailbody(dataChat: dataChat)),
             ),
             ResponsiveRowColumnItem(rowFlex: 2, child: Chatdetailbottom()),
             // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),

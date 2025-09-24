@@ -17,22 +17,19 @@ class _Chatdetailbody extends State<Chatdetailbody> {
 
   @override
   Widget build(BuildContext context) {
+    //var mediaQueryHeight = MediaQuery.of(context).size.height;
     return Container(
       child: Column(
         children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+          Expanded(
             child: ListView.separated(
-              separatorBuilder: (context, index) {
-                return Divider();
-              },
+              // reverse: true,
+              padding: const EdgeInsets.all(10),
               itemCount: widget.dataChat.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 8),
               itemBuilder: (BuildContext context, int index) {
                 return Chatdetailbubble(data: widget.dataChat[index]);
               },
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              physics: ScrollPhysics(),
             ),
           ),
         ],

@@ -35,7 +35,7 @@ class _Chatdetailbubble extends State<Chatdetailbubble> {
         ),
         decoration: BoxDecoration(
           color: widget.data.nama == "David"
-              ? Colors.green[300]
+              ? Colors.blue[300]
               : Colors.grey[300],
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
@@ -51,7 +51,7 @@ class _Chatdetailbubble extends State<Chatdetailbubble> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(widget.data.nama!, style: const TextStyle(fontSize: 15)),
+            Text(widget.data.message!, style: const TextStyle(fontSize: 15)),
             const SizedBox(height: 4),
             Text(
               DateFormat('HH:mm').format(widget.data.addDate!),
