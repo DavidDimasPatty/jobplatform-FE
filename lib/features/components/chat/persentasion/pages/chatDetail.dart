@@ -15,7 +15,8 @@ import 'package:job_platform/features/components/setting/persentation/widgets/to
 import 'package:responsive_framework/responsive_framework.dart';
 
 class ChatDetail extends StatefulWidget {
-  const ChatDetail({super.key});
+  Key navigatorKeys;
+  ChatDetail({super.key, required this.navigatorKeys});
 
   @override
   State<ChatDetail> createState() => _ChatDetail();

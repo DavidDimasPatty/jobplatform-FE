@@ -5,7 +5,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Chatbody extends StatefulWidget {
   final List<Chatitems> items;
-  const Chatbody({super.key, required this.items});
+  GlobalKey<NavigatorState> navigatorKeys;
+  Chatbody({super.key, required this.items, required this.navigatorKeys});
 
   @override
   State<Chatbody> createState() => _Chatbody(this.items);

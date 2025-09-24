@@ -11,7 +11,8 @@ import 'package:job_platform/features/components/setting/persentation/widgets/to
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Chat extends StatefulWidget {
-  const Chat({super.key});
+  final GlobalKey<NavigatorState> navigatorKeys;
+  Chat({super.key, required this.navigatorKeys});
 
   @override
   State<Chat> createState() => _Chat();
@@ -56,16 +57,19 @@ class _Chat extends State<Chat> {
             photoUrl: "assets/images/BG_HRD.png",
             name: "HRD Indomaret",
             lastChat: "Halo David, Bagaimana Penawaran Terakhir?",
+            navigatorKeys: widget.navigatorKeys,
           ),
           Chatitems(
             photoUrl: "assets/images/BG_HRD.png",
             name: "HRD Alfamart",
             lastChat: "Jadi proses selanjutnya bagaimana?",
+            navigatorKeys: widget.navigatorKeys,
           ),
           Chatitems(
             photoUrl: "assets/images/BG_HRD.png",
             name: "HRD Alfamart",
             lastChat: "Saya mau menanyakan sesuatu terkait profile anda",
+            navigatorKeys: widget.navigatorKeys,
           ),
         ];
       });
@@ -143,7 +147,10 @@ class _Chat extends State<Chat> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Chatbody(items: dataChat),
+                child: Chatbody(
+                  items: dataChat,
+                  navigatorKeys: widget.navigatorKeys,
+                ),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
