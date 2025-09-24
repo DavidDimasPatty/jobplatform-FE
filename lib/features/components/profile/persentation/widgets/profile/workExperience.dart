@@ -5,18 +5,16 @@ import 'package:intl/intl.dart';
 
 class Workexperience extends StatefulWidget {
   List<WorkexperienceMV>? dataWork;
-  final Function(int page) onTabSelected;
-  Workexperience({super.key, this.dataWork, required this.onTabSelected});
+  Workexperience({super.key, this.dataWork});
 
   @override
   State<Workexperience> createState() =>
-      _Workexperience(dataWork, onTabSelected);
+      _Workexperience(dataWork);
 }
 
 class _Workexperience extends State<Workexperience> {
   List<WorkexperienceMV>? dataWork;
-  final Function(int page) onTabSelected;
-  _Workexperience(this.dataWork, this.onTabSelected);
+  _Workexperience(this.dataWork);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,7 +43,7 @@ class _Workexperience extends State<Workexperience> {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  onTabSelected!(4);
+                  // onTabSelected!(4);
                 },
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
@@ -66,7 +64,7 @@ class _Workexperience extends State<Workexperience> {
               var data = entry.value;
               return InkWell(
                 onTap: () {
-                  onTabSelected(5);
+                  // onTabSelected(5);
                 },
                 child: Container(
                   margin: EdgeInsets.all(5),

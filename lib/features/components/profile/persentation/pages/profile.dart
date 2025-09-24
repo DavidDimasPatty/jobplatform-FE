@@ -21,16 +21,14 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
-  final Function(int page) onTabSelected;
-  const Profile({super.key, required this.onTabSelected});
+  const Profile({super.key});
 
   @override
-  State<Profile> createState() => _Profile(onTabSelected);
+  State<Profile> createState() => _Profile();
 }
 
 class _Profile extends State<Profile> {
-  final Function(int page) onTabSelected;
-  _Profile(this.onTabSelected);
+  _Profile();
 
   // Data
   Profiledata? dataUser;
@@ -181,7 +179,7 @@ class _Profile extends State<Profile> {
                             size: 20,
                           ),
                           onPressed: () {
-                            onTabSelected(3);
+                            // onTabSelected(3);
                           },
                         ),
                       ),
@@ -265,31 +263,31 @@ class _Profile extends State<Profile> {
               ResponsiveRowColumnItem(
                 child: Workexperience(
                   dataWork: dataWork,
-                  onTabSelected: onTabSelected,
+                  // onTabSelected: onTabSelected,
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Organizational(
                   dataOrg: dataOrg,
-                  onTabSelected: onTabSelected,
+                  // onTabSelected: onTabSelected,
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Education(
                   dataEdu: dataEdu,
-                  onTabSelected: onTabSelected,
+                  // onTabSelected: onTabSelected,
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Certificate(
                   dataCertificates: dataCertificate,
-                  onTabSelected: onTabSelected,
+                  // onTabSelected: onTabSelected,
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Skill(
                   dataSkills: dataSkill,
-                  onTabSelected: onTabSelected,
+                  // onTabSelected: onTabSelected,
                 ),
               ),
               ResponsiveRowColumnItem(

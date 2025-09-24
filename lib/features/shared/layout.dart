@@ -11,6 +11,7 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/experienceEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profileNav.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
 import 'package:job_platform/features/shared/bottomAppLayout.dart';
 
@@ -25,7 +26,14 @@ class _LayoutState extends State<Layout> {
   bool _showNotification = false;
   bool _showMessages = false;
   int _selectedIndex = 0;
-  late List<Widget> _pages;
+  // late List<Widget> _pages;
+
+  final _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+  ];
+
   toggleNotification() {
     print(_showNotification);
     setState(() {
@@ -38,7 +46,12 @@ class _LayoutState extends State<Layout> {
 
   _onTabSelected(int index) {
     setState(() {
-      _selectedIndex = index;
+      if (_selectedIndex == index) {
+        // If user taps the same tab again, pop to first route in that tab
+        _navigatorKeys[index].currentState!.popUntil((r) => r.isFirst);
+      } else {
+        setState(() => _selectedIndex = index);
+      }
     });
   }
 
@@ -54,37 +67,75 @@ class _LayoutState extends State<Layout> {
   @override
   void initState() {
     super.initState();
-    _pages = [
-      const HomePage(),
-      const Cart(),
-      Profile(onTabSelected: _onTabSelected),
-      Personalinfo(),
-      ExperienceAdd(),
-      ExperienceEdit(),
-      EducationalAdd(),
-      EducationalEdit(),
-      OrganizationAdd(),
-      OrganizationEdit(),
-      CertificateAdd(),
-      CertificateEdit(),
-    ];
+    // _pages = [
+    //   const HomePage(),
+    //   const Cart(),
+    //   Profile(onTabSelected: _onTabSelected),
+    //   Personalinfo(),
+    //   ExperienceAdd(),
+    //   ExperienceEdit(),
+    //   EducationalAdd(),
+    //   EducationalEdit(),
+    //   OrganizationAdd(),
+    //   OrganizationEdit(),
+    //   CertificateAdd(),
+    //   CertificateEdit(),
+    // ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: TopApplayout(
-        onToggleNotification: toggleNotification,
-        onToggleMessages: toggleMessages,
-      ),
-      body: Stack(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        final currentNavigator = _navigatorKeys[_selectedIndex].currentState!;
+        if (didPop) return; // system already handled back
+
+        if (currentNavigator.canPop()) {
+          currentNavigator.pop();
+        } else {
+          // allow system/app to close
+          Navigator.of(context).maybePop();
+        }
+      },
+      child: Stack(
         children: [
-          //IndexedStack(index: _selectedIndex, children: _pages),
-          _pages[_selectedIndex],
+          Scaffold(
+            backgroundColor: Colors.white,
+            appBar: TopApplayout(
+              onToggleNotification: toggleNotification,
+              onToggleMessages: toggleMessages,
+            ),
+            body: IndexedStack(
+              index: _selectedIndex,
+              children: [
+                Navigator(
+                  key: _navigatorKeys[0],
+                  onGenerateRoute: (settings) =>
+                      MaterialPageRoute(builder: (_) => const HomePage()),
+                ),
+                Navigator(
+                  key: _navigatorKeys[1],
+                  onGenerateRoute: (settings) =>
+                      MaterialPageRoute(builder: (_) => const Cart()),
+                ),
+                Navigator(
+                  key: _navigatorKeys[2],
+                  onGenerateRoute: (settings) => MaterialPageRoute(
+                    builder: (_) => const ProfileNav(),
+                  ),
+                ),
+              ],
+            ),
+            bottomNavigationBar: BottomApplayout(
+              currentIndex: _selectedIndex,
+              onTabSelected: _onTabSelected,
+            ),
+          ),
+
           if (_showNotification)
             Positioned(
-              top: 0,
+              top: MediaQuery.of(context).padding.top,
               left: 0,
               right: 0,
               child: Material(
@@ -112,7 +163,7 @@ class _LayoutState extends State<Layout> {
           /// Overlay messages
           if (_showMessages)
             Positioned(
-              top: 0,
+              top: MediaQuery.of(context).padding.top,
               left: 0,
               right: 0,
               child: Material(
@@ -134,11 +185,6 @@ class _LayoutState extends State<Layout> {
               ),
             ),
         ],
-      ),
-
-      bottomNavigationBar: BottomApplayout(
-        currentIndex: _selectedIndex,
-        onTabSelected: _onTabSelected,
       ),
     );
   }

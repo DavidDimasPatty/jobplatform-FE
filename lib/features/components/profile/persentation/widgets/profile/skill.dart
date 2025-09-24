@@ -3,22 +3,19 @@ import 'package:job_platform/features/components/profile/domain/entities/SkillMV
 
 class Skill extends StatefulWidget {
   final List<SkillMV> dataSkills;
-  final Function(int page) onTabSelected;
   const Skill({
     super.key,
     required this.dataSkills,
-    required this.onTabSelected,
   });
 
   @override
-  _SkillState createState() => _SkillState(dataSkills, this.onTabSelected);
+  _SkillState createState() => _SkillState(dataSkills);
 }
 
 class _SkillState extends State<Skill> {
   final List<SkillMV> dataSkills;
-  final Function(int page) onTabSelected;
 
-  _SkillState(this.dataSkills, this.onTabSelected);
+  _SkillState(this.dataSkills);
 
   void _addSkill() {
     // Logic to add a new skill

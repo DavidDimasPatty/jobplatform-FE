@@ -5,17 +5,15 @@ import 'package:intl/intl.dart';
 
 class Education extends StatefulWidget {
   List<EducationMV>? dataEdu;
-  final Function(int page) onTabSelected;
-  Education({super.key, this.dataEdu, required this.onTabSelected});
+  Education({super.key, this.dataEdu});
 
   @override
-  State<Education> createState() => _Education(dataEdu, this.onTabSelected);
+  State<Education> createState() => _Education(dataEdu);
 }
 
 class _Education extends State<Education> {
   List<EducationMV>? dataEdu;
-  final Function(int page) onTabSelected;
-  _Education(this.dataEdu, this.onTabSelected);
+  _Education(this.dataEdu);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,7 +42,7 @@ class _Education extends State<Education> {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  onTabSelected!(6);
+                  // onTabSelected!(6);
                 },
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
@@ -65,7 +63,7 @@ class _Education extends State<Education> {
               var data = entry.value;
               return InkWell(
                 onTap: () {
-                  onTabSelected(7);
+                  // onTabSelected(7);
                 },
                 child: Container(
                   margin: EdgeInsets.all(5),

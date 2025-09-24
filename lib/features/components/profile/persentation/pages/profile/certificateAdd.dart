@@ -113,7 +113,7 @@ class _CertificateAddState extends State<CertificateAdd> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Certificate added successfully!')),
           );
-          // Navigator.pop(context); // Go back to the previous screen
+          Navigator.pop(context, true); // Go back to the previous screen
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

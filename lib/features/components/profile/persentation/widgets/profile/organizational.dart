@@ -5,18 +5,16 @@ import 'package:intl/intl.dart';
 
 class Organizational extends StatefulWidget {
   List<OrganizationMV>? dataOrg;
-  final Function(int page) onTabSelected;
-  Organizational({super.key, this.dataOrg, required this.onTabSelected});
+  Organizational({super.key, this.dataOrg});
 
   @override
   State<Organizational> createState() =>
-      _Organizational(dataOrg, this.onTabSelected);
+      _Organizational(dataOrg);
 }
 
 class _Organizational extends State<Organizational> {
   List<OrganizationMV>? dataOrg;
-  final Function(int page) onTabSelected;
-  _Organizational(this.dataOrg, this.onTabSelected);
+  _Organizational(this.dataOrg);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,7 +43,7 @@ class _Organizational extends State<Organizational> {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  onTabSelected!(8);
+                  // onTabSelected!(8);
                 },
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
@@ -66,7 +64,7 @@ class _Organizational extends State<Organizational> {
               var data = entry.value;
               return InkWell(
                 onTap: () {
-                  onTabSelected(9);
+                  // onTabSelected(9);
                 },
                 child: Container(
                   margin: EdgeInsets.all(5),
