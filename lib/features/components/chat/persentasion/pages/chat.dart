@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
+import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
@@ -8,14 +10,15 @@ import 'package:job_platform/features/components/setting/persentation/widgets/se
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Setting extends StatefulWidget {
-  const Setting({super.key});
+class Chat extends StatefulWidget {
+  const Chat({super.key});
 
   @override
-  State<Setting> createState() => _Setting();
+  State<Chat> createState() => _Chat();
 }
 
-class _Setting extends State<Setting> {
+class _Chat extends State<Chat> {
+  List<Chatitems> dataChat = [];
   // Loading state
   bool isLoading = true;
   String? errorMessage;
@@ -48,6 +51,23 @@ class _Setting extends State<Setting> {
       setState(() {
         isLoading = false;
         errorMessage = null;
+        dataChat = [
+          Chatitems(
+            photoUrl: "assets/images/BG_HRD.png",
+            name: "HRD Indomaret",
+            lastChat: "Halo David, Bagaimana Penawaran Terakhir?",
+          ),
+          Chatitems(
+            photoUrl: "assets/images/BG_HRD.png",
+            name: "HRD Alfamart",
+            lastChat: "Jadi proses selanjutnya bagaimana?",
+          ),
+          Chatitems(
+            photoUrl: "assets/images/BG_HRD.png",
+            name: "HRD Alfamart",
+            lastChat: "Saya mau menanyakan sesuatu terkait profile anda",
+          ),
+        ];
       });
     } catch (e) {
       print("Error loading profile data: $e");
@@ -121,8 +141,11 @@ class _Setting extends State<Setting> {
             rowSpacing: 100,
             columnSpacing: 20,
             children: [
-              ResponsiveRowColumnItem(rowFlex: 2, child: topSetting()),
-              ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
+              ResponsiveRowColumnItem(
+                rowFlex: 2,
+                child: Chatbody(items: dataChat),
+              ),
+              // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
           ),
         ),

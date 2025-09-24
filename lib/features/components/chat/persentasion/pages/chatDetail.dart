@@ -1,5 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/chat/domain/entities/ChatDetailItems.dart';
+import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
+import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
+import 'package:job_platform/features/components/chat/persentasion/widget/chatDetail/chatDetailBody.dart';
+import 'package:job_platform/features/components/chat/persentasion/widget/chatDetail/chatDetailBottom.dart';
+import 'package:job_platform/features/components/chat/persentasion/widget/chatDetail/chatDetailTop.dart';
 import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
@@ -8,14 +14,15 @@ import 'package:job_platform/features/components/setting/persentation/widgets/se
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Setting extends StatefulWidget {
-  const Setting({super.key});
+class ChatDetail extends StatefulWidget {
+  const ChatDetail({super.key});
 
   @override
-  State<Setting> createState() => _Setting();
+  State<ChatDetail> createState() => _ChatDetail();
 }
 
-class _Setting extends State<Setting> {
+class _ChatDetail extends State<ChatDetail> {
+  List<Chatdetailitems> dataChat = [];
   // Loading state
   bool isLoading = true;
   String? errorMessage;
@@ -48,6 +55,32 @@ class _Setting extends State<Setting> {
       setState(() {
         isLoading = false;
         errorMessage = null;
+        dataChat = [
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo David",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Halo Bu",
+            nama: "David",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Gimana Kabar?",
+            nama: "HRD",
+          ),
+          Chatdetailitems(
+            id: "1",
+            addDate: DateTime.parse("2025-05-05 04:04:30"),
+            message: "Baik",
+            nama: "David",
+          ),
+        ];
       });
     } catch (e) {
       print("Error loading profile data: $e");
@@ -101,30 +134,35 @@ class _Setting extends State<Setting> {
       );
     }
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-      child: Center(
-        child: Container(
-          width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-              ? double.infinity
-              : MediaQuery.of(context).size.width * 0.45,
-          alignment: Alignment.center,
-          child: ResponsiveRowColumn(
-            columnCrossAxisAlignment: CrossAxisAlignment.center,
-            rowMainAxisAlignment: MainAxisAlignment.center,
-            columnMainAxisAlignment: MainAxisAlignment.center,
-            rowCrossAxisAlignment: CrossAxisAlignment.center,
-            // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-            //     ? ResponsiveRowColumnType.COLUMN
-            //     : ResponsiveRowColumnType.ROW,
-            layout: ResponsiveRowColumnType.COLUMN,
-            rowSpacing: 100,
-            columnSpacing: 20,
-            children: [
-              ResponsiveRowColumnItem(rowFlex: 2, child: topSetting()),
-              ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
-            ],
-          ),
+    return Center(
+      child: Container(
+        width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+            ? double.infinity
+            : MediaQuery.of(context).size.width * 0.45,
+        alignment: Alignment.center,
+        child: ResponsiveRowColumn(
+          columnCrossAxisAlignment: CrossAxisAlignment.start,
+          rowMainAxisAlignment: MainAxisAlignment.start,
+          columnMainAxisAlignment: MainAxisAlignment.start,
+          rowCrossAxisAlignment: CrossAxisAlignment.start,
+          // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+          //     ? ResponsiveRowColumnType.COLUMN
+          //     : ResponsiveRowColumnType.ROW,
+          layout: ResponsiveRowColumnType.COLUMN,
+          rowSpacing: 100,
+          columnSpacing: 20,
+          children: [
+            ResponsiveRowColumnItem(
+              rowFlex: 2,
+              child: Chatdetailtop(dataChat: dataChat[0]),
+            ),
+            ResponsiveRowColumnItem(
+              rowFlex: 2,
+              child: Chatdetailbody(dataChat: dataChat),
+            ),
+            ResponsiveRowColumnItem(rowFlex: 2, child: Chatdetailbottom()),
+            // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
+          ],
         ),
       ),
     );

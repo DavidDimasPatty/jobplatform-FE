@@ -104,7 +104,7 @@ class _LoginFormState extends State<LoginForm> {
                   data.hrCompanies!.company.id!,
                 );
               }
-              return Navigator.push(
+              return Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const Layout()),
               );
@@ -116,7 +116,7 @@ class _LoginFormState extends State<LoginForm> {
                   await prefs.setString("nama", data.company!.nama!);
                   await prefs.setString("domain", data.company!.email!);
                   await prefs.setString("noTelp", data.company!.noTelp!);
-                  return Navigator.push(
+                  return Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => Layout()),
                   );
