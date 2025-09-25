@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/candidate/persentation/pages/candidateNav.dart';
 import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
+import 'package:job_platform/features/components/chat/persentasion/pages/chatNav.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
@@ -12,6 +14,7 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profileNav.dart';
+import 'package:job_platform/features/components/setting/persentation/settingNav.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
 import 'package:job_platform/features/shared/bottomAppLayout.dart';
 
@@ -29,6 +32,9 @@ class _LayoutState extends State<Layout> {
   // late List<Widget> _pages;
 
   final _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -97,7 +103,7 @@ class _LayoutState extends State<Layout> {
         } else {
           // allow system/app to close
           // Navigator.of(context).maybePop();
-          
+
           // Switch to Home Page
           if (_selectedIndex != 0) {
             setState(() {
@@ -113,6 +119,8 @@ class _LayoutState extends State<Layout> {
             appBar: TopApplayout(
               onToggleNotification: toggleNotification,
               onToggleMessages: toggleMessages,
+              currentIndex: _selectedIndex,
+              onTabSelected: _onTabSelected,
             ),
             body: IndexedStack(
               index: _selectedIndex,
@@ -123,14 +131,25 @@ class _LayoutState extends State<Layout> {
                       MaterialPageRoute(builder: (_) => const HomePage()),
                 ),
                 Navigator(
-                  key: _navigatorKeys[1],
-                  onGenerateRoute: (settings) =>
-                      MaterialPageRoute(builder: (_) => const Cart()),
+                  onGenerateRoute: (settings) => MaterialPageRoute(
+                    builder: (_) =>
+                        Candidatenav(navigatorKey: _navigatorKeys[1]),
+                  ),
                 ),
                 Navigator(
                   key: _navigatorKeys[2],
                   onGenerateRoute: (settings) =>
                       MaterialPageRoute(builder: (_) => const ProfileNav()),
+                ),
+                Navigator(
+                  key: _navigatorKeys[3],
+                  onGenerateRoute: (settings) =>
+                      MaterialPageRoute(builder: (_) => const Settingnav()),
+                ),
+                Navigator(
+                  onGenerateRoute: (settings) => MaterialPageRoute(
+                    builder: (_) => Chatnav(navigatorKey: _navigatorKeys[4]),
+                  ),
                 ),
               ],
             ),
