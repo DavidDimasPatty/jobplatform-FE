@@ -32,15 +32,15 @@ class _Candidatebody extends State<Candidatebody> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GridView.builder(
-            shrinkWrap: true, // biar bisa ditaruh di column
+            shrinkWrap: true,
             physics: const ScrollPhysics(),
             padding: const EdgeInsets.all(10),
             itemCount: widget.items.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // jumlah kolom (2 kotak per baris)
-              crossAxisSpacing: 10, // jarak horizontal antar kotak
-              mainAxisSpacing: 10, // jarak vertikal antar kotak
-              childAspectRatio: 3 / 4, // rasio kotak (lebar : tinggi)
+              crossAxisCount: 4,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 20,
+              childAspectRatio: 1 / 2,
             ),
             itemBuilder: (BuildContext context, int index) {
               final candidate = widget.items[index];

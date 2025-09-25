@@ -23,6 +23,10 @@ class Candidate extends StatefulWidget {
 
 class _Candidate extends State<Candidate> {
   List<CandidateItems> dataCandidate = [];
+  List<CandidateItems> dumpCandidate = [];
+  String searchQuery = "";
+  String? selectedRole;
+  final searchController = TextEditingController();
   // Loading state
   bool isLoading = true;
   String? errorMessage;
@@ -60,83 +64,94 @@ class _Candidate extends State<Candidate> {
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "David Dimas Patty",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Developer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Nando",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Designer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Daniel",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Designer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Krisna",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Designer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Rulof",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Developer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Ronald",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Developer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Yuan",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Developer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Inez",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Designer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Angel",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Developer",
           ),
           CandidateItems(
             id: "1",
             domisili: "Bandung, Jawa Barat",
             nama: "Dimas",
-            photoUrl: "assets/images/BG_Pelamar",
+            photoUrl: "assets/images/BG_Pelamar.png",
             score: "90",
             umur: "24",
+            role: "Designer",
           ),
         ];
+        dumpCandidate = List.from(dataCandidate);
       });
     } catch (e) {
       print("Error loading profile data: $e");
@@ -147,6 +162,94 @@ class _Candidate extends State<Candidate> {
         });
       }
     }
+  }
+
+  void _applyFilter() {
+    setState(() {
+      if ((searchQuery.isEmpty || searchQuery.trim().isEmpty) &&
+          selectedRole == null) {
+        dumpCandidate = List.from(dataCandidate);
+        return;
+      }
+
+      dumpCandidate = dataCandidate.where((candidate) {
+        final matchSearch =
+            candidate.nama?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+            false;
+        final matchRole =
+            selectedRole == null || candidate.role == selectedRole;
+        return matchSearch && matchRole;
+      }).toList();
+    });
+  }
+
+  void _onSearchChanged(String value) {
+    searchQuery = value;
+    _applyFilter();
+  }
+
+  void _openFilterPopup() async {
+    final result = await showModalBottomSheet<String?>(
+      context: context,
+      builder: (context) {
+        String? tempSelectedRole = selectedRole;
+        String? ValueEndRole = "";
+        return StatefulBuilder(
+          builder: (context, setStateSheet) => Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Filter by Role",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 12),
+                RadioListTile<String>(
+                  title: const Text("All"),
+                  value: "",
+                  groupValue: tempSelectedRole ?? "",
+                  onChanged: (value) {
+                    setStateSheet(
+                      () => tempSelectedRole = value == "" ? null : value,
+                    );
+                  },
+                ),
+                RadioListTile<String>(
+                  title: const Text("Developer"),
+                  value: "Developer",
+                  groupValue: tempSelectedRole,
+                  onChanged: (value) {
+                    setStateSheet(() => tempSelectedRole = value);
+                  },
+                ),
+                RadioListTile<String>(
+                  title: const Text("Designer"),
+                  value: "Designer",
+                  groupValue: tempSelectedRole,
+                  onChanged: (value) {
+                    setStateSheet(() => tempSelectedRole = value);
+                  },
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    ValueEndRole = tempSelectedRole;
+                    Navigator.pop(context, ValueEndRole);
+                  },
+                  child: const Text("Apply"),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    setState(() {
+      selectedRole = result;
+      _applyFilter();
+    });
   }
 
   @override
@@ -210,11 +313,18 @@ class _Candidate extends State<Candidate> {
             rowSpacing: 100,
             columnSpacing: 20,
             children: [
-              ResponsiveRowColumnItem(rowFlex: 2, child: Candidateheader()),
+              ResponsiveRowColumnItem(
+                rowFlex: 2,
+                child: Candidateheader(
+                  searchController: searchController,
+                  onSearchChanged: _onSearchChanged,
+                  onFilterTap: _openFilterPopup,
+                ),
+              ),
               ResponsiveRowColumnItem(
                 rowFlex: 2,
                 child: Candidatebody(
-                  items: dataCandidate,
+                  items: dumpCandidate,
                   navigatorKeys: widget.navigatorKeys,
                 ),
               ),
