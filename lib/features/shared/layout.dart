@@ -45,14 +45,15 @@ class _LayoutState extends State<Layout> {
   }
 
   _onTabSelected(int index) {
-    setState(() {
-      if (_selectedIndex == index) {
-        // If user taps the same tab again, pop to first route in that tab
-        _navigatorKeys[index].currentState!.popUntil((r) => r.isFirst);
-      } else {
-        setState(() => _selectedIndex = index);
+    if (_selectedIndex == index) {
+      // If user taps the same tab again, pop to first route in that tab
+      final navigator = _navigatorKeys[index].currentState;
+      if (navigator != null) {
+        navigator.pushNamedAndRemoveUntil('/', (route) => false);
       }
-    });
+    } else {
+      setState(() => _selectedIndex = index);
+    }
   }
 
   toggleMessages() {
@@ -95,7 +96,14 @@ class _LayoutState extends State<Layout> {
           currentNavigator.pop();
         } else {
           // allow system/app to close
-          Navigator.of(context).maybePop();
+          // Navigator.of(context).maybePop();
+          
+          // Switch to Home Page
+          if (_selectedIndex != 0) {
+            setState(() {
+              _selectedIndex = 0;
+            });
+          }
         }
       },
       child: Stack(
@@ -121,9 +129,8 @@ class _LayoutState extends State<Layout> {
                 ),
                 Navigator(
                   key: _navigatorKeys[2],
-                  onGenerateRoute: (settings) => MaterialPageRoute(
-                    builder: (_) => const ProfileNav(),
-                  ),
+                  onGenerateRoute: (settings) =>
+                      MaterialPageRoute(builder: (_) => const ProfileNav()),
                 ),
               ],
             ),
