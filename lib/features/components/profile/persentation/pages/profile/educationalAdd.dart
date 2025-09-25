@@ -25,6 +25,8 @@ class _EducationalAdd extends State<EducationalAdd> {
   final _tingkatController = TextEditingController();
   final _gpaController = TextEditingController();
   final _namaController = TextEditingController();
+
+  // Global key
   final _formKey = GlobalKey<FormState>();
 
   // Helper variables
@@ -108,7 +110,7 @@ class _EducationalAdd extends State<EducationalAdd> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Education added successfully!')),
           );
-          // Navigator.pop(context); // Go back to the previous screen
+          Navigator.pop(context, true); // Go back to the previous screen
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -193,7 +195,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               decoration: InputDecoration(
                                 labelText: 'Nama Sekolah',
                                 hintText: 'Masukan Nama Sekolah',
-                                prefixIcon: Icon(Icons.school),
+                                prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -239,7 +241,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               decoration: InputDecoration(
                                 labelText: 'Tingkatan',
                                 hintText: 'Masukan Tingkatan',
-                                prefixIcon: Icon(Icons.show_chart),
+                                prefixIcon: Icon(Icons.school),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -315,7 +317,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                     ),
                                     child: Text(
                                       startDate != null
-                                          ? "${startDate!.day}-${startDate!.month}-${startDate!.year}"
+                                          ? DateFormat('dd MMMM yyyy').format(startDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),
@@ -335,7 +337,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                     ),
                                     child: Text(
                                       endDate != null
-                                          ? "${endDate!.day}-${endDate!.month}-${endDate!.year}"
+                                          ? DateFormat('dd MMMM yyyy').format(endDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),

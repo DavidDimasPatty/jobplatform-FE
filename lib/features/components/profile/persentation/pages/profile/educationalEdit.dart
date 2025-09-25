@@ -1,34 +1,57 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/signup/data/models/country.dart';
+import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
+import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 
-import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/signup/data/models/country.dart';
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
-import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:intl/intl.dart';
 
 class EducationalEdit extends StatefulWidget {
-  const EducationalEdit({super.key});
+  final EducationMV education;
+
+  const EducationalEdit({super.key, required this.education});
 
   @override
-  State<EducationalEdit> createState() => _EducationalEdit();
+  State<EducationalEdit> createState() => _EducationalEdit(data: education);
 }
 
 class _EducationalEdit extends State<EducationalEdit> {
-  final _headLineController = TextEditingController();
+  final EducationMV data;
+
+  _EducationalEdit({required this.data});
+
+  // Textfield Controller
   final _deskripsiController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _lokasiController = TextEditingController();
+  final _penjurusanController = TextEditingController();
+  final _tingkatController = TextEditingController();
+  final _gpaController = TextEditingController();
   final _namaController = TextEditingController();
+
+  // Global key
   final _formKey = GlobalKey<FormState>();
-  late SignupUseCase signupUseCase;
+
+  // Helper variables
+  bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+  List<String> _selectedSkills = [];
+
+  // Use case instance
+  late ProfileUsecase _profileUseCase;
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -63,76 +86,130 @@ class _EducationalEdit extends State<EducationalEdit> {
   }
 
   Future _handleEditEducation() async {
-    // if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    // try {
-    //   // print(_tanggalLahirController.selectedDates);
-    //   // print(selectedProvinsi!.nama);
-    //   // print(selectedKota!.nama);
-    //   DateTime? tanggalLahir = _tanggalLahirController.selectedDate;
-    //   SignupRequestModel data = SignupRequestModel(
-    //     registerAs: "user",
-    //     email: _emailController.text,
-    //     nama: _namaController.text,
-    //     domisili:
-    //         selectedProvinsi!.nama +
-    //         "," +
-    //         selectedKota!.nama +
-    //         "," +
-    //         _alamatController.text,
-    //     tanggalLahir: tanggalLahir!,
-    //     noTelp: selectedCountry!.dialCode + _phoneController.text,
-    //     jenisKelamin: gender,
-    //     tempatLahir:
-    //         selectedProvinsiLahir!.nama + "," + selectedKotaLahir!.nama,
-    //   );
-    //   SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
+      try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idUser');
 
-    //   // if (mounted) {
-    //   //   Navigator.pushReplacement(
-    //   //     context,
-    //   //     MaterialPageRoute(builder: (context) => const Login()),
-    //   //   );
-    //   // }
-    //   if (dataRes.responseMessages == "Sukses") {
-    //     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString("loginAs", "user");
-    //     await prefs.setString("idUser", dataRes.user!.id);
-    //     await prefs.setString("nama", dataRes.user!.nama);
-    //     await prefs.setString("email", dataRes.user!.email);
-    //     await prefs.setString("noTelp", dataRes.user!.noTelp);
-    //     return Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => Layout()),
-    //     );
-    //   } else {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(dataRes.responseMessages),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // } catch (e) {
-    //   debugPrint('Error during signup: $e');
-    //   // Show error message to user
-    //   if (mounted) {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Signup failed. Please try again.'),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // }
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        // Format dates to 'yyyy-MM-dd'
+        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
+        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
+
+        EducationModel newEducation = EducationModel(
+          idUser: idUser,
+          idUserEducation: data.id,
+          idEducation: data.idEducation,
+          nama: _namaController.text,
+          deskripsi: _deskripsiController.text,
+          lokasi: _lokasiController.text,
+          tingkat: _tingkatController.text,
+          penjurusan: _penjurusanController.text,
+          gpa: _gpaController.text,
+          // Assuming skills are handled elsewhere or not required here
+          skill: [],
+          startDate: DateTime.parse(issueDate),
+          endDate: DateTime.parse(expiryDate),
+        );
+
+        EducationResponse response = await _profileUseCase.editEducation(
+          newEducation,
+        );
+
+        // On success, clear the form or navigate away
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Education edited successfully!')),
+          );
+          Navigator.pop(context, true); // Go back to the previous screen
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to edit education. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        _formKey.currentState!.reset();
+      } catch (e) {
+        // Handle errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to edit education. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future _handleDeleteEducaiton() async {
+    if (data == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      EducationResponse response = await _profileUseCase.deleteEducation(
+        data.id,
+      );
+
+      if (response.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Education deleted successfully!')),
+        );
+        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete education. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete education. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    final remoteDataSource = AuthRemoteDatasource();
+    final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
-    signupUseCase = SignupUseCase(repository);
+    _profileUseCase = ProfileUsecase(repository);
+    _loadData();
+  }
+
+  void _loadData() {
+    _deskripsiController.text = data.deskripsi ?? '';
+    _lokasiController.text = data.lokasi ?? '';
+    _penjurusanController.text = data.penjurusan;
+    _tingkatController.text = data.tingkat;
+    _gpaController.text = data.gpa;
+    _namaController.text = data.nama ?? '';
+    startDate = data.startDate;
+    endDate = data.endDate;
   }
 
   @override
@@ -186,7 +263,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               decoration: InputDecoration(
                                 labelText: 'Nama Sekolah',
                                 hintText: 'Masukan Nama Sekolah',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -205,11 +282,34 @@ class _EducationalEdit extends State<EducationalEdit> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _headLineController,
+                              controller: _lokasiController,
+                              decoration: InputDecoration(
+                                labelText: 'Lokasi Sekolah',
+                                hintText: 'Masukan Lokasi Sekolah',
+                                prefixIcon: Icon(Icons.location_pin),
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 11,
+                                ),
+                              ),
+                              // initialValue: email,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
+                            ),
+                          ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: TextFormField(
+                              controller: _tingkatController,
                               decoration: InputDecoration(
                                 labelText: 'Tingkatan',
                                 hintText: 'Masukan Tingkatan',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.school),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -228,11 +328,11 @@ class _EducationalEdit extends State<EducationalEdit> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _headLineController,
+                              controller: _penjurusanController,
                               decoration: InputDecoration(
                                 labelText: 'Penjurusan',
                                 hintText: 'Masukan Penjurusan',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.local_library),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -256,7 +356,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                                 labelText: 'Deskripsi Pekerjaan',
                                 hintText: 'Masukan Deskripsi Pekerjaan',
                                 border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.location_pin),
+                                prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 10,
                                   horizontal: 11,
@@ -279,12 +379,13 @@ class _EducationalEdit extends State<EducationalEdit> {
                                   onTap: () => _pickStartDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "Start Date",
                                       border: OutlineInputBorder(),
                                     ),
                                     child: Text(
                                       startDate != null
-                                          ? "${startDate!.day}-${startDate!.month}-${startDate!.year}"
+                                          ? DateFormat('dd MMMM yyyy').format(startDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),
@@ -298,12 +399,13 @@ class _EducationalEdit extends State<EducationalEdit> {
                                       : () => _pickEndDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "End Date",
                                       border: OutlineInputBorder(),
                                     ),
                                     child: Text(
                                       endDate != null
-                                          ? "${endDate!.day}-${endDate!.month}-${endDate!.year}"
+                                          ? DateFormat('dd MMMM yyyy').format(endDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),
@@ -323,13 +425,12 @@ class _EducationalEdit extends State<EducationalEdit> {
                                   // height: 90,
                                   //width: 300,
                                   child: TextFormField(
-                                    readOnly: true,
-                                    controller: _namaController,
+                                    controller: _gpaController,
                                     decoration: InputDecoration(
                                       labelText: 'GPA',
                                       hintText: 'Masukan GPA',
                                       border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.account_circle),
+                                      prefixIcon: Icon(Icons.bar_chart),
                                       contentPadding: EdgeInsets.symmetric(
                                         vertical: 8,
                                         horizontal: 11,
@@ -347,17 +448,24 @@ class _EducationalEdit extends State<EducationalEdit> {
                           ),
 
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // ElevatedButton(
-                              //   onPressed: _handleSignUp,
-                              //   child: Text(
-                              //     'Daftar',
-                              //     style: TextStyle(color: Colors.black),
-                              //   ),
-                              // ),
+                              TextButton.icon(
+                                onPressed: _showSimpleDeleteConfirmation,
+                                label: Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  foregroundColor: Colors.grey,
+                                  shadowColor: Colors.transparent,
+                                  surfaceTintColor: Colors.transparent,
+                                ),
+                              ),
+                              SizedBox(width: 20),
                               Directionality(
-                                textDirection: TextDirection.rtl,
+                                textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
@@ -385,6 +493,122 @@ class _EducationalEdit extends State<EducationalEdit> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showSimpleDeleteConfirmation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Delete Education',
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Warning icon
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.delete_forever,
+                    color: Colors.red,
+                    size: 48,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Are you sure you want to delete this Education?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 8),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.title, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              widget.education.nama!,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.business, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              '${widget.education.tingkat} - ${widget.education.penjurusan}',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  '⚠️ This action is permanent and cannot be undone.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.close, size: 16),
+              label: Text('Cancel'),
+              style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _handleDeleteEducaiton();
+              },
+              icon: Icon(Icons.delete, size: 16),
+              label: Text('Delete'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

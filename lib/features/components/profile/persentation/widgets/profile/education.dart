@@ -3,17 +3,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:intl/intl.dart';
 
-class Education extends StatefulWidget {
-  List<EducationMV>? dataEdu;
-  Education({super.key, this.dataEdu});
+class Education extends StatelessWidget {
+  final List<EducationMV> dataEdu;
+  final VoidCallback onAddPressed;
+  final ValueChanged<EducationMV> onEditPressed;
 
-  @override
-  State<Education> createState() => _Education(dataEdu);
-}
+  const Education({
+    super.key,
+    required this.dataEdu,
+    required this.onAddPressed,
+    required this.onEditPressed,
+  });
 
-class _Education extends State<Education> {
-  List<EducationMV>? dataEdu;
-  _Education(this.dataEdu);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,9 +42,7 @@ class _Education extends State<Education> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {
-                  // onTabSelected!(6);
-                },
+                onPressed: onAddPressed,
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
                 style: ElevatedButton.styleFrom(
@@ -58,13 +57,11 @@ class _Education extends State<Education> {
           ),
           SizedBox(height: 10),
           Column(
-            children: dataEdu!.asMap().entries.map((entry) {
+            children: dataEdu.asMap().entries.map((entry) {
               int idx = entry.key + 1;
               var data = entry.value;
               return InkWell(
-                onTap: () {
-                  // onTabSelected(7);
-                },
+                onTap: () => onEditPressed(data),
                 child: Container(
                   margin: EdgeInsets.all(5),
                   padding: EdgeInsets.all(10),

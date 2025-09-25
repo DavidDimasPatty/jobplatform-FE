@@ -98,20 +98,14 @@ class _Profile extends State<Profile> {
     }
   }
 
-  Future<void> _certificateAdd() async {
-    final added = await Navigator.of(context).pushNamed('/add-certificate');
-
-    if (added == true) {
-      await _loadProfileData();
-    }
-  }
-
-  Future<void> _certificateEdit(CertificateMV certificate) async {
-    final edited = await Navigator.of(
-      context,
-    ).pushNamed('/edit-certificate', arguments: certificate);
-
-    if (edited == true) {
+  // Generic method for handling navigation with refresh
+  Future<void> _navigateAndRefresh(String routeName, {Object? arguments}) async {
+    final result = await Navigator.of(context).pushNamed(
+      routeName,
+      arguments: arguments,
+    );
+    
+    if (result == true) {
       await _loadProfileData();
     }
   }
@@ -295,14 +289,15 @@ class _Profile extends State<Profile> {
               ResponsiveRowColumnItem(
                 child: Education(
                   dataEdu: dataEdu,
-                  // onTabSelected: onTabSelected,
+                  onAddPressed: () => _navigateAndRefresh('/add-education'),
+                  onEditPressed: (education) => _navigateAndRefresh('/edit-education', arguments: education)
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Certificate(
                   dataCertificates: dataCertificate,
-                  onAddPressed: _certificateAdd,
-                  onEditPressed: _certificateEdit,
+                  onAddPressed: () => _navigateAndRefresh('/add-certificate'),
+                  onEditPressed: (certificate) => _navigateAndRefresh('/edit-certificate', arguments: certificate)
                 ),
               ),
               ResponsiveRowColumnItem(
