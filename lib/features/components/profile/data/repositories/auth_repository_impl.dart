@@ -4,6 +4,8 @@ import 'package:job_platform/features/components/profile/data/models/educationRe
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -107,6 +109,23 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<OrganizationResponse> organizationDelete(String id) async {
     final result = await remoteDataSource.organizationDelete(id);
+    return result;
+  }
+
+  // User Preference
+  @override
+  Future<PreferenceResponse> preferenceAdd(
+    PreferenceRequest preference,
+  ) async {
+    final result = await remoteDataSource.preferenceAdd(preference);
+    return result;
+  }
+
+  @override
+  Future<PreferenceResponse> preferenceEdit(
+    PreferenceRequest preference,
+  ) async {
+    final result = await remoteDataSource.preferenceEdit(preference);
     return result;
   }
 }

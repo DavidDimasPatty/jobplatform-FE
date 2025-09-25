@@ -99,12 +99,14 @@ class _Profile extends State<Profile> {
   }
 
   // Generic method for handling navigation with refresh
-  Future<void> _navigateAndRefresh(String routeName, {Object? arguments}) async {
-    final result = await Navigator.of(context).pushNamed(
-      routeName,
-      arguments: arguments,
-    );
-    
+  Future<void> _navigateAndRefresh(
+    String routeName, {
+    Object? arguments,
+  }) async {
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(routeName, arguments: arguments);
+
     if (result == true) {
       await _loadProfileData();
     }
@@ -278,28 +280,40 @@ class _Profile extends State<Profile> {
                 child: Workexperience(
                   dataWork: dataWork,
                   onAddPressed: () => _navigateAndRefresh('/add-experience'),
-                  onEditPressed: (experience) => _navigateAndRefresh('/edit-experience', arguments: experience)
+                  onEditPressed: (experience) => _navigateAndRefresh(
+                    '/edit-experience',
+                    arguments: experience,
+                  ),
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Organizational(
                   dataOrg: dataOrg,
                   onAddPressed: () => _navigateAndRefresh('/add-organization'),
-                  onEditPressed: (organization) => _navigateAndRefresh('/edit-organization', arguments: organization)
+                  onEditPressed: (organization) => _navigateAndRefresh(
+                    '/edit-organization',
+                    arguments: organization,
+                  ),
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Education(
                   dataEdu: dataEdu,
                   onAddPressed: () => _navigateAndRefresh('/add-education'),
-                  onEditPressed: (education) => _navigateAndRefresh('/edit-education', arguments: education)
+                  onEditPressed: (education) => _navigateAndRefresh(
+                    '/edit-education',
+                    arguments: education,
+                  ),
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Certificate(
                   dataCertificates: dataCertificate,
                   onAddPressed: () => _navigateAndRefresh('/add-certificate'),
-                  onEditPressed: (certificate) => _navigateAndRefresh('/edit-certificate', arguments: certificate)
+                  onEditPressed: (certificate) => _navigateAndRefresh(
+                    '/edit-certificate',
+                    arguments: certificate,
+                  ),
                 ),
               ),
               ResponsiveRowColumnItem(
@@ -309,7 +323,12 @@ class _Profile extends State<Profile> {
                 ),
               ),
               ResponsiveRowColumnItem(
-                child: CareerPreference(dataPreferences: dataPreference),
+                child: CareerPreference(
+                  dataPreferences: dataPreference,
+                  onAddPressed: () => _navigateAndRefresh('/add-preference'),
+                  onEditPressed: (preference) =>
+                      _navigateAndRefresh('/edit-preference', arguments: preference),
+                ),
               ),
               ResponsiveRowColumnItem(
                 child: Container(

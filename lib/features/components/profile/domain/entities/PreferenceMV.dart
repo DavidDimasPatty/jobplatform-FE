@@ -1,34 +1,40 @@
 class PreferenceMV {
   String id;
+  String idUser;
   String? lokasi;
-  String? industri;
+  String? posisi;
   String? levelJabatan;
   int? gajiMin;
   int? gajiMax;
   String? tipePekerjaan;
+  String? sistemKerja;
   DateTime? dateWork;
 
   PreferenceMV(
     this.id,
+    this.idUser,
     this.lokasi,
-    this.industri,
+    this.posisi,
     this.levelJabatan,
     this.gajiMin,
     this.gajiMax,
     this.tipePekerjaan,
+    this.sistemKerja,
     this.dateWork,
   );
 
   factory PreferenceMV.fromJson(Map<String, dynamic> json) {
     return PreferenceMV(
-      json['userPreference']['_id'] as String,
-      json['preference']['lokasi'] as String?,
-      json['preference']['industri'] as String?,
-      json['preference']['levelJabatan'] as String?,
-      json['preference']['gajiMin'] as int?,
-      json['preference']['gajiMax'] as int?,
-      json['preference']['tipePekerjaan'] as String?,
-      json['preference']['dateWork'] != null ? DateTime.parse(json['preference']['dateWork']) : null,
+      json['_id'] as String,
+      json['idUser'] as String,
+      json['lokasi'] as String?,
+      json['posisi'] as String?,
+      json['levelJabatan'] as String?,
+      json['gajiMin'] as int?,
+      json['gajiMax'] as int?,
+      json['tipePekerjaan'] as String?,
+      json['sistemKerja'] as String?,
+      json['dateWork'] != null ? DateTime.parse(json['dateWork']) : null,
     );
   }
 }

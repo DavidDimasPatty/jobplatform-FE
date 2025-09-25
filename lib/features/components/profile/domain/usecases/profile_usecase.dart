@@ -4,6 +4,8 @@ import 'package:job_platform/features/components/profile/data/models/educationRe
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -77,5 +79,14 @@ class ProfileUsecase {
 
   Future<OrganizationResponse> deleteOrganization(String id) {
     return repository.organizationDelete(id);
+  }
+
+  // User Preference
+  Future<PreferenceResponse> addPreference(PreferenceRequest preference) {
+    return repository.preferenceAdd(preference);
+  }
+
+  Future<PreferenceResponse> editPreference(PreferenceRequest preference) {
+    return repository.preferenceEdit(preference);
   }
 }

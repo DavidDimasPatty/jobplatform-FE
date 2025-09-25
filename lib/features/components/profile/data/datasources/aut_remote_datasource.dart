@@ -7,6 +7,8 @@ import 'package:job_platform/features/components/profile/data/models/educationRe
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -453,6 +455,79 @@ class AuthRemoteDataSource {
     } catch (e) {
       print('Error during delete organization: $e');
       return OrganizationResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  // User Preference
+  Future<PreferenceResponse> preferenceAdd(PreferenceRequest preference) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/add-preference',
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(preference.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        PreferenceResponse preferenceResponse = PreferenceResponse.fromJson(
+          jsonData,
+        );
+        return preferenceResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return PreferenceResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during add preference: $e');
+      return PreferenceResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<PreferenceResponse> preferenceEdit(PreferenceRequest preference) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-preference',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(preference.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        PreferenceResponse preferenceResponse = PreferenceResponse.fromJson(
+          jsonData,
+        );
+        return preferenceResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return PreferenceResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit preference: $e');
+      return PreferenceResponse(
         responseCode: '500',
         responseMessage: 'Failed',
         data: null,
