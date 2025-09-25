@@ -70,6 +70,8 @@ class _Profile extends State<Profile> {
 
       if (userId != null) {
         var profile = await _profileUseCase.getProfile(userId);
+        if (!mounted) return;
+
         if (profile != null) {
           setState(() {
             dataUser = profile.user;
@@ -87,12 +89,30 @@ class _Profile extends State<Profile> {
       }
     } catch (e) {
       print("Error loading profile data: $e");
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-          errorMessage = "Error loading profile: $e";
-        });
-      }
+      if (!mounted) return;
+
+      setState(() {
+        isLoading = false;
+        errorMessage = "Error loading profile: $e";
+      });
+    }
+  }
+
+  Future<void> _certificateAdd() async {
+    final added = await Navigator.of(context).pushNamed('/add-certificate');
+
+    if (added == true) {
+      await _loadProfileData();
+    }
+  }
+
+  Future<void> _certificateEdit(CertificateMV certificate) async {
+    final edited = await Navigator.of(
+      context,
+    ).pushNamed('/edit-certificate', arguments: certificate);
+
+    if (edited == true) {
+      await _loadProfileData();
     }
   }
 
@@ -281,7 +301,8 @@ class _Profile extends State<Profile> {
               ResponsiveRowColumnItem(
                 child: Certificate(
                   dataCertificates: dataCertificate,
-                  // onTabSelected: onTabSelected,
+                  onAddPressed: _certificateAdd,
+                  onEditPressed: _certificateEdit,
                 ),
               ),
               ResponsiveRowColumnItem(

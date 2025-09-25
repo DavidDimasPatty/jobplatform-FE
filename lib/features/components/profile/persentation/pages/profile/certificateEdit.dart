@@ -3,25 +3,26 @@ import 'package:job_platform/features/components/profile/data/datasources/aut_re
 import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class CertificateEdit extends StatefulWidget {
-  final String? idUserCertificate;
+  final CertificateMV certificate;
 
-  const CertificateEdit({super.key, this.idUserCertificate});
+  const CertificateEdit({super.key, required this.certificate});
 
   @override
   _CertificateEditState createState() =>
-      _CertificateEditState(idUserCertificate: idUserCertificate);
+      _CertificateEditState(data: certificate);
 }
 
 class _CertificateEditState extends State<CertificateEdit> {
-  final String? idUserCertificate;
+  final CertificateMV data;
 
-  _CertificateEditState({this.idUserCertificate});
+  _CertificateEditState({required this.data});
 
   // Form key
   final _formKey = GlobalKey<FormState>();
@@ -30,6 +31,7 @@ class _CertificateEditState extends State<CertificateEdit> {
   final TextEditingController _certificateNameController =
       TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _skillsController = TextEditingController();
   final TextEditingController _issuedByController = TextEditingController();
   final TextEditingController _issueDateController = TextEditingController();
   final TextEditingController _expiryDateController = TextEditingController();
@@ -40,6 +42,8 @@ class _CertificateEditState extends State<CertificateEdit> {
   // Helper variables
   bool _isLoading = false;
   DateTime? _selectedIssueDate;
+  bool _hasExpiredDate = false;
+  List<String> _selectedSkills = [];
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
@@ -48,18 +52,37 @@ class _CertificateEditState extends State<CertificateEdit> {
   void initState() {
     super.initState();
     _initializeUseCase();
+    _loadData();
   }
 
   @override
   void dispose() {
     _certificateNameController.dispose();
     _descriptionController.dispose();
+    _skillsController.dispose();
     _issuedByController.dispose();
     _issueDateController.dispose();
     _expiryDateController.dispose();
     _credentialIdController.dispose();
     _credentialUrlController.dispose();
     super.dispose();
+  }
+
+  void _loadData() {
+    _certificateNameController.text = data.nama;
+    _descriptionController.text = data.deskripsi ?? '';
+    _issuedByController.text = data.publisher;
+    _issueDateController.text = DateFormat(
+      'dd MMMM yyyy',
+    ).format(data.publishDate);
+    if (data.expiredDate != null) {
+      _hasExpiredDate = true;
+      _expiryDateController.text = DateFormat(
+        'dd MMMM yyyy',
+      ).format(data.expiredDate!);
+    }
+    _credentialIdController.text = data.code!;
+    _credentialUrlController.text = data.codeURL!;
   }
 
   void _initializeUseCase() {
@@ -89,12 +112,13 @@ class _CertificateEditState extends State<CertificateEdit> {
           DateFormat('dd MMMM yyyy', 'en_US').parse(_expiryDateController.text),
         );
 
-        CertificateModel newCertificate = CertificateModel(
+        CertificateModel editedCertificate = CertificateModel(
           idUser: idUser,
-          idUserCertificate: idUserCertificate,
+          idUserCertificate: data.id,
+          idCertificate: data.idCertificate,
           nama: _certificateNameController.text,
-          deskripsi: _descriptionController.text,
           publisher: _issuedByController.text,
+          deskripsi: _descriptionController.text,
           // Assuming skills are handled elsewhere or not required here
           skill: [],
           publishDate: DateTime.parse(issueDate),
@@ -103,8 +127,8 @@ class _CertificateEditState extends State<CertificateEdit> {
           codeURL: _credentialUrlController.text,
         );
 
-        CertificateResponse response = await _profileUseCase.addCertificate(
-          newCertificate,
+        CertificateResponse response = await _profileUseCase.editCertificate(
+          editedCertificate,
         );
 
         // On success, clear the form or navigate away
@@ -112,6 +136,7 @@ class _CertificateEditState extends State<CertificateEdit> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Certificate edited successfully!')),
           );
+          Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -138,7 +163,7 @@ class _CertificateEditState extends State<CertificateEdit> {
   }
 
   Future<void> _deleteCertificate() async {
-    if (idUserCertificate == null) return;
+    if (data == null) return;
 
     setState(() {
       _isLoading = true;
@@ -146,14 +171,14 @@ class _CertificateEditState extends State<CertificateEdit> {
 
     try {
       CertificateResponse response = await _profileUseCase.deleteCertificate(
-        idUserCertificate!,
+        data.id,
       );
 
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Certificate deleted successfully!')),
         );
-        // Navigator.of(context).pop(); // Navigate back after deletion
+        Navigator.pop(context, true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -247,58 +272,60 @@ class _CertificateEditState extends State<CertificateEdit> {
                           return null;
                         },
                       ),
+                      buildDateField(
+                        'Issue Date',
+                        _issueDateController,
+                        (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter issue date';
+                          }
+                          return null;
+                        },
+                        context,
+                        onDateSelected: (date) {
+                          setState(() {
+                            _selectedIssueDate = date;
+                            _issueDateController.text = date != null
+                                ? DateFormat('dd MMMM yyyy').format(date)
+                                : '';
+                            if (_expiryDateController.text.isNotEmpty &&
+                                _selectedIssueDate != null &&
+                                DateTime.tryParse(_expiryDateController.text) !=
+                                    null &&
+                                DateTime.parse(
+                                  _expiryDateController.text,
+                                ).isBefore(_selectedIssueDate!)) {
+                              _expiryDateController.clear();
+                            }
+                          });
+                        },
+                      ),
                       Row(
                         children: [
-                          Expanded(
-                            child: buildDateField(
-                              'Issue Date',
-                              _issueDateController,
-                              (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter issue date';
+                          Checkbox(
+                            value: _hasExpiredDate,
+                            onChanged: (checked) {
+                              setState(() {
+                                _hasExpiredDate = checked ?? false;
+                                if (!_hasExpiredDate) {
+                                  _expiryDateController.clear();
                                 }
-                                return null;
-                              },
-                              context,
-                              onDateSelected: (date) {
-                                setState(() {
-                                  _selectedIssueDate = date;
-                                  _issueDateController.text = date != null
-                                      ? date.toLocal().toString().split(' ')[0]
-                                      : '';
-                                  if (_expiryDateController.text.isNotEmpty &&
-                                      _selectedIssueDate != null &&
-                                      DateTime.tryParse(
-                                            _expiryDateController.text,
-                                          ) !=
-                                          null &&
-                                      DateTime.parse(
-                                        _expiryDateController.text,
-                                      ).isBefore(_selectedIssueDate!)) {
-                                    _expiryDateController.clear();
-                                  }
-                                });
-                              },
-                            ),
+                              });
+                            },
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: buildDateField(
-                              'Expiry Date',
-                              _expiryDateController,
-                              (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter expiry date';
-                                }
-                                return null;
-                              },
-                              context,
-                              enabled: _selectedIssueDate != null,
-                              firstDate: _selectedIssueDate,
-                            ),
-                          ),
+                          Text('Has Expiry Date'),
                         ],
                       ),
+                      if (_hasExpiredDate)
+                        buildDateField(
+                          'Expiry Date',
+                          _expiryDateController,
+                          (value) {
+                            return null;
+                          },
+                          context,
+                          firstDate: _selectedIssueDate,
+                        ),
                       buildTextField(
                         'Credential ID',
                         _credentialIdController,
@@ -328,7 +355,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextButton.icon(
-                                  onPressed: _deleteCertificate,
+                                  onPressed: _showSimpleDeleteConfirmation,
                                   label: Text(
                                     'Delete',
                                     style: TextStyle(color: Colors.grey),
@@ -416,14 +443,126 @@ class _CertificateEditState extends State<CertificateEdit> {
                   lastDate: DateTime(2100),
                 );
                 if (pickedDate != null) {
-                  controller.text = pickedDate.toLocal().toString().split(
-                    ' ',
-                  )[0];
+                  controller.text = DateFormat(
+                    'dd MMMM yyyy',
+                  ).format(pickedDate);
                   if (onDateSelected != null) onDateSelected(pickedDate);
                 }
               }
             : null,
       ),
+    );
+  }
+
+  void _showSimpleDeleteConfirmation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Delete Certificate',
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Warning icon
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.delete_forever,
+                    color: Colors.red,
+                    size: 48,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Are you sure you want to delete this certificate?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 8),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.title, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              widget.certificate.nama,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.business, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(child: Text(widget.certificate.publisher)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  '⚠️ This action is permanent and cannot be undone.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.close, size: 16),
+              label: Text('Cancel'),
+              style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteCertificate();
+              },
+              icon: Icon(Icons.delete, size: 16),
+              label: Text('Delete'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

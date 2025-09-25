@@ -49,6 +49,7 @@ class _CertificateAddState extends State<CertificateAdd> {
   void dispose() {
     _certificateNameController.dispose();
     _descriptionController.dispose();
+    _skillsController.dispose();
     _issuedByController.dispose();
     _issueDateController.dispose();
     _expiryDateController.dispose();
@@ -94,8 +95,8 @@ class _CertificateAddState extends State<CertificateAdd> {
         CertificateModel newCertificate = CertificateModel(
           idUser: idUser,
           nama: _certificateNameController.text,
-          deskripsi: _descriptionController.text,
           publisher: _issuedByController.text,
+          deskripsi: _descriptionController.text,
           // Assuming skills are handled elsewhere or not required here
           skill: [],
           publishDate: DateTime.parse(issueDate),

@@ -118,7 +118,7 @@ class AuthRemoteDataSource {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
         '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/delete-certificate',
-      ).replace(queryParameters: {'id': id});
+      ).replace(queryParameters: {'idUserCertificate': id});
       final response = await http.delete(url);
       print(response.body.toString());
 
@@ -221,7 +221,7 @@ class AuthRemoteDataSource {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
         '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/delete-education',
-      ).replace(queryParameters: {'id': id});
+      ).replace(queryParameters: {'idUserEducation': id});
       final response = await http.delete(url);
       print(response.body.toString());
 

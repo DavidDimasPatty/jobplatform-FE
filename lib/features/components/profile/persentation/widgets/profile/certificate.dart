@@ -2,22 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:intl/intl.dart';
 
-class Certificate extends StatefulWidget {
+class Certificate extends StatelessWidget {
   final List<CertificateMV> dataCertificates;
-  Certificate({super.key, required this.dataCertificates});
+  final VoidCallback onAddPressed;
+  final ValueChanged<CertificateMV> onEditPressed;
 
-  @override
-  _CertificateState createState() => _CertificateState(dataCertificates);
-}
-
-class _CertificateState extends State<Certificate> {
-  final List<CertificateMV> dataCertificates;
-
-  _CertificateState(this.dataCertificates);
-
-  void _viewCertificateEdits(CertificateMV certificate) {
-    // onTabSelected(11); // Navigate to edit page
-  }
+  Certificate({super.key, required this.dataCertificates, required this.onAddPressed, required this.onEditPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +34,7 @@ class _CertificateState extends State<Certificate> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () async {
-                  final added = Navigator.of(
-                    context,
-                  ).pushNamed('add-certificate');
-                  if (added == true) {
-                    //
-                  }
-                },
+                onPressed: onAddPressed,
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -68,16 +51,12 @@ class _CertificateState extends State<Certificate> {
           for (var cert in dataCertificates) ...[
             CertificateCard(
               idx: idx++,
-              title: cert.nama!,
-              description: cert.publisher!,
+              title: cert.nama,
+              description: cert.publisher,
               dateRange: (cert.expiredDate == null)
-                  ? "${DateFormat('MMM yyyy').format(cert.publishDate ?? DateTime.now())} - Present"
-                  : "${DateFormat('MMM yyyy').format(cert.publishDate ?? DateTime.now())} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
-              onPressed: () async {
-                final updated = Navigator.of(
-                  context,
-                ).pushNamed('edit-certificate');
-              },
+                  ? "${DateFormat('MMM yyyy').format(cert.publishDate)} - Present"
+                  : "${DateFormat('MMM yyyy').format(cert.publishDate)} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
+              onPressed: () => onEditPressed(cert),
             ),
             SizedBox(height: 10),
           ],

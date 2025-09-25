@@ -32,7 +32,7 @@ class ProfileModel {
       user: json["data"]["user"] != null
           ? Profiledata.fromJson(json["data"]["user"])
           : null,
-      preferences: json["data"]["linkPreference"]
+      preferences: json["data"]["preference"]
           .map<PreferenceMV>((item) => PreferenceMV.fromJson(item))
           .toList()
           .cast<PreferenceMV>(),
