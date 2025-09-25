@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
+import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
@@ -102,7 +103,7 @@ class _EducationalEdit extends State<EducationalEdit> {
         final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
         final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
 
-        EducationModel newEducation = EducationModel(
+        EducationRequest newEducation = EducationRequest(
           idUser: idUser,
           idUserEducation: data.id,
           idEducation: data.idEducation,

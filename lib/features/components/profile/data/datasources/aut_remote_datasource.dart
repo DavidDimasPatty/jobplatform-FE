@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
-import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
+import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 
 class AuthRemoteDataSource {
+  // General
   Future<ProfileModel?> profileGet(String id) async {
     try {
       await dotenv.load(fileName: '.env');
@@ -39,7 +42,7 @@ class AuthRemoteDataSource {
 
   // Certificate
   Future<CertificateResponse> certificateAdd(
-    CertificateModel certificate,
+    CertificateRequest certificate,
   ) async {
     try {
       await dotenv.load(fileName: '.env');
@@ -77,7 +80,7 @@ class AuthRemoteDataSource {
   }
 
   Future<CertificateResponse> certificateEdit(
-    CertificateModel certificate,
+    CertificateRequest certificate,
   ) async {
     try {
       await dotenv.load(fileName: '.env');
@@ -145,7 +148,7 @@ class AuthRemoteDataSource {
   }
 
   // Education
-  Future<EducationResponse> educationAdd(EducationModel education) async {
+  Future<EducationResponse> educationAdd(EducationRequest education) async {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
@@ -181,7 +184,7 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<EducationResponse> educationEdit(EducationModel education) async {
+  Future<EducationResponse> educationEdit(EducationRequest education) async {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
@@ -240,6 +243,110 @@ class AuthRemoteDataSource {
     } catch (e) {
       print('Error during delete education: $e');
       return EducationResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  // Work Experience
+  Future<WorkExperienceResponse> workExperienceAdd(
+    WorkExperienceRequest workExperience,
+  ) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/add-experience',
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(workExperience.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        WorkExperienceResponse workExperienceResponse =
+            WorkExperienceResponse.fromJson(jsonData);
+        return workExperienceResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return WorkExperienceResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during add work experience: $e');
+      return WorkExperienceResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<WorkExperienceResponse> workExperienceEdit(
+    WorkExperienceRequest workExperience,
+  ) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-experience',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(workExperience.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        WorkExperienceResponse workExperienceResponse =
+            WorkExperienceResponse.fromJson(jsonData);
+        return workExperienceResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return WorkExperienceResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit work experience: $e');
+      return WorkExperienceResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<WorkExperienceResponse> workExperienceDelete(String id) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/delete-experience',
+      ).replace(queryParameters: {'idUserExperience': id});
+      final response = await http.delete(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        WorkExperienceResponse workExperienceResponse =
+            WorkExperienceResponse.fromJson(jsonData);
+        return workExperienceResponse;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return WorkExperienceResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during delete work experience: $e');
+      return WorkExperienceResponse(
         responseCode: '500',
         responseMessage: 'Failed',
         data: null,

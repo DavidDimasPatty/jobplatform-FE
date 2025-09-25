@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:ui' as ui;
 import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
+import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
@@ -87,7 +88,7 @@ class _EducationalAdd extends State<EducationalAdd> {
         final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
         final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
 
-        EducationModel newEducation = EducationModel(
+        EducationRequest newEducation = EducationRequest(
           idUser: idUser,
           nama: _namaController.text,
           deskripsi: _deskripsiController.text,

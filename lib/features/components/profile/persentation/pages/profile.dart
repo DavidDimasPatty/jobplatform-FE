@@ -277,7 +277,8 @@ class _Profile extends State<Profile> {
               ResponsiveRowColumnItem(
                 child: Workexperience(
                   dataWork: dataWork,
-                  // onTabSelected: onTabSelected,
+                  onAddPressed: () => _navigateAndRefresh('/add-experience'),
+                  onEditPressed: (experience) => _navigateAndRefresh('/edit-experience', arguments: experience)
                 ),
               ),
               ResponsiveRowColumnItem(

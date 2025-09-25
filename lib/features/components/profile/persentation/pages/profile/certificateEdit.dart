@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
@@ -112,7 +113,7 @@ class _CertificateEditState extends State<CertificateEdit> {
           DateFormat('dd MMMM yyyy', 'en_US').parse(_expiryDateController.text),
         );
 
-        CertificateModel editedCertificate = CertificateModel(
+        CertificateRequest editedCertificate = CertificateRequest(
           idUser: idUser,
           idUserCertificate: data.id,
           idCertificate: data.idCertificate,

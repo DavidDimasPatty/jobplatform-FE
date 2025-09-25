@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
+import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
@@ -92,7 +93,7 @@ class _CertificateAddState extends State<CertificateAdd> {
           );
         }
 
-        CertificateModel newCertificate = CertificateModel(
+        CertificateRequest newCertificate = CertificateRequest(
           idUser: idUser,
           nama: _certificateNameController.text,
           publisher: _issuedByController.text,
