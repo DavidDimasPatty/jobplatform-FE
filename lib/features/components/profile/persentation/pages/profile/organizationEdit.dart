@@ -1,38 +1,62 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
+import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
 
-import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:intl/intl.dart';
 
 class OrganizationEdit extends StatefulWidget {
-  const OrganizationEdit({super.key});
+  final OrganizationMV organization;
+
+  const OrganizationEdit({super.key, required this.organization});
 
   @override
-  State<OrganizationEdit> createState() => _OrganizationEdit();
+  State<OrganizationEdit> createState() =>
+      _OrganizationEdit(data: organization);
 }
 
 class _OrganizationEdit extends State<OrganizationEdit> {
+  final OrganizationMV data;
+
+  _OrganizationEdit({required this.data});
+
   bool isLoadingKota = false;
   bool isLoadingKotaLahir = false;
   bool isLoadingProvinsi = false;
   bool isLoadingProvinsiLahir = false;
-  final _headLineController = TextEditingController();
+
+  // Controllers
+  final _jabatanController = TextEditingController();
   final _deskripsiController = TextEditingController();
   final _emailController = TextEditingController();
   final _namaController = TextEditingController();
+
+  // Global key
   final _formKey = GlobalKey<FormState>();
-  late SignupUseCase signupUseCase;
+
+  // Helper variables
+  bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+
+  // Usecase Instance
+  late ProfileUsecase _profileUseCase;
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -67,76 +91,129 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   }
 
   Future _handleEditOrganization() async {
-    // if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    // try {
-    //   // print(_tanggalLahirController.selectedDates);
-    //   // print(selectedProvinsi!.nama);
-    //   // print(selectedKota!.nama);
-    //   DateTime? tanggalLahir = _tanggalLahirController.selectedDate;
-    //   SignupRequestModel data = SignupRequestModel(
-    //     registerAs: "user",
-    //     email: _emailController.text,
-    //     nama: _namaController.text,
-    //     domisili:
-    //         selectedProvinsi!.nama +
-    //         "," +
-    //         selectedKota!.nama +
-    //         "," +
-    //         _alamatController.text,
-    //     tanggalLahir: tanggalLahir!,
-    //     noTelp: selectedCountry!.dialCode + _phoneController.text,
-    //     jenisKelamin: gender,
-    //     tempatLahir:
-    //         selectedProvinsiLahir!.nama + "," + selectedKotaLahir!.nama,
-    //   );
-    //   SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
+      try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idUser');
 
-    //   // if (mounted) {
-    //   //   Navigator.pushReplacement(
-    //   //     context,
-    //   //     MaterialPageRoute(builder: (context) => const Login()),
-    //   //   );
-    //   // }
-    //   if (dataRes.responseMessages == "Sukses") {
-    //     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString("loginAs", "user");
-    //     await prefs.setString("idUser", dataRes.user!.id);
-    //     await prefs.setString("nama", dataRes.user!.nama);
-    //     await prefs.setString("email", dataRes.user!.email);
-    //     await prefs.setString("noTelp", dataRes.user!.noTelp);
-    //     return Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => Layout()),
-    //     );
-    //   } else {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(dataRes.responseMessages),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // } catch (e) {
-    //   debugPrint('Error during signup: $e');
-    //   // Show error message to user
-    //   if (mounted) {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Signup failed. Please try again.'),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // }
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        // Format dates to 'yyyy-MM-dd'
+        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
+        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
+
+        OrganizationModel organization = OrganizationModel(
+          idOrganization: data.idOrganization,
+          nama: _namaController.text,
+          lokasi: 'PIK',
+        );
+
+        OrganizationRequest newOrganization = OrganizationRequest(
+          idUser: idUser,
+          idUserOrganization: data.id,
+          organization: organization,
+          skill: [],
+          isActive: true,
+          deskripsi: _deskripsiController.text,
+          jabatan: _jabatanController.text,
+          startDate: DateTime.parse(issueDate),
+          endDate: DateTime.parse(expiryDate),
+        );
+
+        OrganizationResponse response = await _profileUseCase.editOrganization(
+          newOrganization,
+        );
+
+        // On success, clear the form or navigate away
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Organization editted successfully!')),
+          );
+          Navigator.pop(context, true); // Go back to the previous screen
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to edit organization. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        _formKey.currentState!.reset();
+      } catch (e) {
+        // Handle errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to edit organization. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future _handleDeleteOrganization() async {
+    if (data == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      OrganizationResponse response = await _profileUseCase.deleteOrganization(
+        data.id,
+      );
+
+      if (response.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Organization deleted successfully!')),
+        );
+        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete organization. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete organization. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    final remoteDataSource = AuthRemoteDatasource();
+    final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
-    signupUseCase = SignupUseCase(repository);
+    _profileUseCase = ProfileUsecase(repository);
+    _loadData();
+  }
+
+  void _loadData(){
+    _namaController.text = data.nama ?? '';
+    _jabatanController.text = data.jabatan ?? '';
+    _deskripsiController.text = data.deskripsi ?? '';
+    startDate = data.startDate;
+    endDate = data.endDate;
   }
 
   @override
@@ -190,7 +267,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                               decoration: InputDecoration(
                                 labelText: 'Nama Organisasi',
                                 hintText: 'Masukan Nama Organisasi',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -209,7 +286,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _headLineController,
+                              controller: _jabatanController,
                               decoration: InputDecoration(
                                 labelText: 'Jabatan',
                                 hintText: 'Masukan Jabatan',
@@ -237,7 +314,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                 labelText: 'Deskripsi Pekerjaan',
                                 hintText: 'Masukan Deskripsi Pekerjaan',
                                 border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.location_pin),
+                                prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 10,
                                   horizontal: 11,
@@ -260,12 +337,15 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                   onTap: () => _pickStartDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "Start Date",
                                       border: OutlineInputBorder(),
                                     ),
                                     child: Text(
                                       startDate != null
-                                          ? "${startDate!.day}-${startDate!.month}-${startDate!.year}"
+                                          ? DateFormat(
+                                              'dd MMMM yyyy',
+                                            ).format(startDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),
@@ -279,12 +359,15 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                       : () => _pickEndDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "End Date",
                                       border: OutlineInputBorder(),
                                     ),
                                     child: Text(
                                       endDate != null
-                                          ? "${endDate!.day}-${endDate!.month}-${endDate!.year}"
+                                          ? DateFormat(
+                                              'dd MMMM yyyy',
+                                            ).format(endDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),
@@ -294,17 +377,24 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                           ),
                           SizedBox(height: 20),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // ElevatedButton(
-                              //   onPressed: _handleSignUp,
-                              //   child: Text(
-                              //     'Daftar',
-                              //     style: TextStyle(color: Colors.black),
-                              //   ),
-                              // ),
+                              TextButton.icon(
+                                onPressed: _showSimpleDeleteConfirmation,
+                                label: Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  foregroundColor: Colors.grey,
+                                  shadowColor: Colors.transparent,
+                                  surfaceTintColor: Colors.transparent,
+                                ),
+                              ),
+                              SizedBox(width: 20),
                               Directionality(
-                                textDirection: TextDirection.rtl,
+                                textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
@@ -332,6 +422,122 @@ class _OrganizationEdit extends State<OrganizationEdit> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showSimpleDeleteConfirmation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Delete Organization',
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Warning icon
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.delete_forever,
+                    color: Colors.red,
+                    size: 48,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Are you sure you want to delete this organization?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 8),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.title, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              widget.organization.nama!,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.business, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              '${widget.organization.jabatan}',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  '⚠️ This action is permanent and cannot be undone.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.close, size: 16),
+              label: Text('Cancel'),
+              style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _handleDeleteOrganization();
+              },
+              icon: Icon(Icons.delete, size: 16),
+              label: Text('Delete'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

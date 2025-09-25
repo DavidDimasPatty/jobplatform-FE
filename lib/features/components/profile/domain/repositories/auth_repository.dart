@@ -2,6 +2,8 @@ import 'package:job_platform/features/components/profile/data/models/certificate
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -20,4 +22,11 @@ abstract class AuthRepository {
   Future<WorkExperienceResponse> experienceAdd(WorkExperienceRequest experience);
   Future<WorkExperienceResponse> experienceEdit(WorkExperienceRequest experience);
   Future<WorkExperienceResponse> experienceDelete(String id);
+  // Organization
+  Future<OrganizationResponse> organizationAdd(OrganizationRequest organization);
+  Future<OrganizationResponse> organizationEdit(OrganizationRequest organization);
+  Future<OrganizationResponse> organizationDelete(String id);
+  // Preference
+  // Skill
+  // Personal Info
 }

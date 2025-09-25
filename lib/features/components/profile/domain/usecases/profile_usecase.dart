@@ -1,10 +1,10 @@
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
-import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
-import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 
@@ -60,5 +60,22 @@ class ProfileUsecase {
 
   Future<WorkExperienceResponse> deleteWorkExperience(String id) {
     return repository.experienceDelete(id);
+  }
+
+  // Organization
+  Future<OrganizationResponse> addOrganization(
+    OrganizationRequest organization,
+  ) {
+    return repository.organizationAdd(organization);
+  }
+
+  Future<OrganizationResponse> editOrganization(
+    OrganizationRequest organization,
+  ) {
+    return repository.organizationEdit(organization);
+  }
+
+  Future<OrganizationResponse> deleteOrganization(String id) {
+    return repository.organizationDelete(id);
   }
 }

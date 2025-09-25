@@ -5,6 +5,8 @@ import 'package:job_platform/features/components/profile/data/models/certificate
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -347,6 +349,110 @@ class AuthRemoteDataSource {
     } catch (e) {
       print('Error during delete work experience: $e');
       return WorkExperienceResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  // Organization
+  Future<OrganizationResponse> organizationAdd(
+    OrganizationRequest organization,
+  ) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/add-organization',
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(organization.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        OrganizationResponse organizationResponse =
+            OrganizationResponse.fromJson(jsonData);
+        return organizationResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return OrganizationResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during add organization: $e');
+      return OrganizationResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<OrganizationResponse> organizationEdit(
+    OrganizationRequest organization,
+  ) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-organization',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(organization.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        OrganizationResponse organizationResponse =
+            OrganizationResponse.fromJson(jsonData);
+        return organizationResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return OrganizationResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit organization: $e');
+      return OrganizationResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<OrganizationResponse> organizationDelete(String id) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/delete-organization',
+      ).replace(queryParameters: {'idUserOrganization': id});
+      final response = await http.delete(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        OrganizationResponse organizationResponse =
+            OrganizationResponse.fromJson(jsonData);
+        return organizationResponse;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return OrganizationResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during delete organization: $e');
+      return OrganizationResponse(
         responseCode: '500',
         responseMessage: 'Failed',
         data: null,

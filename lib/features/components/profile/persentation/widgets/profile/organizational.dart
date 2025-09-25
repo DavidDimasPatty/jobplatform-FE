@@ -3,18 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:intl/intl.dart';
 
-class Organizational extends StatefulWidget {
-  List<OrganizationMV>? dataOrg;
-  Organizational({super.key, this.dataOrg});
+class Organizational extends StatelessWidget {
+  final List<OrganizationMV> dataOrg;
+  final VoidCallback onAddPressed;
+  final ValueChanged onEditPressed;
 
-  @override
-  State<Organizational> createState() =>
-      _Organizational(dataOrg);
-}
+  Organizational({super.key, required this.dataOrg, required this.onAddPressed, required this.onEditPressed});
 
-class _Organizational extends State<Organizational> {
-  List<OrganizationMV>? dataOrg;
-  _Organizational(this.dataOrg);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,9 +37,7 @@ class _Organizational extends State<Organizational> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {
-                  // onTabSelected!(8);
-                },
+                onPressed: onAddPressed,
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
                 style: ElevatedButton.styleFrom(
@@ -59,13 +52,11 @@ class _Organizational extends State<Organizational> {
           ),
           SizedBox(height: 10),
           Column(
-            children: dataOrg!.asMap().entries.map((entry) {
+            children: dataOrg.asMap().entries.map((entry) {
               int idx = entry.key + 1;
               var data = entry.value;
               return InkWell(
-                onTap: () {
-                  // onTabSelected(9);
-                },
+                onTap: () => onEditPressed(data),
                 child: Container(
                   margin: EdgeInsets.all(5),
                   padding: EdgeInsets.all(10),

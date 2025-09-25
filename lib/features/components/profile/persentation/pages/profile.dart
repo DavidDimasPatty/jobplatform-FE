@@ -284,7 +284,8 @@ class _Profile extends State<Profile> {
               ResponsiveRowColumnItem(
                 child: Organizational(
                   dataOrg: dataOrg,
-                  // onTabSelected: onTabSelected,
+                  onAddPressed: () => _navigateAndRefresh('/add-organization'),
+                  onEditPressed: (organization) => _navigateAndRefresh('/edit-organization', arguments: organization)
                 ),
               ),
               ResponsiveRowColumnItem(
