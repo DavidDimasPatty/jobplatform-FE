@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/benchmarkItem.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/homePageBody.dart';
 import 'package:job_platform/features/shared/layout.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/usecases/get_products_usecase.dart';
 import '../../data/datasources/product_remote_datasource.dart';
 import '../../data/repositories/product_repository_impl.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final GlobalKey<NavigatorState> navigatorKeys;
+  const HomePage({super.key, required this.navigatorKeys});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -26,6 +30,8 @@ class _HomePageState extends State<HomePage> {
   String? noTelpCompany;
   bool isLoading = true;
 
+  List<Benchmarkitem> dataBenchmark = [];
+
   void getDataPref() async {
     final prefs = await SharedPreferences.getInstance();
     loginAs = prefs.getString('loginAs');
@@ -42,6 +48,23 @@ class _HomePageState extends State<HomePage> {
         noTelpCompany = prefs.getString('noTelp');
       }
       isLoading = false;
+      dataBenchmark = [
+        Benchmarkitem(
+          title: "Nando Witin (25)",
+          subtitle: "Back End Developer",
+          skill: ["Dart", "C#", "React"],
+        ),
+        Benchmarkitem(
+          title: "Nando Sitorus (25)",
+          subtitle: "Front End Developer",
+          skill: ["Dart", "C#", "Java"],
+        ),
+        Benchmarkitem(
+          title: "Nando Baltwin (25)",
+          subtitle: "Backend Developer",
+          skill: ["Dart", "C#", "Python"],
+        ),
+      ];
     });
   }
 
@@ -70,28 +93,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Center(
       child: isLoading
-          ? CircularProgressIndicator()
-          : SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Welcome To Skillen",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (loginAs == "user") Text("Welcome User $namaUser"),
-                  if (loginAs == "company")
-                    Text("Welcome Company $namaCompany"),
-                  if (loginAs != "user" && loginAs != "company")
-                    Text("Sesi Habis"),
-                ],
-              ),
+          ? CircularProgressIndicator(color: Colors.blue)
+          : Homepagebody(
+              items: dataBenchmark,
+              navigatorKeys: widget.navigatorKeys,
             ),
     );
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidateNav.dart';
 import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
+import 'package:job_platform/features/components/cart/persentation/pages/cartNav.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chatNav.dart';
+import 'package:job_platform/features/components/home/persentation/pages/homeNav.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
@@ -32,6 +34,7 @@ class _LayoutState extends State<Layout> {
   // late List<Widget> _pages;
 
   final _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -126,9 +129,9 @@ class _LayoutState extends State<Layout> {
               index: _selectedIndex,
               children: [
                 Navigator(
-                  key: _navigatorKeys[0],
-                  onGenerateRoute: (settings) =>
-                      MaterialPageRoute(builder: (_) => const HomePage()),
+                  onGenerateRoute: (settings) => MaterialPageRoute(
+                    builder: (_) => Homenav(navigatorKey: _navigatorKeys[0]),
+                  ),
                 ),
                 Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
@@ -149,6 +152,11 @@ class _LayoutState extends State<Layout> {
                 Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
                     builder: (_) => Chatnav(navigatorKey: _navigatorKeys[4]),
+                  ),
+                ),
+                Navigator(
+                  onGenerateRoute: (settings) => MaterialPageRoute(
+                    builder: (_) => Cartnav(navigatorKey: _navigatorKeys[5]),
                   ),
                 ),
               ],

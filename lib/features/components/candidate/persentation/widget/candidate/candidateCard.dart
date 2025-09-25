@@ -16,22 +16,21 @@ class Candidatecard extends StatefulWidget {
 class _Candidatecard extends State<Candidatecard> {
   final CandidateItems item;
   _Candidatecard(this.item);
-
-  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(minHeight: 200),
       //height: 200,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey, width: 2),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(
+          Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -49,18 +48,22 @@ class _Candidatecard extends State<Candidatecard> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Expanded(
+                Flexible(
                   child: Container(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.3,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      border: Border.all(color: Colors.grey, width: 1),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black12, blurRadius: 5),
+                      ],
                       image: DecorationImage(
                         image: AssetImage(
                           widget.item.photoUrl ?? "assets/images/default.png",
                         ),
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -159,7 +162,7 @@ class _Candidatecard extends State<Candidatecard> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
@@ -180,13 +183,13 @@ class _Candidatecard extends State<Candidatecard> {
                 bottomLeft: Radius.circular(12),
                 bottomRight: Radius.circular(12),
               ),
-              border: Border.all(color: Colors.grey, width: 1),
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
+                Flexible(
                   child: InkWell(
                     onTap: () => {},
                     child: Column(
@@ -204,7 +207,7 @@ class _Candidatecard extends State<Candidatecard> {
                     width: 20,
                   ),
                 ),
-                Expanded(
+                Flexible(
                   child: InkWell(
                     onTap: () => {},
                     child: Column(

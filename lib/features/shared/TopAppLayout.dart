@@ -35,12 +35,17 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
               onPressed: onToggleNotification,
               icon: const Icon(Icons.notifications, color: Colors.white),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
+            IconButton(
+              onPressed: () => onTabSelected(5),
+              icon: const Icon(Icons.shopping_cart, color: Colors.white),
+            ),
+            SizedBox(width: 10),
             IconButton(
               onPressed: () => onTabSelected(4),
               icon: const Icon(Icons.chat, color: Colors.white),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
             IconButton(
               onPressed: () => onTabSelected(3),
               icon: const Icon(Icons.settings, color: Colors.white),

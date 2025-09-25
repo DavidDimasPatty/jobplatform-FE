@@ -14,6 +14,18 @@ class Candidatebody extends StatefulWidget {
   State<Candidatebody> createState() => _Candidatebody(this.items);
 }
 
+int getCrossAxisCount(BuildContext context) {
+  double width = MediaQuery.of(context).size.width;
+
+  if (width < 600) {
+    return 2;
+  } else if (width < 900) {
+    return 3;
+  } else {
+    return 4;
+  }
+}
+
 class _Candidatebody extends State<Candidatebody> {
   final List<CandidateItems> items;
   _Candidatebody(this.items);
@@ -33,11 +45,11 @@ class _Candidatebody extends State<Candidatebody> {
         children: [
           GridView.builder(
             shrinkWrap: true,
-            physics: const ScrollPhysics(),
-            padding: const EdgeInsets.all(10),
+            physics: ScrollPhysics(),
+            padding: EdgeInsets.all(10),
             itemCount: widget.items.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: getCrossAxisCount(context),
               crossAxisSpacing: 4,
               mainAxisSpacing: 20,
               childAspectRatio: 1 / 2,
