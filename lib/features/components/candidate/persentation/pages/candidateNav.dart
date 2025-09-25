@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/candidate/persentation/pages/candidateItem.dart';
+import 'package:job_platform/features/components/candidate/persentation/pages/candidateDetail.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chat.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chatDetail.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
 
-class Chatnav extends StatelessWidget {
+class Candidatenav extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
 
-  Chatnav({super.key, required this.navigatorKey});
+  Candidatenav({super.key, required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +16,13 @@ class Chatnav extends StatelessWidget {
       key: navigatorKey,
       onGenerateRoute: (setting) {
         switch (setting.name) {
-          case "detail-chat":
+          case "detail-candidate":
             return MaterialPageRoute(
-              builder: (_) => ChatDetail(navigatorKeys: navigatorKey),
+              builder: (_) => Candidatedetail(navigatorKeys: navigatorKey),
             );
           default:
             return MaterialPageRoute(
-              builder: (_) => Chat(navigatorKeys: navigatorKey),
+              builder: (_) => Candidate(navigatorKeys: navigatorKey),
             );
         }
       },
