@@ -1,41 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
-import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
-import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
-class CertificateAdd extends StatefulWidget {
-  const CertificateAdd({super.key});
+class PreferenceEdit extends StatefulWidget {
+  final PreferenceMV preference;
+
+  const PreferenceEdit({super.key, required this.preference});
 
   @override
-  _CertificateAddState createState() => _CertificateAddState();
+  _PreferenceEditState createState() => _PreferenceEditState(data: preference);
 }
 
-class _CertificateAddState extends State<CertificateAdd> {
+class _PreferenceEditState extends State<PreferenceEdit> {
+  final PreferenceMV data;
+
+  _PreferenceEditState({required this.data});
+
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for form fields
-  final TextEditingController _certificateNameController =
-      TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _skillsController = TextEditingController();
-  final TextEditingController _issuedByController = TextEditingController();
-  final TextEditingController _issueDateController = TextEditingController();
-  final TextEditingController _expiryDateController = TextEditingController();
-  final TextEditingController _credentialIdController = TextEditingController();
-  final TextEditingController _credentialUrlController =
-      TextEditingController();
+  final TextEditingController _salaryMinController = TextEditingController();
+  final TextEditingController _salaryMaxController = TextEditingController();
+  final TextEditingController _positionController = TextEditingController();
+  final TextEditingController _jobTypeController = TextEditingController();
+  final TextEditingController _workSystemController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _careerLevelController = TextEditingController();
+  final TextEditingController _availabilityController = TextEditingController();
 
   // Helper variables
   bool _isLoading = false;
-  DateTime? _selectedIssueDate;
-  bool _hasExpiredDate = false;
-  List<String> _selectedSkills = [];
+  int minSalary = 0;
+  int maxSalary = 0;
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
@@ -44,19 +47,31 @@ class _CertificateAddState extends State<CertificateAdd> {
   void initState() {
     super.initState();
     _initializeUseCase();
+    _loadData();
   }
 
   @override
   void dispose() {
-    _certificateNameController.dispose();
-    _descriptionController.dispose();
-    _skillsController.dispose();
-    _issuedByController.dispose();
-    _issueDateController.dispose();
-    _expiryDateController.dispose();
-    _credentialIdController.dispose();
-    _credentialUrlController.dispose();
+    _salaryMinController.dispose();
+    _salaryMaxController.dispose();
+    _positionController.dispose();
+    _jobTypeController.dispose();
+    _workSystemController.dispose();
+    _locationController.dispose();
+    _careerLevelController.dispose();
+    _availabilityController.dispose();
     super.dispose();
+  }
+
+  void _loadData(){
+    _salaryMinController.text = data.gajiMin.toString();
+    _salaryMaxController.text = data.gajiMax.toString();
+    _positionController.text = data.posisi ?? '';
+    _jobTypeController.text = data.tipePekerjaan ?? '';
+    _workSystemController.text = data.sistemKerja ?? '';
+    _locationController.text = data.lokasi ?? '';
+    _careerLevelController.text = data.levelJabatan ?? '';
+    _availabilityController.text = DateFormat('dd MMMM yyyy').format(data.dateWork ?? DateTime.now());
   }
 
   void _initializeUseCase() {
@@ -79,47 +94,40 @@ class _CertificateAddState extends State<CertificateAdd> {
         if (idUser == null) throw Exception("User ID not found in preferences");
 
         // Format dates to 'yyyy-MM-dd'
-        final issueDate = DateFormat('yyyy-MM-dd').format(
-          DateFormat('dd MMMM yyyy', 'en_US').parse(_issueDateController.text),
+        final workDate = DateFormat('yyyy-MM-dd').format(
+          DateFormat(
+            'dd MMMM yyyy',
+            'en_US',
+          ).parse(_availabilityController.text),
         );
 
-        var expiryDate;
-        if (_hasExpiredDate) {
-          expiryDate = DateFormat('yyyy-MM-dd').format(
-            DateFormat(
-              'dd MMMM yyyy',
-              'en_US',
-            ).parse(_expiryDateController.text),
-          );
-        }
-
-        CertificateRequest newCertificate = CertificateRequest(
+        PreferenceRequest editPreference = PreferenceRequest(
           idUser: idUser,
-          nama: _certificateNameController.text,
-          publisher: _issuedByController.text,
-          deskripsi: _descriptionController.text,
-          // Assuming skills are handled elsewhere or not required here
-          skill: [],
-          publishDate: DateTime.parse(issueDate),
-          expiredDate: _hasExpiredDate ? DateTime.parse(expiryDate) : null,
-          code: _credentialIdController.text,
-          codeURL: _credentialUrlController.text,
+          idPreference: data.id,
+          gajiMin: int.parse(_salaryMinController.text),
+          gajiMax: int.parse(_salaryMaxController.text),
+          posisi: _positionController.text,
+          tipePekerjaan: _jobTypeController.text,
+          sistemKerja: _workSystemController.text,
+          lokasi: _locationController.text,
+          levelJabatan: _careerLevelController.text,
+          dateWork: DateTime.parse(workDate),
         );
 
-        CertificateResponse response = await _profileUseCase.addCertificate(
-          newCertificate,
+        PreferenceResponse response = await _profileUseCase.editPreference(
+          editPreference,
         );
 
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Certificate added successfully!')),
+            SnackBar(content: Text('Preference edited successfully!')),
           );
           Navigator.pop(context, true); // Go back to the previous screen
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to add certificate. Please try again.'),
+              content: Text('Failed to edit preference. Please try again.'),
               backgroundColor: Colors.red,
             ),
           );
@@ -129,7 +137,7 @@ class _CertificateAddState extends State<CertificateAdd> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add certificate. Please try again.'),
+            content: Text('Failed to edit preference. Please try again.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -140,21 +148,6 @@ class _CertificateAddState extends State<CertificateAdd> {
       }
     }
   }
-
-  // Future<void> _getSkills() async {
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     String? idUser = prefs.getString('idUser');
-
-  //     if (idUser == null) throw Exception("User ID not found in preferences");
-
-  //     // Fetch skills from the use case
-  //     final skills = await _profileUseCase.getSkills();
-  //     _skillsController.text = skills.join(", ");
-  //   } catch (e) {
-  //     print('Error fetching skills: $e');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +176,7 @@ class _CertificateAddState extends State<CertificateAdd> {
                     children: [
                       SizedBox(
                         child: Text(
-                          'Add Certificate',
+                          'Add Preference',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,
@@ -193,130 +186,122 @@ class _CertificateAddState extends State<CertificateAdd> {
                         ),
                       ),
                       SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: buildTextField(
+                              'Min Salary Expectation',
+                              _salaryMinController,
+                              Icons.attach_money,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter minimum salary';
+                                } else if (int.tryParse(value) == null) {
+                                  return 'Please enter a valid number';
+                                }
+                                minSalary = int.parse(value);
+                                if (minSalary < 0) {
+                                  return 'Salary cannot be negative';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text('-'),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: buildTextField(
+                              'Max Salary Expectation',
+                              _salaryMaxController,
+                              Icons.attach_money,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter maximum salary';
+                                } else if (int.tryParse(value) == null) {
+                                  return 'Please enter a valid number';
+                                }
+                                maxSalary = int.parse(value);
+                                if (maxSalary < 0) {
+                                  return 'Salary cannot be negative';
+                                } else if (maxSalary < minSalary) {
+                                  return 'Max salary must be greater than min salary';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                       buildTextField(
-                        'Certificate Name',
-                        _certificateNameController,
-                        Icons.school,
+                        'Position',
+                        _positionController,
+                        Icons.business,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter certificate name';
+                            return 'Please enter position';
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Description',
-                        _descriptionController,
-                        Icons.description,
-                        maxLines: 3,
+                        'Job Type',
+                        _jobTypeController,
+                        Icons.co_present,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter description';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildDropdownField(
-                        'Skills',
-                        null,
-                        ['Skill 1', 'Skill 2', 'Skill 3'], // Example skills
-                        (value) {
-                          _skillsController.text = value ?? '';
-                        },
-                        (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a skill';
+                            return 'Please enter job type';
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Issued By',
-                        _issuedByController,
-                        Icons.person,
+                        'Work System',
+                        _workSystemController,
+                        Icons.access_time,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter issuer';
+                            return 'Please enter work system';
+                          }
+                          return null;
+                        },
+                      ),
+                      buildTextField(
+                        'Location',
+                        _locationController,
+                        Icons.location_on,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter location';
+                          }
+                          return null;
+                        },
+                      ),
+                      buildTextField(
+                        'Career Level',
+                        _careerLevelController,
+                        Icons.trending_up,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter career level';
                           }
                           return null;
                         },
                       ),
                       buildDateField(
-                        'Issue Date',
-                        _issueDateController,
-                        (value) {
+                        'Availability',
+                        _availabilityController,
+                        validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter issue date';
+                            return 'Please enter availability';
                           }
                           return null;
                         },
                         context,
                         onDateSelected: (date) {
-                          setState(() {
-                            _selectedIssueDate = date;
-                            _issueDateController.text = date != null
-                                ? DateFormat('dd MMMM yyyy').format(date)
-                                : '';
-                            if (_expiryDateController.text.isNotEmpty &&
-                                _selectedIssueDate != null &&
-                                DateTime.tryParse(_expiryDateController.text) !=
-                                    null &&
-                                DateTime.parse(
-                                  _expiryDateController.text,
-                                ).isBefore(_selectedIssueDate!)) {
-                              _expiryDateController.clear();
-                            }
-                          });
-                        },
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _hasExpiredDate,
-                            onChanged: (checked) {
-                              setState(() {
-                                _hasExpiredDate = checked ?? false;
-                                if (!_hasExpiredDate) {
-                                  _expiryDateController.clear();
-                                }
-                              });
-                            },
-                          ),
-                          Text('Has Expiry Date'),
-                        ],
-                      ),
-                      if (_hasExpiredDate)
-                        buildDateField(
-                          'Expiry Date',
-                          _expiryDateController,
-                          (value) {
-                            return null;
-                          },
-                          context,
-                          firstDate: _selectedIssueDate,
-                        ),
-                      buildTextField(
-                        'Credential ID',
-                        _credentialIdController,
-                        Icons.vpn_key,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter credential ID';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildTextField(
-                        'Credential URL',
-                        _credentialUrlController,
-                        Icons.link,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter credential URL';
-                          } else if (!Uri.parse(value).isAbsolute) {
-                            return 'Please enter a valid URL';
-                          }
-                          return null;
+                          _availabilityController.text = date != null
+                              ? DateFormat('dd MMMM yyyy').format(date)
+                              : '';
                         },
                       ),
                       SizedBox(height: 20),
@@ -396,8 +381,8 @@ class _CertificateAddState extends State<CertificateAdd> {
   Widget buildDateField(
     String label,
     TextEditingController controller,
-    String? Function(String?) validator,
     BuildContext context, {
+    required String? Function(String?) validator,
     bool enabled = true,
     DateTime? firstDate,
     void Function(DateTime?)? onDateSelected,

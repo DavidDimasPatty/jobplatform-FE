@@ -1,17 +1,23 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
-
-import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:intl/intl.dart';
 
 class ExperienceAdd extends StatefulWidget {
   const ExperienceAdd({super.key});
@@ -21,14 +27,23 @@ class ExperienceAdd extends StatefulWidget {
 }
 
 class _ExperienceAdd extends State<ExperienceAdd> {
-  final _headLineController = TextEditingController();
-  final _deskripsiController = TextEditingController();
-  final _emailController = TextEditingController();
+  // Controllers
   final _namaController = TextEditingController();
+  final _jabatanController = TextEditingController();
+  final _divisiController = TextEditingController();
+  final _sistemKerjaController = TextEditingController();
+  final _deskripsiController = TextEditingController();
+
+  // Global key
   final _formKey = GlobalKey<FormState>();
-  late SignupUseCase signupUseCase;
+
+  // Helper variables
+  bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+
+  // Use case instance
+  late ProfileUsecase _profileUseCase;
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -63,76 +78,79 @@ class _ExperienceAdd extends State<ExperienceAdd> {
   }
 
   Future _handleAddExperience() async {
-    // if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    // try {
-    //   // print(_tanggalLahirController.selectedDates);
-    //   // print(selectedProvinsi!.nama);
-    //   // print(selectedKota!.nama);
-    //   DateTime? tanggalLahir = _tanggalLahirController.selectedDate;
-    //   SignupRequestModel data = SignupRequestModel(
-    //     registerAs: "user",
-    //     email: _emailController.text,
-    //     nama: _namaController.text,
-    //     domisili:
-    //         selectedProvinsi!.nama +
-    //         "," +
-    //         selectedKota!.nama +
-    //         "," +
-    //         _alamatController.text,
-    //     tanggalLahir: tanggalLahir!,
-    //     noTelp: selectedCountry!.dialCode + _phoneController.text,
-    //     jenisKelamin: gender,
-    //     tempatLahir:
-    //         selectedProvinsiLahir!.nama + "," + selectedKotaLahir!.nama,
-    //   );
-    //   SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
+      try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idUser');
 
-    //   // if (mounted) {
-    //   //   Navigator.pushReplacement(
-    //   //     context,
-    //   //     MaterialPageRoute(builder: (context) => const Login()),
-    //   //   );
-    //   // }
-    //   if (dataRes.responseMessages == "Sukses") {
-    //     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString("loginAs", "user");
-    //     await prefs.setString("idUser", dataRes.user!.id);
-    //     await prefs.setString("nama", dataRes.user!.nama);
-    //     await prefs.setString("email", dataRes.user!.email);
-    //     await prefs.setString("noTelp", dataRes.user!.noTelp);
-    //     return Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => Layout()),
-    //     );
-    //   } else {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(dataRes.responseMessages),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // } catch (e) {
-    //   debugPrint('Error during signup: $e');
-    //   // Show error message to user
-    //   if (mounted) {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Signup failed. Please try again.'),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // }
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        // Format dates to 'yyyy-MM-dd'
+        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
+        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
+
+        WorkExperienceRequest newExperience = WorkExperienceRequest(
+          idUser: idUser,
+          namaPerusahaan: _namaController.text,
+          industri: 'Retail',
+          lokasi: 'PIK',
+          skill: [],
+          isActive: true,
+          bidang: _divisiController.text,
+          deskripsi: _deskripsiController.text,
+          namaJabatan: _jabatanController.text,
+          sistemKerja: _sistemKerjaController.text,
+          tipeKaryawan: '...',
+          startDate: DateTime.parse(issueDate),
+          endDate: DateTime.parse(expiryDate),
+        );
+
+        WorkExperienceResponse response = await _profileUseCase.addWorkExperience(
+          newExperience,
+        );
+
+        // On success, clear the form or navigate away
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Work Experience added successfully!')),
+          );
+          Navigator.pop(context, true); // Go back to the previous screen
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to add work experience. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        _formKey.currentState!.reset();
+      } catch (e) {
+        // Handle errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to add work experience. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    final remoteDataSource = AuthRemoteDatasource();
+    final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
-    signupUseCase = SignupUseCase(repository);
+    _profileUseCase = ProfileUsecase(repository);
   }
 
   @override
@@ -186,7 +204,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               decoration: InputDecoration(
                                 labelText: 'Nama Perusahaan',
                                 hintText: 'Masukan Nama',
-                                prefixIcon: Icon(Icons.info),
+                                prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -205,7 +223,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _headLineController,
+                              controller: _jabatanController,
                               decoration: InputDecoration(
                                 labelText: 'Jabatan',
                                 hintText: 'Masukan Jabatan',
@@ -228,7 +246,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _headLineController,
+                              controller: _divisiController,
                               decoration: InputDecoration(
                                 labelText: 'Divisi',
                                 hintText: 'Masukan Divisi',
@@ -256,7 +274,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                 labelText: 'Deskripsi Pekerjaan',
                                 hintText: 'Masukan Deskripsi Pekerjaan',
                                 border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.location_pin),
+                                prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 10,
                                   horizontal: 11,
@@ -279,12 +297,15 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                   onTap: () => _pickStartDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "Start Date",
                                       border: OutlineInputBorder(),
                                     ),
                                     child: Text(
                                       startDate != null
-                                          ? "${startDate!.day}-${startDate!.month}-${startDate!.year}"
+                                          ? DateFormat(
+                                              'dd MMMM yyyy',
+                                            ).format(startDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),
@@ -298,12 +319,15 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                       : () => _pickEndDate(context),
                                   child: InputDecorator(
                                     decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.calendar_today),
                                       labelText: "End Date",
                                       border: OutlineInputBorder(),
                                     ),
                                     child: Text(
                                       endDate != null
-                                          ? "${endDate!.day}-${endDate!.month}-${endDate!.year}"
+                                          ? DateFormat(
+                                              'dd MMMM yyyy',
+                                            ).format(endDate!)
                                           : "Pilih tanggal",
                                     ),
                                   ),
@@ -323,8 +347,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                   // height: 90,
                                   //width: 300,
                                   child: TextFormField(
-                                    readOnly: true,
-                                    controller: _namaController,
+                                    controller: _sistemKerjaController,
                                     decoration: InputDecoration(
                                       labelText: 'Sistem Kerja',
                                       hintText: 'Masukan Sistem Kerja',
@@ -357,7 +380,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               //   ),
                               // ),
                               Directionality(
-                                textDirection: TextDirection.rtl,
+                                textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,

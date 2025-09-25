@@ -2,30 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:intl/intl.dart';
 
-class CareerPreference extends StatefulWidget {
+class CareerPreference extends StatelessWidget {
   final List<PreferenceMV> dataPreferences;
-  const CareerPreference({super.key, required this.dataPreferences});
+  final VoidCallback onAddPressed;
+  final ValueChanged<PreferenceMV> onEditPressed;
 
-  @override
-  _CareerPreferenceState createState() =>
-      _CareerPreferenceState(dataPreferences);
-}
-
-class _CareerPreferenceState extends State<CareerPreference> {
-  final List<PreferenceMV> dataPreferences;
-
-  _CareerPreferenceState(this.dataPreferences);
+  CareerPreference({super.key, required this.dataPreferences, required this.onAddPressed, required this.onEditPressed});
 
   // Sample data for career preferences
   Map<String, String> get careerDescriptions => {
     "Salary Expectation": dataPreferences.isNotEmpty
-        ? "${dataPreferences[0].gajiMin.toString()} - ${dataPreferences[0].gajiMax.toString()}"
+        ? "${NumberFormat('#,###').format(dataPreferences[0].gajiMin)} - ${NumberFormat('#,###').format(dataPreferences[0].gajiMax)}"
         : "Not specified",
-    "Industry": dataPreferences.isNotEmpty
-        ? dataPreferences[0].industri ?? "Not specified"
+    "Position": dataPreferences.isNotEmpty
+        ? dataPreferences[0].posisi ?? "Not specified"
         : "Not specified",
     "Job Type": dataPreferences.isNotEmpty
         ? dataPreferences[0].tipePekerjaan ?? "Not specified"
+        : "Not specified",
+    "Work System": dataPreferences.isNotEmpty
+        ? dataPreferences[0].sistemKerja ?? "Not specified"
         : "Not specified",
     "Location": dataPreferences.isNotEmpty
         ? dataPreferences[0].lokasi ?? "Not specified"
@@ -40,18 +36,14 @@ class _CareerPreferenceState extends State<CareerPreference> {
 
   // Map to store icon preferences for each career preference key
   final Map<String, IconData> careerIcons = {
-    "Location": Icons.location_on,
     "Salary Expectation": Icons.attach_money,
-    "Job Type": Icons.access_time,
-    "Industry": Icons.business,
-    "Availability": Icons.event_available,
+    "Position": Icons.business,
+    "Job Type": Icons.co_present,
+    "Work System" : Icons.access_time,
+    "Location": Icons.location_on,
     "Career Level": Icons.trending_up,
+    "Availability": Icons.event_available,
   };
-
-  void _editPreferences() {
-    // Logic to edit career preferences
-    print("Edit Career Preferences button pressed");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,18 +67,32 @@ class _CareerPreferenceState extends State<CareerPreference> {
                   color: Colors.black,
                 ),
               ),
-              ElevatedButton.icon(
-                onPressed: _editPreferences,
-                icon: Icon(Icons.edit, size: 16),
-                label: Text("Edit"),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              if (dataPreferences.isEmpty)
+                ElevatedButton.icon(
+                  onPressed: onAddPressed,
+                  icon: Icon(Icons.add, size: 16),
+                  label: Text("Add"),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    backgroundColor: Colors.blue, // Button color
+                    foregroundColor: Colors.white, // Icon/text color
                   ),
-                  backgroundColor: Colors.blue, // Button color
-                  foregroundColor: Colors.white, // Icon/text color
+                )
+              else
+                ElevatedButton.icon(
+                  onPressed: () => onEditPressed(dataPreferences[0]),
+                  icon: Icon(Icons.edit, size: 16),
+                  label: Text("Edit"),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    backgroundColor: Colors.blue, // Button color
+                    foregroundColor: Colors.white, // Icon/text color
+                  ),
                 ),
-              ),
             ],
           ),
           SizedBox(height: 20),

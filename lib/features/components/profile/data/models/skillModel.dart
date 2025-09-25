@@ -1,27 +1,14 @@
 class SkillModel {
-  final String idSkill;
+  final String? idSkill;
   final String nama;
-  final String tingkat;
 
-  SkillModel({
-    required this.idSkill,
-    required this.nama,
-    required this.tingkat,
-  });
+  SkillModel({this.idSkill, required this.nama});
 
   factory SkillModel.fromJson(Map<String, dynamic> json) {
-    return SkillModel(
-      idSkill: json['idSkill'],
-      nama: json['nama'],
-      tingkat: json['tingkat'],
-    );
+    return SkillModel(idSkill: json['idSkill'], nama: json['nama']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'idSkill': idSkill,
-      'nama': nama,
-      'tingkat': tingkat,
-    };
+    return {'idSkill': idSkill, 'nama': nama};
   }
 }

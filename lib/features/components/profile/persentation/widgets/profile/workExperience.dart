@@ -3,18 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:intl/intl.dart';
 
-class Workexperience extends StatefulWidget {
-  List<WorkexperienceMV>? dataWork;
-  Workexperience({super.key, this.dataWork});
+class Workexperience extends StatelessWidget {
+  final List<WorkexperienceMV> dataWork;
+  final VoidCallback onAddPressed;
+  final ValueChanged<WorkexperienceMV> onEditPressed;
 
-  @override
-  State<Workexperience> createState() =>
-      _Workexperience(dataWork);
-}
+  Workexperience({super.key, required this.dataWork, required this.onAddPressed, required this.onEditPressed});
 
-class _Workexperience extends State<Workexperience> {
-  List<WorkexperienceMV>? dataWork;
-  _Workexperience(this.dataWork);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,9 +37,7 @@ class _Workexperience extends State<Workexperience> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {
-                  // onTabSelected!(4);
-                },
+                onPressed: onAddPressed,
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
                 style: ElevatedButton.styleFrom(
@@ -59,13 +52,11 @@ class _Workexperience extends State<Workexperience> {
           ),
           SizedBox(height: 10),
           Column(
-            children: dataWork!.asMap().entries.map((entry) {
+            children: dataWork.asMap().entries.map((entry) {
               int idx = entry.key + 1;
               var data = entry.value;
               return InkWell(
-                onTap: () {
-                  // onTabSelected(5);
-                },
+                onTap: () => onEditPressed(data),
                 child: Container(
                   margin: EdgeInsets.all(5),
                   padding: EdgeInsets.all(10),
