@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/candidate/persentation/pages/candidateItem.dart';
+import 'package:job_platform/features/components/candidate/persentation/pages/candidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidateDetail.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chat.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chatDetail.dart';

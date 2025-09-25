@@ -21,49 +21,201 @@ class _Candidatecard extends State<Candidatecard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      //height: 200,
       decoration: BoxDecoration(
-        color: Colors.blueAccent.shade100,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey, width: 2),
       ),
-      padding: const EdgeInsets.all(8),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: NetworkImage(widget.item.photoUrl ?? ""),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Text(
+                    "${widget.item.nama != null ? widget.item.nama : ''} (${widget.item.umur != null ? widget.item.umur : ''})",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey, width: 1),
+                      image: DecorationImage(
+                        image: AssetImage(
+                          widget.item.photoUrl ?? "assets/images/default.png",
+                        ),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            widget.item.nama ?? "",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+
+          Container(
+            margin: EdgeInsets.all(5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  widget.item.role ?? "Unknown",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "| 3 Tahun",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "Remote | WFO",
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  widget.item.domisili ?? "Unknown",
+                  style: TextStyle(fontSize: 14, color: Colors.black54),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            widget.item.umur ?? "0",
-            style: const TextStyle(fontSize: 12, color: Colors.black54),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(3),
+                margin: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Text("React", style: TextStyle(color: Colors.white)),
+              ),
+              Container(
+                padding: EdgeInsets.all(3),
+                margin: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Text("Java", style: TextStyle(color: Colors.white)),
+              ),
+              Container(
+                padding: EdgeInsets.all(3),
+                margin: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Text("Figma", style: TextStyle(color: Colors.white)),
+              ),
+            ],
           ),
-          SizedBox(height: 4),
-          Text(
-            widget.item.domisili ?? "Unknown",
-            style: const TextStyle(fontSize: 12, color: Colors.black54),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          Container(
+            margin: EdgeInsets.all(5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Matching: 85%",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: 0.85,
+                    minHeight: 8,
+                    backgroundColor: Colors.grey.shade300,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blueGrey),
+                  ),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 4),
-          Text(
-            widget.item.score ?? "0",
-            style: const TextStyle(fontSize: 12, color: Colors.black54),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+              border: Border.all(color: Colors.grey, width: 1),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () => {},
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Icon(Icons.favorite, color: Colors.blue)],
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  child: VerticalDivider(
+                    color: Colors.grey,
+                    thickness: 1,
+                    width: 20,
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () => {},
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Icon(Icons.shopping_cart, color: Colors.blue)],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

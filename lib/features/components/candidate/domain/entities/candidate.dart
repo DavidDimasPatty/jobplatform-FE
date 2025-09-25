@@ -5,7 +5,7 @@ class CandidateItems {
   String? score;
   String? umur;
   String? domisili;
-
+  String? role;
   CandidateItems({
     this.id,
     this.nama,
@@ -13,6 +13,7 @@ class CandidateItems {
     this.score,
     this.domisili,
     this.umur,
+    this.role,
   });
 
   // factory CertificateMV.fromJson(Map<String, dynamic> json) {
