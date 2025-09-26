@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
@@ -165,8 +164,6 @@ class _CertificateEditState extends State<CertificateEdit> {
   }
 
   Future<void> _deleteCertificate() async {
-    if (data == null) return;
-
     setState(() {
       _isLoading = true;
     });

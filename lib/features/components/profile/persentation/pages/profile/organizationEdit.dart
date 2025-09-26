@@ -170,8 +170,6 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   }
 
   Future _handleDeleteOrganization() async {
-    if (data == null) return;
-
     setState(() {
       _isLoading = true;
     });

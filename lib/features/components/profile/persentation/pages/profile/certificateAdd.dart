@@ -378,11 +378,6 @@ class _CertificateAddState extends State<CertificateAdd> {
                           },
                         ),
                       ],
-                      buildDropdownField(
-                        'skill-select',
-                        'Skill',
-                        _selectSkillController,
-                      ),
                       buildTextField(
                         'Description',
                         _descriptionController,
@@ -394,6 +389,11 @@ class _CertificateAddState extends State<CertificateAdd> {
                           }
                           return null;
                         },
+                      ),
+                      buildDropdownField(
+                        'skill-select',
+                        'Skill',
+                        _selectSkillController,
                       ),
                       buildDateField(
                         'Issue Date',

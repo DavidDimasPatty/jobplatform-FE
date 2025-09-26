@@ -1,11 +1,10 @@
+import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 
 class EducationRequest {
   String idUser;
   String? idUserEducation;
-  String? idEducation;
-  String nama;
-  String lokasi;
+  EducationModel education;
   List<SkillModel> skill;
   bool isActive;
   String penjurusan;
@@ -13,14 +12,12 @@ class EducationRequest {
   String gpa;
   String? deskripsi;
   DateTime startDate;
-  DateTime endDate;
+  DateTime? endDate;
 
   EducationRequest({
     required this.idUser,
     this.idUserEducation,
-    this.idEducation,
-    required this.nama,
-    required this.lokasi,
+    required this.education,
     required this.skill,
     this.isActive = true,
     required this.penjurusan,
@@ -28,27 +25,25 @@ class EducationRequest {
     this.gpa = '0.0',
     this.deskripsi,
     required this.startDate,
-    required this.endDate,
+    this.endDate,
   });
 
   factory EducationRequest.fromJson(Map<String, dynamic> json) {
     return EducationRequest(
       idUser: json['idUser'],
       idUserEducation: json['idUserEducation'],
-      idEducation: json['education'] != null ? json['education']['idEducation'] : null,
-      nama: json['nama'],
-      lokasi: json['lokasi'],
+      education: EducationModel.fromJson(json['education']),
       skill:
           (json['skill'] as List<dynamic>?)
               ?.map((item) => SkillModel.fromJson(item))
               .toList() ??
           [],
-      isActive: json['isActive'] ?? true,
-      gpa: json['gpa'] ?? '0.0',
-      penjurusan: json['penjurusan'] ?? '',
-      tingkat: json['tingkat'] ?? '',
-      deskripsi: json['deskripsi'] ?? '',
-      startDate: DateTime.parse(json['startDate'] ?? ''),
+      isActive: json['isActive'],
+      gpa: json['gpa'],
+      penjurusan: json['penjurusan'],
+      tingkat: json['tingkat'],
+      deskripsi: json['deskripsi'],
+      startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate'] ?? ''),
     );
   }
@@ -57,11 +52,7 @@ class EducationRequest {
     return {
       'idUser': idUser,
       'idUserEducation': idUserEducation,
-      'education': {
-        'idEducation': idEducation,
-        'nama': nama,
-        'lokasi': lokasi,
-      },
+      'education': education.toJson(),
       'skill': skill,
       'isActive': isActive,
       'penjurusan': penjurusan,
@@ -69,7 +60,7 @@ class EducationRequest {
       'gpa': gpa,
       'deskripsi': deskripsi,
       'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
     };
   }
 }

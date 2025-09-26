@@ -1,9 +1,12 @@
+import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+
 class EducationMV {
   String id;
   String idUser;
   String idEducation;
-  String? nama;
-  String? lokasi;
+  EducationModel education;
+  List<SkillModel> skill;
   bool isActive;
   String penjurusan;
   String tingkat;
@@ -16,8 +19,8 @@ class EducationMV {
     this.id,
     this.idUser,
     this.idEducation,
-    this.nama,
-    this.lokasi,
+    this.education,
+    this.skill,
     this.isActive,
     this.penjurusan,
     this.tingkat,
@@ -32,8 +35,11 @@ class EducationMV {
       json['userEducation']['_id'],
       json['userEducation']['idUser'],
       json['userEducation']['idEducation'],
-      json['education']['nama'],
-      json['education']['lokasi'],
+      EducationModel.fromJson(json['education']),
+      (json['userEducation']['skill'] as List<dynamic>?)
+              ?.map((item) => SkillModel.fromJson(item['skill']))
+              .toList() ??
+          [],
       json['userEducation']['isActive'],
       json['userEducation']['penjurusan'],
       json['userEducation']['tingkat'],

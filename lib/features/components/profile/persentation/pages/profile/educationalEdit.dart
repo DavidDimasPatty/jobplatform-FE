@@ -11,7 +11,6 @@ import 'package:job_platform/features/components/profile/domain/entities/Educati
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
-
 import 'package:job_platform/features/components/signup/data/models/country.dart';
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
@@ -49,10 +48,34 @@ class _EducationalEdit extends State<EducationalEdit> {
   bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
-  List<String> _selectedSkills = [];
+  bool _stillActive = true;
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
+
+  @override
+  void initState() {
+    super.initState();
+    final remoteDataSource = AuthRemoteDataSource();
+    final repository = AuthRepositoryImpl(remoteDataSource);
+    _profileUseCase = ProfileUsecase(repository);
+    _loadData();
+  }
+
+  void _loadData() {
+    _lokasiController.text = data.education.lokasi;
+    _namaController.text = data.education.nama;
+    _penjurusanController.text = data.penjurusan;
+    _tingkatController.text = data.tingkat;
+    _gpaController.text = data.gpa;
+    _deskripsiController.text = data.deskripsi ?? '';
+    startDate = data.startDate;
+
+    _stillActive = data.endDate == null;
+    if (!_stillActive) {
+      endDate = data.endDate;
+    }
+  }
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -99,28 +122,22 @@ class _EducationalEdit extends State<EducationalEdit> {
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
 
-        // Format dates to 'yyyy-MM-dd'
-        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
-        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
-
-        EducationRequest newEducation = EducationRequest(
+        EducationRequest editedEducation = EducationRequest(
           idUser: idUser,
           idUserEducation: data.id,
-          idEducation: data.idEducation,
-          nama: _namaController.text,
+          education: data.education,
+          skill: data.skill,
           deskripsi: _deskripsiController.text,
-          lokasi: _lokasiController.text,
           tingkat: _tingkatController.text,
           penjurusan: _penjurusanController.text,
           gpa: _gpaController.text,
-          // Assuming skills are handled elsewhere or not required here
-          skill: [],
-          startDate: DateTime.parse(issueDate),
-          endDate: DateTime.parse(expiryDate),
+          isActive: _stillActive,
+          startDate: startDate!,
+          endDate: _stillActive ? null : endDate,
         );
 
         EducationResponse response = await _profileUseCase.editEducation(
-          newEducation,
+          editedEducation,
         );
 
         // On success, clear the form or navigate away
@@ -155,8 +172,6 @@ class _EducationalEdit extends State<EducationalEdit> {
   }
 
   Future _handleDeleteEducaiton() async {
-    if (data == null) return;
-
     setState(() {
       _isLoading = true;
     });
@@ -191,26 +206,6 @@ class _EducationalEdit extends State<EducationalEdit> {
         _isLoading = false;
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final remoteDataSource = AuthRemoteDataSource();
-    final repository = AuthRepositoryImpl(remoteDataSource);
-    _profileUseCase = ProfileUsecase(repository);
-    _loadData();
-  }
-
-  void _loadData() {
-    _deskripsiController.text = data.deskripsi ?? '';
-    _lokasiController.text = data.lokasi ?? '';
-    _penjurusanController.text = data.penjurusan;
-    _tingkatController.text = data.tingkat;
-    _gpaController.text = data.gpa;
-    _namaController.text = data.nama ?? '';
-    startDate = data.startDate;
-    endDate = data.endDate;
   }
 
   @override
@@ -260,6 +255,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
+                              readOnly: true,
                               controller: _namaController,
                               decoration: InputDecoration(
                                 labelText: 'Nama Sekolah',
@@ -283,6 +279,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
+                              readOnly: true,
                               controller: _lokasiController,
                               decoration: InputDecoration(
                                 labelText: 'Lokasi Sekolah',
@@ -349,73 +346,6 @@ class _EducationalEdit extends State<EducationalEdit> {
                           ),
 
                           Container(
-                            margin: EdgeInsets.symmetric(vertical: 20),
-                            // height: 90,
-                            child: TextFormField(
-                              controller: _deskripsiController,
-                              decoration: InputDecoration(
-                                labelText: 'Deskripsi Pekerjaan',
-                                hintText: 'Masukan Deskripsi Pekerjaan',
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.description),
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 11,
-                                ),
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              minLines: 3,
-                              maxLines: 5,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
-                            ),
-                          ),
-
-                          Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () => _pickStartDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "Start Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      startDate != null
-                                          ? DateFormat('dd MMMM yyyy').format(startDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: startDate == null
-                                      ? null
-                                      : () => _pickEndDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "End Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      endDate != null
-                                          ? DateFormat('dd MMMM yyyy').format(endDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // SizedBox(height: 90),
-                          Container(
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Row(
@@ -448,6 +378,86 @@ class _EducationalEdit extends State<EducationalEdit> {
                             ),
                           ),
 
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            // height: 90,
+                            child: TextFormField(
+                              controller: _deskripsiController,
+                              decoration: InputDecoration(
+                                labelText: 'Deskripsi Pekerjaan',
+                                hintText: 'Masukan Deskripsi Pekerjaan',
+                                border: OutlineInputBorder(),
+                                prefixIcon: Icon(Icons.description),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 11,
+                                ),
+                              ),
+                              keyboardType: TextInputType.multiline,
+                              minLines: 3,
+                              maxLines: 5,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
+                            ),
+                          ),
+
+                          InkWell(
+                            onTap: () => _pickStartDate(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.calendar_today),
+                                labelText: "Start Date",
+                                border: OutlineInputBorder(),
+                              ),
+                              child: Text(
+                                startDate != null
+                                    ? DateFormat(
+                                        'dd MMMM yyyy',
+                                      ).format(startDate!)
+                                    : "Pilih tanggal",
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _stillActive,
+                                onChanged: (checked) {
+                                  setState(() {
+                                    _stillActive = checked ?? true;
+                                    if (_stillActive) {
+                                      endDate = null;
+                                    }
+                                  });
+                                },
+                              ),
+                              Text('Still Active?'),
+                            ],
+                          ),
+                          if (!_stillActive)
+                            InkWell(
+                              onTap: startDate == null
+                                  ? null
+                                  : () => _pickEndDate(context),
+                              child: InputDecorator(
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.calendar_today),
+                                  labelText: "End Date",
+                                  border: OutlineInputBorder(),
+                                ),
+                                child: Text(
+                                  endDate != null
+                                      ? DateFormat(
+                                          'dd MMMM yyyy',
+                                        ).format(endDate!)
+                                      : "Pilih tanggal",
+                                ),
+                              ),
+                            ),
+                            
+                          SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -546,7 +556,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              widget.education.nama!,
+                              widget.education.education.nama,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
