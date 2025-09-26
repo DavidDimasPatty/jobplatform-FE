@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
-  await Firebase.initializeApp(options: FirebaseOptions());
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: dotenv.env['FIREBASE_API_KEY_DEV']!,
+      authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN_DEV']!,
+      projectId: dotenv.env['FIREBASE_PROJECT_ID_DEV']!,
+      storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET_DEV']!,
+      messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID_DEV']!,
+      appId: dotenv.env['FIREBASE_APP_ID_DEV']!,
+      measurementId: dotenv.env['FIREBASE_MEASUREMENT_ID_DEV']!,
+    ),
+  );
   runApp(const MyApp());
 }
 
@@ -27,7 +37,7 @@ class MyApp extends StatelessWidget {
           const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
         ],
       ),
-      home: SignUpPelamar("David Dimas", "daviddimas80@gmail.com", "", ""),
+      home:Login(),
     );
   }
 }
