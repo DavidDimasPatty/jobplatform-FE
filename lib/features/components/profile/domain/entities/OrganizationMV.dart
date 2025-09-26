@@ -1,8 +1,10 @@
+import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
+
 class OrganizationMV {
   String id;
   String idUser;
   String idOrganization;
-  String? nama;
+  OrganizationModel organization;
   DateTime? startDate;
   DateTime? endDate;
   String? deskripsi;
@@ -12,7 +14,7 @@ class OrganizationMV {
     this.id,
     this.idUser,
     this.idOrganization,
-    this.nama,
+    this.organization,
     this.startDate,
     this.endDate,
     this.deskripsi,
@@ -24,7 +26,7 @@ class OrganizationMV {
       json['userOrganization']['_id'] as String,
       json['userOrganization']['idUser'] as String,
       json['userOrganization']['idOrganization'] as String,
-      json['organization']['nama'] as String?,
+      OrganizationModel.fromJson(json['organization']),
       json['userOrganization']['startDate'] != null ? DateTime.parse(json['userOrganization']['startDate']) : null,
       json['userOrganization']['endDate'] != null ? DateTime.parse(json['userOrganization']['endDate']) : null,
       json['userOrganization']['deskripsi'] as String?,

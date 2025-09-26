@@ -8,7 +8,12 @@ class Organizational extends StatelessWidget {
   final VoidCallback onAddPressed;
   final ValueChanged onEditPressed;
 
-  Organizational({super.key, required this.dataOrg, required this.onAddPressed, required this.onEditPressed});
+  Organizational({
+    super.key,
+    required this.dataOrg,
+    required this.onAddPressed,
+    required this.onEditPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +90,7 @@ class Organizational extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            data.nama!,
+                            data.organization.nama,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -107,13 +112,9 @@ class Organizational extends StatelessWidget {
                         child: Text(
                           softWrap: true,
                           textAlign: TextAlign.center,
-                          DateFormat(
-                                'MMM yyyy',
-                              ).format(data.startDate!).toString() +
-                              " - " +
-                              DateFormat(
-                                'MMM yyyy',
-                              ).format(data.endDate!).toString(),
+                          (data.endDate == null)
+                              ? "${DateFormat('MMM yyyy').format(data.startDate!)} - Present"
+                              : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}"
                         ),
                       ),
                     ],
