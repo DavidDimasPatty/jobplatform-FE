@@ -13,7 +13,7 @@ class WorkExperienceModel {
 
   factory WorkExperienceModel.fromJson(Map<String, dynamic> json) {
     return WorkExperienceModel(
-      idExperience: json['idExperience'],
+      idExperience: json['_id'],
       namaPerusahaan: json['namaPerusahaan'],
       industri: json['industri'],
       lokasi: json['lokasi'],

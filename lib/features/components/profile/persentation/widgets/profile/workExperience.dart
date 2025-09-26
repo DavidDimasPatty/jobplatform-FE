@@ -85,7 +85,7 @@ class Workexperience extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            data.namaPerusahaan!,
+                            data.experience.namaPerusahaan,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -107,13 +107,9 @@ class Workexperience extends StatelessWidget {
                         child: Text(
                           softWrap: true,
                           textAlign: TextAlign.center,
-                          DateFormat(
-                                'MMM yyyy',
-                              ).format(data.startDate!).toString() +
-                              " - " +
-                              DateFormat(
-                                'MMM yyyy',
-                              ).format(data.endDate!).toString(),
+                          (data.endDate == null)
+                              ? "${DateFormat('MMM yyyy').format(data.startDate!)} - Present"
+                              : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}"
                         ),
                       ),
                     ],

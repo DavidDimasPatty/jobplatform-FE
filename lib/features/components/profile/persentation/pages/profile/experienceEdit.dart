@@ -40,7 +40,10 @@ class _ExperienceEdit extends State<ExperienceEdit> {
   final _divisiController = TextEditingController();
   final _sistemKerjaController = TextEditingController();
   final _deskripsiController = TextEditingController();
-  
+  final _lokasiController = TextEditingController();
+  final _industriController = TextEditingController();
+  final _tipeKaryawanController = TextEditingController();
+
   // Global key
   final _formKey = GlobalKey<FormState>();
 
@@ -48,9 +51,36 @@ class _ExperienceEdit extends State<ExperienceEdit> {
   bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+  bool _stillActive = true;
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
+
+  @override
+  void initState() {
+    super.initState();
+    final remoteDataSource = AuthRemoteDataSource();
+    final repository = AuthRepositoryImpl(remoteDataSource);
+    _profileUseCase = ProfileUsecase(repository);
+    _loadData();
+  }
+
+  void _loadData() {
+    _namaController.text = data.experience.namaPerusahaan;
+    _lokasiController.text = data.experience.lokasi;
+    _industriController.text = data.experience.industri;
+    _deskripsiController.text = data.deskripsi ?? '';
+    _jabatanController.text = data.namaJabatan ?? '';
+    _divisiController.text = data.bidang ?? '';
+    _sistemKerjaController.text = data.sistemKerja ?? '';
+    _tipeKaryawanController.text = data.tipeKaryawan ?? '';
+    startDate = data.startDate;
+
+    _stillActive = data.endDate == null;
+    if (!_stillActive) {
+      endDate = data.endDate;
+    }
+  }
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -97,31 +127,23 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
 
-        // Format dates to 'yyyy-MM-dd'
-        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
-        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
-
         WorkExperienceRequest editedExperience = WorkExperienceRequest(
           idUser: idUser,
           idUserExperience: data.id,
-          idExperience: data.idExperience,
-          namaPerusahaan: _namaController.text,
-          industri: 'Retail',
-          lokasi: 'PIK',
-          skill: [],
-          isActive: true,
+          experience: data.experience,
+          skill: data.skill,
           bidang: _divisiController.text,
           deskripsi: _deskripsiController.text,
           namaJabatan: _jabatanController.text,
           sistemKerja: _sistemKerjaController.text,
-          tipeKaryawan: '...',
-          startDate: DateTime.parse(issueDate),
-          endDate: DateTime.parse(expiryDate),
+          tipeKaryawan: _tipeKaryawanController.text,
+          isActive: _stillActive,
+          startDate: startDate!,
+          endDate: _stillActive ? null : endDate,
         );
 
-        WorkExperienceResponse response = await _profileUseCase.editWorkExperience(
-          editedExperience,
-        );
+        WorkExperienceResponse response = await _profileUseCase
+            .editWorkExperience(editedExperience);
 
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
@@ -132,7 +154,9 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit work experience. Please try again.'),
+              content: Text(
+                'Failed to edit work experience. Please try again.',
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -155,16 +179,13 @@ class _ExperienceEdit extends State<ExperienceEdit> {
   }
 
   Future _handleDeleteExperience() async {
-    if (data == null) return;
-
     setState(() {
       _isLoading = true;
     });
 
     try {
-      WorkExperienceResponse response = await _profileUseCase.deleteWorkExperience(
-        data.id,
-      );
+      WorkExperienceResponse response = await _profileUseCase
+          .deleteWorkExperience(data.id);
 
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -174,7 +195,9 @@ class _ExperienceEdit extends State<ExperienceEdit> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete work experience. Please try again.'),
+            content: Text(
+              'Failed to delete work experience. Please try again.',
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -191,25 +214,6 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         _isLoading = false;
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final remoteDataSource = AuthRemoteDataSource();
-    final repository = AuthRepositoryImpl(remoteDataSource);
-    _profileUseCase = ProfileUsecase(repository);
-    _loadData();
-  }
-
-  void _loadData() {
-    _namaController.text = data.namaPerusahaan!;
-    _deskripsiController.text = data.deskripsi ?? '';
-    _jabatanController.text = data.namaJabatan ?? '';
-    _divisiController.text = data.bidang ?? '';
-    _sistemKerjaController.text = data.sistemKerja ?? '';
-    startDate = data.startDate;
-    endDate = data.endDate;
   }
 
   @override
@@ -259,11 +263,60 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
+                              readOnly: true,
                               controller: _namaController,
                               decoration: InputDecoration(
                                 labelText: 'Nama Perusahaan',
                                 hintText: 'Masukan Nama',
                                 prefixIcon: Icon(Icons.text_fields),
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 11,
+                                ),
+                              ),
+                              // initialValue: email,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
+                            ),
+                          ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: TextFormField(
+                              readOnly: true,
+                              controller: _industriController,
+                              decoration: InputDecoration(
+                                labelText: 'Tipe Industri Perusahaan',
+                                hintText: 'Masukan Industri',
+                                prefixIcon: Icon(Icons.text_fields),
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 11,
+                                ),
+                              ),
+                              // initialValue: email,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
+                            ),
+                          ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: TextFormField(
+                              readOnly: true,
+                              controller: _lokasiController,
+                              decoration: InputDecoration(
+                                labelText: 'Lokasi Perusahaan',
+                                hintText: 'Masukan Lokasi',
+                                prefixIcon: Icon(Icons.location_on),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -325,76 +378,38 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                           ),
 
                           Container(
-                            margin: EdgeInsets.symmetric(vertical: 20),
                             // height: 90,
-                            child: TextFormField(
-                              controller: _deskripsiController,
-                              decoration: InputDecoration(
-                                labelText: 'Deskripsi Pekerjaan',
-                                hintText: 'Masukan Deskripsi Pekerjaan',
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.description),
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 11,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  // height: 90,
+                                  //width: 300,
+                                  child: TextFormField(
+                                    controller: _tipeKaryawanController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Tipe Karyawan',
+                                      hintText: 'Masukan Tipe Karyawan',
+                                      border: OutlineInputBorder(),
+                                      prefixIcon: Icon(Icons.account_circle),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 11,
+                                      ),
+                                    ),
+                                    // initialValue: name,
+                                    validator: (value) =>
+                                        value == null || value.isEmpty
+                                        ? 'Wajib diisi'
+                                        : null,
+                                  ),
                                 ),
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              minLines: 3,
-                              maxLines: 5,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
+                              ],
                             ),
                           ),
 
-                          Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () => _pickStartDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "Start Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      startDate != null
-                                          ? DateFormat(
-                                              'dd MMMM yyyy',
-                                            ).format(startDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: startDate == null
-                                      ? null
-                                      : () => _pickEndDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "End Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      endDate != null
-                                          ? DateFormat(
-                                              'dd MMMM yyyy',
-                                            ).format(endDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // SizedBox(height: 90),
                           Container(
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
@@ -428,6 +443,86 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                             ),
                           ),
 
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            // height: 90,
+                            child: TextFormField(
+                              controller: _deskripsiController,
+                              decoration: InputDecoration(
+                                labelText: 'Deskripsi Pekerjaan',
+                                hintText: 'Masukan Deskripsi Pekerjaan',
+                                border: OutlineInputBorder(),
+                                prefixIcon: Icon(Icons.description),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 11,
+                                ),
+                              ),
+                              keyboardType: TextInputType.multiline,
+                              minLines: 3,
+                              maxLines: 5,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
+                            ),
+                          ),
+
+                          InkWell(
+                            onTap: () => _pickStartDate(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.calendar_today),
+                                labelText: "Start Date",
+                                border: OutlineInputBorder(),
+                              ),
+                              child: Text(
+                                startDate != null
+                                    ? DateFormat(
+                                        'dd MMMM yyyy',
+                                      ).format(startDate!)
+                                    : "Pilih tanggal",
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _stillActive,
+                                onChanged: (checked) {
+                                  setState(() {
+                                    _stillActive = checked ?? true;
+                                    if (_stillActive) {
+                                      endDate = null;
+                                    }
+                                  });
+                                },
+                              ),
+                              Text('Still Active?'),
+                            ],
+                          ),
+                          if (!_stillActive)
+                            InkWell(
+                              onTap: startDate == null
+                                  ? null
+                                  : () => _pickEndDate(context),
+                              child: InputDecorator(
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.calendar_today),
+                                  labelText: "End Date",
+                                  border: OutlineInputBorder(),
+                                ),
+                                child: Text(
+                                  endDate != null
+                                      ? DateFormat(
+                                          'dd MMMM yyyy',
+                                        ).format(endDate!)
+                                      : "Pilih tanggal",
+                                ),
+                              ),
+                            ),
+                            
+                          SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -526,7 +621,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              widget.experience.namaPerusahaan!,
+                              widget.experience.experience.namaPerusahaan,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
