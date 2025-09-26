@@ -69,17 +69,10 @@ class _SkillState extends State<Skill> {
           for (var entry in dataSkills) ...[
             SkillCard(
               idx: idx++,
-              title: entry.nama!,
-              level: entry.tingkat!,
-              onPressed: () => _viewSkillDetails(entry.nama!),
+              title: entry.skill.nama,
+              onPressed: () => _viewSkillDetails(entry.skill.nama),
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              height: 20,
-              indent: 0,
-              endIndent: 0,
-            ),
+            SizedBox(height: 10)
           ],
         ],
       ),
@@ -90,13 +83,11 @@ class _SkillState extends State<Skill> {
 class SkillCard extends StatelessWidget {
   final int idx;
   final String title;
-  final String level;
   final VoidCallback onPressed;
 
   const SkillCard({
     required this.idx,
     required this.title,
-    required this.level,
     required this.onPressed,
     Key? key,
   }) : super(key: key);
@@ -140,7 +131,7 @@ class SkillCard extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  level,
+                  'test',
                   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],

@@ -11,7 +11,7 @@ class CertificateModel {
 
   factory CertificateModel.fromJson(Map<String, dynamic> json) {
     return CertificateModel(
-      idCertificate: json['idCertificate'],
+      idCertificate: json['_id'],
       nama: json['nama'],
       publisher: json['publisher'],
     );

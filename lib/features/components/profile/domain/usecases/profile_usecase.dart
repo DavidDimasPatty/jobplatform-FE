@@ -1,5 +1,7 @@
+import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
@@ -9,6 +11,7 @@ import 'package:job_platform/features/components/profile/data/models/preferenceR
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 
@@ -24,6 +27,10 @@ class ProfileUsecase {
   }
 
   // Certificate
+  Future<List<CertificateModel>?> getAllCertificate(String? name){
+    return repository.certificateGetAll(name);
+  }
+
   Future<CertificateResponse> addCertificate(CertificateRequest certificate) {
     return repository.certificateAdd(certificate);
   }
@@ -37,6 +44,10 @@ class ProfileUsecase {
   }
 
   // Education
+  Future<List<EducationModel>?> getAllEducation(String? name){
+    return repository.educationGetAll(name);
+  }
+
   Future<EducationResponse> addEducation(EducationRequest education) {
     return repository.educationAdd(education);
   }
@@ -50,6 +61,10 @@ class ProfileUsecase {
   }
 
   // Work Experience
+  Future<List<WorkExperienceModel>?> getAllExperience(String? name){
+    return repository.experienceGetAll(name);
+  }
+
   Future<WorkExperienceResponse> addWorkExperience(
     WorkExperienceRequest workExperience,
   ) {

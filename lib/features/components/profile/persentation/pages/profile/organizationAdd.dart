@@ -127,11 +127,16 @@ class _OrganizationAdd extends State<OrganizationAdd> {
         }
 
         // Map selected skills to SkillModel list
+        late List<SkillModel> skill;
         var selectedList = _selectSkillController.selectedList;
-        List<SkillModel> skill = selectedList
-            .where((item) => item.value is SkillModel)
-            .map((item) => item.value as SkillModel)
-            .toList();
+        if (selectedList.isNotEmpty) {
+          skill = selectedList
+              .where((item) => item.value is SkillModel)
+              .map((item) => item.value as SkillModel)
+              .toList();
+        } else {
+          skill = [];
+        }
 
         OrganizationRequest newOrganization = OrganizationRequest(
           idUser: idUser,
