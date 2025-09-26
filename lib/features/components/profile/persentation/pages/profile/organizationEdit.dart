@@ -17,6 +17,7 @@ import 'package:job_platform/features/components/signup/domain/entities/kota.dar
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:select2dot1/select2dot1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
@@ -36,16 +37,11 @@ class _OrganizationEdit extends State<OrganizationEdit> {
 
   _OrganizationEdit({required this.data});
 
-  bool isLoadingKota = false;
-  bool isLoadingKotaLahir = false;
-  bool isLoadingProvinsi = false;
-  bool isLoadingProvinsiLahir = false;
-
   // Controllers
+  final _namaController = TextEditingController();
   final _jabatanController = TextEditingController();
   final _deskripsiController = TextEditingController();
   final _emailController = TextEditingController();
-  final _namaController = TextEditingController();
 
   // Global key
   final _formKey = GlobalKey<FormState>();
@@ -54,9 +50,31 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+  bool _stillActive = true;
 
   // Usecase Instance
   late ProfileUsecase _profileUseCase;
+
+  @override
+  void initState() {
+    super.initState();
+    final remoteDataSource = AuthRemoteDataSource();
+    final repository = AuthRepositoryImpl(remoteDataSource);
+    _profileUseCase = ProfileUsecase(repository);
+    _loadData();
+  }
+
+  void _loadData() {
+    _namaController.text = data.organization.nama;
+    _jabatanController.text = data.jabatan ?? '';
+    _deskripsiController.text = data.deskripsi ?? '';
+    startDate = data.startDate;
+
+    _stillActive = data.endDate == null;
+    if (!_stillActive) {
+      endDate = data.endDate;
+    }
+  }
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -103,26 +121,16 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
 
-        // Format dates to 'yyyy-MM-dd'
-        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
-        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
-
-        OrganizationModel organization = OrganizationModel(
-          idOrganization: data.idOrganization,
-          nama: _namaController.text,
-          lokasi: 'PIK',
-        );
-
         OrganizationRequest newOrganization = OrganizationRequest(
           idUser: idUser,
           idUserOrganization: data.id,
-          organization: organization,
+          organization: data.organization,
           skill: [],
-          isActive: true,
+          isActive: _stillActive,
           deskripsi: _deskripsiController.text,
           jabatan: _jabatanController.text,
-          startDate: DateTime.parse(issueDate),
-          endDate: DateTime.parse(expiryDate),
+          startDate: startDate!,
+          endDate: _stillActive ? null : endDate,
         );
 
         OrganizationResponse response = await _profileUseCase.editOrganization(
@@ -145,6 +153,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         }
         _formKey.currentState!.reset();
       } catch (e) {
+        print(e);
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -200,23 +209,6 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    final remoteDataSource = AuthRemoteDataSource();
-    final repository = AuthRepositoryImpl(remoteDataSource);
-    _profileUseCase = ProfileUsecase(repository);
-    _loadData();
-  }
-
-  void _loadData(){
-    _namaController.text = data.nama ?? '';
-    _jabatanController.text = data.jabatan ?? '';
-    _deskripsiController.text = data.deskripsi ?? '';
-    startDate = data.startDate;
-    endDate = data.endDate;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: EdgeInsets.all(20),
@@ -263,6 +255,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
+                              readOnly: true,
                               controller: _namaController,
                               decoration: InputDecoration(
                                 labelText: 'Nama Organisasi',
@@ -329,52 +322,60 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                   : null,
                             ),
                           ),
-
+                          InkWell(
+                            onTap: () => _pickStartDate(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.calendar_today),
+                                labelText: "Start Date",
+                                border: OutlineInputBorder(),
+                              ),
+                              child: Text(
+                                startDate != null
+                                    ? DateFormat(
+                                        'dd MMMM yyyy',
+                                      ).format(startDate!)
+                                    : "Pilih tanggal",
+                              ),
+                            ),
+                          ),
                           Row(
                             children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () => _pickStartDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "Start Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      startDate != null
-                                          ? DateFormat(
-                                              'dd MMMM yyyy',
-                                            ).format(startDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
+                              Checkbox(
+                                value: _stillActive,
+                                onChanged: (checked) {
+                                  setState(() {
+                                    _stillActive = checked ?? true;
+                                    if (_stillActive) {
+                                      endDate = null;
+                                    }
+                                  });
+                                },
                               ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: startDate == null
-                                      ? null
-                                      : () => _pickEndDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "End Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      endDate != null
-                                          ? DateFormat(
-                                              'dd MMMM yyyy',
-                                            ).format(endDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              Text('Still Active?'),
                             ],
                           ),
+                          if (!_stillActive)
+                            InkWell(
+                              onTap: startDate == null
+                                  ? null
+                                  : () => _pickEndDate(context),
+                              child: InputDecorator(
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.calendar_today),
+                                  labelText: "End Date",
+                                  border: OutlineInputBorder(),
+                                ),
+                                child: Text(
+                                  endDate != null
+                                      ? DateFormat(
+                                          'dd MMMM yyyy',
+                                        ).format(endDate!)
+                                      : "Pilih tanggal",
+                                ),
+                              ),
+                            ),
+
                           SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -474,7 +475,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              widget.organization.nama!,
+                              widget.organization.organization.nama,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -486,9 +487,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                           Icon(Icons.business, size: 16, color: Colors.grey),
                           SizedBox(width: 8),
                           Expanded(
-                            child: Text(
-                              '${widget.organization.jabatan}',
-                            ),
+                            child: Text('${widget.organization.jabatan}'),
                           ),
                         ],
                       ),

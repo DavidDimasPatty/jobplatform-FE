@@ -2,11 +2,13 @@ import 'package:job_platform/features/components/profile/data/models/certificate
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 
@@ -65,6 +67,10 @@ class ProfileUsecase {
   }
 
   // Organization
+  Future<List<OrganizationModel>?> getAllOrganization(String? name){
+    return repository.organizationGetAll(name);
+  }
+
   Future<OrganizationResponse> addOrganization(
     OrganizationRequest organization,
   ) {
@@ -88,5 +94,10 @@ class ProfileUsecase {
 
   Future<PreferenceResponse> editPreference(PreferenceRequest preference) {
     return repository.preferenceEdit(preference);
+  }
+
+  // Skill
+  Future<List<SkillModel>?> getAllSkill(String? name){
+    return repository.skillGetAll(name);
   }
 }

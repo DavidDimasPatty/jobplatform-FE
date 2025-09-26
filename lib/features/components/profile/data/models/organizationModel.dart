@@ -11,7 +11,7 @@ class OrganizationModel {
 
   factory OrganizationModel.fromJson(Map<String, dynamic> json) {
     return OrganizationModel(
-      idOrganization: json['idOrganization'],
+      idOrganization: json['_id'],
       nama: json['nama'],
       lokasi: json['lokasi'],
     );

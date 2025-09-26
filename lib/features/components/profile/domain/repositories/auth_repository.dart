@@ -2,11 +2,13 @@ import 'package:job_platform/features/components/profile/data/models/certificate
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 
@@ -25,6 +27,7 @@ abstract class AuthRepository {
   Future<WorkExperienceResponse> experienceEdit(WorkExperienceRequest experience);
   Future<WorkExperienceResponse> experienceDelete(String id);
   // Organization
+  Future<List<OrganizationModel>?> organizationGetAll(String? name);
   Future<OrganizationResponse> organizationAdd(OrganizationRequest organization);
   Future<OrganizationResponse> organizationEdit(OrganizationRequest organization);
   Future<OrganizationResponse> organizationDelete(String id);
@@ -32,5 +35,6 @@ abstract class AuthRepository {
   Future<PreferenceResponse> preferenceAdd(PreferenceRequest preference);
   Future<PreferenceResponse> preferenceEdit(PreferenceRequest preference);
   // Skill
+  Future<List<SkillModel>?> skillGetAll(String? name);
   // Personal Info
 }

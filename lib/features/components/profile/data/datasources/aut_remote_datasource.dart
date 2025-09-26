@@ -5,11 +5,13 @@ import 'package:job_platform/features/components/profile/data/models/certificate
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 
@@ -26,12 +28,9 @@ class AuthRemoteDataSource {
       print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        //print(response.body);
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
-        // print('Berhasil: $jsonData');
 
         data = ProfileModel.fromJson(jsonData);
-        // print(data.certificates);
         return data;
       } else {
         final dataFailed = jsonDecode(response.body);
@@ -359,6 +358,35 @@ class AuthRemoteDataSource {
   }
 
   // Organization
+  Future<List<OrganizationModel>?> organizationGet(String? nama) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/GetOrganizationAll',
+      ).replace(queryParameters: {'nama': nama});
+      List<OrganizationModel>? data;
+      final response = await http.get(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        final List<dynamic> orgList = jsonData["data"]["data"];
+        data = orgList
+            .map<OrganizationModel>((item) => OrganizationModel.fromJson(item))
+            .toList();
+        return data;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return null;
+      }
+    } catch (e) {
+      print('Error during get all organization data: $e');
+      return null;
+    }
+  }
+
   Future<OrganizationResponse> organizationAdd(
     OrganizationRequest organization,
   ) async {
@@ -499,7 +527,9 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<PreferenceResponse> preferenceEdit(PreferenceRequest preference) async {
+  Future<PreferenceResponse> preferenceEdit(
+    PreferenceRequest preference,
+  ) async {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
@@ -532,6 +562,36 @@ class AuthRemoteDataSource {
         responseMessage: 'Failed',
         data: null,
       );
+    }
+  }
+
+  // Skill
+  Future<List<SkillModel>?> skillGet(String? nama) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/GetSkillAll',
+      ).replace(queryParameters: {'nama': nama});
+      List<SkillModel>? data;
+      final response = await http.get(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        final List<dynamic> orgList = jsonData["data"]["data"];
+        data = orgList
+            .map<SkillModel>((item) => SkillModel.fromJson(item))
+            .toList();
+        return data;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return null;
+      }
+    } catch (e) {
+      print('Error during get all skill data: $e');
+      return null;
     }
   }
 }

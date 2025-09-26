@@ -8,6 +8,7 @@ import 'package:job_platform/features/components/profile/data/datasources/aut_re
 import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
 
@@ -16,6 +17,7 @@ import 'package:job_platform/features/components/signup/domain/entities/kota.dar
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:select2dot1/select2dot1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
@@ -29,10 +31,12 @@ class OrganizationAdd extends StatefulWidget {
 
 class _OrganizationAdd extends State<OrganizationAdd> {
   // Controllers
+  final _namaController = TextEditingController();
   final _jabatanController = TextEditingController();
   final _deskripsiController = TextEditingController();
   final _emailController = TextEditingController();
-  final _namaController = TextEditingController();
+  late SelectDataController _selectOrganizationController;
+  late SelectDataController _selectSkillController;
 
   // Global key
   final _formKey = GlobalKey<FormState>();
@@ -41,9 +45,26 @@ class _OrganizationAdd extends State<OrganizationAdd> {
   bool _isLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+  bool _stillActive = true;
+  bool _showAddNewForm = false;
 
   // Usecase Instance
   late ProfileUsecase _profileUseCase;
+
+  @override
+  void initState() {
+    super.initState();
+    final remoteDataSource = AuthRemoteDataSource();
+    final repository = AuthRepositoryImpl(remoteDataSource);
+    _profileUseCase = ProfileUsecase(repository);
+    _selectOrganizationController = SelectDataController(
+      data: [],
+      isMultiSelect: false,
+    );
+    _selectSkillController = SelectDataController(data: []);
+    _getAllOrganization();
+    _getAllSkill();
+  }
 
   Future<void> _pickStartDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -90,24 +111,37 @@ class _OrganizationAdd extends State<OrganizationAdd> {
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
 
-        // Format dates to 'yyyy-MM-dd'
-        final issueDate = DateFormat('yyyy-MM-dd').format(startDate!);
-        final expiryDate = DateFormat('yyyy-MM-dd').format(endDate!);
+        late OrganizationModel organization;
+        if (_showAddNewForm) {
+          organization = OrganizationModel(
+            nama: _namaController.text,
+            lokasi: 'PIK',
+          );
+        } else {
+          var selectedItem =
+              _selectOrganizationController.selectedList.first.value;
 
-        OrganizationModel organization = OrganizationModel(
-          nama: _namaController.text,
-          lokasi: 'PIK',
-        );
+          if (selectedItem is OrganizationModel) {
+            organization = selectedItem;
+          }
+        }
+
+        // Map selected skills to SkillModel list
+        var selectedList = _selectSkillController.selectedList;
+        List<SkillModel> skill = selectedList
+            .where((item) => item.value is SkillModel)
+            .map((item) => item.value as SkillModel)
+            .toList();
 
         OrganizationRequest newOrganization = OrganizationRequest(
           idUser: idUser,
           organization: organization,
-          skill: [],
-          isActive: true,
+          skill: skill,
+          isActive: _stillActive,
           deskripsi: _deskripsiController.text,
           jabatan: _jabatanController.text,
-          startDate: DateTime.parse(issueDate),
-          endDate: DateTime.parse(expiryDate),
+          startDate: startDate!,
+          endDate: _stillActive ? null : endDate,
         );
 
         OrganizationResponse response = await _profileUseCase.addOrganization(
@@ -145,12 +179,134 @@ class _OrganizationAdd extends State<OrganizationAdd> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    final remoteDataSource = AuthRemoteDataSource();
-    final repository = AuthRepositoryImpl(remoteDataSource);
-    _profileUseCase = ProfileUsecase(repository);
+  Future _getAllOrganization({String? name = ""}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var data = await _profileUseCase.getAllOrganization(name);
+      if (!mounted) return;
+
+      List<SingleItemCategoryModel> organizationItems = [];
+
+      if (data != null && data.isNotEmpty) {
+        organizationItems = data
+            .map(
+              (organization) => SingleItemCategoryModel(
+                nameSingleItem: organization.nama,
+                value: organization,
+              ),
+            )
+            .toList();
+
+        // Always add "Add new organization" option
+        organizationItems.add(
+          SingleItemCategoryModel(
+            nameSingleItem: "+ Add new organization",
+            value: "add_new_organization", // Special identifier
+          ),
+        );
+
+        final organizationList = [
+          SingleCategoryModel(singleItemCategoryList: organizationItems),
+        ];
+
+        setState(() {
+          _selectOrganizationController.data = organizationList;
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get organization data. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future _getAllSkill({String? name = ""}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var data = await _profileUseCase.getAllSkill(name);
+      if (!mounted) return;
+
+      List<SingleItemCategoryModel> skillItem = [];
+
+      if (data != null && data.isNotEmpty) {
+        skillItem = data
+            .map(
+              (skill) => SingleItemCategoryModel(
+                nameSingleItem: skill.nama,
+                value: skill,
+              ),
+            )
+            .toList();
+
+        // Always add "Add new organization" option
+        skillItem.add(
+          SingleItemCategoryModel(
+            nameSingleItem: "+ Add new skill",
+            value: "add_new_skill", // Special identifier
+          ),
+        );
+
+        final skillList = [
+          SingleCategoryModel(singleItemCategoryList: skillItem),
+        ];
+
+        setState(() {
+          _selectSkillController.data = skillList;
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get skill data. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _onSelectionChanged(dynamic selectedValue) {
+    if (selectedValue is List && selectedValue.isNotEmpty) {
+      var selectedItem = selectedValue.first;
+
+      if (selectedItem is SingleItemCategoryModel) {
+        var actualValue = selectedItem.value;
+
+        if (actualValue == "add_new_organization") {
+          setState(() {
+            _showAddNewForm = true;
+          });
+        } else {
+          setState(() {
+            _showAddNewForm = false;
+          });
+          print("Selected organization: ${selectedItem.nameSingleItem}");
+        }
+      }
+    } else {
+      setState(() {
+        _showAddNewForm = false;
+      });
+      print("No organization selected");
+    }
   }
 
   @override
@@ -199,23 +355,53 @@ class _OrganizationAdd extends State<OrganizationAdd> {
                           Container(
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
-                            child: TextFormField(
-                              controller: _namaController,
-                              decoration: InputDecoration(
-                                labelText: 'Nama Organisasi',
-                                hintText: 'Masukan Nama Organisasi',
-                                prefixIcon: Icon(Icons.text_fields),
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 11,
-                                ),
+                            child: Select2dot1(
+                              key: ValueKey('organization_select'),
+                              pillboxTitleSettings: const PillboxTitleSettings(
+                                title: 'Organization',
                               ),
-                              // initialValue: email,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
+                              selectDataController:
+                                  _selectOrganizationController,
+                              onChanged: (selectedValue) {
+                                _onSelectionChanged(selectedValue);
+                              },
+                            ),
+                          ),
+
+                          if (_showAddNewForm) ...[
+                            Container(
+                              // height: 90,
+                              margin: EdgeInsets.symmetric(vertical: 20),
+                              child: TextFormField(
+                                controller: _namaController,
+                                decoration: InputDecoration(
+                                  labelText: 'Nama Organisasi',
+                                  hintText: 'Masukan Nama Organisasi',
+                                  prefixIcon: Icon(Icons.text_fields),
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 11,
+                                  ),
+                                ),
+                                // initialValue: email,
+                                validator: (value) =>
+                                    value == null || value.isEmpty
+                                    ? 'Wajib diisi'
+                                    : null,
+                              ),
+                            ),
+                          ],
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: Select2dot1(
+                              key: ValueKey('skill_select'),
+                              pillboxTitleSettings: const PillboxTitleSettings(
+                                title: 'Skill',
+                              ),
+                              selectDataController: _selectSkillController,
                             ),
                           ),
 
@@ -267,47 +453,60 @@ class _OrganizationAdd extends State<OrganizationAdd> {
                             ),
                           ),
 
+                          InkWell(
+                            onTap: () => _pickStartDate(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.calendar_today),
+                                labelText: "Start Date",
+                                border: OutlineInputBorder(),
+                              ),
+                              child: Text(
+                                startDate != null
+                                    ? DateFormat(
+                                        'dd MMMM yyyy',
+                                      ).format(startDate!)
+                                    : "Pilih tanggal",
+                              ),
+                            ),
+                          ),
                           Row(
                             children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () => _pickStartDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "Start Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      startDate != null
-                                          ? DateFormat('dd MMMM yyyy').format(startDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
+                              Checkbox(
+                                value: _stillActive,
+                                onChanged: (checked) {
+                                  setState(() {
+                                    _stillActive = checked ?? true;
+                                    if (_stillActive) {
+                                      endDate = null;
+                                    }
+                                  });
+                                },
                               ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: startDate == null
-                                      ? null
-                                      : () => _pickEndDate(context),
-                                  child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: "End Date",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    child: Text(
-                                      endDate != null
-                                          ? DateFormat('dd MMMM yyyy').format(endDate!)
-                                          : "Pilih tanggal",
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              Text('Still Active?'),
                             ],
                           ),
+                          if (!_stillActive)
+                            InkWell(
+                              onTap: startDate == null
+                                  ? null
+                                  : () => _pickEndDate(context),
+                              child: InputDecorator(
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.calendar_today),
+                                  labelText: "End Date",
+                                  border: OutlineInputBorder(),
+                                ),
+                                child: Text(
+                                  endDate != null
+                                      ? DateFormat(
+                                          'dd MMMM yyyy',
+                                        ).format(endDate!)
+                                      : "Pilih tanggal",
+                                ),
+                              ),
+                            ),
+
                           SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

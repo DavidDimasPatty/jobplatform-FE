@@ -5,7 +5,7 @@ class SkillModel {
   SkillModel({this.idSkill, required this.nama});
 
   factory SkillModel.fromJson(Map<String, dynamic> json) {
-    return SkillModel(idSkill: json['idSkill'], nama: json['nama']);
+    return SkillModel(idSkill: json['_id'], nama: json['nama']);
   }
 
   Map<String, dynamic> toJson() {

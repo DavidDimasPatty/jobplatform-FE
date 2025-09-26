@@ -2,11 +2,13 @@ import 'package:job_platform/features/components/profile/data/models/certificate
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -91,6 +93,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // Organization
   @override
+  Future<List<OrganizationModel>?> organizationGetAll (String? name) async {
+    final result = await remoteDataSource.organizationGet(name);
+    return result;
+  }
+
+  @override
   Future<OrganizationResponse> organizationAdd(
     OrganizationRequest organization,
   ) async {
@@ -126,6 +134,13 @@ class AuthRepositoryImpl implements AuthRepository {
     PreferenceRequest preference,
   ) async {
     final result = await remoteDataSource.preferenceEdit(preference);
+    return result;
+  }
+
+  // Skill
+  @override
+  Future<List<SkillModel>?> skillGetAll(String? name) async {
+    final result = await remoteDataSource.skillGet(name);
     return result;
   }
 }
