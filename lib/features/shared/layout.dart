@@ -17,6 +17,8 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profileNav.dart';
 import 'package:job_platform/features/components/setting/persentation/settingNav.dart';
+import 'package:job_platform/features/shared/Notification/Notification.dart';
+import 'package:job_platform/features/shared/Notification/NotificationItem.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
 import 'package:job_platform/features/shared/bottomAppLayout.dart';
 
@@ -31,17 +33,8 @@ class _LayoutState extends State<Layout> {
   bool _showNotification = false;
   bool _showMessages = false;
   int _selectedIndex = 0;
-  // late List<Widget> _pages;
-
-  final _navigatorKeys = [
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-  ];
+  List<Notificationitem>? dataNotif;
+  List<GlobalKey<NavigatorState>>? _navigatorKeys;
 
   toggleNotification() {
     print(_showNotification);
@@ -56,7 +49,7 @@ class _LayoutState extends State<Layout> {
   _onTabSelected(int index) {
     if (_selectedIndex == index) {
       // If user taps the same tab again, pop to first route in that tab
-      final navigator = _navigatorKeys[index].currentState;
+      final navigator = _navigatorKeys![index].currentState;
       if (navigator != null) {
         navigator.pushNamedAndRemoveUntil('/', (route) => false);
       }
@@ -77,20 +70,51 @@ class _LayoutState extends State<Layout> {
   @override
   void initState() {
     super.initState();
-    // _pages = [
-    //   const HomePage(),
-    //   const Cart(),
-    //   Profile(onTabSelected: _onTabSelected),
-    //   Personalinfo(),
-    //   ExperienceAdd(),
-    //   ExperienceEdit(),
-    //   EducationalAdd(),
-    //   EducationalEdit(),
-    //   OrganizationAdd(),
-    //   OrganizationEdit(),
-    //   CertificateAdd(),
-    //   CertificateEdit(),
-    // ];
+    _navigatorKeys = [
+      GlobalKey<NavigatorState>(),
+      GlobalKey<NavigatorState>(),
+      GlobalKey<NavigatorState>(),
+      GlobalKey<NavigatorState>(),
+      GlobalKey<NavigatorState>(),
+      GlobalKey<NavigatorState>(),
+      GlobalKey<NavigatorState>(),
+    ];
+    dataNotif = [
+      Notificationitem(
+        icon: Icons.warning,
+        iconColor: Colors.yellowAccent,
+        title: "HRD has seen your profile!🤗",
+        subtitle: "Let's we hope for the best!😇",
+        navigatorKeys: _navigatorKeys!,
+        bgColor: Colors.yellow.shade200,
+      ),
+      Notificationitem(
+        icon: Icons.dangerous,
+        iconColor: Colors.redAccent,
+        title: "You have been rejected from PT. Indomarco Prismatama!🥺🥺",
+        subtitle:
+            "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Indomarco Prismatama",
+        navigatorKeys: _navigatorKeys!,
+        bgColor: Colors.red.shade200,
+      ),
+      Notificationitem(
+        icon: Icons.dangerous,
+        iconColor: Colors.redAccent,
+        title: "You have been rejected from PT. Inti Dunia Sukses!🥺🥺",
+        subtitle:
+            "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Inti Dunia Sukses",
+        navigatorKeys: _navigatorKeys!,
+        bgColor: Colors.red.shade200,
+      ),
+      Notificationitem(
+        icon: Icons.tag_faces_rounded,
+        iconColor: Colors.greenAccent,
+        title: "You are selected! 🥳🥳",
+        subtitle: "Let's continue to next progress!💪✊",
+        navigatorKeys: _navigatorKeys!,
+        bgColor: Colors.green.shade200,
+      ),
+    ];
   }
 
   @override
@@ -98,7 +122,7 @@ class _LayoutState extends State<Layout> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        final currentNavigator = _navigatorKeys[_selectedIndex].currentState!;
+        final currentNavigator = _navigatorKeys![_selectedIndex].currentState!;
         if (didPop) return; // system already handled back
 
         if (currentNavigator.canPop()) {
@@ -130,33 +154,33 @@ class _LayoutState extends State<Layout> {
               children: [
                 Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
-                    builder: (_) => Homenav(navigatorKey: _navigatorKeys[0]),
+                    builder: (_) => Homenav(navigatorKey: _navigatorKeys![0]),
                   ),
                 ),
                 Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
                     builder: (_) =>
-                        Candidatenav(navigatorKey: _navigatorKeys[1]),
+                        Candidatenav(navigatorKey: _navigatorKeys![1]),
                   ),
                 ),
                 Navigator(
-                  key: _navigatorKeys[2],
+                  key: _navigatorKeys![2],
                   onGenerateRoute: (settings) =>
                       MaterialPageRoute(builder: (_) => const ProfileNav()),
                 ),
                 Navigator(
-                  key: _navigatorKeys[3],
+                  key: _navigatorKeys![3],
                   onGenerateRoute: (settings) =>
                       MaterialPageRoute(builder: (_) => const Settingnav()),
                 ),
                 Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
-                    builder: (_) => Chatnav(navigatorKey: _navigatorKeys[4]),
+                    builder: (_) => Chatnav(navigatorKey: _navigatorKeys![4]),
                   ),
                 ),
                 Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
-                    builder: (_) => Cartnav(navigatorKey: _navigatorKeys[5]),
+                    builder: (_) => Cartnav(navigatorKey: _navigatorKeys![5]),
                   ),
                 ),
               ],
@@ -168,30 +192,10 @@ class _LayoutState extends State<Layout> {
           ),
 
           if (_showNotification)
-            Positioned(
-              top: MediaQuery.of(context).padding.top,
-              left: 0,
-              right: 0,
-              child: Material(
-                elevation: 6,
-                child: Container(
-                  color: Colors.amber.shade100,
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.info, color: Colors.orange),
-                      const SizedBox(width: 8),
-                      const Expanded(
-                        child: Text("Ada notifikasi baru untukmu!"),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: toggleNotification,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            Notificationbody(
+              toggleNotification: toggleNotification,
+              navigatorKeys: _navigatorKeys!,
+              data: dataNotif!,
             ),
 
           /// Overlay messages
