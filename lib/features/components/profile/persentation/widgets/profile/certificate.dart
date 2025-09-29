@@ -51,8 +51,8 @@ class Certificate extends StatelessWidget {
           for (var cert in dataCertificates) ...[
             CertificateCard(
               idx: idx++,
-              title: cert.nama,
-              description: cert.publisher,
+              title: cert.certificate.nama,
+              description: cert.certificate.publisher,
               dateRange: (cert.expiredDate == null)
                   ? "${DateFormat('MMM yyyy').format(cert.publishDate)} - Present"
                   : "${DateFormat('MMM yyyy').format(cert.publishDate)} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",

@@ -1,10 +1,12 @@
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
+
 class WorkexperienceMV {
   String id;
   String idUser;
   String idExperience;
-  String? namaPerusahaan;
-  String? industri;
-  String? lokasi;
+  WorkExperienceModel experience;
+  List<SkillModel> skill;
   String? namaJabatan;
   String? deskripsi;
   String? bidang;
@@ -17,9 +19,8 @@ class WorkexperienceMV {
     this.id,
     this.idUser,
     this.idExperience,
-    this.namaPerusahaan,
-    this.industri,
-    this.lokasi,
+    this.experience,
+    this.skill,
     this.namaJabatan,
     this.deskripsi,
     this.bidang,
@@ -34,9 +35,11 @@ class WorkexperienceMV {
       json['userExperience']['_id'],
       json['userExperience']['idUser'],
       json['userExperience']['idExperience'],
-      json['experience']['namaPerusahaan'],
-      json['experience']['industri'],
-      json['experience']['lokasi'],
+      WorkExperienceModel.fromJson(json['experience']),
+      (json['userExperience']['skill'] as List<dynamic>?)
+              ?.map((item) => SkillModel.fromJson(item['skill']))
+              .toList() ??
+          [],
       json['userExperience']['namaJabatan'],
       json['userExperience']['deskripsi'],
       json['userExperience']['bidang'],

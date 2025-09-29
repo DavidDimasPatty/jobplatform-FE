@@ -11,7 +11,7 @@ class EducationModel {
 
   factory EducationModel.fromJson(Map<String, dynamic> json) {
     return EducationModel(
-      idEducation: json['idEducation'],
+      idEducation: json['_id'],
       nama: json['nama'],
       lokasi: json['lokasi'],
     );

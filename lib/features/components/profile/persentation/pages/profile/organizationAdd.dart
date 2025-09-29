@@ -34,7 +34,7 @@ class _OrganizationAdd extends State<OrganizationAdd> {
   final _namaController = TextEditingController();
   final _jabatanController = TextEditingController();
   final _deskripsiController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _locationController = TextEditingController();
   late SelectDataController _selectOrganizationController;
   late SelectDataController _selectSkillController;
 
@@ -115,7 +115,7 @@ class _OrganizationAdd extends State<OrganizationAdd> {
         if (_showAddNewForm) {
           organization = OrganizationModel(
             nama: _namaController.text,
-            lokasi: 'PIK',
+            lokasi: _locationController.text,
           );
         } else {
           var selectedItem =
@@ -127,11 +127,16 @@ class _OrganizationAdd extends State<OrganizationAdd> {
         }
 
         // Map selected skills to SkillModel list
+        late List<SkillModel> skill;
         var selectedList = _selectSkillController.selectedList;
-        List<SkillModel> skill = selectedList
-            .where((item) => item.value is SkillModel)
-            .map((item) => item.value as SkillModel)
-            .toList();
+        if (selectedList.isNotEmpty) {
+          skill = selectedList
+              .where((item) => item.value is SkillModel)
+              .map((item) => item.value as SkillModel)
+              .toList();
+        } else {
+          skill = [];
+        }
 
         OrganizationRequest newOrganization = OrganizationRequest(
           idUser: idUser,
@@ -391,19 +396,30 @@ class _OrganizationAdd extends State<OrganizationAdd> {
                                     : null,
                               ),
                             ),
-                          ],
 
-                          Container(
-                            // height: 90,
-                            margin: EdgeInsets.symmetric(vertical: 20),
-                            child: Select2dot1(
-                              key: ValueKey('skill_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Skill',
+                            Container(
+                              // height: 90,
+                              margin: EdgeInsets.symmetric(vertical: 20),
+                              child: TextFormField(
+                                controller: _locationController,
+                                decoration: InputDecoration(
+                                  labelText: 'Lokasi Organisasi',
+                                  hintText: 'Masukan Lokasi Organisasi',
+                                  prefixIcon: Icon(Icons.location_on),
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 11,
+                                  ),
+                                ),
+                                // initialValue: email,
+                                validator: (value) =>
+                                    value == null || value.isEmpty
+                                    ? 'Wajib diisi'
+                                    : null,
                               ),
-                              selectDataController: _selectSkillController,
                             ),
-                          ),
+                          ],
 
                           Container(
                             // height: 90,
@@ -450,6 +466,18 @@ class _OrganizationAdd extends State<OrganizationAdd> {
                                   value == null || value.isEmpty
                                   ? 'Wajib diisi'
                                   : null,
+                            ),
+                          ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: Select2dot1(
+                              key: ValueKey('skill_select'),
+                              pillboxTitleSettings: const PillboxTitleSettings(
+                                title: 'Skill',
+                              ),
+                              selectDataController: _selectSkillController,
                             ),
                           ),
 

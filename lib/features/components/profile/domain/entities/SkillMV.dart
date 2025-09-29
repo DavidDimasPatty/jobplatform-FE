@@ -1,22 +1,24 @@
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+
 class SkillMV {
   String id;
-  String? nama;
-  String? tingkat;
-  String? status;
+  String? source;
+  String? idSource;
+  SkillModel skill;
 
   SkillMV(
     this.id,
-    this.nama,
-    this.tingkat,
-    this.status,
+    this.source,
+    this.idSource,
+    this.skill,
   );
 
   factory SkillMV.fromJson(Map<String, dynamic> json) {
     return SkillMV(
       json['userSkill']['_id'] as String,
-      json['skill']['nama'] as String?,
-      json['userSkill']['tingkat'] as String?,
-      json['skill']['status'] as String?,
+      json['userSkill']['source'] as String,
+      json['userSkill']['idSource'] as String,
+      SkillModel.fromJson(json['skill'])
     );
   }
 }

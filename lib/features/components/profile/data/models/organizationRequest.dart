@@ -38,7 +38,7 @@ class OrganizationRequest {
       deskripsi: json['deskripsi'],
       jabatan: json['jabatan'],
       startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
+      endDate: DateTime.parse(json['endDate'] ?? ''),
     );
   }
 

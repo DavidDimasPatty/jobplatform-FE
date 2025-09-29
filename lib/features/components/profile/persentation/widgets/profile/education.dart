@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:intl/intl.dart';
 
@@ -90,14 +89,14 @@ class Education extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            data.nama!,
+                            data.education.nama,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            data.tingkat! + " - " + data.penjurusan!,
+                            data.tingkat + " - " + data.penjurusan,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -112,13 +111,9 @@ class Education extends StatelessWidget {
                         child: Text(
                           softWrap: true,
                           textAlign: TextAlign.center,
-                          DateFormat(
-                                'MMM yyyy',
-                              ).format(data.startDate!).toString() +
-                              " - " +
-                              DateFormat(
-                                'MMM yyyy',
-                              ).format(data.endDate!).toString(),
+                          (data.endDate == null)
+                              ? "${DateFormat('MMM yyyy').format(data.startDate!)} - Present"
+                              : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}"
                         ),
                       ),
                     ],

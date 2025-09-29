@@ -121,11 +121,11 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
 
-        OrganizationRequest newOrganization = OrganizationRequest(
+        OrganizationRequest editedOrganization = OrganizationRequest(
           idUser: idUser,
           idUserOrganization: data.id,
           organization: data.organization,
-          skill: [],
+          skill: data.skill,
           isActive: _stillActive,
           deskripsi: _deskripsiController.text,
           jabatan: _jabatanController.text,
@@ -134,7 +134,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         );
 
         OrganizationResponse response = await _profileUseCase.editOrganization(
-          newOrganization,
+          editedOrganization,
         );
 
         // On success, clear the form or navigate away
@@ -170,8 +170,6 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   }
 
   Future _handleDeleteOrganization() async {
-    if (data == null) return;
-
     setState(() {
       _isLoading = true;
     });

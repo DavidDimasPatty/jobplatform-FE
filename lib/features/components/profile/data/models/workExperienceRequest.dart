@@ -1,12 +1,10 @@
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 
 class WorkExperienceRequest {
   String idUser;
   String? idUserExperience;
-  String? idExperience;
-  String namaPerusahaan;
-  String industri;
-  String lokasi;
+  WorkExperienceModel experience;
   List<SkillModel> skill;
   bool isActive;
   String bidang;
@@ -20,10 +18,7 @@ class WorkExperienceRequest {
   WorkExperienceRequest({
     required this.idUser,
     this.idUserExperience,
-    this.idExperience,
-    required this.namaPerusahaan,
-    required this.industri,
-    required this.lokasi,
+    required this.experience,
     required this.skill,
     this.isActive = true,
     required this.bidang,
@@ -38,9 +33,8 @@ class WorkExperienceRequest {
   factory WorkExperienceRequest.fromJson(Map<String, dynamic> json) {
     return WorkExperienceRequest(
       idUser: json['idUser'],
-      namaPerusahaan: json['namaPerusahaan'],
-      industri: json['industri'],
-      lokasi: json['lokasi'],
+      idUserExperience: json['idUserExperience'],
+      experience: WorkExperienceModel.fromJson(json['experience']),
       skill:
           (json['skill'] as List<dynamic>?)
               ?.map((item) => SkillModel.fromJson(item))
@@ -61,12 +55,7 @@ class WorkExperienceRequest {
     return {
       "idUser": idUser,
       "idUserExperience": idUserExperience,
-      "experience": {
-        "idExperience": idExperience,
-        "namaPerusahaan": namaPerusahaan,
-        "industri": industri,
-        "lokasi": lokasi,
-      },
+      "experience": experience.toJson(),
       "skill": skill,
       "isActive": isActive,
       "bidang": bidang,

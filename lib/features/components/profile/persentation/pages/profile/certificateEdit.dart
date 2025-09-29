@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
@@ -32,7 +31,6 @@ class _CertificateEditState extends State<CertificateEdit> {
   final TextEditingController _certificateNameController =
       TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _skillsController = TextEditingController();
   final TextEditingController _issuedByController = TextEditingController();
   final TextEditingController _issueDateController = TextEditingController();
   final TextEditingController _expiryDateController = TextEditingController();
@@ -44,7 +42,6 @@ class _CertificateEditState extends State<CertificateEdit> {
   bool _isLoading = false;
   DateTime? _selectedIssueDate;
   bool _hasExpiredDate = false;
-  List<String> _selectedSkills = [];
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
@@ -60,7 +57,6 @@ class _CertificateEditState extends State<CertificateEdit> {
   void dispose() {
     _certificateNameController.dispose();
     _descriptionController.dispose();
-    _skillsController.dispose();
     _issuedByController.dispose();
     _issueDateController.dispose();
     _expiryDateController.dispose();
@@ -70,14 +66,15 @@ class _CertificateEditState extends State<CertificateEdit> {
   }
 
   void _loadData() {
-    _certificateNameController.text = data.nama;
+    _certificateNameController.text = data.certificate.nama;
+    _issuedByController.text = data.certificate.publisher;
     _descriptionController.text = data.deskripsi ?? '';
-    _issuedByController.text = data.publisher;
     _issueDateController.text = DateFormat(
       'dd MMMM yyyy',
     ).format(data.publishDate);
-    if (data.expiredDate != null) {
-      _hasExpiredDate = true;
+
+    _hasExpiredDate = data.expiredDate != null;
+    if (_hasExpiredDate) {
       _expiryDateController.text = DateFormat(
         'dd MMMM yyyy',
       ).format(data.expiredDate!);
@@ -109,21 +106,24 @@ class _CertificateEditState extends State<CertificateEdit> {
         final issueDate = DateFormat('yyyy-MM-dd').format(
           DateFormat('dd MMMM yyyy', 'en_US').parse(_issueDateController.text),
         );
-        final expiryDate = DateFormat('yyyy-MM-dd').format(
-          DateFormat('dd MMMM yyyy', 'en_US').parse(_expiryDateController.text),
-        );
+        var expiryDate;
+        if (_hasExpiredDate) {
+          expiryDate = DateFormat('yyyy-MM-dd').format(
+            DateFormat(
+              'dd MMMM yyyy',
+              'en_US',
+            ).parse(_expiryDateController.text),
+          );
+        }
 
         CertificateRequest editedCertificate = CertificateRequest(
           idUser: idUser,
           idUserCertificate: data.id,
-          idCertificate: data.idCertificate,
-          nama: _certificateNameController.text,
-          publisher: _issuedByController.text,
+          certificate: data.certificate,
           deskripsi: _descriptionController.text,
-          // Assuming skills are handled elsewhere or not required here
-          skill: [],
+          skill: data.skill,
           publishDate: DateTime.parse(issueDate),
-          expiredDate: DateTime.parse(expiryDate),
+          expiredDate: _hasExpiredDate ? DateTime.parse(expiryDate) : null,
           code: _credentialIdController.text,
           codeURL: _credentialUrlController.text,
         );
@@ -164,8 +164,6 @@ class _CertificateEditState extends State<CertificateEdit> {
   }
 
   Future<void> _deleteCertificate() async {
-    if (data == null) return;
-
     setState(() {
       _isLoading = true;
     });
@@ -243,9 +241,22 @@ class _CertificateEditState extends State<CertificateEdit> {
                         'Certificate Name',
                         _certificateNameController,
                         Icons.school,
+                        readOnly: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter certificate name';
+                          }
+                          return null;
+                        },
+                      ),
+                      buildTextField(
+                        'Issued By',
+                        _issuedByController,
+                        Icons.person,
+                        readOnly: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter issuer';
                           }
                           return null;
                         },
@@ -258,17 +269,6 @@ class _CertificateEditState extends State<CertificateEdit> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter description';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildTextField(
-                        'Issued By',
-                        _issuedByController,
-                        Icons.person,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter issuer';
                           }
                           return null;
                         },
@@ -397,11 +397,13 @@ class _CertificateEditState extends State<CertificateEdit> {
     TextEditingController controller,
     IconData prefixIcon, {
     int maxLines = 1,
+    bool readOnly = false,
     required String? Function(String?) validator,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        readOnly: readOnly,
         maxLines: maxLines,
         controller: controller,
         decoration: InputDecoration(
@@ -504,7 +506,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              widget.certificate.nama,
+                              widget.certificate.certificate.nama,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -515,7 +517,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                         children: [
                           Icon(Icons.business, size: 16, color: Colors.grey),
                           SizedBox(width: 8),
-                          Expanded(child: Text(widget.certificate.publisher)),
+                          Expanded(child: Text(widget.certificate.certificate.publisher)),
                         ],
                       ),
                     ],

@@ -1,11 +1,10 @@
+import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 
 class CertificateRequest {
   String idUser;
   String? idUserCertificate;
-  String? idCertificate;
-  String nama;
-  String publisher;
+  CertificateModel certificate;
   List<SkillModel> skill;
   String code;
   String codeURL;
@@ -16,32 +15,30 @@ class CertificateRequest {
   CertificateRequest({
     required this.idUser,
     this.idUserCertificate,
-    this.idCertificate,
-    required this.nama,
-    required this.publisher,
+    required this.certificate,
     required this.skill,
     required this.code,
     required this.codeURL,
     this.deskripsi,
     required this.publishDate,
-    required this.expiredDate,
+    this.expiredDate,
   });
 
   factory CertificateRequest.fromJson(Map<String, dynamic> json) {
     return CertificateRequest(
       idUser: json['idUser'],
-      nama: json['nama'],
-      publisher: json['publisher'],
+      idUserCertificate: json['idUserCertificate'],
+      certificate: CertificateModel.fromJson(json['certificate']),
       skill:
           (json['skill'] as List<dynamic>?)
               ?.map((item) => SkillModel.fromJson(item))
               .toList() ??
           [],
-      code: json['code'] ?? '',
-      codeURL: json['codeURL'] ?? '',
-      deskripsi: json['deskripsi'] ?? '',
-      publishDate: DateTime.parse(json['publishDate'] ?? ''),
-      expiredDate: DateTime.parse(json['expiredDate'] ?? ''),
+      code: json['code'],
+      codeURL: json['codeURL'],
+      deskripsi: json['deskripsi'],
+      publishDate: DateTime.parse(json['publishDate']),
+      expiredDate: DateTime.parse(json['expiredDate']),
     );
   }
 
@@ -49,17 +46,13 @@ class CertificateRequest {
     return {
       'idUser': idUser,
       'idUserCertificate': idUserCertificate,
-      'certificate': {
-        'idCertificate': idCertificate,
-        'nama': nama,
-        'publisher': publisher,
-      },
+      'certificate': certificate.toJson(),
       'skill': skill,
       'code': code,
       'codeURL': codeURL,
       'deskripsi': deskripsi,
       'publishDate': publishDate.toIso8601String(),
-      'expiredDate': expiredDate?.toIso8601String() ?? null,
+      'expiredDate': expiredDate?.toIso8601String(),
     };
   }
 }

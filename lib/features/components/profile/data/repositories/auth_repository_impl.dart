@@ -1,5 +1,7 @@
+import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
@@ -9,6 +11,7 @@ import 'package:job_platform/features/components/profile/data/models/preferenceR
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -27,6 +30,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   // Certificate
+  @override
+  Future<List<CertificateModel>?> certificateGetAll(String? name) async {
+    final result = await remoteDataSource.certificateGet(name);
+    return result;
+  }
+
   @override
   Future<CertificateResponse> certificateAdd(
     CertificateRequest certificate,
@@ -51,6 +60,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // Education
   @override
+  Future<List<EducationModel>?> educationGetAll(String? name) async {
+    final result = await remoteDataSource.educationGet(name);
+    return result;
+  }
+
+  @override
   Future<EducationResponse> educationAdd(EducationRequest education) async {
     final result = await remoteDataSource.educationAdd(education);
     return result;
@@ -69,6 +84,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   // Work Experience
+  @override
+  Future<List<WorkExperienceModel>?> experienceGetAll(String? name) async {
+    final result = await remoteDataSource.workExperienceGet(name);
+    return result;
+  }
+
   @override
   Future<WorkExperienceResponse> experienceAdd(
     WorkExperienceRequest workExperience,
@@ -93,7 +114,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // Organization
   @override
-  Future<List<OrganizationModel>?> organizationGetAll (String? name) async {
+  Future<List<OrganizationModel>?> organizationGetAll(String? name) async {
     final result = await remoteDataSource.organizationGet(name);
     return result;
   }
@@ -122,9 +143,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // User Preference
   @override
-  Future<PreferenceResponse> preferenceAdd(
-    PreferenceRequest preference,
-  ) async {
+  Future<PreferenceResponse> preferenceAdd(PreferenceRequest preference) async {
     final result = await remoteDataSource.preferenceAdd(preference);
     return result;
   }

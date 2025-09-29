@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
@@ -12,6 +14,7 @@ import 'package:job_platform/features/components/profile/data/models/preferenceR
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 
@@ -25,7 +28,7 @@ class AuthRemoteDataSource {
       ).replace(queryParameters: {'id': id});
       ProfileModel? data;
       final response = await http.get(url);
-      print(response.body.toString());
+      // print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -44,6 +47,35 @@ class AuthRemoteDataSource {
   }
 
   // Certificate
+  Future<List<CertificateModel>?> certificateGet(String? nama) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/GetCertificateAll',
+      ).replace(queryParameters: {'nama': nama});
+      List<CertificateModel>? data;
+      final response = await http.get(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        final List<dynamic> orgList = jsonData["data"]["data"];
+        data = orgList
+            .map<CertificateModel>((item) => CertificateModel.fromJson(item))
+            .toList();
+        return data;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return null;
+      }
+    } catch (e) {
+      print('Error during get all certificate data: $e');
+      return null;
+    }
+  }
+
   Future<CertificateResponse> certificateAdd(
     CertificateRequest certificate,
   ) async {
@@ -151,6 +183,35 @@ class AuthRemoteDataSource {
   }
 
   // Education
+  Future<List<EducationModel>?> educationGet(String? nama) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/GetEducationAll',
+      ).replace(queryParameters: {'nama': nama});
+      List<EducationModel>? data;
+      final response = await http.get(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        final List<dynamic> orgList = jsonData["data"]["data"];
+        data = orgList
+            .map<EducationModel>((item) => EducationModel.fromJson(item))
+            .toList();
+        return data;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return null;
+      }
+    } catch (e) {
+      print('Error during get all education data: $e');
+      return null;
+    }
+  }
+
   Future<EducationResponse> educationAdd(EducationRequest education) async {
     try {
       await dotenv.load(fileName: '.env');
@@ -254,6 +315,35 @@ class AuthRemoteDataSource {
   }
 
   // Work Experience
+  Future<List<WorkExperienceModel>?> workExperienceGet(String? nama) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/GetExperienceAll',
+      ).replace(queryParameters: {'nama': nama});
+      List<WorkExperienceModel>? data;
+      final response = await http.get(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        final List<dynamic> orgList = jsonData["data"]["data"];
+        data = orgList
+            .map<WorkExperienceModel>((item) => WorkExperienceModel.fromJson(item))
+            .toList();
+        return data;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return null;
+      }
+    } catch (e) {
+      print('Error during get all certificate data: $e');
+      return null;
+    }
+  }
+
   Future<WorkExperienceResponse> workExperienceAdd(
     WorkExperienceRequest workExperience,
   ) async {

@@ -3,9 +3,11 @@ import 'package:job_platform/features/components/profile/data/datasources/aut_re
 import 'package:job_platform/features/components/profile/data/models/certificateModel.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:select2dot1/select2dot1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -23,19 +25,20 @@ class _CertificateAddState extends State<CertificateAdd> {
   final TextEditingController _certificateNameController =
       TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _skillsController = TextEditingController();
   final TextEditingController _issuedByController = TextEditingController();
   final TextEditingController _issueDateController = TextEditingController();
   final TextEditingController _expiryDateController = TextEditingController();
   final TextEditingController _credentialIdController = TextEditingController();
   final TextEditingController _credentialUrlController =
       TextEditingController();
+  late SelectDataController _selectCertificateController;
+  late SelectDataController _selectSkillController;
 
   // Helper variables
   bool _isLoading = false;
   DateTime? _selectedIssueDate;
   bool _hasExpiredDate = false;
-  List<String> _selectedSkills = [];
+  bool _showAddNewForm = false;
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
@@ -44,13 +47,15 @@ class _CertificateAddState extends State<CertificateAdd> {
   void initState() {
     super.initState();
     _initializeUseCase();
+    _initializeSelectController();
+    _getAllCertification();
+    _getAllSkill();
   }
 
   @override
   void dispose() {
     _certificateNameController.dispose();
     _descriptionController.dispose();
-    _skillsController.dispose();
     _issuedByController.dispose();
     _issueDateController.dispose();
     _expiryDateController.dispose();
@@ -63,6 +68,14 @@ class _CertificateAddState extends State<CertificateAdd> {
     final dataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(dataSource);
     _profileUseCase = ProfileUsecase(repository);
+  }
+
+  void _initializeSelectController() {
+    _selectCertificateController = SelectDataController(
+      data: [],
+      isMultiSelect: false,
+    );
+    _selectSkillController = SelectDataController(data: []);
   }
 
   Future<void> _submitForm() async {
@@ -93,13 +106,39 @@ class _CertificateAddState extends State<CertificateAdd> {
           );
         }
 
+        // Certificate
+        late CertificateModel certificate;
+        if (_showAddNewForm) {
+          certificate = CertificateModel(
+            nama: _certificateNameController.text,
+            publisher: _issuedByController.text,
+          );
+        } else {
+          var selectedItem =
+              _selectCertificateController.selectedList.first.value;
+
+          if (selectedItem is CertificateModel) {
+            certificate = selectedItem;
+          }
+        }
+
+        // Map selected skills to SkillModel list
+        late List<SkillModel> skill;
+        var selectedList = _selectSkillController.selectedList;
+        if (selectedList.isNotEmpty) {
+          skill = selectedList
+              .where((item) => item.value is SkillModel)
+              .map((item) => item.value as SkillModel)
+              .toList();
+        } else {
+          skill = [];
+        }
+
         CertificateRequest newCertificate = CertificateRequest(
           idUser: idUser,
-          nama: _certificateNameController.text,
-          publisher: _issuedByController.text,
+          certificate: certificate,
           deskripsi: _descriptionController.text,
-          // Assuming skills are handled elsewhere or not required here
-          skill: [],
+          skill: skill,
           publishDate: DateTime.parse(issueDate),
           expiredDate: _hasExpiredDate ? DateTime.parse(expiryDate) : null,
           code: _credentialIdController.text,
@@ -141,20 +180,135 @@ class _CertificateAddState extends State<CertificateAdd> {
     }
   }
 
-  // Future<void> _getSkills() async {
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     String? idUser = prefs.getString('idUser');
+  Future _getAllCertification({String? name = ""}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
 
-  //     if (idUser == null) throw Exception("User ID not found in preferences");
+      var data = await _profileUseCase.getAllCertificate(name);
+      if (!mounted) return;
 
-  //     // Fetch skills from the use case
-  //     final skills = await _profileUseCase.getSkills();
-  //     _skillsController.text = skills.join(", ");
-  //   } catch (e) {
-  //     print('Error fetching skills: $e');
-  //   }
-  // }
+      List<SingleItemCategoryModel> certificationItems = [];
+
+      if (data != null && data.isNotEmpty) {
+        certificationItems = data
+            .map(
+              (certification) => SingleItemCategoryModel(
+                nameSingleItem: certification.nama,
+                value: certification,
+              ),
+            )
+            .toList();
+
+        // Always add "Add new certification" option
+        certificationItems.add(
+          SingleItemCategoryModel(
+            nameSingleItem: "+ Add new certification",
+            value: "add_new_certification", // Special identifier
+          ),
+        );
+
+        final certificateList = [
+          SingleCategoryModel(singleItemCategoryList: certificationItems),
+        ];
+
+        setState(() {
+          _selectCertificateController.data = certificateList;
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get certification data. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future _getAllSkill({String? name = ""}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var data = await _profileUseCase.getAllSkill(name);
+      if (!mounted) return;
+
+      List<SingleItemCategoryModel> skillItem = [];
+
+      if (data != null && data.isNotEmpty) {
+        skillItem = data
+            .map(
+              (skill) => SingleItemCategoryModel(
+                nameSingleItem: skill.nama,
+                value: skill,
+              ),
+            )
+            .toList();
+
+        // Always add "Add new skill" option
+        skillItem.add(
+          SingleItemCategoryModel(
+            nameSingleItem: "+ Add new skill",
+            value: "add_new_skill", // Special identifier
+          ),
+        );
+
+        final skillList = [
+          SingleCategoryModel(singleItemCategoryList: skillItem),
+        ];
+
+        setState(() {
+          _selectSkillController.data = skillList;
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get skill data. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _onSelectionChanged(dynamic selectedValue) {
+    if (selectedValue is List && selectedValue.isNotEmpty) {
+      var selectedItem = selectedValue.first;
+
+      if (selectedItem is SingleItemCategoryModel) {
+        var actualValue = selectedItem.value;
+
+        if (actualValue == "add_new_certification") {
+          setState(() {
+            _showAddNewForm = true;
+          });
+        } else {
+          setState(() {
+            _showAddNewForm = false;
+          });
+          print("Selected certification: ${selectedItem.nameSingleItem}");
+        }
+      }
+    } else {
+      setState(() {
+        _showAddNewForm = false;
+      });
+      print("No certification selected");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,17 +347,37 @@ class _CertificateAddState extends State<CertificateAdd> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      buildTextField(
-                        'Certificate Name',
-                        _certificateNameController,
-                        Icons.school,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter certificate name';
-                          }
-                          return null;
-                        },
+                      buildDropdownField(
+                        'certificate-select',
+                        'Certificate',
+                        _selectCertificateController,
+                        onChange: (selectedValue) =>
+                            _onSelectionChanged(selectedValue),
                       ),
+                      if (_showAddNewForm) ...[
+                        buildTextField(
+                          'Certificate Name',
+                          _certificateNameController,
+                          Icons.school,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter certificate name';
+                            }
+                            return null;
+                          },
+                        ),
+                        buildTextField(
+                          'Issued By',
+                          _issuedByController,
+                          Icons.person,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter issuer';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
                       buildTextField(
                         'Description',
                         _descriptionController,
@@ -217,29 +391,9 @@ class _CertificateAddState extends State<CertificateAdd> {
                         },
                       ),
                       buildDropdownField(
-                        'Skills',
-                        null,
-                        ['Skill 1', 'Skill 2', 'Skill 3'], // Example skills
-                        (value) {
-                          _skillsController.text = value ?? '';
-                        },
-                        (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a skill';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildTextField(
-                        'Issued By',
-                        _issuedByController,
-                        Icons.person,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter issuer';
-                          }
-                          return null;
-                        },
+                        'skill-select',
+                        'Skill',
+                        _selectSkillController,
                       ),
                       buildDateField(
                         'Issue Date',
@@ -366,29 +520,18 @@ class _CertificateAddState extends State<CertificateAdd> {
   }
 
   Widget buildDropdownField(
+    String key,
     String label,
-    String? value,
-    List<String> items,
-    void Function(String?) onChanged,
-    String? Function(String?) validator,
-  ) {
+    SelectDataController controller, {
+    void Function(dynamic)? onChange,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: DropdownButtonFormField<String>(
-        value: value,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-          prefixIcon: Icon(Icons.arrow_drop_down),
-        ),
-        items: items
-            .map(
-              (item) =>
-                  DropdownMenuItem<String>(value: item, child: Text(item)),
-            )
-            .toList(),
-        onChanged: onChanged,
-        validator: validator,
+      child: Select2dot1(
+        key: ValueKey(key),
+        pillboxTitleSettings: PillboxTitleSettings(title: label),
+        selectDataController: controller,
+        onChanged: onChange,
       ),
     );
   }
