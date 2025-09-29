@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
@@ -42,6 +43,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   final _jabatanController = TextEditingController();
   final _deskripsiController = TextEditingController();
   final _emailController = TextEditingController();
+  late SelectDataController _selectSkillController;
 
   // Global key
   final _formKey = GlobalKey<FormState>();
@@ -61,6 +63,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
     final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
     _profileUseCase = ProfileUsecase(repository);
+    _getAllSkill();
     _loadData();
   }
 
@@ -108,6 +111,72 @@ class _OrganizationEdit extends State<OrganizationEdit> {
     }
   }
 
+  Future _getAllSkill({String? name = ""}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var data = await _profileUseCase.getAllSkill(name);
+      if (!mounted) return;
+
+      List<SingleItemCategoryModel> skillItem = [];
+
+      if (data != null && data.isNotEmpty) {
+        skillItem = data
+            .map(
+              (skill) => SingleItemCategoryModel(
+                nameSingleItem: skill.nama,
+                value: skill,
+              ),
+            )
+            .toList();
+
+        // Always add "Add new skill" option
+        skillItem.add(
+          SingleItemCategoryModel(
+            nameSingleItem: "+ Add new skill",
+            value: "add_new_skill", // Special identifier
+          ),
+        );
+
+        final skillList = [
+          SingleCategoryModel(singleItemCategoryList: skillItem),
+        ];
+
+        // Find matching items by comparing a unique property
+        var initSelectedItems = this.data.skill.map((userSkill) {
+          return skillItem.firstWhere(
+            (skillItem) => skillItem.value.idSkill == userSkill.idSkill,
+            orElse: () => SingleItemCategoryModel(
+              nameSingleItem: userSkill.nama,
+              value: userSkill,
+            ),
+          );
+        }).toList();
+
+        setState(() {
+          _selectSkillController = SelectDataController(
+            data: skillList,
+            initSelected: initSelectedItems,
+          );
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get skill data. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future _handleEditOrganization() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -121,11 +190,23 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
 
+        // Map selected skills to SkillModel list
+        late List<SkillModel> skill;
+        var selectedList = _selectSkillController.selectedList;
+        if (selectedList.isNotEmpty) {
+          skill = selectedList
+              .where((item) => item.value is SkillModel)
+              .map((item) => item.value as SkillModel)
+              .toList();
+        } else {
+          skill = [];
+        }
+
         OrganizationRequest editedOrganization = OrganizationRequest(
           idUser: idUser,
           idUserOrganization: data.id,
           organization: data.organization,
-          skill: data.skill,
+          skill: skill,
           isActive: _stillActive,
           deskripsi: _deskripsiController.text,
           jabatan: _jabatanController.text,
@@ -320,6 +401,19 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                   : null,
                             ),
                           ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: Select2dot1(
+                              key: ValueKey('skill_select'),
+                              pillboxTitleSettings: const PillboxTitleSettings(
+                                title: 'Skill',
+                              ),
+                              selectDataController: _selectSkillController,
+                            ),
+                          ),
+
                           InkWell(
                             onTap: () => _pickStartDate(context),
                             child: InputDecorator(
