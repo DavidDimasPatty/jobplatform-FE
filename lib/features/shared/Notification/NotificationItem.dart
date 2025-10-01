@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/chat/persentasion/pages/chatNav.dart';
 
 class Notificationitem extends StatefulWidget {
   final IconData icon;

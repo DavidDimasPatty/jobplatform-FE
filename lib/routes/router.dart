@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart' hide Notification;
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidate.dart';
+import 'package:job_platform/features/components/candidate/persentation/pages/candidateDetail.dart';
 import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chat.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chatDetail.dart';
+import 'package:job_platform/features/components/error/persentation/error.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/landing/persentation/landing.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
@@ -23,16 +25,25 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceEdit.dart';
+import 'package:job_platform/features/components/progress/persentation/pages/progress.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
 import 'package:job_platform/features/components/notification/persentation/notification.dart';
+import 'package:job_platform/features/components/statusJob/persentation/pages/statusJob.dart';
 import 'package:job_platform/features/shared/layout.dart';
 
 final List<GoRoute> _layoutRoutes = [
   GoRoute(path: '/home', builder: (context, state) => const HomePage()),
   GoRoute(path: '/candidate', builder: (context, state) => Candidate()),
+  GoRoute(
+    path: '/candidateDetail',
+    builder: (context, state) {
+      final data = state.extra as String?;
+      return Candidatedetail(dataId: data);
+    },
+  ),
   GoRoute(path: '/profile', builder: (context, state) => const Profile()),
   GoRoute(path: '/setting', builder: (context, state) => const Setting()),
   GoRoute(
@@ -92,11 +103,14 @@ final List<GoRoute> _layoutRoutes = [
   ),
   GoRoute(path: '/cart', builder: (context, state) => Cart()),
   GoRoute(path: '/chat', builder: (context, state) => Chat()),
+  GoRoute(path: '/progress', builder: (context, state) => Progress()),
+  GoRoute(path: '/statusJob', builder: (context, state) => statusJob()),
 ];
 
 final router = GoRouter(
   initialLocation: '/home',
   routes: [
+    GoRoute(path: '/landing', builder: (context, state) => Landing()),
     GoRoute(path: '/login', builder: (context, state) => Login()),
     GoRoute(
       path: '/signUp',
@@ -134,4 +148,7 @@ final router = GoRouter(
       routes: _layoutRoutes,
     ),
   ],
+  errorBuilder: (context, state) {
+    return ErrorPage();
+  },
 );

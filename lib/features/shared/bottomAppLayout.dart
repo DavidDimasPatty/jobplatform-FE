@@ -76,6 +76,59 @@ class BottomApplayout extends StatelessWidget {
                 ),
               ),
             ),
+
+            Expanded(
+              child: InkWell(
+                onTap: () => onTabSelected(1),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.group_work,
+                      color: currentState.uri.toString() == "/statusJob"
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                    ),
+                    Text(
+                      "Status",
+                      style: TextStyle(
+                        color: currentState.uri.toString() == "/statusJob"
+                            ? Colors.lightBlueAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: InkWell(
+                onTap: () => onTabSelected(1),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.work_history,
+                      color: currentState.uri.toString() == "/progress"
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                    ),
+                    Text(
+                      "Progress",
+                      style: TextStyle(
+                        color: currentState.uri.toString() == "/progress"
+                            ? Colors.lightBlueAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             Expanded(
               child: InkWell(
                 onTap: () => onTabSelected(2),

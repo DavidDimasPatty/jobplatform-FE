@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/careerPreferenceCandidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/certificateCandidate.dart';
@@ -7,8 +6,6 @@ import 'package:job_platform/features/components/candidate/persentation/widget/c
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/organizationalCandidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/skillCandidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/workExperienceCandidate.dart';
-import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
@@ -17,23 +14,11 @@ import 'package:job_platform/features/components/profile/domain/entities/Profile
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/careerPreference.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/certificate.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/education.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/organizational.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/skill.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/workExperience.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Candidatedetail extends StatefulWidget {
-  final GlobalKey<NavigatorState> navigatorKeys;
-  final String dataId;
-  Candidatedetail({
-    super.key,
-    required this.navigatorKeys,
-    required this.dataId,
-  });
+  final String? dataId;
+  Candidatedetail({super.key, required this.dataId});
   @override
   State<Candidatedetail> createState() => _Candidatedetail();
 }
@@ -49,10 +34,11 @@ class _Candidatedetail extends State<Candidatedetail> {
   List<CertificateMV> dataCertificate = [];
   List<SkillMV> dataSkill = [];
   List<PreferenceMV> dataPreference = [];
-
+  List<String> lowongan = ["Back End", "Front End", "Bussines Analyst"];
   // Loading state
   bool isLoading = true;
   String? errorMessage;
+  String? lowonganSelected;
 
   // Usecase
   late ProfileUsecase _profileUseCase;
@@ -65,78 +51,64 @@ class _Candidatedetail extends State<Candidatedetail> {
   }
 
   void _initializeUseCase() {
-    final dataSource = AuthRemoteDataSource();
-    final repository = AuthRepositoryImpl(dataSource);
-    _profileUseCase = ProfileUsecase(repository);
+    // final dataSource = AuthRemoteDataSource();
+    // final repository = AuthRepositoryImpl(dataSource);
+    // _profileUseCase = ProfileUsecase(repository);
   }
 
   Future<void> _loadProfileData() async {
-    try {
-      setState(() {
-        isLoading = true;
-        errorMessage = null;
-      });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
+    // try {
+    //   setState(() {
+    //     isLoading = true;
+    //     errorMessage = null;
+    //   });
+    //   SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   String? userId = prefs.getString('idUser');
 
-      if (userId != null) {
-        var profile = await _profileUseCase.getProfile(userId);
-        if (!mounted) return;
+    //   if (userId != null) {
+    //     var profile = await _profileUseCase.getProfile(userId);
+    //     if (!mounted) return;
 
-        if (profile != null) {
-          setState(() {
-            dataUser = profile.user;
-            dataEdu = profile.educations ?? [];
-            dataOrg = profile.organizations ?? [];
-            dataWork = profile.experiences ?? [];
-            dataCertificate = profile.certificates ?? [];
-            dataSkill = profile.skills ?? [];
-            dataPreference = profile.preferences ?? [];
-            isLoading = false;
-          });
-        }
-      } else {
-        print("User ID not found in SharedPreferences");
-      }
-    } catch (e) {
-      print("Error loading profile data: $e");
-      if (!mounted) return;
+    //     if (profile != null) {
+    //       setState(() {
+    //         dataUser = profile.user;
+    //         dataEdu = profile.educations ?? [];
+    //         dataOrg = profile.organizations ?? [];
+    //         dataWork = profile.experiences ?? [];
+    //         dataCertificate = profile.certificates ?? [];
+    //         dataSkill = profile.skills ?? [];
+    //         dataPreference = profile.preferences ?? [];
+    //         isLoading = false;
+    //       });
+    //     }
+    //   } else {
+    //     print("User ID not found in SharedPreferences");
+    //   }
+    // } catch (e) {
+    //   print("Error loading profile data: $e");
+    //   if (!mounted) return;
 
-      setState(() {
-        isLoading = false;
-        errorMessage = "Error loading profile: $e";
-      });
-    }
-  }
-
-  // Generic method for handling navigation with refresh
-  Future<void> _navigateAndRefresh(
-    String routeName, {
-    Object? arguments,
-  }) async {
-    final result = await Navigator.of(
-      context,
-    ).pushNamed(routeName, arguments: arguments);
-
-    if (result == true) {
-      await _loadProfileData();
-    }
+    //   setState(() {
+    //     isLoading = false;
+    //     errorMessage = "Error loading profile: $e";
+    //   });
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Loading profile data...'),
-          ],
-        ),
-      );
-    }
+    // if (isLoading) {
+    //   return const Center(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         CircularProgressIndicator(),
+    //         SizedBox(height: 16),
+    //         Text('Loading profile data...'),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     // Show error message if there's an error
     if (errorMessage != null) {
@@ -159,7 +131,7 @@ class _Candidatedetail extends State<Candidatedetail> {
     }
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 30),
       child: Center(
         child: Container(
           width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
@@ -199,16 +171,16 @@ class _Candidatedetail extends State<Candidatedetail> {
                       right: 10,
                       top: 0,
                       child: Container(
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            // onTabSelected(3);
-                          },
-                        ),
+                        // child: IconButton(
+                        //   icon: const Icon(
+                        //     Icons.edit,
+                        //     color: Colors.white,
+                        //     size: 20,
+                        //   ),
+                        //   onPressed: () {
+                        //     // onTabSelected(3);
+                        //   },
+                        // ),
                       ),
                     ),
                     Column(
@@ -227,37 +199,37 @@ class _Candidatedetail extends State<Candidatedetail> {
                                 ),
                               ),
 
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey,
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                    onPressed: () {
-                                      print("Ganti foto profil diklik");
-                                    },
-                                  ),
-                                ),
-                              ),
+                              // Positioned(
+                              //   right: 0,
+                              //   bottom: 0,
+                              //   child: Container(
+                              //     height: 30,
+                              //     width: 30,
+                              //     decoration: const BoxDecoration(
+                              //       shape: BoxShape.circle,
+                              //       color: Colors.grey,
+                              //     ),
+                              //     // child: IconButton(
+                              //     //   icon: const Icon(
+                              //     //     Icons.camera_alt,
+                              //     //     color: Colors.white,
+                              //     //     size: 20,
+                              //     //   ),
+                              //     //   padding: EdgeInsets.zero,
+                              //     //   constraints: const BoxConstraints(),
+                              //     //   onPressed: () {
+                              //     //     print("Ganti foto profil diklik");
+                              //     //   },
+                              //     // ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
 
                         Container(
                           child: Text(
-                            dataUser!.nama,
+                            dataUser?.nama != null ? dataUser!.nama : "test",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
@@ -271,7 +243,10 @@ class _Candidatedetail extends State<Candidatedetail> {
 
                         Container(
                           child: Text(
-                            dataUser!.headline,
+                            //dataUser!.headline,
+                            dataUser?.headline != null
+                                ? dataUser!.headline
+                                : "test",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
@@ -298,76 +273,158 @@ class _Candidatedetail extends State<Candidatedetail> {
                 ),
               ),
               ResponsiveRowColumnItem(
-                child: OrganizationalCandidate(
-                  dataOrg: dataOrg,
-                  // onAddPressed: () => _navigateAndRefresh('/add-organization'),
-                  // onEditPressed: (organization) => _navigateAndRefresh(
-                  //   '/edit-organization',
-                  //   arguments: organization,
-                  // ),
-                ),
+                child: OrganizationalCandidate(dataOrg: dataOrg),
               ),
               ResponsiveRowColumnItem(
-                child: EducationCandidate(
-                  dataEdu: dataEdu,
-                  // onAddPressed: () => _navigateAndRefresh('/add-education'),
-                  // onEditPressed: (education) => _navigateAndRefresh(
-                  //   '/edit-education',
-                  //   arguments: education,
-                  // ),
-                ),
+                child: EducationCandidate(dataEdu: dataEdu),
               ),
               ResponsiveRowColumnItem(
-                child: CertificateCandidate(
-                  dataCertificates: dataCertificate,
-                  // onAddPressed: () => _navigateAndRefresh('/add-certificate'),
-                  // onEditPressed: (certificate) => _navigateAndRefresh(
-                  //   '/edit-certificate',
-                  //   arguments: certificate,
-                  // ),
-                ),
+                child: CertificateCandidate(dataCertificates: dataCertificate),
               ),
               ResponsiveRowColumnItem(
-                child: SkillCandidate(
-                  dataSkills: dataSkill,
-                  // onTabSelected: onTabSelected,
-                ),
+                child: SkillCandidate(dataSkills: dataSkill),
               ),
               ResponsiveRowColumnItem(
                 child: CareerPreferenceCandidate(
                   dataPreferences: dataPreference,
-                  // onAddPressed: () => _navigateAndRefresh('/add-preference'),
-                  // onEditPressed: (preference) => _navigateAndRefresh(
-                  //   '/edit-preference',
-                  //   arguments: preference,
-                  // ),
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Container(
-                  height: 200,
-                  child: ListView(
+                  //height: 200,
+                  child: Column(
+                    spacing: 40,
                     children: [
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.account_box),
-                        title: Text("Account Configuration"),
-                        subtitle: Text("Konfigurasi Account"),
+                      Row(
+                        spacing: 40,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Flexible(
+                            flex: 4,
+                            child: ElevatedButton.icon(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                minimumSize: Size(
+                                  MediaQuery.of(context).size.width * 0.4,
+                                  60,
+                                ),
+                                // padding: EdgeInsets.symmetric(
+                                //   vertical: 16,
+                                //   horizontal: 14,
+                                // ),
+                              ),
+                              icon: Icon(Icons.shopping_cart),
+                              label: Text("Add To Cart"),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 4,
+                            child: ElevatedButton.icon(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                minimumSize: Size(
+                                  MediaQuery.of(context).size.width * 0.4,
+                                  60,
+                                ),
+                                // padding: EdgeInsets.symmetric(
+                                //   vertical: 16,
+                                //   horizontal: 14,
+                                // ),
+                              ),
+                              icon: Icon(Icons.favorite),
+                              label: Text("Add To Favorites"),
+                            ),
+                          ),
+                        ],
                       ),
-                      Divider(height: 1, thickness: 1),
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.call),
-                        title: Text("Contact Support"),
-                        subtitle: Text("Support Aplikasi Customer Service"),
+
+                      Row(
+                        spacing: 30,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Flexible(
+                            flex: 4,
+                            // height: 40,
+                            child: DropdownButtonFormField<String>(
+                              value: lowonganSelected,
+                              isExpanded: true,
+                              hint: Text("Pilih Lowongan Anda"),
+                              items: lowongan.map((item) {
+                                return DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  // const SizedBox(width: 4),
+                                  // Flexible(
+                                  //   child: Text(
+                                  //     country.code,
+                                  //     style: const TextStyle(fontSize: 14),
+                                  //     overflow: TextOverflow.ellipsis,
+                                  //   ),
+                                  // ),
+                                  // const SizedBox(width: 4),
+                                  // Flexible(
+                                  //   child: Text(
+                                  //     country.dialCode,
+                                  //     style: const TextStyle(fontSize: 14),
+                                  //     overflow: TextOverflow.ellipsis,
+                                  //   ),
+                                  // ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  lowonganSelected = value;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 4,
+                            child: ElevatedButton.icon(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                minimumSize: Size(
+                                  MediaQuery.of(context).size.width * 0.4,
+                                  60,
+                                ),
+                                // padding: EdgeInsets.symmetric(
+                                //   vertical: 16,
+                                //   horizontal: 14,
+                                // ),
+                              ),
+                              icon: Icon(Icons.check),
+                              label: Text("Submit"),
+                            ),
+                          ),
+                        ],
                       ),
-                      Divider(height: 1, thickness: 1),
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.logout),
-                        title: Text("Log Out"),
-                      ),
-                      Divider(height: 1, thickness: 1),
                     ],
                   ),
                 ),

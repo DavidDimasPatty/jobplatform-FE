@@ -38,19 +38,19 @@ class CertificateCandidate extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              ElevatedButton.icon(
-                //onPressed: onAddPressed,
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  backgroundColor: Colors.blue, // Button color
-                  foregroundColor: Colors.white, // Icon/text color
-                ),
-                icon: Icon(Icons.add),
-                label: Text("Add"),
-              ),
+              // ElevatedButton.icon(
+              //   //onPressed: onAddPressed,
+              //   onPressed: () {},
+              //   style: ElevatedButton.styleFrom(
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     backgroundColor: Colors.blue, // Button color
+              //     foregroundColor: Colors.white, // Icon/text color
+              //   ),
+              //   icon: Icon(Icons.add),
+              //   label: Text("Add"),
+              // ),
             ],
           ),
           SizedBox(height: 20),
@@ -92,7 +92,7 @@ class CertificateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      // onTap: onPressed,
       child: Container(
         width: double.infinity,
         margin: EdgeInsets.all(5.0),

@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:job_platform/routes/router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ Future<void> main() async {
       measurementId: dotenv.env['FIREBASE_MEASUREMENT_ID_DEV']!,
     ),
   );
+  usePathUrlStrategy();
   runApp(const MyApp());
 }
 

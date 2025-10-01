@@ -72,34 +72,34 @@ class CareerPreferenceCandidate extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              if (dataPreferences.isEmpty)
-                ElevatedButton.icon(
-                  //onPressed: onAddPressed,
-                  onPressed: () {},
-                  icon: Icon(Icons.add, size: 16),
-                  label: Text("Add"),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    backgroundColor: Colors.blue, // Button color
-                    foregroundColor: Colors.white, // Icon/text color
-                  ),
-                )
-              else
-                ElevatedButton.icon(
-                  //onPressed: () => onEditPressed(dataPreferences[0]),
-                  onPressed: () {},
-                  icon: Icon(Icons.edit, size: 16),
-                  label: Text("Edit"),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    backgroundColor: Colors.blue, // Button color
-                    foregroundColor: Colors.white, // Icon/text color
-                  ),
-                ),
+              // if (dataPreferences.isEmpty)
+              //   ElevatedButton.icon(
+              //     //onPressed: onAddPressed,
+              //     onPressed: () {},
+              //     icon: Icon(Icons.add, size: 16),
+              //     label: Text("Add"),
+              //     style: ElevatedButton.styleFrom(
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(8),
+              //       ),
+              //       backgroundColor: Colors.blue, // Button color
+              //       foregroundColor: Colors.white, // Icon/text color
+              //     ),
+              //   )
+              // else
+              //   ElevatedButton.icon(
+              //     //onPressed: () => onEditPressed(dataPreferences[0]),
+              //     onPressed: () {},
+              //     icon: Icon(Icons.edit, size: 16),
+              //     label: Text("Edit"),
+              //     style: ElevatedButton.styleFrom(
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(8),
+              //       ),
+              //       backgroundColor: Colors.blue, // Button color
+              //       foregroundColor: Colors.white, // Icon/text color
+              //     ),
+              //   ),
             ],
           ),
           SizedBox(height: 20),

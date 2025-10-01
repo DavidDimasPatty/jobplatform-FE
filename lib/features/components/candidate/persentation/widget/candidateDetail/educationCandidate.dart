@@ -40,19 +40,19 @@ class EducationCandidate extends StatelessWidget {
                   ),
                 ),
               ),
-              ElevatedButton.icon(
-                //onPressed: onAddPressed,
-                onPressed: () {},
-                icon: Icon(Icons.add, size: 20),
-                label: Text("Add"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
+              // ElevatedButton.icon(
+              //   //onPressed: onAddPressed,
+              //   onPressed: () {},
+              //   icon: Icon(Icons.add, size: 20),
+              //   label: Text("Add"),
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.blue,
+              //     foregroundColor: Colors.white,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           SizedBox(height: 10),
@@ -62,7 +62,7 @@ class EducationCandidate extends StatelessWidget {
               var data = entry.value;
               return InkWell(
                 // onTap: () => onEditPressed(data),
-                onTap: () {},
+                // onTap: () {},
                 child: Container(
                   margin: EdgeInsets.all(5),
                   padding: EdgeInsets.all(10),

@@ -31,13 +31,15 @@ class _LayoutState extends State<Layout> {
     '/setting',
     '/chat',
     '/cart',
+    '/statusJob',
+    '/Progress',
   ];
 
   void _onTabSelected(int index) {
-    if (selectedIndex != index) {
-      setState(() => selectedIndex = index);
-      context.go(_routes[index]);
-    }
+    // if (selectedIndex != index) {
+    setState(() => selectedIndex = index);
+    context.go(_routes[index]);
+    // }
   }
 
   @override
