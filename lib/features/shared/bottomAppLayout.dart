@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomApplayout extends StatelessWidget {
   final int currentIndex;
@@ -12,6 +13,7 @@ class BottomApplayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentState = GoRouterState.of(context);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.blueAccent,
@@ -33,14 +35,14 @@ class BottomApplayout extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.home,
-                      color: currentIndex == 0
+                      color: currentState.uri.toString() == "/home"
                           ? Colors.lightBlueAccent
                           : Colors.white,
                     ),
                     Text(
                       "Home",
                       style: TextStyle(
-                        color: currentIndex == 0
+                        color: currentState.uri.toString() == "/home"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
@@ -58,14 +60,14 @@ class BottomApplayout extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.shopping_bag,
-                      color: currentIndex == 1
+                      color: currentState.uri.toString() == "/candidate"
                           ? Colors.lightBlueAccent
                           : Colors.white,
                     ),
                     Text(
                       "Candidate",
                       style: TextStyle(
-                        color: currentIndex == 1
+                        color: currentState.uri.toString() == "/candidate"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
@@ -83,14 +85,14 @@ class BottomApplayout extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.account_circle,
-                      color: currentIndex == 2
+                      color: currentState.uri.toString() == "/profile"
                           ? Colors.lightBlueAccent
                           : Colors.white,
                     ),
                     Text(
                       "Profile",
                       style: TextStyle(
-                        color: currentIndex == 2
+                        color: currentState.uri.toString() == "/profile"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
