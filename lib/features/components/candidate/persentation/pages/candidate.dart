@@ -14,8 +14,7 @@ import 'package:job_platform/features/components/setting/persentation/widgets/to
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Candidate extends StatefulWidget {
-  final GlobalKey<NavigatorState> navigatorKeys;
-  Candidate({super.key, required this.navigatorKeys});
+  Candidate({super.key});
 
   @override
   State<Candidate> createState() => _Candidate();
@@ -323,10 +322,7 @@ class _Candidate extends State<Candidate> {
               ),
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Candidatebody(
-                  items: dumpCandidate,
-                  navigatorKeys: widget.navigatorKeys,
-                ),
+                child: Candidatebody(items: dumpCandidate),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],

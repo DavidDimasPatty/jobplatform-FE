@@ -6,8 +6,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Cartbody extends StatefulWidget {
   final List<Cartitems> items;
-  final GlobalKey<NavigatorState> navigatorKeys;
-  Cartbody({super.key, required this.items, required this.navigatorKeys});
+  Cartbody({super.key, required this.items});
 
   @override
   State<Cartbody> createState() => _Cartbody();

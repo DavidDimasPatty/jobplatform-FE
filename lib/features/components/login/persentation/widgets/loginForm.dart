@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
@@ -14,6 +15,7 @@ import 'package:job_platform/features/components/login/domain/entities/loginData
 import 'package:job_platform/features/components/login/persentation/pages/companyWaiting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:job_platform/features/shared/layout.dart';
+import 'package:job_platform/routes/router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/datasources/aut_remote_datasource.dart';
@@ -104,10 +106,7 @@ class _LoginFormState extends State<LoginForm> {
                   data.hrCompanies!.company.id!,
                 );
               }
-              return Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const Layout()),
-              );
+              return context.go("/home");
             } else if (data.collection == "companies") {
               if (data.progress!.stage! == "Accept") {
                 if (data.progress!.lastAdmin!.status == "Accept") {
@@ -116,10 +115,7 @@ class _LoginFormState extends State<LoginForm> {
                   await prefs.setString("nama", data.company!.nama!);
                   await prefs.setString("domain", data.company!.email!);
                   await prefs.setString("noTelp", data.company!.noTelp!);
-                  return Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Layout()),
-                  );
+                  return context.go("/home");
                 } else if (data.progress!.lastAdmin!.status == "Reject") {
                   String? alasan = data.progress!.lastAdmin!.alasanReject;
                   return ScaffoldMessenger.of(context).showSnackBar(

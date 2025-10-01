@@ -7,8 +7,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Candidatebody extends StatefulWidget {
   final List<CandidateItems> items;
-  GlobalKey<NavigatorState> navigatorKeys;
-  Candidatebody({super.key, required this.items, required this.navigatorKeys});
+  Candidatebody({super.key, required this.items});
 
   @override
   State<Candidatebody> createState() => _Candidatebody(this.items);
@@ -56,10 +55,7 @@ class _Candidatebody extends State<Candidatebody> {
             ),
             itemBuilder: (BuildContext context, int index) {
               final candidate = widget.items[index];
-              return Candidatecard(
-                item: candidate,
-                navigatorKeys: widget.navigatorKeys,
-              );
+              return Candidatecard(item: candidate);
             },
           ),
         ],

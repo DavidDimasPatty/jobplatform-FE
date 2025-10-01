@@ -14,7 +14,6 @@ class Cartitems extends StatelessWidget {
   final TextOverflow? overflow;
   final Color? colorIcon;
   final Color? colorBGIcon;
-  final GlobalKey<NavigatorState> navigatorKeys;
 
   Cartitems({
     this.url,
@@ -30,7 +29,6 @@ class Cartitems extends StatelessWidget {
     this.colorIcon,
     this.colorBGIcon,
     this.skill,
-    required this.navigatorKeys,
   });
 
   @override

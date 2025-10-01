@@ -6,8 +6,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Listjobreceive extends StatefulWidget {
   // final CandidateItems item;
-  GlobalKey<NavigatorState> navigatorKeys;
-  Listjobreceive({super.key, required this.navigatorKeys});
+  Listjobreceive({super.key});
 
   @override
   State<Listjobreceive> createState() => _Listjobreceive();

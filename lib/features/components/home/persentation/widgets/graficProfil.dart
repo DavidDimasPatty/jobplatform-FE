@@ -6,8 +6,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Graficprofil extends StatefulWidget {
   // final CandidateItems item;
-  GlobalKey<NavigatorState> navigatorKeys;
-  Graficprofil({super.key, required this.navigatorKeys});
+  Graficprofil({super.key});
 
   @override
   State<Graficprofil> createState() => _Graficprofil();

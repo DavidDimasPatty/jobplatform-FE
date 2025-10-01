@@ -7,14 +7,14 @@ class Notificationitem extends StatefulWidget {
   final String subtitle;
   final Color bgColor;
   final Color iconColor;
-  final List<GlobalKey<NavigatorState>> navigatorKeys;
+  //final List<GlobalKey<NavigatorState>> navigatorKeys;
   Notificationitem({
     super.key,
     required this.icon,
     required this.iconColor,
     required this.title,
     required this.subtitle,
-    required this.navigatorKeys,
+    //required this.navigatorKeys,
     required this.bgColor,
   });
 

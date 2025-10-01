@@ -10,10 +10,10 @@ class Notificationbody extends StatefulWidget {
   // final CandidateItems item;
   List<Notificationitem> data;
   VoidCallback toggleNotification;
-  List<GlobalKey<NavigatorState>> navigatorKeys;
+  //List<GlobalKey<NavigatorState>> navigatorKeys;
   Notificationbody({
     super.key,
-    required this.navigatorKeys,
+    //required this.navigatorKeys,
     required this.toggleNotification,
     required this.data,
   });

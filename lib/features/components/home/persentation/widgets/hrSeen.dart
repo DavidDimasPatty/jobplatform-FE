@@ -7,8 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 class Hrseen extends StatefulWidget {
   // final CandidateItems item;
-  GlobalKey<NavigatorState> navigatorKeys;
-  Hrseen({super.key, required this.navigatorKeys});
+  Hrseen({super.key});
 
   @override
   State<Hrseen> createState() => _Hrseen();

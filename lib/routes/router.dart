@@ -1,0 +1,137 @@
+import 'package:flutter/material.dart' hide Notification;
+import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/candidate/persentation/pages/candidate.dart';
+import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
+import 'package:job_platform/features/components/chat/persentasion/pages/chat.dart';
+import 'package:job_platform/features/components/chat/persentasion/pages/chatDetail.dart';
+import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
+import 'package:job_platform/features/components/landing/persentation/landing.dart';
+import 'package:job_platform/features/components/login/persentation/pages/login.dart';
+import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/certificateAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/certificateEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/educationalAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/educationalEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/experienceAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/experienceEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceAdd.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceEdit.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
+import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
+import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
+import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
+import 'package:job_platform/features/components/notification/persentation/notification.dart';
+import 'package:job_platform/features/shared/layout.dart';
+
+final List<GoRoute> _layoutRoutes = [
+  GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+  GoRoute(path: '/candidate', builder: (context, state) => Candidate()),
+  GoRoute(path: '/profile', builder: (context, state) => const Profile()),
+  GoRoute(path: '/setting', builder: (context, state) => const Setting()),
+  GoRoute(
+    path: '/add-certificate',
+    builder: (context, state) => CertificateAdd(),
+  ),
+  GoRoute(
+    path: '/edit-certificate',
+    builder: (context, state) {
+      final data = state.extra as CertificateMV;
+      return CertificateEdit(certificate: data);
+    },
+  ),
+  GoRoute(
+    path: '/add-education',
+    builder: (context, state) => EducationalAdd(),
+  ),
+  GoRoute(
+    path: '/edit-education',
+    builder: (context, state) {
+      final data = state.extra as EducationMV;
+      return EducationalEdit(education: data);
+    },
+  ),
+  GoRoute(
+    path: '/add-experience',
+    builder: (context, state) => ExperienceAdd(),
+  ),
+  GoRoute(
+    path: '/edit-experience',
+    builder: (context, state) {
+      final data = state.extra as WorkexperienceMV;
+      return ExperienceEdit(experience: data);
+    },
+  ),
+  GoRoute(
+    path: '/add-organization',
+    builder: (context, state) => OrganizationAdd(),
+  ),
+  GoRoute(
+    path: '/edit-organization',
+    builder: (context, state) {
+      final data = state.extra as OrganizationMV;
+      return OrganizationEdit(organization: data);
+    },
+  ),
+  GoRoute(
+    path: '/add-preference',
+    builder: (context, state) => PreferenceAdd(),
+  ),
+  GoRoute(
+    path: '/edit-preference',
+    builder: (context, state) {
+      final data = state.extra as PreferenceMV;
+      return PreferenceEdit(preference: data);
+    },
+  ),
+  GoRoute(path: '/cart', builder: (context, state) => Cart()),
+  GoRoute(path: '/chat', builder: (context, state) => Chat()),
+];
+
+final router = GoRouter(
+  initialLocation: '/home',
+  routes: [
+    GoRoute(path: '/login', builder: (context, state) => Login()),
+    GoRoute(
+      path: '/signUp',
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>?;
+        final email = data?['email'];
+        final name = data?['name'];
+        final photoUrl = data?["photoUrl"];
+        final token = data?["token"];
+        return SignUp(name, email, photoUrl, token);
+      },
+    ),
+    GoRoute(
+      path: '/signUpPerusahaan',
+      builder: (context, state) {
+        final email = state.extra as String;
+        return SignUpPerusahaan(email);
+      },
+    ),
+    GoRoute(
+      path: '/signUpPelamar',
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>?;
+        final email = data?['email'];
+        final name = data?['name'];
+        final photoUrl = data?["photoUrl"];
+        final token = data?["token"];
+        return SignUpPelamar(name, email, photoUrl, token);
+      },
+    ),
+    ShellRoute(
+      builder: (context, state, child) {
+        return Layout(child: child);
+      },
+      routes: _layoutRoutes,
+    ),
+  ],
+);

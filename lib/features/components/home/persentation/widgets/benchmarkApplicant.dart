@@ -7,9 +7,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Benchmarkapplicant extends StatefulWidget {
   // final CandidateItems item;
-  GlobalKey<NavigatorState> navigatorKeys;
   List<Benchmarkitem>? items;
-  Benchmarkapplicant({super.key, required this.navigatorKeys, this.items});
+  Benchmarkapplicant({super.key, this.items});
   @override
   State<Benchmarkapplicant> createState() => _Benchmarkapplicant();
 }

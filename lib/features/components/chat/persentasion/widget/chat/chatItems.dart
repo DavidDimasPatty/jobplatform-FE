@@ -5,13 +5,11 @@ class Chatitems extends StatefulWidget {
   final String photoUrl;
   final String name;
   final String? lastChat;
-  final GlobalKey<NavigatorState> navigatorKeys;
   Chatitems({
     super.key,
     required this.photoUrl,
     required this.name,
     this.lastChat,
-    required this.navigatorKeys,
   });
 
   @override
@@ -22,12 +20,7 @@ class _Chatitems extends State<Chatitems> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        widget.navigatorKeys.currentState!.pushNamed(
-          'detail-chat',
-          //arguments: {"navigatorKeys": widget.navigatorKeys},
-        );
-      },
+      onTap: () {},
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(

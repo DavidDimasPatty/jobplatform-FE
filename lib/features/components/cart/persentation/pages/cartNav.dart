@@ -16,9 +16,7 @@ class Cartnav extends StatelessWidget {
       onGenerateRoute: (setting) {
         switch (setting.name) {
           default:
-            return MaterialPageRoute(
-              builder: (_) => Cart(navigatorKeys: navigatorKey),
-            );
+            return MaterialPageRoute(builder: (_) => Cart());
         }
       },
     );

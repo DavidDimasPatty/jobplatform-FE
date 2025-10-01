@@ -11,9 +11,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Homepagebody extends StatefulWidget {
   // final CandidateItems item;
-  GlobalKey<NavigatorState> navigatorKeys;
   List<Benchmarkitem>? items;
-  Homepagebody({super.key, required this.navigatorKeys, this.items});
+  Homepagebody({super.key, this.items});
 
   @override
   State<Homepagebody> createState() => _Homepagebody();
@@ -47,12 +46,9 @@ class _Homepagebody extends State<Homepagebody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Listjobreceive(navigatorKeys: widget.navigatorKeys),
+                  Listjobreceive(),
                   SizedBox(height: 20),
-                  Benchmarkapplicant(
-                    items: widget.items,
-                    navigatorKeys: widget.navigatorKeys,
-                  ),
+                  Benchmarkapplicant(items: widget.items),
                 ],
               ),
               //child: Listjobreceive(navigatorKeys: widget.navigatorKeys),
@@ -63,11 +59,7 @@ class _Homepagebody extends State<Homepagebody> {
               rowFlex: 4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Graficprofil(navigatorKeys: widget.navigatorKeys),
-                  SizedBox(height: 20),
-                  Hrseen(navigatorKeys: widget.navigatorKeys),
-                ],
+                children: [Graficprofil(), SizedBox(height: 20), Hrseen()],
               ),
             ),
           ],

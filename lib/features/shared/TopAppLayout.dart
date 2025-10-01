@@ -3,14 +3,14 @@ import 'package:job_platform/features/components/setting/persentation/pages/sett
 
 class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onToggleNotification;
-  final VoidCallback onToggleMessages;
+  //final VoidCallback onToggleMessages;
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
 
   const TopApplayout({
     super.key,
     required this.onToggleNotification,
-    required this.onToggleMessages,
+    //required this.onToggleMessages,
     required this.currentIndex,
     required this.onTabSelected,
   });

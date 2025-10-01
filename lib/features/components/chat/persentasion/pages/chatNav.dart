@@ -15,13 +15,9 @@ class Chatnav extends StatelessWidget {
       onGenerateRoute: (setting) {
         switch (setting.name) {
           case "detail-chat":
-            return MaterialPageRoute(
-              builder: (_) => ChatDetail(navigatorKeys: navigatorKey),
-            );
+            return MaterialPageRoute(builder: (_) => ChatDetail());
           default:
-            return MaterialPageRoute(
-              builder: (_) => Chat(navigatorKeys: navigatorKey),
-            );
+            return MaterialPageRoute(builder: (_) => Chat());
         }
       },
     );

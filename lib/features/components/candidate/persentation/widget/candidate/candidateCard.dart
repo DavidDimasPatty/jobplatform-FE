@@ -6,8 +6,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Candidatecard extends StatefulWidget {
   final CandidateItems item;
-  GlobalKey<NavigatorState> navigatorKeys;
-  Candidatecard({super.key, required this.item, required this.navigatorKeys});
+  Candidatecard({super.key, required this.item});
 
   @override
   State<Candidatecard> createState() => _Candidatecard(this.item);

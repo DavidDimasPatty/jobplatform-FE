@@ -17,13 +17,13 @@ class Candidatenav extends StatelessWidget {
       onGenerateRoute: (setting) {
         switch (setting.name) {
           case "detail-candidate":
+            final data = setting.arguments as String;
             return MaterialPageRoute(
-              builder: (_) => Candidatedetail(navigatorKeys: navigatorKey),
+              builder: (_) =>
+                  Candidatedetail(navigatorKeys: navigatorKey, dataId: data),
             );
           default:
-            return MaterialPageRoute(
-              builder: (_) => Candidate(navigatorKeys: navigatorKey),
-            );
+            return MaterialPageRoute(builder: (_) => Candidate());
         }
       },
     );

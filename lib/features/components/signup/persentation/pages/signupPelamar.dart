@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
@@ -11,6 +12,7 @@ import 'package:job_platform/features/components/signup/domain/entities/signUpRe
 import 'package:job_platform/features/components/signup/domain/entities/signupResponse.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:job_platform/features/shared/layout.dart';
+import 'package:job_platform/routes/router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -100,10 +102,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
         await prefs.setString("nama", dataRes.user!.nama);
         await prefs.setString("email", dataRes.user!.email);
         await prefs.setString("noTelp", dataRes.user!.noTelp);
-        return Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Layout()),
-        );
+        return context.go("/home");
       } else {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

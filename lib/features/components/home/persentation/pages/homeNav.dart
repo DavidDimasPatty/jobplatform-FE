@@ -22,9 +22,7 @@ class Homenav extends StatelessWidget {
           //     builder: (_) => Candidatedetail(navigatorKeys: navigatorKey),
           //   );
           default:
-            return MaterialPageRoute(
-              builder: (_) => HomePage(navigatorKeys: navigatorKey),
-            );
+            return MaterialPageRoute(builder: (_) => HomePage());
         }
       },
     );

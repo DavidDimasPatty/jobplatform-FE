@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:job_platform/routes/router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 Future<void> main() async {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //return MaterialApp(home: Login());
-    return MaterialApp(
+    return MaterialApp.router(
       builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
         breakpoints: [
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
         ],
       ),
-      home:Login(),
+      routerConfig: router,
     );
   }
 }

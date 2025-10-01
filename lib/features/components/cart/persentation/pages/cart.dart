@@ -13,8 +13,7 @@ import 'package:job_platform/features/components/setting/persentation/widgets/to
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Cart extends StatefulWidget {
-  final GlobalKey<NavigatorState> navigatorKeys;
-  Cart({super.key, required this.navigatorKeys});
+  Cart({super.key});
 
   @override
   State<Cart> createState() => _Cart();
@@ -58,19 +57,16 @@ class _Cart extends State<Cart> {
           Cartitems(
             url: "assets/images/BG_Pelamar.png",
             title: "Nando Witin (25)",
-            navigatorKeys: widget.navigatorKeys,
             subtitle: "Back End Developer",
           ),
           Cartitems(
             url: "assets/images/BG_Pelamar.png",
             title: "Nando Sitorus (25)",
-            navigatorKeys: widget.navigatorKeys,
             subtitle: "Back End Developer",
           ),
           Cartitems(
             url: "assets/images/BG_Pelamar.png",
             title: "Nando Baltwin (25)",
-            navigatorKeys: widget.navigatorKeys,
             subtitle: "Front End Developer",
           ),
         ];
@@ -149,10 +145,7 @@ class _Cart extends State<Cart> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Cartbody(
-                  items: dataSub,
-                  navigatorKeys: widget.navigatorKeys,
-                ),
+                child: Cartbody(items: dataSub),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],

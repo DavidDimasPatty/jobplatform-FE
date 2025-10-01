@@ -9,8 +9,7 @@ import '../../data/datasources/product_remote_datasource.dart';
 import '../../data/repositories/product_repository_impl.dart';
 
 class HomePage extends StatefulWidget {
-  final GlobalKey<NavigatorState> navigatorKeys;
-  const HomePage({super.key, required this.navigatorKeys});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -94,10 +93,7 @@ class _HomePageState extends State<HomePage> {
     return Center(
       child: isLoading
           ? CircularProgressIndicator(color: Colors.blue)
-          : Homepagebody(
-              items: dataBenchmark,
-              navigatorKeys: widget.navigatorKeys,
-            ),
+          : Homepagebody(items: dataBenchmark),
     );
   }
 }
