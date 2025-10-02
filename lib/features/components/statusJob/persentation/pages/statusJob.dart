@@ -1,15 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartBody.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
-    show SettingsGroup;
-import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
+import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobBody.dart';
+import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class statusJob extends StatefulWidget {
@@ -20,7 +12,7 @@ class statusJob extends StatefulWidget {
 }
 
 class _statusJob extends State<statusJob> {
-  List<Cartitems> dataSub = [];
+  List<statusjobitems> dataSub = [];
   // Loading state
   bool isLoading = true;
   String? errorMessage;
@@ -54,19 +46,19 @@ class _statusJob extends State<statusJob> {
         isLoading = false;
         errorMessage = null;
         dataSub = [
-          Cartitems(
+          statusjobitems(
             url: "assets/images/BG_Pelamar.png",
-            title: "Nando Witin (25)",
+            title: "PT. INDOMARCO PRISMATAMA",
             subtitle: "Back End Developer",
           ),
-          Cartitems(
+          statusjobitems(
             url: "assets/images/BG_Pelamar.png",
-            title: "Nando Sitorus (25)",
+            title: "PT. INTI DUNIA SUKSES",
             subtitle: "Back End Developer",
           ),
-          Cartitems(
+          statusjobitems(
             url: "assets/images/BG_Pelamar.png",
-            title: "Nando Baltwin (25)",
+            title: "PT. ASTRA GROUP",
             subtitle: "Front End Developer",
           ),
         ];
@@ -145,7 +137,7 @@ class _statusJob extends State<statusJob> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Cartbody(items: dataSub),
+                child: Statusjobbody(items: dataSub),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/chat/domain/entities/ChatDetailItems.dart';
 
-class Candidateheader extends StatefulWidget {
+class Progressheader extends StatefulWidget {
   ValueChanged<String> onSearchChanged;
   VoidCallback onFilterTap;
   TextEditingController searchController;
-  Candidateheader({
+  Progressheader({
     super.key,
     required this.searchController,
     required this.onFilterTap,
@@ -13,10 +13,10 @@ class Candidateheader extends StatefulWidget {
   });
 
   @override
-  State<Candidateheader> createState() => _Candidateheader();
+  State<Progressheader> createState() => _Progressheader();
 }
 
-class _Candidateheader extends State<Candidateheader> {
+class _Progressheader extends State<Progressheader> {
   @override
   Widget build(BuildContext context) {
     var mediaQueryHeight = MediaQuery.of(context).size.height;

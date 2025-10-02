@@ -9,6 +9,9 @@ import 'package:job_platform/features/components/error/persentation/error.dart';
 import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
 import 'package:job_platform/features/components/landing/persentation/landing.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
+import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRD.dart';
+import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRDAdd.dart';
+import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRDEdit.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
@@ -26,12 +29,16 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceEdit.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progress.dart';
+import 'package:job_platform/features/components/progress/persentation/pages/progressDetail.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
-import 'package:job_platform/features/components/notification/persentation/notification.dart';
 import 'package:job_platform/features/components/statusJob/persentation/pages/statusJob.dart';
+import 'package:job_platform/features/components/statusJob/persentation/pages/statusJobDetail.dart';
+import 'package:job_platform/features/components/vacancy/persentation/pages/vacancy.dart';
+import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyAdd.dart';
+import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyEdit.dart';
 import 'package:job_platform/features/shared/layout.dart';
 
 final List<GoRoute> _layoutRoutes = [
@@ -104,7 +111,39 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(path: '/cart', builder: (context, state) => Cart()),
   GoRoute(path: '/chat', builder: (context, state) => Chat()),
   GoRoute(path: '/progress', builder: (context, state) => Progress()),
+  GoRoute(
+    path: '/progressDetail',
+    builder: (context, state) {
+      final data = state.extra as String?;
+      return Progressdetail(dataId: data);
+    },
+  ),
   GoRoute(path: '/statusJob', builder: (context, state) => statusJob()),
+  GoRoute(
+    path: '/statusJobDetail',
+    builder: (context, state) {
+      final data = state.extra as String?;
+      return Statusjobdetail(dataId: data);
+    },
+  ),
+  GoRoute(path: '/vacancy', builder: (context, state) => Vacancy()),
+  GoRoute(
+    path: '/vacancyEdit',
+    builder: (context, state) {
+      final data = state.extra as PreferenceMV;
+      return Vacancyedit(data: data);
+    },
+  ),
+  GoRoute(path: '/vacancyAdd', builder: (context, state) => Vacancyadd()),
+  GoRoute(path: '/manageHRD', builder: (context, state) => Managehrd()),
+  GoRoute(path: '/manageHRDAdd', builder: (context, state) => Managehrdadd()),
+  GoRoute(
+    path: '/manageHRDEdit',
+    builder: (context, state) {
+      final data = state.extra as PreferenceMV;
+      return Managehrdedit(data: data);
+    },
+  ),
 ];
 
 final router = GoRouter(

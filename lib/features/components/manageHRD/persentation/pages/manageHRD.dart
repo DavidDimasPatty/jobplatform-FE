@@ -5,8 +5,8 @@ import 'package:job_platform/features/components/cart/persentation/widgets/cartI
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
-import 'package:job_platform/features/components/progress/persentation/widgets/progress/progressBody.dart';
-import 'package:job_platform/features/components/progress/persentation/widgets/progress/progressItems.dart';
+import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDBody.dart';
+import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDItems.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
     show SettingsGroup;
@@ -14,18 +14,20 @@ import 'package:job_platform/features/components/setting/persentation/widgets/se
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Progress extends StatefulWidget {
-  Progress({super.key});
+class Managehrd extends StatefulWidget {
+  Managehrd({super.key});
 
   @override
-  State<Progress> createState() => _Progress();
+  State<Managehrd> createState() => _Managehrd();
 }
 
-class _Progress extends State<Progress> {
-  List<Progressitems> dataSub = [];
+class _Managehrd extends State<Managehrd> {
+  List<Managehrditems> dataSub = [];
   // Loading state
   bool isLoading = true;
   String? errorMessage;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
   Future<void> _loadProfileData() async {
     try {
       // setState(() {
@@ -56,20 +58,20 @@ class _Progress extends State<Progress> {
         isLoading = false;
         errorMessage = null;
         dataSub = [
-          Progressitems(
+          Managehrditems(
             url: "assets/images/BG_Pelamar.png",
-            title: "Nando Witin (25)",
-            subtitle: "Back End Developer",
+            title: "Nando Witin",
+            subtitle: "email@email.com",
           ),
-          Progressitems(
+          Managehrditems(
             url: "assets/images/BG_Pelamar.png",
-            title: "Nando Sitorus (25)",
-            subtitle: "Back End Developer",
+            title: "Nando Sitorus",
+            subtitle: "email@email.com",
           ),
-          Progressitems(
+          Managehrditems(
             url: "assets/images/BG_Pelamar.png",
-            title: "Nando Baltwin (25)",
-            subtitle: "Front End Developer",
+            title: "Nando Baltwin",
+            subtitle: "email@email.com",
           ),
         ];
       });
@@ -82,6 +84,59 @@ class _Progress extends State<Progress> {
         });
       }
     }
+  }
+
+  void _showEmailDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const Text("Masukkan Email"),
+          content: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                labelText: "Email",
+                hintText: "contoh@email.com",
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Email tidak boleh kosong";
+                }
+                final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                if (!regex.hasMatch(value)) {
+                  return "Format email tidak valid";
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Batal"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Email: ${_emailController.text}")),
+                  );
+                }
+              },
+              child: const Text("Submit"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -147,7 +202,7 @@ class _Progress extends State<Progress> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Progressbody(items: dataSub),
+                child: Managehrdbody(items: dataSub, popup: _showEmailDialog),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],

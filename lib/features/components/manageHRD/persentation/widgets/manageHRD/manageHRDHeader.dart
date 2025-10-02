@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/chat/domain/entities/ChatDetailItems.dart';
 
-class Candidateheader extends StatefulWidget {
+class Managehrdheader extends StatefulWidget {
   ValueChanged<String> onSearchChanged;
   VoidCallback onFilterTap;
   TextEditingController searchController;
-  Candidateheader({
+  Managehrdheader({
     super.key,
     required this.searchController,
     required this.onFilterTap,
@@ -13,10 +13,10 @@ class Candidateheader extends StatefulWidget {
   });
 
   @override
-  State<Candidateheader> createState() => _Candidateheader();
+  State<Managehrdheader> createState() => _Managehrdheader();
 }
 
-class _Candidateheader extends State<Candidateheader> {
+class _Managehrdheader extends State<Managehrdheader> {
   @override
   Widget build(BuildContext context) {
     var mediaQueryHeight = MediaQuery.of(context).size.height;

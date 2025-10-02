@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Cartitems extends StatelessWidget {
+class NotificationDetailitems extends StatelessWidget {
   final String? url;
   final List<String>? skill;
   final String title;
@@ -15,7 +15,7 @@ class Cartitems extends StatelessWidget {
   final Color? colorIcon;
   final Color? colorBGIcon;
 
-  Cartitems({
+  NotificationDetailitems({
     this.url,
     required this.title,
     this.titleStyle,

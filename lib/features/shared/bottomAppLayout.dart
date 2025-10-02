@@ -79,7 +79,7 @@ class BottomApplayout extends StatelessWidget {
 
             Expanded(
               child: InkWell(
-                onTap: () => onTabSelected(1),
+                onTap: () => onTabSelected(6),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +105,7 @@ class BottomApplayout extends StatelessWidget {
 
             Expanded(
               child: InkWell(
-                onTap: () => onTabSelected(1),
+                onTap: () => onTabSelected(7),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -120,6 +120,58 @@ class BottomApplayout extends StatelessWidget {
                       "Progress",
                       style: TextStyle(
                         color: currentState.uri.toString() == "/progress"
+                            ? Colors.lightBlueAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: InkWell(
+                onTap: () => onTabSelected(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.home_work,
+                      color: currentState.uri.toString() == "/vacancy"
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                    ),
+                    Text(
+                      "Vacancy",
+                      style: TextStyle(
+                        color: currentState.uri.toString() == "/vacancy"
+                            ? Colors.lightBlueAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: InkWell(
+                onTap: () => onTabSelected(9),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.people,
+                      color: currentState.uri.toString() == "/manageHRD"
+                          ? Colors.lightBlueAccent
+                          : Colors.white,
+                    ),
+                    Text(
+                      "Manage HRD",
+                      style: TextStyle(
+                        color: currentState.uri.toString() == "/manageHRD"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),

@@ -5,24 +5,25 @@ import 'package:job_platform/features/components/cart/persentation/widgets/cartI
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
-import 'package:job_platform/features/components/progress/persentation/widgets/progress/progressBody.dart';
-import 'package:job_platform/features/components/progress/persentation/widgets/progress/progressItems.dart';
+import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailBody.dart';
+import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailItems.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
     show SettingsGroup;
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
+import 'package:job_platform/features/shared/Notification/Notification.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Progress extends StatefulWidget {
-  Progress({super.key});
+class Notification extends StatefulWidget {
+  Notification({super.key});
 
   @override
-  State<Progress> createState() => _Progress();
+  State<Notification> createState() => _Notification();
 }
 
-class _Progress extends State<Progress> {
-  List<Progressitems> dataSub = [];
+class _Notification extends State<Notification> {
+  List<NotificationDetailitems> dataSub = [];
   // Loading state
   bool isLoading = true;
   String? errorMessage;
@@ -56,17 +57,17 @@ class _Progress extends State<Progress> {
         isLoading = false;
         errorMessage = null;
         dataSub = [
-          Progressitems(
+          NotificationDetailitems(
             url: "assets/images/BG_Pelamar.png",
             title: "Nando Witin (25)",
             subtitle: "Back End Developer",
           ),
-          Progressitems(
+          NotificationDetailitems(
             url: "assets/images/BG_Pelamar.png",
             title: "Nando Sitorus (25)",
             subtitle: "Back End Developer",
           ),
-          Progressitems(
+          NotificationDetailitems(
             url: "assets/images/BG_Pelamar.png",
             title: "Nando Baltwin (25)",
             subtitle: "Front End Developer",
@@ -147,7 +148,7 @@ class _Progress extends State<Progress> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Progressbody(items: dataSub),
+                child: NotificationDetailbody(items: dataSub),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],

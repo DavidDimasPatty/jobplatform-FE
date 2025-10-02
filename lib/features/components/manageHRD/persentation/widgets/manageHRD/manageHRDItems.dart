@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Cartitems extends StatelessWidget {
+class Managehrditems extends StatelessWidget {
   final String? url;
   final List<String>? skill;
   final String title;
@@ -15,7 +15,7 @@ class Cartitems extends StatelessWidget {
   final Color? colorIcon;
   final Color? colorBGIcon;
 
-  Cartitems({
+  Managehrditems({
     this.url,
     required this.title,
     this.titleStyle,
@@ -79,22 +79,6 @@ class Cartitems extends StatelessWidget {
                               color: Colors.black87,
                             ),
                           ),
-                          const Text(
-                            "Bandung, Jawa Barat",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          const Text(
-                            "Match Score : 80%",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -104,18 +88,18 @@ class Cartitems extends StatelessWidget {
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  label: const Text("See Profile"),
-                                  icon: const Icon(Icons.visibility),
-                                ),
+                                // ElevatedButton.icon(
+                                //   style: ElevatedButton.styleFrom(
+                                //     backgroundColor: Colors.blue,
+                                //     foregroundColor: Colors.white,
+                                //     shape: RoundedRectangleBorder(
+                                //       borderRadius: BorderRadius.circular(8),
+                                //     ),
+                                //   ),
+                                //   onPressed: () {},
+                                //   label: const Text("See Profile"),
+                                //   icon: const Icon(Icons.visibility),
+                                // ),
                                 const SizedBox(height: 8),
                                 ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
@@ -134,18 +118,18 @@ class Cartitems extends StatelessWidget {
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  label: const Text("See Profile"),
-                                  icon: const Icon(Icons.visibility),
-                                ),
+                                // ElevatedButton.icon(
+                                //   style: ElevatedButton.styleFrom(
+                                //     backgroundColor: Colors.blue,
+                                //     foregroundColor: Colors.white,
+                                //     shape: RoundedRectangleBorder(
+                                //       borderRadius: BorderRadius.circular(8),
+                                //     ),
+                                //   ),
+                                //   onPressed: () {},
+                                //   label: const Text("See Profile"),
+                                //   icon: const Icon(Icons.visibility),
+                                // ),
                                 ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,

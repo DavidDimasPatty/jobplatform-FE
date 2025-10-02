@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
+import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Cartbody extends StatefulWidget {
-  final List<Cartitems> items;
-  Cartbody({super.key, required this.items});
+class Statusjobbody extends StatefulWidget {
+  final List<statusjobitems> items;
+  Statusjobbody({super.key, required this.items});
 
   @override
-  State<Cartbody> createState() => _Cartbody();
+  State<Statusjobbody> createState() => _Statusjobbody();
 }
 
-class _Cartbody extends State<Cartbody> {
+class _Statusjobbody extends State<Statusjobbody> {
   final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class _Cartbody extends State<Cartbody> {
           Container(
             margin: EdgeInsets.only(left: 20, top: 20),
             child: Text(
-              "Carts",
+              "Status Pekerjaan",
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
@@ -40,7 +41,7 @@ class _Cartbody extends State<Cartbody> {
             child: TextFormField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Cari Carts Candidate',
+                labelText: 'Cari Pekerjaan',
                 hintText: 'Masukan Chat',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(

@@ -32,7 +32,9 @@ class _LayoutState extends State<Layout> {
     '/chat',
     '/cart',
     '/statusJob',
-    '/Progress',
+    '/progress',
+    '/vacancy',
+    '/manageHRD',
   ];
 
   void _onTabSelected(int index) {
@@ -86,7 +88,7 @@ class _LayoutState extends State<Layout> {
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey.shade200,
             appBar: TopApplayout(
               onToggleNotification: toggleNotification,
               currentIndex: selectedIndex,
