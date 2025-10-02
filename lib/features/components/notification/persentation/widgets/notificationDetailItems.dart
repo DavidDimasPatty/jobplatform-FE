@@ -1,67 +1,55 @@
 import 'package:flutter/material.dart';
 
-class NotificationDetailitems extends StatelessWidget {
-  final String? url;
-  final List<String>? skill;
+class NotificationDetailitems extends StatefulWidget {
+  final IconData icon;
   final String title;
-  final TextStyle? titleStyle;
-  final String? subtitle;
-  final TextStyle? subtitleStyle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-  final int? titleMaxLine;
-  final int? subtitleMaxLine;
-  final TextOverflow? overflow;
-  final Color? colorIcon;
-  final Color? colorBGIcon;
-
+  final String subtitle;
+  final Color bgColor;
+  final Color iconColor;
+  final String about;
+  //final List<GlobalKey<NavigatorState>> navigatorKeys;
   NotificationDetailitems({
-    this.url,
+    super.key,
+    required this.icon,
+    required this.iconColor,
     required this.title,
-    this.titleStyle,
-    this.subtitle,
-    this.subtitleStyle,
-    this.trailing,
-    this.onTap,
-    this.titleMaxLine,
-    this.subtitleMaxLine,
-    this.overflow = TextOverflow.ellipsis,
-    this.colorIcon,
-    this.colorBGIcon,
-    this.skill,
+    required this.subtitle,
+    //required this.navigatorKeys,
+    required this.bgColor,
+    required this.about,
   });
 
   @override
+  State<NotificationDetailitems> createState() => _NotificationDetailitems();
+}
+
+class _NotificationDetailitems extends State<NotificationDetailitems> {
+  @override
   Widget build(BuildContext context) {
-    final isSmallScreen = MediaQuery.of(context).size.width < 600;
-    return InkWell(
-      onTap: () {},
+    return GestureDetector(
+      onTap: () {
+        // widget.navigatorKeys.currentState!.pushNamed(
+        //   'detail-chat',
+        //   //arguments: {"navigatorKeys": widget.navigatorKeys},
+        // );
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(
-          onTap: onTap,
+          // tileColor: widget.bgColor,
+          style: ListTileStyle.list,
+          //onTap: onTap,
           leading: Container(
-            decoration: BoxDecoration(
-              // color: (colorBGIcon != null ? colorBGIcon : Colors.lightBlueAccent),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            // padding: EdgeInsets.all(5),
-            child: ClipOval(
-              child: Image.asset(
-                "assets/images/BG_Pelamar.png",
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-              ),
-            ),
+            child: Icon(widget.icon, size: 20, color: widget.iconColor),
           ),
+
           title: Text(
-            title,
-            style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-            maxLines: titleMaxLine,
-            overflow: titleMaxLine != null ? overflow : null,
+            widget.title,
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          subtitle: (subtitle != null
+          subtitle: (widget.about == "offer"
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,98 +60,54 @@ class NotificationDetailitems extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            subtitle ?? "",
+                            widget.subtitle ?? "",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
                               color: Colors.black87,
                             ),
                           ),
-                          const Text(
-                            "Bandung, Jawa Barat",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          const Text(
-                            "Match Score : 80%",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                            ),
+                          Row(
+                            spacing: 20,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                label: const Text("Accept"),
+                                icon: const Icon(Icons.check),
+                              ),
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                label: const Text("Reject"),
+                                icon: const Icon(Icons.close),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    Flexible(
-                      flex: 3,
-                      child: isSmallScreen
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  label: const Text("See Profile"),
-                                  icon: const Icon(Icons.visibility),
-                                ),
-                                const SizedBox(height: 8),
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  label: const Text("Delete"),
-                                  icon: const Icon(Icons.delete),
-                                ),
-                              ],
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  label: const Text("See Profile"),
-                                  icon: const Icon(Icons.visibility),
-                                ),
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  label: const Text("Delete"),
-                                  icon: const Icon(Icons.delete),
-                                ),
-                              ],
-                            ),
-                    ),
                   ],
                 )
-              : null),
+              : Container(
+                  child: Text(
+                    widget.subtitle,
+                    // style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                )),
         ),
       ),
     );

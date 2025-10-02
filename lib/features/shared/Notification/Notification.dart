@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/shared/Notification/NotificationItem.dart';
@@ -85,6 +86,28 @@ class _Notificationbody extends State<Notificationbody>
                       separatorBuilder: (_, __) =>
                           const Divider(height: 1, color: Colors.white24),
                       itemBuilder: (context, index) => widget.data[index],
+                    ),
+                  ),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        widget.toggleNotification();
+                        context.go("/notificationDetail");
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        height: 50,
+                        decoration: BoxDecoration(color: Colors.black38),
+                        child: Text(
+                          "See More Notifications",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

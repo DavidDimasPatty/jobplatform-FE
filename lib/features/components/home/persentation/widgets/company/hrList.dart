@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/benchmarkItem.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/company/hrListitem.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Benchmarkapplicant extends StatefulWidget {
+class hrList extends StatefulWidget {
   // final CandidateItems item;
-  List<Benchmarkitem>? items;
-  Benchmarkapplicant({super.key, this.items});
+  List<hrListitem>? items;
+  hrList({super.key, this.items});
   @override
-  State<Benchmarkapplicant> createState() => _Benchmarkapplicant();
+  State<hrList> createState() => _hrList();
 }
 
-class _Benchmarkapplicant extends State<Benchmarkapplicant> {
+class _hrList extends State<hrList> {
   // final CandidateItems item;
   // _Listjobreceive(this.item);
 
@@ -43,7 +44,7 @@ class _Benchmarkapplicant extends State<Benchmarkapplicant> {
             width: double.infinity,
             child: Center(
               child: Text(
-                "Benchmark Profile Serupa",
+                "HRD Terdaftar",
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),

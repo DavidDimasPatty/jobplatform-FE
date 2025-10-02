@@ -41,8 +41,8 @@ class _NotificationDetailbody extends State<NotificationDetailbody> {
             child: TextFormField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Cari Notifications Candidate',
-                hintText: 'Masukan Chat',
+                labelText: 'Cari Notifications',
+                hintText: 'Cari Notifications',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),
@@ -58,10 +58,10 @@ class _NotificationDetailbody extends State<NotificationDetailbody> {
                   value == null || value.isEmpty ? 'Wajib diisi' : null,
             ),
           ),
-          ListView.builder(
-            // separatorBuilder: (context, index) {
-            //   return Divider();
-            // },
+          ListView.separated(
+            separatorBuilder: (context, index) {
+              return Divider();
+            },
             itemCount: widget.items.length,
             itemBuilder: (BuildContext context, int index) {
               return widget.items[index];

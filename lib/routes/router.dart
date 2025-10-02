@@ -6,12 +6,15 @@ import 'package:job_platform/features/components/cart/persentation/pages/cart.da
 import 'package:job_platform/features/components/chat/persentasion/pages/chat.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chatDetail.dart';
 import 'package:job_platform/features/components/error/persentation/error.dart';
-import 'package:job_platform/features/components/home/persentation/pages/home_page.dart';
+import 'package:job_platform/features/components/home/persentation/pages/homePage.dart';
+import 'package:job_platform/features/components/home/persentation/pages/homePageCompany.dart';
 import 'package:job_platform/features/components/landing/persentation/landing.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRD.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRDAdd.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRDEdit.dart';
+import 'package:job_platform/features/components/notification/persentation/page/notificationDetail.dart';
+import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailBody.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
@@ -42,7 +45,8 @@ import 'package:job_platform/features/components/vacancy/persentation/pages/vaca
 import 'package:job_platform/features/shared/layout.dart';
 
 final List<GoRoute> _layoutRoutes = [
-  GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+  GoRoute(path: '/home', builder: (context, state) => HomePage()),
+  GoRoute(path: '/homeCompany', builder: (context, state) => HomePageCompany()),
   GoRoute(path: '/candidate', builder: (context, state) => Candidate()),
   GoRoute(
     path: '/candidateDetail',
@@ -51,8 +55,8 @@ final List<GoRoute> _layoutRoutes = [
       return Candidatedetail(dataId: data);
     },
   ),
-  GoRoute(path: '/profile', builder: (context, state) => const Profile()),
-  GoRoute(path: '/setting', builder: (context, state) => const Setting()),
+  GoRoute(path: '/profile', builder: (context, state) => Profile()),
+  GoRoute(path: '/setting', builder: (context, state) => Setting()),
   GoRoute(
     path: '/add-certificate',
     builder: (context, state) => CertificateAdd(),
@@ -143,6 +147,10 @@ final List<GoRoute> _layoutRoutes = [
       final data = state.extra as PreferenceMV;
       return Managehrdedit(data: data);
     },
+  ),
+  GoRoute(
+    path: '/notificationDetail',
+    builder: (context, state) => NotificationDetail(),
   ),
 ];
 

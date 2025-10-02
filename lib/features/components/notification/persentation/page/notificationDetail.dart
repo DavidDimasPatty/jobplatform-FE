@@ -15,14 +15,14 @@ import 'package:job_platform/features/components/setting/persentation/widgets/to
 import 'package:job_platform/features/shared/Notification/Notification.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Notification extends StatefulWidget {
-  Notification({super.key});
+class NotificationDetail extends StatefulWidget {
+  NotificationDetail({super.key});
 
   @override
-  State<Notification> createState() => _Notification();
+  State<NotificationDetail> createState() => _NotificationDetail();
 }
 
-class _Notification extends State<Notification> {
+class _NotificationDetail extends State<NotificationDetail> {
   List<NotificationDetailitems> dataSub = [];
   // Loading state
   bool isLoading = true;
@@ -58,19 +58,39 @@ class _Notification extends State<Notification> {
         errorMessage = null;
         dataSub = [
           NotificationDetailitems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "Nando Witin (25)",
-            subtitle: "Back End Developer",
+            icon: Icons.warning,
+            iconColor: Colors.yellowAccent,
+            title: "HRD has seen your profile!🤗",
+            subtitle: "Let's we hope for the best!😇",
+            bgColor: Colors.yellow.shade200,
+            about: "job",
           ),
           NotificationDetailitems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "Nando Sitorus (25)",
-            subtitle: "Back End Developer",
+            icon: Icons.dangerous,
+            iconColor: Colors.redAccent,
+            title: "You have been rejected from PT. Indomarco Prismatama!🥺🥺",
+            subtitle:
+                "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Indomarco Prismatama",
+            bgColor: Colors.red.shade200,
+            about: "job",
           ),
           NotificationDetailitems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "Nando Baltwin (25)",
-            subtitle: "Front End Developer",
+            icon: Icons.dangerous,
+            iconColor: Colors.redAccent,
+            title: "You have been rejected from PT. Inti Dunia Sukses!🥺🥺",
+            subtitle:
+                "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Inti Dunia Sukses",
+            bgColor: Colors.red.shade200,
+            about: "job",
+          ),
+          NotificationDetailitems(
+            icon: Icons.tag_faces_rounded,
+            iconColor: Colors.greenAccent,
+            title:
+                "Anda Telah Ditambahkan menjadi HRD PT.Indomaret Group! 🥳🥳",
+            subtitle: "Perlu Konfirmasi Anda (Memerlukan login ulang)!💪",
+            bgColor: Colors.green.shade200,
+            about: "offer",
           ),
         ];
       });
