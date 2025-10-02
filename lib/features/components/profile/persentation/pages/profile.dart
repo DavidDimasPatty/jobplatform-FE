@@ -11,6 +11,7 @@ import 'package:job_platform/features/components/profile/domain/entities/Profile
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/careerPreference.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/certificate.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/education.dart';
@@ -195,7 +196,13 @@ class _Profile extends State<Profile> {
                             size: 20,
                           ),
                           onPressed: () {
-                            // onTabSelected(3);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    Personalinfo(userProfile: dataUser!),
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -326,8 +333,10 @@ class _Profile extends State<Profile> {
                 child: CareerPreference(
                   dataPreferences: dataPreference,
                   onAddPressed: () => _navigateAndRefresh('/add-preference'),
-                  onEditPressed: (preference) =>
-                      _navigateAndRefresh('/edit-preference', arguments: preference),
+                  onEditPressed: (preference) => _navigateAndRefresh(
+                    '/edit-preference',
+                    arguments: preference,
+                  ),
                 ),
               ),
               ResponsiveRowColumnItem(

@@ -10,6 +10,8 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
@@ -17,6 +19,7 @@ import 'package:job_platform/features/components/profile/data/models/workExperie
 
 abstract class AuthRepository {
   Future<ProfileModel?> profile(String id);
+  Future<ProfileResponse> editProfile(ProfileRequest profile);
   // Certificate
   Future<List<CertificateModel>?> certificateGetAll(String? name);
   Future<CertificateResponse> certificateAdd(CertificateRequest certificate);

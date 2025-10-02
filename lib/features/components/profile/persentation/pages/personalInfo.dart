@@ -1,26 +1,34 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
-
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:intl/intl.dart';
 
 class Personalinfo extends StatefulWidget {
-  const Personalinfo({super.key});
+  final Profiledata userProfile;
+
+  const Personalinfo({super.key, required this.userProfile});
 
   @override
-  State<Personalinfo> createState() => _Personalinfo();
+  State<Personalinfo> createState() => _Personalinfo(data: userProfile);
 }
 
 class _Personalinfo extends State<Personalinfo> {
+  final Profiledata data;
+
+  _Personalinfo({required this.data});
+
   List<ProvinsiModel> provinsi = [];
   List<KotaModel> kota = [];
   List<ProvinsiModel> provinsiLahir = [];
@@ -30,21 +38,86 @@ class _Personalinfo extends State<Personalinfo> {
   bool isLoadingKotaLahir = false;
   bool isLoadingProvinsi = false;
   bool isLoadingProvinsiLahir = false;
+
+  // Global Key
+  final _formKey = GlobalKey<FormState>();
+
+  // Controller
   final _headLineController = TextEditingController();
   final _deskripsiController = TextEditingController();
   final _alamatController = TextEditingController();
   final _emailController = TextEditingController();
   final _namaController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _tanggalLahirController = DateRangePickerController();
-  final _formKey = GlobalKey<FormState>();
+
+  // Helper variable
   ProvinsiModel? selectedProvinsi;
   KotaModel? selectedKota;
   ProvinsiModel? selectedProvinsiLahir;
   KotaModel? selectedKotaLahir;
   Country? selectedCountry;
   String gender = "";
+  DateTime? birthDate;
+  bool isVisible = false;
+  bool isPrivate = false;
+
+  // Usecase Instance
   late SignupUseCase signupUseCase;
+
+  @override
+  void initState() {
+    super.initState();
+    final remoteDataSource = AuthRemoteDatasource();
+    final repository = AuthRepositoryImpl(remoteDataSource);
+    signupUseCase = SignupUseCase(repository);
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await Future.wait([
+      fetchDataProvinsi(),
+      fetchDataProvinsiLahir(),
+      loadCountries(),
+    ]);
+
+    _loadData();
+  }
+
+  void _loadData() {
+    _namaController.text = data.nama;
+    _headLineController.text = data.headline;
+    _deskripsiController.text = data.ringkasan;
+    _emailController.text = data.email;
+    birthDate = data.tanggalLahir;
+
+    var [dataProv, dataKota, dataAlamat] = data.domisili.split(',');
+    selectedProvinsi = provinsi.firstWhere((p) => p.nama == dataProv);
+    if (selectedProvinsi != null) {
+      fetchDataKota(selectedProvinsi!.id).then((_) {
+        setState(() {
+          selectedKota = kota.firstWhere((k) => k.nama == dataKota);
+        });
+      });
+    }
+    _alamatController.text = dataAlamat;
+
+    var [dataProvLahir, dataKotaLahir] = data.tempatLahir.split(',');
+    selectedProvinsiLahir = provinsiLahir.firstWhere(
+      (p) => p.nama == dataProvLahir,
+    );
+    if (selectedProvinsiLahir != null) {
+      fetchDataKotaLahir(selectedProvinsiLahir!.id).then((_) {
+        setState(() {
+          selectedKotaLahir = kotaLahir.firstWhere(
+            (k) => k.nama == dataKotaLahir,
+          );
+        });
+      });
+    }
+
+    isVisible = data.isVisible;
+    isPrivate = data.privacy;
+  }
 
   Future _handleEditProfile() async {
     // if (!(_formKey.currentState?.validate() ?? false)) return;
@@ -109,6 +182,20 @@ class _Personalinfo extends State<Personalinfo> {
     //     );
     //   }
     // }
+  }
+
+  Future<void> _pickTanggalLahir(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: birthDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        birthDate = picked;
+      });
+    }
   }
 
   void _changeGender(String genderSelect) {
@@ -178,42 +265,42 @@ class _Personalinfo extends State<Personalinfo> {
       final jsonString = await rootBundle.loadString(
         'lib/core/constant/phoneNumber.json',
       );
-      print("masuk");
       final List<dynamic> jsonList = jsonDecode(jsonString);
       final loaded = jsonList
           .map((e) => Country.fromJson(e as Map<String, dynamic>))
           .toList();
-      setState(() {
-        if (!countries.isNotEmpty) {
-          countries = loaded;
-          selectedCountry = countries.firstWhere(
-            (c) => c.code.toUpperCase() == 'ID' || c.dialCode == '+62',
-            orElse: () => countries.first,
-          );
-          print(selectedCountry!.dialCode);
-        } else {
-          selectedCountry = null;
+
+      String fullNumber = data.noTelp;
+      if (!fullNumber.startsWith('+')) {
+        fullNumber = '+' + fullNumber;
+      }
+
+      Country? foundCountry;
+      for (Country country
+          in loaded
+            ..sort((a, b) => b.dialCode.length.compareTo(a.dialCode.length))) {
+        if (fullNumber.startsWith(country.dialCode)) {
+          foundCountry = country;
+          _phoneController.text = fullNumber.substring(country.dialCode.length);
+          break;
         }
+      }
+
+      setState(() {
+        countries = loaded;
+        selectedCountry =
+            foundCountry ??
+            loaded.firstWhere(
+              (c) => c.dialCode == '+62',
+              orElse: () => loaded.first,
+            );
       });
+
       return countries;
     } catch (e) {
       debugPrint('Error load countries: $e');
       return countries;
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final remoteDataSource = AuthRemoteDatasource();
-    final repository = AuthRepositoryImpl(remoteDataSource);
-    signupUseCase = SignupUseCase(repository);
-    fetchDataProvinsi();
-    fetchDataProvinsiLahir();
-    loadCountries();
-    // _emailController.text = email!;
-    // _namaController.text = name!;
-    // _phoneController.text = "";
   }
 
   @override
@@ -303,23 +390,34 @@ class _Personalinfo extends State<Personalinfo> {
                           Container(
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
-                            child: TextFormField(
-                              controller: _namaController,
-                              decoration: InputDecoration(
-                                labelText: 'Nama',
-                                hintText: 'Masukan Nama',
-                                prefixIcon: Icon(Icons.info),
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 11,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  // height: 90,
+                                  //width: 300,
+                                  child: TextFormField(
+                                    readOnly: true,
+                                    controller: _namaController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Nama Lengkap',
+                                      hintText: 'Masukan Nama Lengkap',
+                                      border: OutlineInputBorder(),
+                                      prefixIcon: Icon(Icons.account_circle),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 11,
+                                      ),
+                                    ),
+                                    // initialValue: name,
+                                    validator: (value) =>
+                                        value == null || value.isEmpty
+                                        ? 'Wajib diisi'
+                                        : null,
+                                  ),
                                 ),
-                              ),
-                              // initialValue: email,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
+                              ],
                             ),
                           ),
 
@@ -355,7 +453,7 @@ class _Personalinfo extends State<Personalinfo> {
                                 labelText: 'Deskripsi Profile',
                                 hintText: 'Masukan Deskripsi Profile',
                                 border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.location_pin),
+                                prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 10,
                                   horizontal: 11,
@@ -519,39 +617,39 @@ class _Personalinfo extends State<Personalinfo> {
                           ),
 
                           // SizedBox(height: 90),
-                          Container(
-                            // height: 90,
-                            margin: EdgeInsets.symmetric(vertical: 20),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  // height: 90,
-                                  //width: 300,
-                                  child: TextFormField(
-                                    readOnly: true,
-                                    controller: _namaController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Nama Lengkap',
-                                      hintText: 'Masukan Nama Lengkap',
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.account_circle),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        vertical: 8,
-                                        horizontal: 11,
-                                      ),
-                                    ),
-                                    // initialValue: name,
-                                    validator: (value) =>
-                                        value == null || value.isEmpty
-                                        ? 'Wajib diisi'
-                                        : null,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Container(
+                          //   // height: 90,
+                          //   margin: EdgeInsets.symmetric(vertical: 20),
+                          //   child: Row(
+                          //     crossAxisAlignment: CrossAxisAlignment.center,
+                          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          //     children: [
+                          //       Expanded(
+                          //         // height: 90,
+                          //         //width: 300,
+                          //         child: TextFormField(
+                          //           readOnly: true,
+                          //           controller: _namaController,
+                          //           decoration: InputDecoration(
+                          //             labelText: 'Nama Lengkap',
+                          //             hintText: 'Masukan Nama Lengkap',
+                          //             border: OutlineInputBorder(),
+                          //             prefixIcon: Icon(Icons.account_circle),
+                          //             contentPadding: EdgeInsets.symmetric(
+                          //               vertical: 8,
+                          //               horizontal: 11,
+                          //             ),
+                          //           ),
+                          //           // initialValue: name,
+                          //           validator: (value) =>
+                          //               value == null || value.isEmpty
+                          //               ? 'Wajib diisi'
+                          //               : null,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
 
                           // Container(
                           //   // height: 90,
@@ -696,73 +794,91 @@ class _Personalinfo extends State<Personalinfo> {
                           // ),
 
                           // SizedBox(height: 90, width: 300),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: 500,
-                              minWidth: 200,
-                              maxHeight: 400,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Tanggal Lahir",
-                                  style: GoogleFonts.figtree(
-                                    textStyle: TextStyle(
-                                      color: Colors.black,
-                                      letterSpacing: 2,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 8),
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: SfDateRangePicker(
-                                      monthCellStyle:
-                                          DateRangePickerMonthCellStyle(
-                                            todayTextStyle: TextStyle(
-                                              color: Colors
-                                                  .black, // warna teks hari ini
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                      yearCellStyle:
-                                          DateRangePickerYearCellStyle(
-                                            todayTextStyle: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                      selectionTextStyle: TextStyle(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      startRangeSelectionColor: Colors.blue,
-                                      selectionColor: Colors.white,
-                                      todayHighlightColor: Colors.transparent,
-                                      backgroundColor: Colors.blue.shade50,
-                                      headerStyle: DateRangePickerHeaderStyle(
-                                        textAlign: TextAlign.center,
-                                        backgroundColor: Colors.blue.shade50,
-                                        textStyle: TextStyle(
-                                          backgroundColor: Colors.blue.shade50,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      controller: _tanggalLahirController,
-                                      selectionMode:
-                                          DateRangePickerSelectionMode.single,
-                                      maxDate: DateTime.now(),
-                                      view: DateRangePickerView.year,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                          // ConstrainedBox(
+                          //   constraints: BoxConstraints(
+                          //     maxWidth: 500,
+                          //     minWidth: 200,
+                          //     maxHeight: 400,
+                          //   ),
+                          //   child: Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.center,
+                          //     children: [
+                          //       Text(
+                          //         "Tanggal Lahir",
+                          //         style: GoogleFonts.figtree(
+                          //           textStyle: TextStyle(
+                          //             color: Colors.black,
+                          //             letterSpacing: 2,
+                          //             fontSize: 16,
+                          //           ),
+                          //         ),
+                          //         textAlign: TextAlign.center,
+                          //       ),
+                          //       SizedBox(height: 8),
+                          //       Expanded(
+                          //         child: ClipRRect(
+                          //           borderRadius: BorderRadius.circular(20),
+                          //           child: SfDateRangePicker(
+                          //             monthCellStyle:
+                          //                 DateRangePickerMonthCellStyle(
+                          //                   todayTextStyle: TextStyle(
+                          //                     color: Colors
+                          //                         .black, // warna teks hari ini
+                          //                     fontWeight: FontWeight.bold,
+                          //                   ),
+                          //                 ),
+                          //             yearCellStyle:
+                          //                 DateRangePickerYearCellStyle(
+                          //                   todayTextStyle: TextStyle(
+                          //                     color: Colors.black,
+                          //                     fontWeight: FontWeight.bold,
+                          //                   ),
+                          //                 ),
+                          //             selectionTextStyle: TextStyle(
+                          //               color: Colors.blue,
+                          //               fontWeight: FontWeight.bold,
+                          //             ),
+                          //             startRangeSelectionColor: Colors.blue,
+                          //             selectionColor: Colors.white,
+                          //             todayHighlightColor: Colors.transparent,
+                          //             backgroundColor: Colors.blue.shade50,
+                          //             headerStyle: DateRangePickerHeaderStyle(
+                          //               textAlign: TextAlign.center,
+                          //               backgroundColor: Colors.blue.shade50,
+                          //               textStyle: TextStyle(
+                          //                 backgroundColor: Colors.blue.shade50,
+                          //                 fontSize: 18,
+                          //                 fontWeight: FontWeight.bold,
+                          //                 color: Colors.black,
+                          //               ),
+                          //             ),
+                          //             controller: _tanggalLahirController,
+                          //             selectionMode:
+                          //                 DateRangePickerSelectionMode.single,
+                          //             maxDate: DateTime.now(),
+                          //             view: DateRangePickerView.year,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          SizedBox(height: 20),
+                          InkWell(
+                            onTap: () => _pickTanggalLahir(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.calendar_today),
+                                labelText: "Tanggal Lahir",
+                                border: OutlineInputBorder(),
+                              ),
+                              child: Text(
+                                birthDate != null
+                                    ? DateFormat(
+                                        'dd MMMM yyyy',
+                                      ).format(birthDate!)
+                                    : "Pilih tanggal",
+                              ),
                             ),
                           ),
 
@@ -1027,6 +1143,34 @@ class _Personalinfo extends State<Personalinfo> {
                                         : null,
                                   ),
                                 ),
+
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: isVisible,
+                                      onChanged: (checked) {
+                                        setState(() {
+                                          isVisible = checked ?? true;
+                                        });
+                                      },
+                                    ),
+                                    Text('Visible from HR'),
+                                  ],
+                                ),
+
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: isPrivate,
+                                      onChanged: (checked) {
+                                        setState(() {
+                                          isPrivate = checked ?? true;
+                                        });
+                                      },
+                                    ),
+                                    Text('Private Profile'),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -1042,7 +1186,7 @@ class _Personalinfo extends State<Personalinfo> {
                               //   ),
                               // ),
                               Directionality(
-                                textDirection: TextDirection.rtl,
+                                textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,

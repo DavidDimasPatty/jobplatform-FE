@@ -13,6 +13,8 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
@@ -43,6 +45,39 @@ class AuthRemoteDataSource {
     } catch (e) {
       print('Error during get profile: $e');
       return null;
+    }
+  }
+
+  Future<ProfileResponse> profileEdit(ProfileRequest profile) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-profile',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(profile.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        ProfileResponse profileResponse = ProfileResponse.fromJson(jsonData);
+        return profileResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return ProfileResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit profile: $e');
+      return ProfileResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
     }
   }
 
@@ -330,7 +365,9 @@ class AuthRemoteDataSource {
 
         final List<dynamic> orgList = jsonData["data"]["data"];
         data = orgList
-            .map<WorkExperienceModel>((item) => WorkExperienceModel.fromJson(item))
+            .map<WorkExperienceModel>(
+              (item) => WorkExperienceModel.fromJson(item),
+            )
             .toList();
         return data;
       } else {

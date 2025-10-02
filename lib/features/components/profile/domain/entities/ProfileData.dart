@@ -16,6 +16,7 @@ class Profiledata {
   final String ringkasan;
   final bool isVisible;
   final int seekStatus;
+  final bool privacy;
 
   Profiledata({
     required this.nama,
@@ -35,6 +36,7 @@ class Profiledata {
     this.ringkasan = '',
     this.isVisible = true,
     this.seekStatus = 0,
+    this.privacy = false
   });
 
   factory Profiledata.fromJson(Map<String, dynamic> json) {
@@ -54,8 +56,9 @@ class Profiledata {
       headline: json['headline'] ?? '',
       photoURL: json['photoURL'] ?? '',
       ringkasan: json['ringkasan'] ?? '',
-      isVisible: json['isVisible'] ?? true,
+      isVisible: json['visibility'] ?? true,
       seekStatus: json['seekStatus'] ?? 0,
+      privacy: json['privacy'] ?? false,
     );
   }
 }

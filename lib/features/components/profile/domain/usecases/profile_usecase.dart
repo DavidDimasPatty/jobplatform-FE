@@ -10,6 +10,8 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
@@ -24,6 +26,10 @@ class ProfileUsecase {
 
   Future<ProfileModel?> getProfile(String id) {
     return repository.profile(id);
+  }
+
+  Future<ProfileResponse> editProfile(ProfileRequest profile){
+    return repository.editProfile(profile);
   }
 
   // Certificate
