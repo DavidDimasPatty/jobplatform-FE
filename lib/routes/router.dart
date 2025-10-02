@@ -31,6 +31,8 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profileCompany.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profileCompany/personalInfoCompany.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progress.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progressDetail.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
@@ -54,6 +56,14 @@ final List<GoRoute> _layoutRoutes = [
       final data = state.extra as String?;
       return Candidatedetail(dataId: data);
     },
+  ),
+  GoRoute(
+    path: '/profileCompany',
+    builder: (context, state) => ProfileCompany(),
+  ),
+  GoRoute(
+    path: '/personalInfoCompany',
+    builder: (context, state) => Personalinfocompany(),
   ),
   GoRoute(path: '/profile', builder: (context, state) => Profile()),
   GoRoute(path: '/setting', builder: (context, state) => Setting()),
