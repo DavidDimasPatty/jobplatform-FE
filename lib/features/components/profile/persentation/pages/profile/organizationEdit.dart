@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
@@ -223,7 +224,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Organization editted successfully!')),
           );
-          Navigator.pop(context, true); // Go back to the previous screen
+          context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -264,7 +265,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Organization deleted successfully!')),
         );
-        Navigator.pop(context, true);
+        context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

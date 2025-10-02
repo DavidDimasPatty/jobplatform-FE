@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
@@ -232,7 +233,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Work Experience edited successfully!')),
           );
-          Navigator.pop(context, true); // Go back to the previous screen
+          context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -273,7 +274,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Work Experience deleted successfully!')),
         );
-        Navigator.pop(context, true);
+        context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
@@ -219,7 +220,7 @@ class _CertificateEditState extends State<CertificateEdit> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Certificate edited successfully!')),
           );
-          Navigator.pop(context, true);
+          context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -259,7 +260,7 @@ class _CertificateEditState extends State<CertificateEdit> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Certificate deleted successfully!')),
         );
-        Navigator.pop(context, true);
+        context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

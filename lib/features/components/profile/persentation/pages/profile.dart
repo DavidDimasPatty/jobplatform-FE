@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
@@ -96,20 +97,6 @@ class _Profile extends State<Profile> {
         isLoading = false;
         errorMessage = "Error loading profile: $e";
       });
-    }
-  }
-
-  // Generic method for handling navigation with refresh
-  Future<void> _navigateAndRefresh(
-    String routeName, {
-    Object? arguments,
-  }) async {
-    final result = await Navigator.of(
-      context,
-    ).pushNamed(routeName, arguments: arguments);
-
-    if (result == true) {
-      await _loadProfileData();
     }
   }
 
@@ -286,41 +273,33 @@ class _Profile extends State<Profile> {
               ResponsiveRowColumnItem(
                 child: Workexperience(
                   dataWork: dataWork,
-                  onAddPressed: () => _navigateAndRefresh('/add-experience'),
-                  onEditPressed: (experience) => _navigateAndRefresh(
-                    '/edit-experience',
-                    arguments: experience,
-                  ),
+                  onAddPressed: () => context.go('/add-experience'),
+                  onEditPressed: (experience) =>
+                      context.go('/edit-experience', extra: experience),
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Organizational(
                   dataOrg: dataOrg,
-                  onAddPressed: () => _navigateAndRefresh('/add-organization'),
-                  onEditPressed: (organization) => _navigateAndRefresh(
-                    '/edit-organization',
-                    arguments: organization,
-                  ),
+                  onAddPressed: () => context.go('/add-organization'),
+                  onEditPressed: (organization) =>
+                      context.go('/edit-organization', extra: organization),
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Education(
                   dataEdu: dataEdu,
-                  onAddPressed: () => _navigateAndRefresh('/add-education'),
-                  onEditPressed: (education) => _navigateAndRefresh(
-                    '/edit-education',
-                    arguments: education,
-                  ),
+                  onAddPressed: () => context.go('/add-education'),
+                  onEditPressed: (education) =>
+                      context.go('/edit-education', extra: education),
                 ),
               ),
               ResponsiveRowColumnItem(
                 child: Certificate(
                   dataCertificates: dataCertificate,
-                  onAddPressed: () => _navigateAndRefresh('/add-certificate'),
-                  onEditPressed: (certificate) => _navigateAndRefresh(
-                    '/edit-certificate',
-                    arguments: certificate,
-                  ),
+                  onAddPressed: () => context.go('/add-certificate'),
+                  onEditPressed: (certificate) =>
+                      context.go('/edit-certificate', extra: certificate),
                 ),
               ),
               ResponsiveRowColumnItem(
@@ -332,11 +311,9 @@ class _Profile extends State<Profile> {
               ResponsiveRowColumnItem(
                 child: CareerPreference(
                   dataPreferences: dataPreference,
-                  onAddPressed: () => _navigateAndRefresh('/add-preference'),
-                  onEditPressed: (preference) => _navigateAndRefresh(
-                    '/edit-preference',
-                    arguments: preference,
-                  ),
+                  onAddPressed: () => context.go('/add-preference'),
+                  onEditPressed: (preference) =>
+                      context.go('/edit-preference', extra: preference),
                 ),
               ),
               ResponsiveRowColumnItem(
