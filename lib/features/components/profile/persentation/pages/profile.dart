@@ -1,8 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
@@ -40,6 +45,7 @@ class _Profile extends State<Profile> {
   List<CertificateMV> dataCertificate = [];
   List<SkillMV> dataSkill = [];
   List<PreferenceMV> dataPreference = [];
+  bool isPrivate = false;
 
   // Loading state
   bool isLoading = true;
@@ -84,6 +90,7 @@ class _Profile extends State<Profile> {
             dataSkill = profile.skills ?? [];
             dataPreference = profile.preferences ?? [];
             isLoading = false;
+            isPrivate = profile.user!.privacy ?? false;
           });
         }
       } else {
@@ -97,6 +104,119 @@ class _Profile extends State<Profile> {
         isLoading = false;
         errorMessage = "Error loading profile: $e";
       });
+    }
+  }
+
+  Future _editProfileAvatar() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        withData: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        PlatformFile file = result.files.first;
+        Uint8List? bytes;
+
+        // Get bytes (works for both web and mobile)
+        if (file.bytes != null) {
+          bytes = file.bytes;
+        } else if (file.path != null) {
+          bytes = await File(file.path!).readAsBytes();
+        }
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idUser');
+
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        ProfileRequest profile = new ProfileRequest(
+          idUser: idUser,
+          photo: bytes,
+        );
+
+        ProfileResponse response = await _profileUseCase.editProfileAvatar(
+          profile,
+        );
+
+        // On success, clear the form or navigate away
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profile avatar updated successfully!')),
+          );
+          _loadProfileData();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Failed to update profile avatar. Please try again.',
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error during edit profile avatar: $e');
+      // Show error message to user
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update profile avatar. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future _editProfilePrivacy(bool value) async {
+    setState(() {
+      isPrivate = value;
+    });
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idUser = prefs.getString('idUser');
+
+      // Ensure idUser is not null
+      if (idUser == null) throw Exception("User ID not found in preferences");
+
+      ProfileRequest profile = new ProfileRequest(
+        idUser: idUser,
+        privacy: isPrivate,
+      );
+
+      ProfileResponse response = await _profileUseCase.editProfilePrivacy(
+        profile,
+      );
+
+      // On success, clear the form or navigate away
+      if (response.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile privacy edited successfully!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to edit profile privacy. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during edit profile privacy: $e');
+      // Show error message to user
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to edit profile privacy. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -182,15 +302,8 @@ class _Profile extends State<Profile> {
                             color: Colors.white,
                             size: 20,
                           ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    Personalinfo(userProfile: dataUser!),
-                              ),
-                            );
-                          },
+                          onPressed: () =>
+                              context.go('/edit-profile', extra: dataUser!),
                         ),
                       ),
                     ),
@@ -203,9 +316,17 @@ class _Profile extends State<Profile> {
                               CircleAvatar(
                                 radius: 50,
                                 backgroundColor: Colors.white,
-                                child: const CircleAvatar(
+                                child: CircleAvatar(
                                   radius: 46,
-                                  //backgroundImage: AssetImage("assets/profile.jpg"),
+                                  backgroundImage: dataUser!.photoURL != null
+                                      ? NetworkImage(dataUser!.photoURL!)
+                                      : (dataUser!.jenisKelamin == "L"
+                                            ? AssetImage(
+                                                'assets/images/male-avatar.png',
+                                              )
+                                            : AssetImage(
+                                                'assets/images/female-avatar.png',
+                                              )),
                                   backgroundColor: Colors.blueGrey,
                                 ),
                               ),
@@ -228,9 +349,7 @@ class _Profile extends State<Profile> {
                                     ),
                                     padding: EdgeInsets.zero,
                                     constraints: const BoxConstraints(),
-                                    onPressed: () {
-                                      print("Ganti foto profil diklik");
-                                    },
+                                    onPressed: () => _editProfileAvatar(),
                                   ),
                                 ),
                               ),
@@ -254,7 +373,7 @@ class _Profile extends State<Profile> {
 
                         Container(
                           child: Text(
-                            dataUser!.headline,
+                            dataUser?.headline ?? '',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
@@ -318,9 +437,24 @@ class _Profile extends State<Profile> {
               ),
               ResponsiveRowColumnItem(
                 child: Container(
-                  height: 200,
+                  height: 300,
                   child: ListView(
                     children: [
+                      ListTile(
+                        onTap: () {},
+                        leading: Icon(Icons.lock),
+                        title: Text("Private Profile"),
+                        trailing: Switch(
+                          trackColor: const WidgetStateProperty<Color?>.fromMap(
+                            <WidgetState, Color>{
+                              WidgetState.selected: Colors.lightBlue,
+                            },
+                          ),
+                          value: isPrivate,
+                          onChanged: (bool value) => _editProfilePrivacy(value),
+                        ),
+                      ),
+                      Divider(height: 1, thickness: 1),
                       ListTile(
                         onTap: () {},
                         leading: Icon(Icons.account_box),

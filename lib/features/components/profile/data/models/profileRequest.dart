@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 class ProfileRequest {
   String idUser;
   String? nama;
@@ -5,12 +8,14 @@ class ProfileRequest {
   String? tempatLahir;
   String? jenisKelamin;
   String? domisili;
-  String? cv;
+  Uint8List? cv;
   String? headline;
   String? ringkasan;
   bool? visibility;
   int? seekStatus;
-  String? linkPorto;
+  List<String>? linkPorto;
+  Uint8List? photo;
+  bool? privacy;
 
   ProfileRequest({
     required this.idUser,
@@ -24,7 +29,9 @@ class ProfileRequest {
     this.ringkasan,
     this.visibility,
     this.seekStatus,
-    this.linkPorto
+    this.linkPorto,
+    this.photo,
+    this.privacy
   });
 
   factory ProfileRequest.fromJson(Map<String, dynamic> json){
@@ -39,12 +46,26 @@ class ProfileRequest {
       "tempatLahir": tempatLahir,
       "jenisKelamin": jenisKelamin,
       "domisili": domisili,
-      "cv": cv,
+      "cv": cv != null ? base64Encode(cv as List<int>) : null,
       "headline": headline,
       "ringkasan": ringkasan,
       "visibility": visibility,
       "seekStatus": seekStatus,
-      "linkPorto": [linkPorto],
+      "linkPorto": linkPorto,
+    };
+  }
+
+  Map<String, dynamic> toJsonAvatar() {
+    return {
+      "idUser": idUser,
+      "photo": photo != null ? base64Encode(photo as List<int>) : null,
+    };
+  }
+
+  Map<String, dynamic> toJsonPrivacy() {
+    return {
+      "idUser": idUser,
+      "privacy": privacy,
     };
   }
 }

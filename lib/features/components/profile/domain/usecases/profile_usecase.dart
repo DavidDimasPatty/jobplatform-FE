@@ -32,6 +32,14 @@ class ProfileUsecase {
     return repository.editProfile(profile);
   }
 
+  Future<ProfileResponse> editProfileAvatar(ProfileRequest profile){
+    return repository.editProfileAvatar(profile);
+  }
+
+  Future<ProfileResponse> editProfilePrivacy(ProfileRequest profile){
+    return repository.editProfilePrivacy(profile);
+  }
+
   // Certificate
   Future<List<CertificateModel>?> getAllCertificate(String? name){
     return repository.certificateGetAll(name);

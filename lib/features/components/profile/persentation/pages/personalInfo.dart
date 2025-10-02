@@ -1,10 +1,20 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
+import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart'
+    as profileRepo;
+import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart'
+    as profileDataSource;
+import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
 import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
@@ -12,7 +22,7 @@ import 'package:job_platform/features/components/signup/domain/entities/kota.dar
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class Personalinfo extends StatefulWidget {
@@ -46,7 +56,7 @@ class _Personalinfo extends State<Personalinfo> {
   final _headLineController = TextEditingController();
   final _deskripsiController = TextEditingController();
   final _alamatController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _linkPortofolioController = TextEditingController();
   final _namaController = TextEditingController();
   final _phoneController = TextEditingController();
 
@@ -59,10 +69,14 @@ class _Personalinfo extends State<Personalinfo> {
   String gender = "";
   DateTime? birthDate;
   bool isVisible = false;
-  bool isPrivate = false;
+  Uint8List? cvBytes;
+  String? cvFileName;
+  Uint8List? avatarBytes;
+  String? avatarFileName;
 
   // Usecase Instance
   late SignupUseCase signupUseCase;
+  late ProfileUsecase profileUsecase;
 
   @override
   void initState() {
@@ -70,6 +84,11 @@ class _Personalinfo extends State<Personalinfo> {
     final remoteDataSource = AuthRemoteDatasource();
     final repository = AuthRepositoryImpl(remoteDataSource);
     signupUseCase = SignupUseCase(repository);
+
+    final profileSource = profileDataSource.AuthRemoteDataSource();
+    final profileRepository = profileRepo.AuthRepositoryImpl(profileSource);
+    profileUsecase = ProfileUsecase(profileRepository);
+
     _initializeData();
   }
 
@@ -77,7 +96,7 @@ class _Personalinfo extends State<Personalinfo> {
     await Future.wait([
       fetchDataProvinsi(),
       fetchDataProvinsiLahir(),
-      loadCountries(),
+      // loadCountries(),
     ]);
 
     _loadData();
@@ -85,12 +104,13 @@ class _Personalinfo extends State<Personalinfo> {
 
   void _loadData() {
     _namaController.text = data.nama;
-    _headLineController.text = data.headline;
-    _deskripsiController.text = data.ringkasan;
-    _emailController.text = data.email;
+    gender = data.jenisKelamin;
+    _headLineController.text = data.headline ?? '';
+    _deskripsiController.text = data.ringkasan ?? '';
+    _linkPortofolioController.text = data.linkPorto!.join(',');
     birthDate = data.tanggalLahir;
 
-    var [dataProv, dataKota, dataAlamat] = data.domisili.split(',');
+    var [dataProv, dataKota, dataAlamat] = data.domisili!.split(',');
     selectedProvinsi = provinsi.firstWhere((p) => p.nama == dataProv);
     if (selectedProvinsi != null) {
       fetchDataKota(selectedProvinsi!.id).then((_) {
@@ -115,73 +135,92 @@ class _Personalinfo extends State<Personalinfo> {
       });
     }
 
-    isVisible = data.isVisible;
-    isPrivate = data.privacy;
+    isVisible = data.isVisible ?? false;
+
+    if (data.cv != null) {
+      cvFileName = data.cv!.split('/').last;
+    }
   }
 
   Future _handleEditProfile() async {
-    // if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    // try {
-    //   // print(_tanggalLahirController.selectedDates);
-    //   // print(selectedProvinsi!.nama);
-    //   // print(selectedKota!.nama);
-    //   DateTime? tanggalLahir = _tanggalLahirController.selectedDate;
-    //   SignupRequestModel data = SignupRequestModel(
-    //     registerAs: "user",
-    //     email: _emailController.text,
-    //     nama: _namaController.text,
-    //     domisili:
-    //         selectedProvinsi!.nama +
-    //         "," +
-    //         selectedKota!.nama +
-    //         "," +
-    //         _alamatController.text,
-    //     tanggalLahir: tanggalLahir!,
-    //     noTelp: selectedCountry!.dialCode + _phoneController.text,
-    //     jenisKelamin: gender,
-    //     tempatLahir:
-    //         selectedProvinsiLahir!.nama + "," + selectedKotaLahir!.nama,
-    //   );
-    //   SignupResponseModel dataRes = await signupUseCase.SignUpAction(data);
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idUser = prefs.getString('idUser');
 
-    //   // if (mounted) {
-    //   //   Navigator.pushReplacement(
-    //   //     context,
-    //   //     MaterialPageRoute(builder: (context) => const Login()),
-    //   //   );
-    //   // }
-    //   if (dataRes.responseMessages == "Sukses") {
-    //     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString("loginAs", "user");
-    //     await prefs.setString("idUser", dataRes.user!.id);
-    //     await prefs.setString("nama", dataRes.user!.nama);
-    //     await prefs.setString("email", dataRes.user!.email);
-    //     await prefs.setString("noTelp", dataRes.user!.noTelp);
-    //     return Navigator.push(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => Layout()),
-    //     );
-    //   } else {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(dataRes.responseMessages),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // } catch (e) {
-    //   debugPrint('Error during signup: $e');
-    //   // Show error message to user
-    //   if (mounted) {
-    //     return ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Signup failed. Please try again.'),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   }
-    // }
+      // Ensure idUser is not null
+      if (idUser == null) throw Exception("User ID not found in preferences");
+
+      List<String> portofolioList = _linkPortofolioController.text.split(',');
+
+      ProfileRequest profile = new ProfileRequest(
+        idUser: idUser,
+        nama: _namaController.text,
+        tanggalLahir: birthDate,
+        tempatLahir:
+            "${selectedProvinsiLahir?.nama},${selectedKotaLahir?.nama}",
+        jenisKelamin: gender,
+        domisili:
+            "${selectedProvinsi?.nama},${selectedKota?.nama},${_alamatController.text}",
+        cv: cvBytes,
+        headline: _headLineController.text,
+        ringkasan: _deskripsiController.text,
+        visibility: isVisible,
+        seekStatus: 1,
+        linkPorto: portofolioList,
+      );
+
+      if (avatarBytes != null) {
+        ProfileRequest avatarUpdate = new ProfileRequest(
+          idUser: idUser,
+          photo: avatarBytes,
+        );
+
+        ProfileResponse responseAvatar = await profileUsecase.editProfileAvatar(
+          avatarUpdate,
+        );
+
+        if (responseAvatar.responseMessage != 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(responseAvatar.responseMessage),
+              backgroundColor: Colors.red,
+            ),
+          );
+
+          return;
+        }
+      }
+
+      ProfileResponse response = await profileUsecase.editProfile(profile);
+      // On success, clear the form or navigate away
+      if (response.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Profile edited successfully!')));
+        context.go('/profile');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to edit profile. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      _formKey.currentState!.reset();
+    } catch (e) {
+      debugPrint('Error during edit profile: $e');
+      // Show error message to user
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Edit profile failed. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _pickTanggalLahir(BuildContext context) async {
@@ -202,6 +241,73 @@ class _Personalinfo extends State<Personalinfo> {
     setState(() {
       gender = genderSelect;
     });
+  }
+
+  Future<void> _pickCVFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowMultiple: false,
+        withData: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        PlatformFile file = result.files.first;
+        Uint8List? bytes;
+
+        // Get bytes (works for both web and mobile)
+        if (file.bytes != null) {
+          bytes = file.bytes;
+        } else if (file.path != null) {
+          bytes = await File(file.path!).readAsBytes();
+        }
+
+        if (file.path != null) {
+          setState(() {
+            cvBytes = bytes;
+            cvFileName = file.name;
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error picking file: $e')));
+    }
+  }
+
+  Future<void> _pickProfileImage() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        withData: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        PlatformFile file = result.files.first;
+        Uint8List? bytes;
+
+        // Get bytes (works for both web and mobile)
+        if (file.bytes != null) {
+          bytes = file.bytes;
+        } else if (file.path != null) {
+          bytes = await File(file.path!).readAsBytes();
+        }
+
+        if (file.path != null) {
+          setState(() {
+            avatarBytes = bytes;
+            avatarFileName = file.name;
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error picking file: $e')));
+    }
   }
 
   Future<List<ProvinsiModel>> fetchDataProvinsi() async {
@@ -353,9 +459,19 @@ class _Personalinfo extends State<Personalinfo> {
                                 CircleAvatar(
                                   radius: 50,
                                   backgroundColor: Colors.white,
-                                  child: const CircleAvatar(
+                                  child: CircleAvatar(
                                     radius: 46,
-                                    //backgroundImage: AssetImage("assets/profile.jpg"),
+                                    backgroundImage: avatarBytes == null
+                                        ? (data.photoURL != null
+                                              ? NetworkImage(data.photoURL!)
+                                              : (data.jenisKelamin == "L"
+                                                    ? AssetImage(
+                                                        'assets/images/male-avatar.png',
+                                                      )
+                                                    : AssetImage(
+                                                        'assets/images/female-avatar.png',
+                                                      )))
+                                        : MemoryImage(avatarBytes!),
                                     backgroundColor: Colors.blueGrey,
                                   ),
                                 ),
@@ -378,15 +494,14 @@ class _Personalinfo extends State<Personalinfo> {
                                       ),
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
-                                      onPressed: () {
-                                        print("Ganti foto profil diklik");
-                                      },
+                                      onPressed: _pickProfileImage,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
+
                           Container(
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
@@ -473,11 +588,11 @@ class _Personalinfo extends State<Personalinfo> {
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: TextFormField(
-                              controller: _emailController,
+                              controller: _linkPortofolioController,
                               decoration: InputDecoration(
-                                labelText: 'Email',
-                                hintText: 'Masukan Email',
-                                prefixIcon: Icon(Icons.email),
+                                labelText: 'Link Portofolio',
+                                hintText: 'Masukan Link portofolio',
+                                prefixIcon: Icon(Icons.link),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                   vertical: 8,
@@ -492,129 +607,173 @@ class _Personalinfo extends State<Personalinfo> {
                             ),
                           ),
 
-                          // SizedBox(width: 90),
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 20),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 8,
                               children: [
-                                Flexible(
-                                  flex: 1,
-                                  // height: 40,
-                                  child: DropdownButtonFormField<Country>(
-                                    value: selectedCountry,
-                                    isExpanded: true,
-                                    hint: Text("Pilih Negara"),
-                                    items: countries.map((country) {
-                                      return DropdownMenuItem<Country>(
-                                        value: country,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              country.flag,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Flexible(
-                                              child: Text(
-                                                country.code,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Flexible(
-                                              child: Text(
-                                                country.dialCode,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedCountry = value;
-                                      });
-                                    },
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 8,
-                                      ),
+                                Text(
+                                  "Jenis Kelamin",
+                                  style: GoogleFonts.figtree(
+                                    textStyle: TextStyle(
+                                      color: Colors.black,
+                                      letterSpacing: 2,
+                                      fontSize: 16,
                                     ),
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                SizedBox(width: 10),
-                                Flexible(
-                                  flex: 2,
-                                  // height: 40,
-                                  child: TextFormField(
-                                    key: ValueKey(selectedCountry?.dialCode),
-                                    controller: _phoneController,
-                                    keyboardType: TextInputType.phone,
-                                    decoration: InputDecoration(
-                                      labelText: 'Nomor Telepon',
-                                      hintText: 'Masukkan nomor telepon Anda',
-                                      border: const OutlineInputBorder(),
-                                      prefixIcon: IntrinsicWidth(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                          ),
-                                          child: Text(
-                                            selectedCountry?.dialCode ?? '+62',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                Wrap(
+                                  spacing: 10,
+                                  children: [
+                                    InputChip(
+                                      label: Text('Laki - Laki'),
+                                      selected: gender == 'L',
+                                      onSelected: (selected) =>
+                                          _changeGender('L'),
+                                      selectedColor: Colors.lightBlue.shade300,
+                                      backgroundColor: Colors.lightBlue.shade50,
+                                      checkmarkColor: Colors.white,
                                     ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Nomor telepon tidak boleh kosong';
-                                      }
-                                      if (!RegExp(
-                                        r'^[0-9]{8,13}$',
-                                      ).hasMatch(value)) {
-                                        return 'Masukkan nomor telepon yang valid';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      // Remove leading zeros as user types
-                                      if (value.startsWith('0')) {
-                                        final newValue = value.replaceFirst(
-                                          RegExp(r'^0+'),
-                                          '',
-                                        );
-                                        _phoneController
-                                            .value = TextEditingValue(
-                                          text: newValue,
-                                          selection: TextSelection.collapsed(
-                                            offset: newValue.length,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
+                                    InputChip(
+                                      label: Text('Perempuan'),
+                                      selected: gender == 'P',
+                                      onSelected: (selected) =>
+                                          _changeGender('P'),
+                                      selectedColor: Colors.lightBlue.shade300,
+                                      backgroundColor: Colors.lightBlue.shade50,
+                                      checkmarkColor: Colors.white,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
+
+                          // SizedBox(width: 90),
+                          // Container(
+                          //   margin: EdgeInsets.symmetric(vertical: 20),
+                          //   child: Row(
+                          //     crossAxisAlignment: CrossAxisAlignment.center,
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Flexible(
+                          //         flex: 1,
+                          //         // height: 40,
+                          //         child: DropdownButtonFormField<Country>(
+                          //           value: selectedCountry,
+                          //           isExpanded: true,
+                          //           hint: Text("Pilih Negara"),
+                          //           items: countries.map((country) {
+                          //             return DropdownMenuItem<Country>(
+                          //               value: country,
+                          //               child: Row(
+                          //                 mainAxisSize: MainAxisSize.min,
+                          //                 children: [
+                          //                   Text(
+                          //                     country.flag,
+                          //                     style: const TextStyle(
+                          //                       fontSize: 16,
+                          //                     ),
+                          //                   ),
+                          //                   const SizedBox(width: 4),
+                          //                   Flexible(
+                          //                     child: Text(
+                          //                       country.code,
+                          //                       style: const TextStyle(
+                          //                         fontSize: 14,
+                          //                       ),
+                          //                       overflow: TextOverflow.ellipsis,
+                          //                     ),
+                          //                   ),
+                          //                   const SizedBox(width: 4),
+                          //                   Flexible(
+                          //                     child: Text(
+                          //                       country.dialCode,
+                          //                       style: const TextStyle(
+                          //                         fontSize: 14,
+                          //                       ),
+                          //                       overflow: TextOverflow.ellipsis,
+                          //                     ),
+                          //                   ),
+                          //                 ],
+                          //               ),
+                          //             );
+                          //           }).toList(),
+                          //           onChanged: (value) {
+                          //             setState(() {
+                          //               selectedCountry = value;
+                          //             });
+                          //           },
+                          //           decoration: InputDecoration(
+                          //             border: OutlineInputBorder(),
+                          //             contentPadding: EdgeInsets.symmetric(
+                          //               horizontal: 12,
+                          //               vertical: 8,
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 10),
+                          //       Flexible(
+                          //         flex: 2,
+                          //         // height: 40,
+                          //         child: TextFormField(
+                          //           key: ValueKey(selectedCountry?.dialCode),
+                          //           controller: _phoneController,
+                          //           keyboardType: TextInputType.phone,
+                          //           decoration: InputDecoration(
+                          //             labelText: 'Nomor Telepon',
+                          //             hintText: 'Masukkan nomor telepon Anda',
+                          //             border: const OutlineInputBorder(),
+                          //             prefixIcon: IntrinsicWidth(
+                          //               child: Container(
+                          //                 alignment: Alignment.center,
+                          //                 padding: const EdgeInsets.symmetric(
+                          //                   horizontal: 8,
+                          //                 ),
+                          //                 child: Text(
+                          //                   selectedCountry?.dialCode ?? '+62',
+                          //                   style: const TextStyle(
+                          //                     fontWeight: FontWeight.bold,
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //           validator: (value) {
+                          //             if (value == null || value.isEmpty) {
+                          //               return 'Nomor telepon tidak boleh kosong';
+                          //             }
+                          //             if (!RegExp(
+                          //               r'^[0-9]{8,13}$',
+                          //             ).hasMatch(value)) {
+                          //               return 'Masukkan nomor telepon yang valid';
+                          //             }
+                          //             return null;
+                          //           },
+                          //           onChanged: (value) {
+                          //             // Remove leading zeros as user types
+                          //             if (value.startsWith('0')) {
+                          //               final newValue = value.replaceFirst(
+                          //                 RegExp(r'^0+'),
+                          //                 '',
+                          //               );
+                          //               _phoneController
+                          //                   .value = TextEditingValue(
+                          //                 text: newValue,
+                          //                 selection: TextSelection.collapsed(
+                          //                   offset: newValue.length,
+                          //                 ),
+                          //               );
+                          //             }
+                          //           },
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
 
                           // SizedBox(height: 90),
                           // Container(
@@ -1119,60 +1278,115 @@ class _Personalinfo extends State<Personalinfo> {
                                     ),
                                   ],
                                 ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 20),
-                                  // height: 90,
-                                  child: TextFormField(
-                                    controller: _alamatController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Alamat Lengkap',
-                                      hintText: 'Masukan Alamat Lengkap',
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.location_pin),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        vertical: 10,
-                                        horizontal: 11,
-                                      ),
+                              ],
+                            ),
+                          ),
+
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            // height: 90,
+                            child: TextFormField(
+                              controller: _alamatController,
+                              decoration: InputDecoration(
+                                labelText: 'Alamat Lengkap',
+                                hintText: 'Masukan Alamat Lengkap',
+                                border: OutlineInputBorder(),
+                                prefixIcon: Icon(Icons.location_pin),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 11,
+                                ),
+                              ),
+                              keyboardType: TextInputType.multiline,
+                              minLines: 3,
+                              maxLines: 5,
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Wajib diisi'
+                                  : null,
+                            ),
+                          ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Upload CV",
+                                  style: GoogleFonts.figtree(
+                                    textStyle: TextStyle(
+                                      color: Colors.black,
+                                      letterSpacing: 2,
+                                      fontSize: 16,
                                     ),
-                                    keyboardType: TextInputType.multiline,
-                                    minLines: 3,
-                                    maxLines: 5,
-                                    validator: (value) =>
-                                        value == null || value.isEmpty
-                                        ? 'Wajib diisi'
-                                        : null,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
-
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: isVisible,
-                                      onChanged: (checked) {
-                                        setState(() {
-                                          isVisible = checked ?? true;
-                                        });
-                                      },
+                                SizedBox(height: 8),
+                                InkWell(
+                                  onTap: _pickCVFile,
+                                  child: Container(
+                                    padding: EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    Text('Visible from HR'),
-                                  ],
-                                ),
-
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: isPrivate,
-                                      onChanged: (checked) {
-                                        setState(() {
-                                          isPrivate = checked ?? true;
-                                        });
-                                      },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.upload_file),
+                                        SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            cvFileName ??
+                                                'Click to select file',
+                                            style: TextStyle(
+                                              color: cvFileName != null
+                                                  ? Colors.black
+                                                  : Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                        if (cvFileName != null)
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.close,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                cvBytes = null;
+                                                cvFileName = null;
+                                              });
+                                            },
+                                          ),
+                                      ],
                                     ),
-                                    Text('Private Profile'),
-                                  ],
+                                  ),
                                 ),
                               ],
                             ),
+                          ),
+
+                          Row(
+                            children: [
+                              Switch(
+                                trackColor:
+                                    const WidgetStateProperty<Color?>.fromMap(
+                                      <WidgetState, Color>{
+                                        WidgetState.selected: Colors.lightBlue,
+                                      },
+                                    ),
+                                value: isVisible,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    isVisible = value;
+                                  });
+                                },
+                              ),
+                              Text('Visible from HR'),
+                            ],
                           ),
 
                           Row(

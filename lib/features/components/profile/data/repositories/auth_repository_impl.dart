@@ -37,6 +37,18 @@ class AuthRepositoryImpl implements AuthRepository {
     return result;
   }
 
+  @override
+  Future<ProfileResponse> editProfileAvatar(ProfileRequest profile) async {
+    final result = await remoteDataSource.profileAvatarEdit(profile);
+    return result;
+  }
+
+  @override
+  Future<ProfileResponse> editProfilePrivacy(ProfileRequest profile) async {
+    final result = await remoteDataSource.profilePrivacyEdit(profile);
+    return result;
+  }
+
   // Certificate
   @override
   Future<List<CertificateModel>?> certificateGetAll(String? name) async {

@@ -20,6 +20,8 @@ import 'package:job_platform/features/components/profile/data/models/workExperie
 abstract class AuthRepository {
   Future<ProfileModel?> profile(String id);
   Future<ProfileResponse> editProfile(ProfileRequest profile);
+  Future<ProfileResponse> editProfileAvatar(ProfileRequest profile);
+  Future<ProfileResponse> editProfilePrivacy(ProfileRequest profile);
   // Certificate
   Future<List<CertificateModel>?> certificateGetAll(String? name);
   Future<CertificateResponse> certificateAdd(CertificateRequest certificate);
