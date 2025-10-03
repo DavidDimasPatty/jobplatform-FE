@@ -115,7 +115,7 @@ class _FormContent extends StatefulWidget {
   const _FormContent(this.email);
 
   @override
-  State<_FormContent> createState() => __FormContentState(this.email);
+  State<_FormContent> createState() => __FormContentState(email);
 }
 
 class __FormContentState extends State<_FormContent> {
@@ -546,10 +546,10 @@ class __FormContentState extends State<_FormContent> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Country Code Dropdown
-        Container(
+        SizedBox(
           width: 150,
           child: DropdownButtonFormField<Country>(
-            initialValue: _selectedCountry,
+            // initialValue: _selectedCountry,
             decoration: const InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.only(

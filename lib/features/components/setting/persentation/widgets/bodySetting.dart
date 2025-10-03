@@ -35,7 +35,7 @@ class bodySetting extends StatelessWidget {
               icons: CupertinoIcons.pencil_outline,
               //iconStyle: IconStyle(),
               title: 'Appearance',
-              subtitle: "Make Ziar'App yours",
+              //subtitle: "",
             ),
             SettingsItem(
               onTap: () {},
