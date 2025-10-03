@@ -13,6 +13,8 @@ import 'package:job_platform/features/components/profile/data/models/profileMode
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/skillResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -128,5 +130,9 @@ class ProfileUsecase {
   // Skill
   Future<List<SkillModel>?> getAllSkill(String? name){
     return repository.skillGetAll(name);
+  }
+
+  Future<SkillResponse> editSkill(SkillRequest skill) {
+    return repository.skillEdit(skill);
   }
 }

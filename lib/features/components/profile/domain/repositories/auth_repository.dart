@@ -13,6 +13,8 @@ import 'package:job_platform/features/components/profile/data/models/profileMode
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/skillResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -34,18 +36,27 @@ abstract class AuthRepository {
   Future<EducationResponse> educationDelete(String id);
   // Work Experience
   Future<List<WorkExperienceModel>?> experienceGetAll(String? name);
-  Future<WorkExperienceResponse> experienceAdd(WorkExperienceRequest experience);
-  Future<WorkExperienceResponse> experienceEdit(WorkExperienceRequest experience);
+  Future<WorkExperienceResponse> experienceAdd(
+    WorkExperienceRequest experience,
+  );
+  Future<WorkExperienceResponse> experienceEdit(
+    WorkExperienceRequest experience,
+  );
   Future<WorkExperienceResponse> experienceDelete(String id);
   // Organization
   Future<List<OrganizationModel>?> organizationGetAll(String? name);
-  Future<OrganizationResponse> organizationAdd(OrganizationRequest organization);
-  Future<OrganizationResponse> organizationEdit(OrganizationRequest organization);
+  Future<OrganizationResponse> organizationAdd(
+    OrganizationRequest organization,
+  );
+  Future<OrganizationResponse> organizationEdit(
+    OrganizationRequest organization,
+  );
   Future<OrganizationResponse> organizationDelete(String id);
   // User Preference
   Future<PreferenceResponse> preferenceAdd(PreferenceRequest preference);
   Future<PreferenceResponse> preferenceEdit(PreferenceRequest preference);
   // Skill
   Future<List<SkillModel>?> skillGetAll(String? name);
+  Future<SkillResponse> skillEdit(SkillRequest skill);
   // Personal Info
 }

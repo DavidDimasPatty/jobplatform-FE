@@ -15,9 +15,9 @@ class SkillMV {
 
   factory SkillMV.fromJson(Map<String, dynamic> json) {
     return SkillMV(
-      json['userSkill']['_id'] as String,
-      json['userSkill']['source'] as String,
-      json['userSkill']['idSource'] as String,
+      json['userSkill']['_id'],
+      json['userSkill']['source'],
+      json['userSkill']['idSource'],
       SkillModel.fromJson(json['skill'])
     );
   }

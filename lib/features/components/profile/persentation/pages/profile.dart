@@ -17,7 +17,6 @@ import 'package:job_platform/features/components/profile/domain/entities/Profile
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
-import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/careerPreference.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/certificate.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/education.dart';

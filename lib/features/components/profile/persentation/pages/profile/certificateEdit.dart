@@ -285,6 +285,19 @@ class _CertificateEditState extends State<CertificateEdit> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading certificate...'),
+          ],
+        ),
+      );
+    }
+    
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Center(
