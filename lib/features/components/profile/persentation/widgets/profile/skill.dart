@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 
 class Skill extends StatefulWidget {
   final List<SkillMV> dataSkills;
-  const Skill({
-    super.key,
-    required this.dataSkills,
-  });
+  const Skill({super.key, required this.dataSkills});
 
   @override
   _SkillState createState() => _SkillState(dataSkills);
@@ -17,20 +15,8 @@ class _SkillState extends State<Skill> {
 
   _SkillState(this.dataSkills);
 
-  void _addSkill() {
-    // Logic to add a new skill
-    print("Add Skill button pressed");
-  }
-
-  void _viewSkillDetails(String title) {
-    // Logic to view skill details
-    print("View details for Skill $title");
-  }
-
   @override
   Widget build(BuildContext context) {
-    int idx = 1;
-
     return Container(
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
@@ -52,7 +38,9 @@ class _SkillState extends State<Skill> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: _addSkill,
+                onPressed: () {
+                  context.go('/edit-skill', extra: dataSkills);
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -60,84 +48,49 @@ class _SkillState extends State<Skill> {
                   backgroundColor: Colors.blue, // Button color
                   foregroundColor: Colors.white, // Icon/text color
                 ),
-                icon: Icon(Icons.add),
-                label: Text("Add"),
+                icon: Icon(Icons.edit),
+                label: Text("Edit"),
               ),
             ],
           ),
           SizedBox(height: 20),
-          for (var entry in dataSkills) ...[
-            SkillCard(
-              idx: idx++,
-              title: entry.skill.nama,
-              onPressed: () => _viewSkillDetails(entry.skill.nama),
-            ),
-            SizedBox(height: 10)
-          ],
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: List<Widget>.generate(dataSkills.length, (int index) {
+              return SkillChip(
+                title: dataSkills[index].skill.nama,
+                source: dataSkills[index].source!,
+              );
+            }).toList(),
+          ),
         ],
       ),
     );
   }
 }
 
-class SkillCard extends StatelessWidget {
-  final int idx;
+class SkillChip extends StatelessWidget {
   final String title;
-  final VoidCallback onPressed;
+  final String source;
 
-  const SkillCard({
-    required this.idx,
-    required this.title,
-    required this.onPressed,
-    Key? key,
-  }) : super(key: key);
+  const SkillChip({required this.title, required this.source, Key? key})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.all(5.0),
-        padding: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Center(
-                child: Text(
-                  idx.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'test',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ],
-        ),
+    return Tooltip(
+      message: source.contains('user') ? source.substring(4) : "General",
+      textStyle: const TextStyle(color: Colors.white, fontSize: 12),
+      decoration: BoxDecoration(
+        color: Colors.black87,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      waitDuration: const Duration(milliseconds: 500),
+      showDuration: const Duration(seconds: 3),
+      child: Chip(
+        label: Text(title),
+        backgroundColor: Colors.lightBlue.shade100,
       ),
     );
   }

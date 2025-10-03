@@ -19,7 +19,10 @@ import 'package:job_platform/features/components/profile/domain/entities/Certifi
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
+import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/personalInfo.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/certificateAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/certificateEdit.dart';
@@ -31,6 +34,7 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/organizationEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceAdd.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/preferenceEdit.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profile/skillEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profileCompany.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profileCompany/personalInfoCompany.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progress.dart';
@@ -67,6 +71,13 @@ final List<GoRoute> _layoutRoutes = [
   ),
   GoRoute(path: '/profile', builder: (context, state) => Profile()),
   GoRoute(path: '/setting', builder: (context, state) => Setting()),
+  GoRoute(
+    path: '/edit-profile',
+    builder: (context, state) {
+      final data = state.extra as Profiledata;
+      return Personalinfo(userProfile: data);
+    },
+  ),
   GoRoute(
     path: '/add-certificate',
     builder: (context, state) => CertificateAdd(),
@@ -109,6 +120,13 @@ final List<GoRoute> _layoutRoutes = [
     builder: (context, state) {
       final data = state.extra as OrganizationMV;
       return OrganizationEdit(organization: data);
+    },
+  ),
+  GoRoute(
+    path: '/edit-skill',
+    builder: (context, state) {
+      final data = state.extra as List<SkillMV>;
+      return SkillEdit(skills: data);
     },
   ),
   GoRoute(

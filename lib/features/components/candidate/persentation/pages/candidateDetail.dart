@@ -244,9 +244,7 @@ class _Candidatedetail extends State<Candidatedetail> {
                         Container(
                           child: Text(
                             //dataUser!.headline,
-                            dataUser?.headline != null
-                                ? dataUser!.headline
-                                : "test",
+                            dataUser?.headline ?? "test",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(

@@ -13,7 +13,11 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
+import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+import 'package:job_platform/features/components/profile/data/models/skillRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/skillResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
@@ -43,6 +47,105 @@ class AuthRemoteDataSource {
     } catch (e) {
       print('Error during get profile: $e');
       return null;
+    }
+  }
+
+  Future<ProfileResponse> profileEdit(ProfileRequest profile) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-personal-info',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(profile.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        ProfileResponse profileResponse = ProfileResponse.fromJson(jsonData);
+        return profileResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return ProfileResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit profile: $e');
+      return ProfileResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<ProfileResponse> profileAvatarEdit(ProfileRequest profile) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-photo',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(profile.toJsonAvatar()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        ProfileResponse profileResponse = ProfileResponse.fromJson(jsonData);
+        return profileResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return ProfileResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit profile: $e');
+      return ProfileResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<ProfileResponse> profilePrivacyEdit(ProfileRequest profile) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-privacy',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(profile.toJsonPrivacy()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        ProfileResponse profileResponse = ProfileResponse.fromJson(jsonData);
+        return profileResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return ProfileResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit profile: $e');
+      return ProfileResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
     }
   }
 
@@ -330,7 +433,9 @@ class AuthRemoteDataSource {
 
         final List<dynamic> orgList = jsonData["data"]["data"];
         data = orgList
-            .map<WorkExperienceModel>((item) => WorkExperienceModel.fromJson(item))
+            .map<WorkExperienceModel>(
+              (item) => WorkExperienceModel.fromJson(item),
+            )
             .toList();
         return data;
       } else {
@@ -682,6 +787,40 @@ class AuthRemoteDataSource {
     } catch (e) {
       print('Error during get all skill data: $e');
       return null;
+    }
+  }
+
+  Future<SkillResponse> skillEdit(SkillRequest skill) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-skill',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(skill.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        SkillResponse skillResponse = SkillResponse.fromJson(jsonData);
+        return skillResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return SkillResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit skills: $e');
+      return SkillResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
     }
   }
 }

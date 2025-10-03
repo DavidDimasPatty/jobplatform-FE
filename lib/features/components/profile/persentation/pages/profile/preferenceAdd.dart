@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
@@ -103,7 +104,7 @@ class _PreferenceAddState extends State<PreferenceAdd> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Preference added successfully!')),
           );
-          Navigator.pop(context, true); // Go back to the previous screen
+          context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -131,6 +132,19 @@ class _PreferenceAddState extends State<PreferenceAdd> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading user preference...'),
+          ],
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Center(

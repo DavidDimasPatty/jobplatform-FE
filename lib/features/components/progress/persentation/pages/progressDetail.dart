@@ -243,10 +243,7 @@ class _Progressdetail extends State<Progressdetail> {
 
                         Container(
                           child: Text(
-                            //dataUser!.headline,
-                            dataUser?.headline != null
-                                ? dataUser!.headline
-                                : "test",
+                            dataUser?.headline ?? '',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(

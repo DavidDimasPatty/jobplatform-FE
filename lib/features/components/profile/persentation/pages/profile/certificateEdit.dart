@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/certificateResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:select2dot1/select2dot1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -37,6 +40,7 @@ class _CertificateEditState extends State<CertificateEdit> {
   final TextEditingController _credentialIdController = TextEditingController();
   final TextEditingController _credentialUrlController =
       TextEditingController();
+  late SelectDataController _selectSkillController;
 
   // Helper variables
   bool _isLoading = false;
@@ -50,6 +54,7 @@ class _CertificateEditState extends State<CertificateEdit> {
   void initState() {
     super.initState();
     _initializeUseCase();
+    _getAllSkill();
     _loadData();
   }
 
@@ -89,6 +94,72 @@ class _CertificateEditState extends State<CertificateEdit> {
     _profileUseCase = ProfileUsecase(repository);
   }
 
+  Future _getAllSkill({String? name = ""}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var data = await _profileUseCase.getAllSkill(name);
+      if (!mounted) return;
+
+      List<SingleItemCategoryModel> skillItem = [];
+
+      if (data != null && data.isNotEmpty) {
+        skillItem = data
+            .map(
+              (skill) => SingleItemCategoryModel(
+                nameSingleItem: skill.nama,
+                value: skill,
+              ),
+            )
+            .toList();
+
+        // Always add "Add new skill" option
+        skillItem.add(
+          SingleItemCategoryModel(
+            nameSingleItem: "+ Add new skill",
+            value: "add_new_skill", // Special identifier
+          ),
+        );
+
+        final skillList = [
+          SingleCategoryModel(singleItemCategoryList: skillItem),
+        ];
+
+        // Find matching items by comparing a unique property
+        var initSelectedItems = this.data.skill.map((userSkill) {
+          return skillItem.firstWhere(
+            (skillItem) => skillItem.value.idSkill == userSkill.idSkill,
+            orElse: () => SingleItemCategoryModel(
+              nameSingleItem: userSkill.nama,
+              value: userSkill,
+            ),
+          );
+        }).toList();
+
+        setState(() {
+          _selectSkillController = SelectDataController(
+            data: skillList,
+            initSelected: initSelectedItems,
+          );
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get skill data. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -116,12 +187,24 @@ class _CertificateEditState extends State<CertificateEdit> {
           );
         }
 
+        // Map selected skills to SkillModel list
+        late List<SkillModel> skill;
+        var selectedList = _selectSkillController.selectedList;
+        if (selectedList.isNotEmpty) {
+          skill = selectedList
+              .where((item) => item.value is SkillModel)
+              .map((item) => item.value as SkillModel)
+              .toList();
+        } else {
+          skill = [];
+        }
+
         CertificateRequest editedCertificate = CertificateRequest(
           idUser: idUser,
           idUserCertificate: data.id,
           certificate: data.certificate,
           deskripsi: _descriptionController.text,
-          skill: data.skill,
+          skill: skill,
           publishDate: DateTime.parse(issueDate),
           expiredDate: _hasExpiredDate ? DateTime.parse(expiryDate) : null,
           code: _credentialIdController.text,
@@ -137,7 +220,7 @@ class _CertificateEditState extends State<CertificateEdit> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Certificate edited successfully!')),
           );
-          Navigator.pop(context, true);
+          context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -177,7 +260,7 @@ class _CertificateEditState extends State<CertificateEdit> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Certificate deleted successfully!')),
         );
-        Navigator.pop(context, true);
+        context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -202,6 +285,19 @@ class _CertificateEditState extends State<CertificateEdit> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading certificate...'),
+          ],
+        ),
+      );
+    }
+    
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Center(
@@ -272,6 +368,11 @@ class _CertificateEditState extends State<CertificateEdit> {
                           }
                           return null;
                         },
+                      ),
+                      buildDropdownField(
+                        'skill-select',
+                        'Skill',
+                        _selectSkillController,
                       ),
                       buildDateField(
                         'Issue Date',
@@ -416,6 +517,23 @@ class _CertificateEditState extends State<CertificateEdit> {
     );
   }
 
+  Widget buildDropdownField(
+    String key,
+    String label,
+    SelectDataController controller, {
+    void Function(dynamic)? onChange,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Select2dot1(
+        key: ValueKey(key),
+        pillboxTitleSettings: PillboxTitleSettings(title: label),
+        selectDataController: controller,
+        onChanged: onChange,
+      ),
+    );
+  }
+
   Widget buildDateField(
     String label,
     TextEditingController controller,
@@ -517,7 +635,11 @@ class _CertificateEditState extends State<CertificateEdit> {
                         children: [
                           Icon(Icons.business, size: 16, color: Colors.grey),
                           SizedBox(width: 8),
-                          Expanded(child: Text(widget.certificate.certificate.publisher)),
+                          Expanded(
+                            child: Text(
+                              widget.certificate.certificate.publisher,
+                            ),
+                          ),
                         ],
                       ),
                     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:ui' as ui;
 import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
@@ -153,7 +154,7 @@ class _EducationalAdd extends State<EducationalAdd> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Education added successfully!')),
           );
-          Navigator.pop(context, true); // Go back to the previous screen
+          context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -311,6 +312,19 @@ class _EducationalAdd extends State<EducationalAdd> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading education...'),
+          ],
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(20),
       child: Center(

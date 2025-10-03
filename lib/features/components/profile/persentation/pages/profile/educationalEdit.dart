@@ -3,10 +3,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
@@ -15,6 +17,7 @@ import 'package:job_platform/features/components/signup/data/models/country.dart
 import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:select2dot1/select2dot1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +43,7 @@ class _EducationalEdit extends State<EducationalEdit> {
   final _tingkatController = TextEditingController();
   final _gpaController = TextEditingController();
   final _namaController = TextEditingController();
+  late SelectDataController _selectSkillController;
 
   // Global key
   final _formKey = GlobalKey<FormState>();
@@ -59,6 +63,7 @@ class _EducationalEdit extends State<EducationalEdit> {
     final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
     _profileUseCase = ProfileUsecase(repository);
+    _getAllSkill();
     _loadData();
   }
 
@@ -109,6 +114,72 @@ class _EducationalEdit extends State<EducationalEdit> {
     }
   }
 
+  Future _getAllSkill({String? name = ""}) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      var data = await _profileUseCase.getAllSkill(name);
+      if (!mounted) return;
+
+      List<SingleItemCategoryModel> skillItem = [];
+
+      if (data != null && data.isNotEmpty) {
+        skillItem = data
+            .map(
+              (skill) => SingleItemCategoryModel(
+                nameSingleItem: skill.nama,
+                value: skill,
+              ),
+            )
+            .toList();
+
+        // Always add "Add new skill" option
+        skillItem.add(
+          SingleItemCategoryModel(
+            nameSingleItem: "+ Add new skill",
+            value: "add_new_skill", // Special identifier
+          ),
+        );
+
+        final skillList = [
+          SingleCategoryModel(singleItemCategoryList: skillItem),
+        ];
+
+        // Find matching items by comparing a unique property
+        var initSelectedItems = this.data.skill.map((userSkill) {
+          return skillItem.firstWhere(
+            (skillItem) => skillItem.value.idSkill == userSkill.idSkill,
+            orElse: () => SingleItemCategoryModel(
+              nameSingleItem: userSkill.nama,
+              value: userSkill,
+            ),
+          );
+        }).toList();
+
+        setState(() {
+          _selectSkillController = SelectDataController(
+            data: skillList,
+            initSelected: initSelectedItems,
+          );
+        });
+      }
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to get skill data. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future _handleEditEducation() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -122,11 +193,23 @@ class _EducationalEdit extends State<EducationalEdit> {
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
 
+        // Map selected skills to SkillModel list
+        late List<SkillModel> skill;
+        var selectedList = _selectSkillController.selectedList;
+        if (selectedList.isNotEmpty) {
+          skill = selectedList
+              .where((item) => item.value is SkillModel)
+              .map((item) => item.value as SkillModel)
+              .toList();
+        } else {
+          skill = [];
+        }
+
         EducationRequest editedEducation = EducationRequest(
           idUser: idUser,
           idUserEducation: data.id,
           education: data.education,
-          skill: data.skill,
+          skill: skill,
           deskripsi: _deskripsiController.text,
           tingkat: _tingkatController.text,
           penjurusan: _penjurusanController.text,
@@ -145,7 +228,7 @@ class _EducationalEdit extends State<EducationalEdit> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Education edited successfully!')),
           );
-          Navigator.pop(context, true); // Go back to the previous screen
+          context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -185,7 +268,7 @@ class _EducationalEdit extends State<EducationalEdit> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Education deleted successfully!')),
         );
-        Navigator.pop(context, true);
+        context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -210,6 +293,19 @@ class _EducationalEdit extends State<EducationalEdit> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading education...'),
+          ],
+        ),
+      );
+    }
+    
     return SingleChildScrollView(
       padding: EdgeInsets.all(20),
       child: Center(
@@ -400,6 +496,18 @@ class _EducationalEdit extends State<EducationalEdit> {
                                   value == null || value.isEmpty
                                   ? 'Wajib diisi'
                                   : null,
+                            ),
+                          ),
+
+                          Container(
+                            // height: 90,
+                            margin: EdgeInsets.symmetric(vertical: 20),
+                            child: Select2dot1(
+                              key: ValueKey('skill_select'),
+                              pillboxTitleSettings: const PillboxTitleSettings(
+                                title: 'Skill',
+                              ),
+                              selectDataController: _selectSkillController,
                             ),
                           ),
 
