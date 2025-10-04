@@ -142,6 +142,7 @@ final List<GoRoute> _layoutRoutes = [
   ),
   GoRoute(path: '/cart', builder: (context, state) => Cart()),
   GoRoute(path: '/chat', builder: (context, state) => Chat()),
+  GoRoute(path: '/chatDetail', builder: (context, state) => ChatDetail()),
   GoRoute(path: '/progress', builder: (context, state) => Progress()),
   GoRoute(
     path: '/progressDetail',
@@ -183,7 +184,7 @@ final List<GoRoute> _layoutRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/login',
   routes: [
     GoRoute(path: '/landing', builder: (context, state) => Landing()),
     GoRoute(path: '/login', builder: (context, state) => Login()),

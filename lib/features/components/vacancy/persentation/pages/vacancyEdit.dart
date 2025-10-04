@@ -157,6 +157,18 @@ class _Vacancyedit extends State<Vacancyedit> {
       padding: EdgeInsets.all(20.0),
       child: Center(
         child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(3, 3),
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
           width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
               ? double.infinity
               : MediaQuery.of(context).size.width * 0.45,
@@ -173,153 +185,156 @@ class _Vacancyedit extends State<Vacancyedit> {
                 rowFlex: 2,
                 child: Form(
                   key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        child: Text(
-                          'Edit Vacancy',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 30,
-                            letterSpacing: 2,
-                            color: Colors.blue,
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            'Edit Vacancy',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 30,
+                              letterSpacing: 2,
+                              color: Colors.blue,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: buildTextField(
-                              'Min Salary Expectation',
-                              _salaryMinController,
-                              Icons.attach_money,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter minimum salary';
-                                } else if (int.tryParse(value) == null) {
-                                  return 'Please enter a valid number';
-                                }
-                                minSalary = int.parse(value);
-                                if (minSalary < 0) {
-                                  return 'Salary cannot be negative';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Text('-'),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: buildTextField(
-                              'Max Salary Expectation',
-                              _salaryMaxController,
-                              Icons.attach_money,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter maximum salary';
-                                } else if (int.tryParse(value) == null) {
-                                  return 'Please enter a valid number';
-                                }
-                                maxSalary = int.parse(value);
-                                if (maxSalary < 0) {
-                                  return 'Salary cannot be negative';
-                                } else if (maxSalary < minSalary) {
-                                  return 'Max salary must be greater than min salary';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      buildTextField(
-                        'Position',
-                        _positionController,
-                        Icons.business,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter position';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildTextField(
-                        'Job Type',
-                        _jobTypeController,
-                        Icons.co_present,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter job type';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildTextField(
-                        'Work System',
-                        _workSystemController,
-                        Icons.access_time,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter work system';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildTextField(
-                        'Location',
-                        _locationController,
-                        Icons.location_on,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter location';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildTextField(
-                        'Career Level',
-                        _careerLevelController,
-                        Icons.trending_up,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter career level';
-                          }
-                          return null;
-                        },
-                      ),
-                      buildDateField(
-                        'Availability',
-                        _availabilityController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter availability';
-                          }
-                          return null;
-                        },
-                        context,
-                        onDateSelected: (date) {
-                          _availabilityController.text = date != null
-                              ? DateFormat('dd MMMM yyyy').format(date)
-                              : '';
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      _isLoading
-                          ? CircularProgressIndicator()
-                          : ElevatedButton.icon(
-                              onPressed: _submitForm,
-                              icon: Icon(Icons.check),
-                              iconAlignment: IconAlignment.end,
-                              label: Text('Submit'),
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue,
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: buildTextField(
+                                'Min Salary Expectation',
+                                _salaryMinController,
+                                Icons.attach_money,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter minimum salary';
+                                  } else if (int.tryParse(value) == null) {
+                                    return 'Please enter a valid number';
+                                  }
+                                  minSalary = int.parse(value);
+                                  if (minSalary < 0) {
+                                    return 'Salary cannot be negative';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
-                    ],
+                            SizedBox(width: 10),
+                            Text('-'),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: buildTextField(
+                                'Max Salary Expectation',
+                                _salaryMaxController,
+                                Icons.attach_money,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter maximum salary';
+                                  } else if (int.tryParse(value) == null) {
+                                    return 'Please enter a valid number';
+                                  }
+                                  maxSalary = int.parse(value);
+                                  if (maxSalary < 0) {
+                                    return 'Salary cannot be negative';
+                                  } else if (maxSalary < minSalary) {
+                                    return 'Max salary must be greater than min salary';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildTextField(
+                          'Position',
+                          _positionController,
+                          Icons.business,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter position';
+                            }
+                            return null;
+                          },
+                        ),
+                        buildTextField(
+                          'Job Type',
+                          _jobTypeController,
+                          Icons.co_present,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter job type';
+                            }
+                            return null;
+                          },
+                        ),
+                        buildTextField(
+                          'Work System',
+                          _workSystemController,
+                          Icons.access_time,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter work system';
+                            }
+                            return null;
+                          },
+                        ),
+                        buildTextField(
+                          'Location',
+                          _locationController,
+                          Icons.location_on,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter location';
+                            }
+                            return null;
+                          },
+                        ),
+                        buildTextField(
+                          'Career Level',
+                          _careerLevelController,
+                          Icons.trending_up,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter career level';
+                            }
+                            return null;
+                          },
+                        ),
+                        buildDateField(
+                          'Availability',
+                          _availabilityController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter availability';
+                            }
+                            return null;
+                          },
+                          context,
+                          onDateSelected: (date) {
+                            _availabilityController.text = date != null
+                                ? DateFormat('dd MMMM yyyy').format(date)
+                                : '';
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        _isLoading
+                            ? CircularProgressIndicator()
+                            : ElevatedButton.icon(
+                                onPressed: _submitForm,
+                                icon: Icon(Icons.check),
+                                iconAlignment: IconAlignment.end,
+                                label: Text('Submit'),
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.blue,
+                                ),
+                              ),
+                      ],
+                    ),
                   ),
                 ),
               ),

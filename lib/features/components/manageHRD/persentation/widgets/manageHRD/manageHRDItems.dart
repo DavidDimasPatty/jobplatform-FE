@@ -36,118 +36,134 @@ class Managehrditems extends StatelessWidget {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
       onTap: () {},
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: ListTile(
-          onTap: onTap,
-          leading: Container(
-            decoration: BoxDecoration(
-              // color: (colorBGIcon != null ? colorBGIcon : Colors.lightBlueAccent),
-              borderRadius: BorderRadius.circular(8),
+      child: Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: Offset(3, 3),
             ),
-            // padding: EdgeInsets.all(5),
-            child: ClipOval(
-              child: Image.asset(
-                "assets/images/BG_Pelamar.png",
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: ListTile(
+            onTap: onTap,
+            leading: Container(
+              decoration: BoxDecoration(
+                // color: (colorBGIcon != null ? colorBGIcon : Colors.lightBlueAccent),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              // padding: EdgeInsets.all(5),
+              child: ClipOval(
+                child: Image.asset(
+                  "assets/images/BG_Pelamar.png",
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          title: Text(
-            title,
-            style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-            maxLines: titleMaxLine,
-            overflow: titleMaxLine != null ? overflow : null,
-          ),
-          subtitle: (subtitle != null
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            subtitle ?? "",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87,
+            title: Text(
+              title,
+              style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
+              maxLines: titleMaxLine,
+              overflow: titleMaxLine != null ? overflow : null,
+            ),
+            subtitle: (subtitle != null
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              subtitle ?? "",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black87,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Flexible(
-                      flex: 3,
-                      child: isSmallScreen
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                // ElevatedButton.icon(
-                                //   style: ElevatedButton.styleFrom(
-                                //     backgroundColor: Colors.blue,
-                                //     foregroundColor: Colors.white,
-                                //     shape: RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.circular(8),
-                                //     ),
-                                //   ),
-                                //   onPressed: () {},
-                                //   label: const Text("See Profile"),
-                                //   icon: const Icon(Icons.visibility),
-                                // ),
-                                const SizedBox(height: 8),
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                      Flexible(
+                        flex: 3,
+                        child: isSmallScreen
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  // ElevatedButton.icon(
+                                  //   style: ElevatedButton.styleFrom(
+                                  //     backgroundColor: Colors.blue,
+                                  //     foregroundColor: Colors.white,
+                                  //     shape: RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.circular(8),
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: () {},
+                                  //   label: const Text("See Profile"),
+                                  //   icon: const Icon(Icons.visibility),
+                                  // ),
+                                  const SizedBox(height: 8),
+                                  ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
+                                    onPressed: () {},
+                                    label: const Text("Delete"),
+                                    icon: const Icon(Icons.delete),
                                   ),
-                                  onPressed: () {},
-                                  label: const Text("Delete"),
-                                  icon: const Icon(Icons.delete),
-                                ),
-                              ],
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // ElevatedButton.icon(
-                                //   style: ElevatedButton.styleFrom(
-                                //     backgroundColor: Colors.blue,
-                                //     foregroundColor: Colors.white,
-                                //     shape: RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.circular(8),
-                                //     ),
-                                //   ),
-                                //   onPressed: () {},
-                                //   label: const Text("See Profile"),
-                                //   icon: const Icon(Icons.visibility),
-                                // ),
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  // ElevatedButton.icon(
+                                  //   style: ElevatedButton.styleFrom(
+                                  //     backgroundColor: Colors.blue,
+                                  //     foregroundColor: Colors.white,
+                                  //     shape: RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.circular(8),
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: () {},
+                                  //   label: const Text("See Profile"),
+                                  //   icon: const Icon(Icons.visibility),
+                                  // ),
+                                  ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
+                                    onPressed: () {},
+                                    label: const Text("Delete"),
+                                    icon: const Icon(Icons.delete),
                                   ),
-                                  onPressed: () {},
-                                  label: const Text("Delete"),
-                                  icon: const Icon(Icons.delete),
-                                ),
-                              ],
-                            ),
-                    ),
-                  ],
-                )
-              : null),
+                                ],
+                              ),
+                      ),
+                    ],
+                  )
+                : null),
+          ),
         ),
       ),
     );

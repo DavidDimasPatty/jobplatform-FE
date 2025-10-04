@@ -134,236 +134,138 @@ class _Progressdetail extends State<Progressdetail> {
       padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 30),
       child: Center(
         child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(3, 3),
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
           width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
               ? double.infinity
               : MediaQuery.of(context).size.width * 0.45,
           alignment: Alignment.center,
-          child: ResponsiveRowColumn(
-            columnCrossAxisAlignment: CrossAxisAlignment.center,
-            rowMainAxisAlignment: MainAxisAlignment.center,
-            columnMainAxisAlignment: MainAxisAlignment.center,
-            rowCrossAxisAlignment: CrossAxisAlignment.center,
-            // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-            //     ? ResponsiveRowColumnType.COLUMN
-            //     : ResponsiveRowColumnType.ROW,
-            layout: ResponsiveRowColumnType.COLUMN,
-            rowSpacing: 100,
-            columnSpacing: 20,
-            children: [
-              ResponsiveRowColumnItem(
-                rowFlex: 2,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      height: 250,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        // image: DecorationImage(
-                        //   image: AssetImage("assets/images/BG_Login.png"),
-                        //   fit: BoxFit.cover,
-                        // ),
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                    Positioned(
-                      right: 10,
-                      top: 0,
-                      child: Container(
-                        // child: IconButton(
-                        //   icon: const Icon(
-                        //     Icons.edit,
-                        //     color: Colors.white,
-                        //     size: 20,
-                        //   ),
-                        //   onPressed: () {
-                        //     // onTabSelected(3);
-                        //   },
-                        // ),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Center(
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundColor: Colors.white,
-                                child: const CircleAvatar(
-                                  radius: 46,
-                                  //backgroundImage: AssetImage("assets/profile.jpg"),
-                                  backgroundColor: Colors.blueGrey,
-                                ),
-                              ),
-
-                              // Positioned(
-                              //   right: 0,
-                              //   bottom: 0,
-                              //   child: Container(
-                              //     height: 30,
-                              //     width: 30,
-                              //     decoration: const BoxDecoration(
-                              //       shape: BoxShape.circle,
-                              //       color: Colors.grey,
-                              //     ),
-                              //     // child: IconButton(
-                              //     //   icon: const Icon(
-                              //     //     Icons.camera_alt,
-                              //     //     color: Colors.white,
-                              //     //     size: 20,
-                              //     //   ),
-                              //     //   padding: EdgeInsets.zero,
-                              //     //   constraints: const BoxConstraints(),
-                              //     //   onPressed: () {
-                              //     //     print("Ganti foto profil diklik");
-                              //     //   },
-                              //     // ),
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        ),
-
-                        Container(
-                          child: Text(
-                            dataUser?.nama != null ? dataUser!.nama : "test",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.ptSerif(
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                letterSpacing: 1,
-                                fontSize: 30,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Container(
-                          child: Text(
-                            dataUser?.headline ?? '',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.ptSerif(
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                //letterSpacing: 2,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              ResponsiveRowColumnItem(
-                child: WorkexperienceProgress(
-                  dataWork: dataWork,
-                  // onAddPressed: () => _navigateAndRefresh('/add-experience'),
-                  // onEditPressed: (experience) => _navigateAndRefresh(
-                  //   '/edit-experience',
-                  //   arguments: experience,
-                  // ),
-                ),
-              ),
-              ResponsiveRowColumnItem(
-                child: OrganizationalProgress(dataOrg: dataOrg),
-              ),
-              ResponsiveRowColumnItem(
-                child: EducationProgress(dataEdu: dataEdu),
-              ),
-              ResponsiveRowColumnItem(
-                child: CertificateProgress(dataCertificates: dataCertificate),
-              ),
-              ResponsiveRowColumnItem(
-                child: SkillProgress(dataSkills: dataSkill),
-              ),
-              ResponsiveRowColumnItem(
-                child: CareerPreferenceProgress(
-                  dataPreferences: dataPreference,
-                ),
-              ),
-              ResponsiveRowColumnItem(
-                child: Container(
-                  //height: 200,
-                  child: Column(
-                    spacing: 40,
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: ResponsiveRowColumn(
+              columnCrossAxisAlignment: CrossAxisAlignment.center,
+              rowMainAxisAlignment: MainAxisAlignment.center,
+              columnMainAxisAlignment: MainAxisAlignment.center,
+              rowCrossAxisAlignment: CrossAxisAlignment.center,
+              // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+              //     ? ResponsiveRowColumnType.COLUMN
+              //     : ResponsiveRowColumnType.ROW,
+              layout: ResponsiveRowColumnType.COLUMN,
+              rowSpacing: 100,
+              columnSpacing: 20,
+              children: [
+                ResponsiveRowColumnItem(
+                  rowFlex: 2,
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: TextStyle(fontSize: 19),
-                          children: [
-                            TextSpan(
-                              text: "Status : ",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "Interview",
-                              style: TextStyle(
-                                color: Colors.yellow,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ],
+                      Container(
+                        height: 250,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          // image: DecorationImage(
+                          //   image: AssetImage("assets/images/BG_Login.png"),
+                          //   fit: BoxFit.cover,
+                          // ),
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.blueAccent,
                         ),
                       ),
-
-                      Row(
-                        spacing: 40,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      Positioned(
+                        right: 10,
+                        top: 0,
+                        child: Container(
+                          // child: IconButton(
+                          //   icon: const Icon(
+                          //     Icons.edit,
+                          //     color: Colors.white,
+                          //     size: 20,
+                          //   ),
+                          //   onPressed: () {
+                          //     // onTabSelected(3);
+                          //   },
+                          // ),
+                        ),
+                      ),
+                      Column(
                         children: [
-                          Flexible(
-                            flex: 4,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                          Center(
+                            child: Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.white,
+                                  child: const CircleAvatar(
+                                    radius: 46,
+                                    //backgroundImage: AssetImage("assets/profile.jpg"),
+                                    backgroundColor: Colors.blueGrey,
+                                  ),
                                 ),
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                                minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.4,
-                                  60,
-                                ),
-                                // padding: EdgeInsets.symmetric(
-                                //   vertical: 16,
-                                //   horizontal: 14,
+
+                                // Positioned(
+                                //   right: 0,
+                                //   bottom: 0,
+                                //   child: Container(
+                                //     height: 30,
+                                //     width: 30,
+                                //     decoration: const BoxDecoration(
+                                //       shape: BoxShape.circle,
+                                //       color: Colors.grey,
+                                //     ),
+                                //     // child: IconButton(
+                                //     //   icon: const Icon(
+                                //     //     Icons.camera_alt,
+                                //     //     color: Colors.white,
+                                //     //     size: 20,
+                                //     //   ),
+                                //     //   padding: EdgeInsets.zero,
+                                //     //   constraints: const BoxConstraints(),
+                                //     //   onPressed: () {
+                                //     //     print("Ganti foto profil diklik");
+                                //     //   },
+                                //     // ),
+                                //   ),
                                 // ),
-                              ),
-                              icon: Icon(Icons.check),
-                              label: Text("Accept (Offering)"),
+                              ],
                             ),
                           ),
-                          Flexible(
-                            flex: 4,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+
+                          Container(
+                            child: Text(
+                              dataUser?.nama != null ? dataUser!.nama : "test",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.ptSerif(
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  letterSpacing: 1,
+                                  fontSize: 30,
                                 ),
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
-                                minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.4,
-                                  60,
-                                ),
-                                // padding: EdgeInsets.symmetric(
-                                //   vertical: 16,
-                                //   horizontal: 14,
-                                // ),
                               ),
-                              icon: Icon(Icons.close),
-                              label: Text("Reject"),
+                            ),
+                          ),
+
+                          Container(
+                            child: Text(
+                              dataUser?.headline ?? '',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.ptSerif(
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  //letterSpacing: 2,
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -371,8 +273,121 @@ class _Progressdetail extends State<Progressdetail> {
                     ],
                   ),
                 ),
-              ),
-            ],
+                ResponsiveRowColumnItem(
+                  child: WorkexperienceProgress(
+                    dataWork: dataWork,
+                    // onAddPressed: () => _navigateAndRefresh('/add-experience'),
+                    // onEditPressed: (experience) => _navigateAndRefresh(
+                    //   '/edit-experience',
+                    //   arguments: experience,
+                    // ),
+                  ),
+                ),
+                ResponsiveRowColumnItem(
+                  child: OrganizationalProgress(dataOrg: dataOrg),
+                ),
+                ResponsiveRowColumnItem(
+                  child: EducationProgress(dataEdu: dataEdu),
+                ),
+                ResponsiveRowColumnItem(
+                  child: CertificateProgress(dataCertificates: dataCertificate),
+                ),
+                ResponsiveRowColumnItem(
+                  child: SkillProgress(dataSkills: dataSkill),
+                ),
+                ResponsiveRowColumnItem(
+                  child: CareerPreferenceProgress(
+                    dataPreferences: dataPreference,
+                  ),
+                ),
+                ResponsiveRowColumnItem(
+                  child: Container(
+                    //height: 200,
+                    child: Column(
+                      spacing: 40,
+                      children: [
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            style: TextStyle(fontSize: 19),
+                            children: [
+                              TextSpan(
+                                text: "Status : ",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "Interview",
+                                style: TextStyle(
+                                  color: Colors.yellow,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Row(
+                          spacing: 40,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Flexible(
+                              flex: 4,
+                              child: ElevatedButton.icon(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    60,
+                                  ),
+                                  // padding: EdgeInsets.symmetric(
+                                  //   vertical: 16,
+                                  //   horizontal: 14,
+                                  // ),
+                                ),
+                                icon: Icon(Icons.check),
+                                label: Text("Accept (Offering)"),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 4,
+                              child: ElevatedButton.icon(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    60,
+                                  ),
+                                  // padding: EdgeInsets.symmetric(
+                                  //   vertical: 16,
+                                  //   horizontal: 14,
+                                  // ),
+                                ),
+                                icon: Icon(Icons.close),
+                                label: Text("Reject"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

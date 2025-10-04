@@ -135,157 +135,94 @@ class _Statusjobdetail extends State<Statusjobdetail> {
       padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 30),
       child: Center(
         child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(3, 3),
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
           width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
               ? double.infinity
               : MediaQuery.of(context).size.width * 0.45,
           alignment: Alignment.center,
-          child: ResponsiveRowColumn(
-            columnCrossAxisAlignment: CrossAxisAlignment.center,
-            rowMainAxisAlignment: MainAxisAlignment.center,
-            columnMainAxisAlignment: MainAxisAlignment.center,
-            rowCrossAxisAlignment: CrossAxisAlignment.center,
-            // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-            //     ? ResponsiveRowColumnType.COLUMN
-            //     : ResponsiveRowColumnType.ROW,
-            layout: ResponsiveRowColumnType.COLUMN,
-            rowSpacing: 100,
-            columnSpacing: 20,
-            children: [
-              ResponsiveRowColumnItem(
-                rowFlex: 2,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      height: 250,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                    Positioned(right: 10, top: 0, child: Container()),
-                    Column(
-                      children: [
-                        Center(
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundColor: Colors.white,
-                                child: const CircleAvatar(
-                                  radius: 46,
-                                  //backgroundImage: AssetImage("assets/profile.jpg"),
-                                  backgroundColor: Colors.blueGrey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Container(
-                          child: Text(
-                            dataUser?.nama != null ? dataUser!.nama : "test",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.ptSerif(
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                letterSpacing: 1,
-                                fontSize: 30,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Container(
-                          child: Text(
-                            dataUser?.headline ?? '',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.ptSerif(
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                //letterSpacing: 2,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              ResponsiveRowColumnItem(
-                child: statusJobDetailMore(dataPreferences: dataPreference),
-              ),
-
-              ResponsiveRowColumnItem(
-                child: Container(
-                  child: Column(
-                    spacing: 40,
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: ResponsiveRowColumn(
+              columnCrossAxisAlignment: CrossAxisAlignment.center,
+              rowMainAxisAlignment: MainAxisAlignment.center,
+              columnMainAxisAlignment: MainAxisAlignment.center,
+              rowCrossAxisAlignment: CrossAxisAlignment.center,
+              // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+              //     ? ResponsiveRowColumnType.COLUMN
+              //     : ResponsiveRowColumnType.ROW,
+              layout: ResponsiveRowColumnType.COLUMN,
+              rowSpacing: 100,
+              columnSpacing: 20,
+              children: [
+                ResponsiveRowColumnItem(
+                  rowFlex: 2,
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      Row(
-                        spacing: 40,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      Container(
+                        height: 250,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                      Positioned(right: 10, top: 0, child: Container()),
+                      Column(
                         children: [
-                          Flexible(
-                            flex: 3,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                          Center(
+                            child: Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.white,
+                                  child: const CircleAvatar(
+                                    radius: 46,
+                                    //backgroundImage: AssetImage("assets/profile.jpg"),
+                                    backgroundColor: Colors.blueGrey,
+                                  ),
                                 ),
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                                minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.4,
-                                  60,
-                                ),
-                              ),
-                              icon: Icon(Icons.check),
-                              label: Text("Accept"),
+                              ],
                             ),
                           ),
-                          Flexible(
-                            flex: 3,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
-                                minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.4,
-                                  60,
+
+                          Container(
+                            child: Text(
+                              dataUser?.nama != null ? dataUser!.nama : "test",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.ptSerif(
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  letterSpacing: 1,
+                                  fontSize: 30,
                                 ),
                               ),
-                              icon: Icon(Icons.close),
-                              label: Text("Reject"),
                             ),
                           ),
-                          Flexible(
-                            flex: 4,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                                minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.4,
-                                  60,
+
+                          Container(
+                            child: Text(
+                              dataUser?.headline ?? '',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.ptSerif(
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  //letterSpacing: 2,
+                                  fontSize: 20,
                                 ),
                               ),
-                              icon: Icon(Icons.chat),
-                              label: Text("Chat"),
                             ),
                           ),
                         ],
@@ -293,8 +230,86 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                     ],
                   ),
                 ),
-              ),
-            ],
+
+                ResponsiveRowColumnItem(
+                  child: statusJobDetailMore(dataPreferences: dataPreference),
+                ),
+
+                ResponsiveRowColumnItem(
+                  child: Container(
+                    child: Column(
+                      spacing: 40,
+                      children: [
+                        Row(
+                          spacing: 40,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: ElevatedButton.icon(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    60,
+                                  ),
+                                ),
+                                icon: Icon(Icons.check),
+                                label: Text("Accept"),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: ElevatedButton.icon(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    60,
+                                  ),
+                                ),
+                                icon: Icon(Icons.close),
+                                label: Text("Reject"),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 4,
+                              child: ElevatedButton.icon(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    60,
+                                  ),
+                                ),
+                                icon: Icon(Icons.chat),
+                                label: Text("Chat"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

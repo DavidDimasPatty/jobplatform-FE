@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Chatitems extends StatefulWidget {
   final String photoUrl;
@@ -19,7 +20,9 @@ class _Chatitems extends State<Chatitems> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.go("/chatDetail");
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(
