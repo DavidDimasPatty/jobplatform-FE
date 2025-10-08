@@ -41,14 +41,13 @@ class _CompanyWaiting extends State<CompanyWaiting> {
   }
 
   int stepsChange() {
-    if (stage == "Pending Survey" ||
-        stage == "Belum ada proses survey/approval") {
+    if (stage == "Pending Survey") {
       stepsImpl = 0;
     } else if (stage == "Process Survey") {
       stepsImpl = 1;
-    } else if (stage == "Accept") {
+    } else if (stage == "Pending Admin") {
       stepsImpl = 2;
-    } else if (stage == "Accept Admin") {
+    } else if (stage == "Accept") {
       stepsImpl = 3;
     }
     return stepsImpl;

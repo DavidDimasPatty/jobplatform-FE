@@ -4,6 +4,7 @@ import 'package:job_platform/features/shared/Notification/Notification.dart';
 import 'package:job_platform/features/shared/Notification/NotificationItem.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
 import 'package:job_platform/features/shared/bottomAppLayout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Layout extends StatefulWidget {
   final Widget child;
@@ -17,6 +18,16 @@ class _LayoutState extends State<Layout> {
   int selectedIndex = 0;
   bool _showNotification = false;
   List<Notificationitem>? dataNotif;
+  String? loginAs;
+  String? idUser;
+  String? namaUser;
+  String? emailUser;
+  String? noTelpUser;
+
+  String? idCompany;
+  String? namaCompany;
+  String? domainCompany;
+  String? noTelpCompany;
 
   toggleNotification() {
     setState(() {
@@ -35,6 +46,7 @@ class _LayoutState extends State<Layout> {
     '/progress',
     '/vacancy',
     '/manageHRD',
+    '/profileCompany',
   ];
 
   void _onTabSelected(int index) {
@@ -44,9 +56,28 @@ class _LayoutState extends State<Layout> {
     // }
   }
 
+  void getDataPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      loginAs = prefs.getString('loginAs');
+    });
+    if (loginAs == "user") {
+      idUser = prefs.getString('idUser');
+      namaUser = prefs.getString('nama');
+      emailUser = prefs.getString('email');
+      noTelpUser = prefs.getString('noTelp');
+    } else if (loginAs == "company") {
+      idCompany = prefs.getString('idCompany');
+      namaCompany = prefs.getString('nama');
+      domainCompany = prefs.getString('domain');
+      noTelpCompany = prefs.getString('noTelp');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getDataPref();
     dataNotif = [
       Notificationitem(
         icon: Icons.warning,
@@ -98,6 +129,7 @@ class _LayoutState extends State<Layout> {
             bottomNavigationBar: BottomApplayout(
               currentIndex: selectedIndex,
               onTabSelected: _onTabSelected,
+              loginAs: loginAs!,
             ),
           ),
 

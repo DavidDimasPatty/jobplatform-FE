@@ -125,15 +125,30 @@ class _Chat extends State<Chat> {
       padding: EdgeInsets.only(left: 10, right: 10, top: 10),
       child: Center(
         child: Container(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height * 0.8,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(3, 3),
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
           width: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
               ? double.infinity
               : MediaQuery.of(context).size.width * 0.45,
-          alignment: Alignment.center,
+          //alignment: Alignment.center,
           child: ResponsiveRowColumn(
-            columnCrossAxisAlignment: CrossAxisAlignment.center,
-            rowMainAxisAlignment: MainAxisAlignment.center,
-            columnMainAxisAlignment: MainAxisAlignment.center,
-            rowCrossAxisAlignment: CrossAxisAlignment.center,
+            columnCrossAxisAlignment: CrossAxisAlignment.start,
+            rowMainAxisAlignment: MainAxisAlignment.start,
+            columnMainAxisAlignment: MainAxisAlignment.start,
+            rowCrossAxisAlignment: CrossAxisAlignment.start,
             // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
             //     ? ResponsiveRowColumnType.COLUMN
             //     : ResponsiveRowColumnType.ROW,

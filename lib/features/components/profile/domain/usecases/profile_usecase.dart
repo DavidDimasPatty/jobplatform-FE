@@ -9,6 +9,7 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/profileCompanyRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
@@ -18,6 +19,8 @@ import 'package:job_platform/features/components/profile/data/models/skillRespon
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profileCompany.dart';
 
 import '../repositories/auth_repository.dart';
 
@@ -30,20 +33,30 @@ class ProfileUsecase {
     return repository.profile(id);
   }
 
-  Future<ProfileResponse> editProfile(ProfileRequest profile){
+  Future<ProfileCompanydata?> getProfileCompany(String id) {
+    return repository.profileCompany(id);
+  }
+
+  Future<ProfileResponse> editProfile(ProfileRequest profile) {
     return repository.editProfile(profile);
   }
 
-  Future<ProfileResponse> editProfileAvatar(ProfileRequest profile){
+  Future<ProfileResponse> editProfileAvatar(ProfileRequest profile) {
     return repository.editProfileAvatar(profile);
   }
 
-  Future<ProfileResponse> editProfilePrivacy(ProfileRequest profile){
+  Future<ProfileResponse> editProfileAvatarCompany(
+    ProfileCompanyRequest profile,
+  ) {
+    return repository.editProfileAvatarCompany(profile);
+  }
+
+  Future<ProfileResponse> editProfilePrivacy(ProfileRequest profile) {
     return repository.editProfilePrivacy(profile);
   }
 
   // Certificate
-  Future<List<CertificateModel>?> getAllCertificate(String? name){
+  Future<List<CertificateModel>?> getAllCertificate(String? name) {
     return repository.certificateGetAll(name);
   }
 
@@ -60,7 +73,7 @@ class ProfileUsecase {
   }
 
   // Education
-  Future<List<EducationModel>?> getAllEducation(String? name){
+  Future<List<EducationModel>?> getAllEducation(String? name) {
     return repository.educationGetAll(name);
   }
 
@@ -77,7 +90,7 @@ class ProfileUsecase {
   }
 
   // Work Experience
-  Future<List<WorkExperienceModel>?> getAllExperience(String? name){
+  Future<List<WorkExperienceModel>?> getAllExperience(String? name) {
     return repository.experienceGetAll(name);
   }
 
@@ -98,7 +111,7 @@ class ProfileUsecase {
   }
 
   // Organization
-  Future<List<OrganizationModel>?> getAllOrganization(String? name){
+  Future<List<OrganizationModel>?> getAllOrganization(String? name) {
     return repository.organizationGetAll(name);
   }
 
@@ -128,7 +141,7 @@ class ProfileUsecase {
   }
 
   // Skill
-  Future<List<SkillModel>?> getAllSkill(String? name){
+  Future<List<SkillModel>?> getAllSkill(String? name) {
     return repository.skillGetAll(name);
   }
 

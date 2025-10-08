@@ -18,9 +18,20 @@ class _Cartbody extends State<Cartbody> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20),
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.8,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: Offset(3, 3),
+          ),
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -57,10 +68,10 @@ class _Cartbody extends State<Cartbody> {
                   value == null || value.isEmpty ? 'Wajib diisi' : null,
             ),
           ),
-          ListView.builder(
-            // separatorBuilder: (context, index) {
-            //   return Divider();
-            // },
+          ListView.separated(
+            separatorBuilder: (context, index) {
+              return Divider();
+            },
             itemCount: widget.items.length,
             itemBuilder: (BuildContext context, int index) {
               return widget.items[index];

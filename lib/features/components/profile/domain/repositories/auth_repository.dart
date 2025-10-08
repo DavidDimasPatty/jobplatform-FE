@@ -9,6 +9,7 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/profileCompanyRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
@@ -18,11 +19,17 @@ import 'package:job_platform/features/components/profile/data/models/skillRespon
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
+import 'package:job_platform/features/components/profile/persentation/pages/profileCompany.dart';
 
 abstract class AuthRepository {
   Future<ProfileModel?> profile(String id);
+  Future<ProfileCompanydata?> profileCompany(String id);
   Future<ProfileResponse> editProfile(ProfileRequest profile);
   Future<ProfileResponse> editProfileAvatar(ProfileRequest profile);
+  Future<ProfileResponse> editProfileAvatarCompany(
+    ProfileCompanyRequest profile,
+  );
   Future<ProfileResponse> editProfilePrivacy(ProfileRequest profile);
   // Certificate
   Future<List<CertificateModel>?> certificateGetAll(String? name);

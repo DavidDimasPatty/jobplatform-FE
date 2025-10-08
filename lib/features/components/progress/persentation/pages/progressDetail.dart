@@ -39,7 +39,8 @@ class _Progressdetail extends State<Progressdetail> {
   bool isLoading = true;
   String? errorMessage;
   String? lowonganSelected;
-
+  int stepsImpl = 0;
+  List<String> steps = [];
   // Usecase
   late ProfileUsecase _profileUseCase;
 
@@ -48,6 +49,7 @@ class _Progressdetail extends State<Progressdetail> {
     super.initState();
     _initializeUseCase();
     _loadProfileData();
+    steps = ["Review", "Interview", "Offering", "Close"];
   }
 
   void _initializeUseCase() {
@@ -306,27 +308,179 @@ class _Progressdetail extends State<Progressdetail> {
                     child: Column(
                       spacing: 40,
                       children: [
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style: TextStyle(fontSize: 19),
-                            children: [
-                              TextSpan(
-                                text: "Status : ",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            bool isMobile = ResponsiveBreakpoints.of(
+                              context,
+                            ).smallerThan(TABLET);
+                            if (!isMobile) {
+                              return SizedBox(
+                                width: 800,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(20),
+                                      child: Text(
+                                        "Proses Rekrutment",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.davidLibre(
+                                          textStyle: TextStyle(
+                                            color: Colors.blue,
+                                            letterSpacing: 2,
+                                            fontSize: 25,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: List.generate(
+                                        steps.length * 2 - 1,
+                                        (index) {
+                                          if (index.isEven) {
+                                            int stepIndex = index ~/ 2;
+                                            return Container(
+                                              margin: EdgeInsets.only(top: 60),
+                                              child: Column(
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 25,
+                                                    backgroundColor:
+                                                        stepsImpl >= stepIndex
+                                                        ? Colors.blue
+                                                        : Colors.grey.shade200,
+                                                    child: Text(
+                                                      "${stepIndex + 1}",
+                                                      style: TextStyle(
+                                                        color:
+                                                            stepsImpl >=
+                                                                stepIndex
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: 100,
+                                                    height: 60,
+                                                    margin: EdgeInsets.only(
+                                                      top: 10,
+                                                    ),
+                                                    child: Text(
+                                                      steps[stepIndex],
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: GoogleFonts.ptSerif(
+                                                        textStyle: TextStyle(
+                                                          color:
+                                                              stepsImpl >=
+                                                                  stepIndex
+                                                              ? Colors.blue
+                                                              : Colors
+                                                                    .grey
+                                                                    .shade600,
+                                                          letterSpacing: 1,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            int stepIndex = index ~/ 2;
+                                            return Expanded(
+                                              child: Container(
+                                                height: 2,
+                                                color: stepsImpl >= stepIndex
+                                                    ? Colors.blue
+                                                    : Colors.grey.shade600,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              TextSpan(
-                                text: "Interview",
-                                style: TextStyle(
-                                  color: Colors.yellow,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
+                              );
+                            } else {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(20),
+                                    child: Text(
+                                      "Proses Rekrutment",
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.davidLibre(
+                                        textStyle: TextStyle(
+                                          color: Colors.blue,
+                                          letterSpacing: 2,
+                                          fontSize: 25,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: GridView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            crossAxisSpacing: 20,
+                                            mainAxisSpacing: 20,
+                                            childAspectRatio: 1,
+                                          ),
+                                      itemCount: steps.length,
+                                      itemBuilder: (context, index) {
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 25,
+                                              backgroundColor:
+                                                  stepsImpl >= index
+                                                  ? Colors.blue
+                                                  : Colors.grey.shade200,
+                                              child: Text(
+                                                "${index + 1}",
+                                                style: TextStyle(
+                                                  color: stepsImpl >= index
+                                                      ? Colors.white
+                                                      : Colors.blue,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              steps[index],
+                                              textAlign: TextAlign.center,
+                                              style: GoogleFonts.ptSerif(
+                                                textStyle: TextStyle(
+                                                  color: stepsImpl >= index
+                                                      ? Colors.blue
+                                                      : Colors.grey.shade600,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
 
                         Row(

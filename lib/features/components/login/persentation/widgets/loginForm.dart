@@ -108,38 +108,25 @@ class _LoginFormState extends State<LoginForm> {
               }
               return context.go("/home");
             } else if (data.collection == "companies") {
-              if (data.progress!.stage! == "Accept") {
-                if (data.progress!.lastAdmin!.status == "Accept") {
-                  await prefs.setString("loginAs", "company");
-                  await prefs.setString("idCompany", data.company!.id!);
-                  await prefs.setString("nama", data.company!.nama!);
-                  await prefs.setString("domain", data.company!.email!);
-                  await prefs.setString("noTelp", data.company!.noTelp!);
-                  return context.go("/home");
-                } else if (data.progress!.lastAdmin!.status == "Reject") {
-                  String? alasan = data.progress!.lastAdmin!.alasanReject;
-                  return ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Pendaftaran Perusahaan Gagal. Alasan: $alasan, Mohon Mencoba Pendaftaran Kembali Besok!',
-                      ),
-                      backgroundColor: Colors.red,
+              if (data.progress == null) {
+                await prefs.setString("loginAs", "company");
+                await prefs.setString("idCompany", data.company!.id!);
+                await prefs.setString("nama", data.company!.nama!);
+                await prefs.setString("domain", data.company!.email!);
+                await prefs.setString("noTelp", data.company!.noTelp!);
+                return context.go("/homeCompany");
+              } else if (data.progress!.lastAdmin!.status ==
+                  "Reject oleh Admin") {
+                String? alasan = data.progress!.lastAdmin!.alasanReject;
+                return ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Pendaftaran Perusahaan Gagal. Alasan: $alasan, Mohon Mencoba Pendaftaran Kembali Besok!',
                     ),
-                  );
-                } else {
-                  return Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CompanyWaiting(
-                        data.progress!.stage!,
-                        data.company!.id!,
-                        data.company!.nama!,
-                      ),
-                    ),
-                  );
-                }
-              }
-              if (data.progress!.stage! == "Reject oleh Surveyer") {
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              } else if (data.progress!.stage! == "Reject oleh Surveyer") {
                 String? alasan = data.progress!.lastSurvey!.alasanReject;
                 return ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

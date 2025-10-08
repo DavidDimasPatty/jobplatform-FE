@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/signup/data/models/country.dart';
 
@@ -14,7 +15,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class Personalinfocompany extends StatefulWidget {
-  Personalinfocompany({super.key});
+  ProfileCompanydata dataCompany;
+  Personalinfocompany({super.key, required this.dataCompany});
 
   @override
   State<Personalinfocompany> createState() => _Personalinfocompany();
@@ -145,34 +147,6 @@ class _Personalinfocompany extends State<Personalinfocompany> {
     }
   }
 
-  Future<List<ProvinsiModel>> fetchDataProvinsiLahir() async {
-    final result = await signupUseCase.getProvinsi();
-    setState(() {
-      provinsiLahir = result;
-      isLoadingProvinsiLahir = false;
-    });
-    return provinsiLahir;
-  }
-
-  Future<List<KotaModel>> fetchDataKotaLahir(String provinceCode) async {
-    setState(() {
-      kotaLahir = [];
-      isLoadingKotaLahir = true;
-    });
-
-    try {
-      final result = await signupUseCase.getKota(provinceCode);
-      setState(() {
-        kotaLahir = result;
-        isLoadingKotaLahir = false;
-      });
-      return kotaLahir;
-    } catch (e, st) {
-      debugPrint('Error fetchDataKota: $e\n$st');
-      return kotaLahir;
-    }
-  }
-
   Future<List<Country>> loadCountries() async {
     try {
       final jsonString = await rootBundle.loadString(
@@ -209,11 +183,16 @@ class _Personalinfocompany extends State<Personalinfocompany> {
     final repository = AuthRepositoryImpl(remoteDataSource);
     signupUseCase = SignupUseCase(repository);
     fetchDataProvinsi();
-    fetchDataProvinsiLahir();
     loadCountries();
-    // _emailController.text = email!;
-    // _namaController.text = name!;
-    // _phoneController.text = "";
+
+    _emailController.text = widget.dataCompany.email!;
+    _namaController.text = widget.dataCompany.nama!;
+    _alamatController.text = widget.dataCompany.alamat!.split(', ')[0];
+    _phoneController.text = widget.dataCompany.noTelp!.substring(
+      3,
+      widget.dataCompany.noTelp!.length,
+    );
+    _deskripsiController.text = widget.dataCompany.deskripsi!;
   }
 
   @override
@@ -259,47 +238,6 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                             ),
                           ),
 
-                          Center(
-                            child: Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.white,
-                                  child: const CircleAvatar(
-                                    radius: 46,
-                                    //backgroundImage: AssetImage("assets/profile.jpg"),
-                                    backgroundColor: Colors.blueGrey,
-                                  ),
-                                ),
-
-                                Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    height: 30,
-                                    width: 30,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey,
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.camera_alt,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(),
-                                      onPressed: () {
-                                        print("Ganti foto profil diklik");
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                           Container(
                             // height: 90,
                             margin: EdgeInsets.symmetric(vertical: 20),

@@ -12,6 +12,7 @@ import 'package:job_platform/features/components/setting/persentation/widgets/se
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:intl/intl.dart';
 
 class Candidate extends StatefulWidget {
   Candidate({super.key});
@@ -26,6 +27,21 @@ class _Candidate extends State<Candidate> {
   String searchQuery = "";
   String? selectedRole;
   final searchController = TextEditingController();
+  // Controllers for form fields
+  final TextEditingController _salaryMinController = TextEditingController();
+  final TextEditingController _salaryMaxController = TextEditingController();
+  final TextEditingController _positionController = TextEditingController();
+  final TextEditingController _jobTypeController = TextEditingController();
+  final TextEditingController _workSystemController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _careerLevelController = TextEditingController();
+  final TextEditingController _availabilityController = TextEditingController();
+
+  // Helper variables
+  bool _isLoading = false;
+  int minSalary = 0;
+  int maxSalary = 0;
+
   // Loading state
   bool isLoading = true;
   String? errorMessage;
@@ -163,6 +179,69 @@ class _Candidate extends State<Candidate> {
     }
   }
 
+  Widget buildTextField(
+    String label,
+    TextEditingController controller,
+    IconData prefixIcon, {
+    int maxLines = 1,
+    required String? Function(String?) validator,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        maxLines: maxLines,
+        controller: controller,
+        decoration: InputDecoration(
+          prefixIcon: Icon(prefixIcon),
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        validator: validator,
+      ),
+    );
+  }
+
+  Widget buildDateField(
+    String label,
+    TextEditingController controller,
+    BuildContext context, {
+    required String? Function(String?) validator,
+    bool enabled = true,
+    DateTime? firstDate,
+    void Function(DateTime?)? onDateSelected,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        readOnly: true,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          prefixIcon: Icon(Icons.calendar_today),
+        ),
+        validator: validator,
+        onTap: enabled
+            ? () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: firstDate ?? DateTime.now(),
+                  firstDate: firstDate ?? DateTime(1900),
+                  lastDate: DateTime(2100),
+                );
+                if (pickedDate != null) {
+                  controller.text = DateFormat(
+                    'dd MMMM yyyy',
+                  ).format(pickedDate);
+                  if (onDateSelected != null) onDateSelected(pickedDate);
+                }
+              }
+            : null,
+      ),
+    );
+  }
+
   void _applyFilter() {
     setState(() {
       if ((searchQuery.isEmpty || searchQuery.trim().isEmpty) &&
@@ -189,6 +268,7 @@ class _Candidate extends State<Candidate> {
 
   void _openFilterPopup() async {
     final result = await showModalBottomSheet<String?>(
+      backgroundColor: Colors.white,
       context: context,
       builder: (context) {
         String? tempSelectedRole = selectedRole;
@@ -196,49 +276,249 @@ class _Candidate extends State<Candidate> {
         return StatefulBuilder(
           builder: (context, setStateSheet) => Container(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Filter by Role",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 12),
-                RadioListTile<String>(
-                  title: const Text("All"),
-                  value: "",
-                  groupValue: tempSelectedRole ?? "",
-                  onChanged: (value) {
-                    setStateSheet(
-                      () => tempSelectedRole = value == "" ? null : value,
-                    );
-                  },
-                ),
-                RadioListTile<String>(
-                  title: const Text("Developer"),
-                  value: "Developer",
-                  groupValue: tempSelectedRole,
-                  onChanged: (value) {
-                    setStateSheet(() => tempSelectedRole = value);
-                  },
-                ),
-                RadioListTile<String>(
-                  title: const Text("Designer"),
-                  value: "Designer",
-                  groupValue: tempSelectedRole,
-                  onChanged: (value) {
-                    setStateSheet(() => tempSelectedRole = value);
-                  },
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    ValueEndRole = tempSelectedRole;
-                    Navigator.pop(context, ValueEndRole);
-                  },
-                  child: const Text("Apply"),
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  //Position
+                  Column(
+                    children: [
+                      Text(
+                        "Filter by Position",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      RadioListTile<String>(
+                        title: const Text("All"),
+                        value: "",
+                        groupValue: tempSelectedRole ?? "",
+                        onChanged: (value) {
+                          setStateSheet(
+                            () => tempSelectedRole = value == "" ? null : value,
+                          );
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("Developer"),
+                        value: "Developer",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("Designer"),
+                        value: "Designer",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                    ],
+                  ),
+                  //Sistem Kerja
+                  Column(
+                    children: [
+                      Text(
+                        "Sistem Kerja",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      RadioListTile<String>(
+                        title: const Text("All"),
+                        value: "",
+                        groupValue: tempSelectedRole ?? "",
+                        onChanged: (value) {
+                          setStateSheet(
+                            () => tempSelectedRole = value == "" ? null : value,
+                          );
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("WFH"),
+                        value: "WFH",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("Hybrid"),
+                        value: "Hybrid",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("WFO"),
+                        value: "WFO",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                    ],
+                  ),
+                  //Tipe Kerja
+                  Column(
+                    children: [
+                      Text(
+                        "Tipe Kerja",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      RadioListTile<String>(
+                        title: const Text("All"),
+                        value: "",
+                        groupValue: tempSelectedRole ?? "",
+                        onChanged: (value) {
+                          setStateSheet(
+                            () => tempSelectedRole = value == "" ? null : value,
+                          );
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("Kontrak"),
+                        value: "Kontrak",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("Magang"),
+                        value: "Magang",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                      RadioListTile<String>(
+                        title: const Text("Full Time"),
+                        value: "Full Time",
+                        groupValue: tempSelectedRole,
+                        onChanged: (value) {
+                          setStateSheet(() => tempSelectedRole = value);
+                        },
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "Range Gaji",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildTextField(
+                          'Min Salary Expectation',
+                          _salaryMinController,
+                          Icons.attach_money,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter minimum salary';
+                            } else if (int.tryParse(value) == null) {
+                              return 'Please enter a valid number';
+                            }
+                            minSalary = int.parse(value);
+                            if (minSalary < 0) {
+                              return 'Salary cannot be negative';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text('-'),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: buildTextField(
+                          'Max Salary Expectation',
+                          _salaryMaxController,
+                          Icons.attach_money,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter maximum salary';
+                            } else if (int.tryParse(value) == null) {
+                              return 'Please enter a valid number';
+                            }
+                            maxSalary = int.parse(value);
+                            if (maxSalary < 0) {
+                              return 'Salary cannot be negative';
+                            } else if (maxSalary < minSalary) {
+                              return 'Max salary must be greater than min salary';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  buildTextField(
+                    'Location',
+                    _locationController,
+                    Icons.location_on,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter location';
+                      }
+                      return null;
+                    },
+                  ),
+                  buildTextField(
+                    'Career Level',
+                    _careerLevelController,
+                    Icons.trending_up,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter career level';
+                      }
+                      return null;
+                    },
+                  ),
+                  buildDateField(
+                    'Availability',
+                    _availabilityController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter availability';
+                      }
+                      return null;
+                    },
+                    context,
+                    onDateSelected: (date) {
+                      _availabilityController.text = date != null
+                          ? DateFormat('dd MMMM yyyy').format(date)
+                          : '';
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    label: const Text("Apply"),
+                    icon: const Icon(Icons.filter),
+                    onPressed: () {
+                      ValueEndRole = tempSelectedRole;
+                      Navigator.pop(context, ValueEndRole);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );

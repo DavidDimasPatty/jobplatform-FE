@@ -19,6 +19,7 @@ import 'package:job_platform/features/components/profile/domain/entities/Certifi
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
@@ -67,7 +68,10 @@ final List<GoRoute> _layoutRoutes = [
   ),
   GoRoute(
     path: '/personalInfoCompany',
-    builder: (context, state) => Personalinfocompany(),
+    builder: (context, state) {
+      final data = state.extra as ProfileCompanydata;
+      return Personalinfocompany(dataCompany: data);
+    },
   ),
   GoRoute(path: '/profile', builder: (context, state) => Profile()),
   GoRoute(path: '/setting', builder: (context, state) => Setting()),

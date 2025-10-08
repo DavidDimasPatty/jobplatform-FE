@@ -48,6 +48,7 @@ dependencies:
   select2dot1: ^2.0.9
   go_router: ^16.2.4
   file_picker: ^10.3.3
+  font_awesome_flutter: ^10.9.1
 
 dev_dependencies:
   flutter_test:

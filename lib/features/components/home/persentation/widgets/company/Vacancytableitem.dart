@@ -39,7 +39,9 @@ class Vacancytableitem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        context.go("/progress");
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(

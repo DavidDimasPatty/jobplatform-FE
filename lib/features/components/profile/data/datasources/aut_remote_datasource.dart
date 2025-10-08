@@ -12,6 +12,7 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/profileCompanyRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
@@ -21,6 +22,7 @@ import 'package:job_platform/features/components/profile/data/models/skillRespon
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
 
 class AuthRemoteDataSource {
   // General
@@ -38,6 +40,32 @@ class AuthRemoteDataSource {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
 
         data = ProfileModel.fromJson(jsonData);
+        return data;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return null;
+      }
+    } catch (e) {
+      print('Error during get profile: $e');
+      return null;
+    }
+  }
+
+  Future<ProfileCompanydata?> profileCompanyGet(String id) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_COMPANY']}/api/v1/profile-management/detail',
+      ).replace(queryParameters: {'id': id});
+      ProfileCompanydata? data;
+      final response = await http.get(url);
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        data = ProfileCompanydata.fromJson(jsonData);
         return data;
       } else {
         final dataFailed = jsonDecode(response.body);
@@ -88,6 +116,41 @@ class AuthRemoteDataSource {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
         '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/profile-management/update-photo',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(profile.toJsonAvatar()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        ProfileResponse profileResponse = ProfileResponse.fromJson(jsonData);
+        return profileResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return ProfileResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit profile: $e');
+      return ProfileResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
+  Future<ProfileResponse> profileAvatarCompanyEdit(
+    ProfileCompanyRequest profile,
+  ) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_COMPANY']}/api/v1/profile-management/update-logo',
       );
       final response = await http.put(
         url,

@@ -87,14 +87,14 @@ class Cartitems extends StatelessWidget {
                               color: Colors.black54,
                             ),
                           ),
-                          const Text(
-                            "Match Score : 80%",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                            ),
-                          ),
+                          // const Text(
+                          //   "Match Score : 80%",
+                          //   style: TextStyle(
+                          //     fontSize: 14,
+                          //     fontWeight: FontWeight.bold,
+                          //     color: Colors.blueAccent,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

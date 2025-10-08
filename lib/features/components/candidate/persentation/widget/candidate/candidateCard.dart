@@ -159,13 +159,6 @@ class _Candidatecard extends State<Candidatecard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Matching: 85%",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
                   SizedBox(height: 8),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),

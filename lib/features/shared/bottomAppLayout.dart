@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomApplayout extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
+  final String loginAs;
 
-  const BottomApplayout({
+  BottomApplayout({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
+    required this.loginAs,
   });
 
   @override
@@ -183,7 +186,12 @@ class BottomApplayout extends StatelessWidget {
 
             Expanded(
               child: InkWell(
-                onTap: () => onTabSelected(2),
+                onTap: () {
+                  if (loginAs == "user")
+                    onTabSelected(2);
+                  else if (loginAs == "company")
+                    onTabSelected(10);
+                },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,

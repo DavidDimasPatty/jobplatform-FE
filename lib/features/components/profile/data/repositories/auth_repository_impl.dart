@@ -9,6 +9,7 @@ import 'package:job_platform/features/components/profile/data/models/organizatio
 import 'package:job_platform/features/components/profile/data/models/organizationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
+import 'package:job_platform/features/components/profile/data/models/profileCompanyRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileModel.dart';
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
@@ -18,6 +19,7 @@ import 'package:job_platform/features/components/profile/data/models/skillRespon
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profile/skillEdit.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/aut_remote_datasource.dart';
@@ -35,6 +37,13 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<ProfileCompanydata?> profileCompany(String id) async {
+    final profileModel = await remoteDataSource.profileCompanyGet(id);
+    // print(profileModel);
+    return profileModel;
+  }
+
+  @override
   Future<ProfileResponse> editProfile(ProfileRequest profile) async {
     final result = await remoteDataSource.profileEdit(profile);
     return result;
@@ -43,6 +52,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<ProfileResponse> editProfileAvatar(ProfileRequest profile) async {
     final result = await remoteDataSource.profileAvatarEdit(profile);
+    return result;
+  }
+
+  @override
+  Future<ProfileResponse> editProfileAvatarCompany(
+    ProfileCompanyRequest profile,
+  ) async {
+    final result = await remoteDataSource.profileAvatarCompanyEdit(profile);
     return result;
   }
 

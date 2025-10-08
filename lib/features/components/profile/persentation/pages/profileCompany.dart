@@ -1,13 +1,22 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/profile/data/models/profileCompanyRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
+import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
@@ -33,13 +42,8 @@ class _ProfileCompany extends State<ProfileCompany> {
   _ProfileCompany();
 
   // Data
-  Profiledata? dataUser;
-  List<EducationMV> dataEdu = [];
-  List<OrganizationMV> dataOrg = [];
-  List<WorkexperienceMV> dataWork = [];
-  List<CertificateMV> dataCertificate = [];
-  List<SkillMV> dataSkill = [];
-  List<PreferenceMV> dataPreference = [];
+  ProfileCompanydata? dataCompany;
+  bool isPrivate = false;
 
   // Loading state
   bool isLoading = true;
@@ -51,8 +55,8 @@ class _ProfileCompany extends State<ProfileCompany> {
   @override
   void initState() {
     super.initState();
-    // _initializeUseCase();
-    // _loadProfileData();
+    _initializeUseCase();
+    _loadProfileData();
   }
 
   void _initializeUseCase() {
@@ -68,22 +72,17 @@ class _ProfileCompany extends State<ProfileCompany> {
         errorMessage = null;
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
+      String? idCompany = prefs.getString('idCompany');
 
-      if (userId != null) {
-        var profile = await _profileUseCase.getProfile(userId);
+      if (idCompany != null) {
+        var profile = await _profileUseCase.getProfileCompany(idCompany);
         if (!mounted) return;
 
         if (profile != null) {
           setState(() {
-            dataUser = profile.user;
-            dataEdu = profile.educations ?? [];
-            dataOrg = profile.organizations ?? [];
-            dataWork = profile.experiences ?? [];
-            dataCertificate = profile.certificates ?? [];
-            dataSkill = profile.skills ?? [];
-            dataPreference = profile.preferences ?? [];
+            dataCompany = profile;
             isLoading = false;
+            // isPrivate = profile.user!.privacy ?? false;
           });
         }
       } else {
@@ -100,54 +99,151 @@ class _ProfileCompany extends State<ProfileCompany> {
     }
   }
 
-  // Generic method for handling navigation with refresh
-  Future<void> _navigateAndRefresh(
-    String routeName, {
-    Object? arguments,
-  }) async {
-    final result = await Navigator.of(
-      context,
-    ).pushNamed(routeName, arguments: arguments);
+  Future _editProfileAvatar() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        withData: true,
+      );
 
-    if (result == true) {
-      await _loadProfileData();
+      if (result != null && result.files.isNotEmpty) {
+        PlatformFile file = result.files.first;
+        Uint8List? bytes;
+
+        // Get bytes (works for both web and mobile)
+        if (file.bytes != null) {
+          bytes = file.bytes;
+        } else if (file.path != null) {
+          bytes = await File(file.path!).readAsBytes();
+        }
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? idUser = prefs.getString('idCompany');
+
+        // Ensure idUser is not null
+        if (idUser == null) throw Exception("User ID not found in preferences");
+
+        ProfileCompanyRequest profile = new ProfileCompanyRequest(
+          idCompany: idUser,
+          logo: bytes,
+        );
+
+        ProfileResponse response = await _profileUseCase
+            .editProfileAvatarCompany(profile);
+
+        // On success, clear the form or navigate away
+        if (response.responseMessage == 'Sukses') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profile avatar updated successfully!')),
+          );
+          _loadProfileData();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Failed to update profile avatar. Please try again.',
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error during edit profile avatar: $e');
+      // Show error message to user
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update profile avatar. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future _editProfilePrivacy(bool value) async {
+    setState(() {
+      isPrivate = value;
+    });
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idUser = prefs.getString('idCompany');
+
+      // Ensure idUser is not null
+      if (idUser == null) throw Exception("User ID not found in preferences");
+
+      ProfileRequest profile = new ProfileRequest(
+        idUser: idUser,
+        privacy: isPrivate,
+      );
+
+      ProfileResponse response = await _profileUseCase.editProfilePrivacy(
+        profile,
+      );
+
+      // On success, clear the form or navigate away
+      if (response.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile privacy edited successfully!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to edit profile privacy. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during edit profile privacy: $e');
+      // Show error message to user
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to edit profile privacy. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (isLoading) {
-    //   return const Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         CircularProgressIndicator(),
-    //         SizedBox(height: 16),
-    //         Text('Loading profile data...'),
-    //       ],
-    //     ),
-    //   );
-    // }
+    if (isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading profile data...'),
+          ],
+        ),
+      );
+    }
 
-    // Show error message if there's an error
-    // if (errorMessage != null) {
-    //   return Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         Icon(Icons.error_outline, size: 48, color: Colors.red),
-    //         SizedBox(height: 16),
-    //         Text(
-    //           errorMessage!,
-    //           textAlign: TextAlign.center,
-    //           style: TextStyle(color: Colors.red),
-    //         ),
-    //         SizedBox(height: 16),
-    //         ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
-    //       ],
-    //     ),
-    //   );
-    // }
+    if (errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: Colors.red),
+            SizedBox(height: 16),
+            Text(
+              errorMessage!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.red),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
+          ],
+        ),
+      );
+    }
 
     return SingleChildScrollView(
       padding: EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -197,7 +293,10 @@ class _ProfileCompany extends State<ProfileCompany> {
                             size: 20,
                           ),
                           onPressed: () {
-                            context.go("/personalInfoCompany");
+                            context.go(
+                              "/personalInfoCompany",
+                              extra: dataCompany,
+                            );
                           },
                         ),
                       ),
@@ -211,9 +310,13 @@ class _ProfileCompany extends State<ProfileCompany> {
                               CircleAvatar(
                                 radius: 50,
                                 backgroundColor: Colors.white,
-                                child: const CircleAvatar(
+                                child: CircleAvatar(
                                   radius: 46,
-                                  //backgroundImage: AssetImage("assets/profile.jpg"),
+                                  backgroundImage: dataCompany!.logo != null
+                                      ? NetworkImage(dataCompany!.logo!)
+                                      : AssetImage(
+                                          'assets/images/female-avatar.png',
+                                        ),
                                   backgroundColor: Colors.blueGrey,
                                 ),
                               ),
@@ -236,9 +339,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                                     ),
                                     padding: EdgeInsets.zero,
                                     constraints: const BoxConstraints(),
-                                    onPressed: () {
-                                      print("Ganti foto profil diklik");
-                                    },
+                                    onPressed: () => _editProfileAvatar(),
                                   ),
                                 ),
                               ),
@@ -248,7 +349,7 @@ class _ProfileCompany extends State<ProfileCompany> {
 
                         Container(
                           child: Text(
-                            "PT. ASTRA OTOPARTS",
+                            dataCompany?.nama ?? "",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
@@ -262,7 +363,7 @@ class _ProfileCompany extends State<ProfileCompany> {
 
                         Container(
                           child: Text(
-                            "Bandung, Jawa Barat",
+                            dataCompany?.alamat ?? "",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
@@ -276,7 +377,7 @@ class _ProfileCompany extends State<ProfileCompany> {
 
                         Container(
                           child: Text(
-                            "Otomotif",
+                            dataCompany?.industri ?? "",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
@@ -336,9 +437,7 @@ class _ProfileCompany extends State<ProfileCompany> {
 
                         Container(
                           child: Text(
-                            '''PT Inovasi Digital Nusantara adalah perusahaan teknologi yang berfokus pada pengembangan solusi digital modern untuk mendukung transformasi bisnis di berbagai sektor. Kami menghadirkan layanan yang mencakup pengembangan perangkat lunak, integrasi sistem, hingga konsultasi teknologi informasi dengan tujuan membantu perusahaan meningkatkan efisiensi, keamanan, dan daya saing di era digital.
-Dengan tim yang berpengalaman dan berorientasi pada inovasi, kami berkomitmen untuk memberikan produk serta layanan berkualitas tinggi yang sesuai dengan kebutuhan pelanggan. Kepercayaan dan kepuasan klien menjadi prioritas utama kami, sehingga setiap proyek ditangani dengan pendekatan yang profesional, transparan, dan berkelanjutan.
-Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementara misi kami adalah menciptakan solusi teknologi yang sederhana, efektif, dan bernilai nyata bagi masyarakat maupun dunia usaha.''',
+                            dataCompany?.deskripsi ?? "",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               color: Colors.black,
@@ -393,11 +492,12 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                             ),
                           ),
                         ),
-                        ListView(
+                        ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          children: [
-                            Container(
+                          itemCount: dataCompany?.benefit!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
                               width: double.infinity,
                               margin: EdgeInsets.all(5.0),
                               padding: EdgeInsets.all(10.0),
@@ -409,13 +509,23 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: 30,
-                                    height: 30,
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: Colors.white60,
+                                        width: 1,
+                                      ),
+                                      color: Colors.blueAccent,
+                                    ),
                                     child: Center(
-                                      child: Icon(
-                                        Icons.health_and_safety,
-                                        size: 30,
-                                        color: Colors.blueAccent,
+                                      child: Text(
+                                        index.toString(),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -426,7 +536,7 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                                     children: [
                                       SizedBox(height: 8),
                                       Text(
-                                        "BPJS Kesehatan",
+                                        dataCompany!.benefit![index],
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -444,106 +554,158 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                                   ),
                                 ],
                               ),
-                            ),
+                            );
+                          },
+                          padding: EdgeInsets.zero,
+                          // children: [
 
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.all(5.0),
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.money,
-                                        size: 30,
-                                        color: Colors.blueAccent,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 15),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 8),
-                                      Text(
-                                        "Salary",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        "Available",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                          // Container(
+                          //   width: double.infinity,
+                          //   margin: EdgeInsets.all(5.0),
+                          //   padding: EdgeInsets.all(10.0),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.grey.shade300,
+                          //     borderRadius: BorderRadius.circular(20.0),
+                          //   ),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.start,
+                          //     children: [
+                          //       Container(
+                          //         width: 30,
+                          //         height: 30,
+                          //         child: Center(
+                          //           child: Icon(
+                          //             Icons.health_and_safety,
+                          //             size: 30,
+                          //             color: Colors.blueAccent,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 15),
+                          //       Column(
+                          //         crossAxisAlignment:
+                          //             CrossAxisAlignment.start,
+                          //         children: [
+                          //           SizedBox(height: 8),
+                          //           Text(
+                          //             "BPJS Kesehatan",
+                          //             style: TextStyle(
+                          //               fontSize: 18,
+                          //               fontWeight: FontWeight.bold,
+                          //             ),
+                          //           ),
+                          //           SizedBox(height: 8),
+                          //           Text(
+                          //             "Available",
+                          //             style: TextStyle(
+                          //               fontSize: 14,
+                          //               color: Colors.grey[600],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
 
-                            Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.all(5.0),
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.monetization_on,
-                                        size: 30,
-                                        color: Colors.blueAccent,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 15),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 8),
-                                      Text(
-                                        "Bonus Tahunan",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        "Available",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          // Container(
+                          //   width: double.infinity,
+                          //   margin: EdgeInsets.all(5.0),
+                          //   padding: EdgeInsets.all(10.0),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.grey.shade300,
+                          //     borderRadius: BorderRadius.circular(20.0),
+                          //   ),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.start,
+                          //     children: [
+                          //       Container(
+                          //         width: 30,
+                          //         height: 30,
+                          //         child: Center(
+                          //           child: Icon(
+                          //             Icons.money,
+                          //             size: 30,
+                          //             color: Colors.blueAccent,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 15),
+                          //       Column(
+                          //         crossAxisAlignment:
+                          //             CrossAxisAlignment.start,
+                          //         children: [
+                          //           SizedBox(height: 8),
+                          //           Text(
+                          //             "Salary",
+                          //             style: TextStyle(
+                          //               fontSize: 18,
+                          //               fontWeight: FontWeight.bold,
+                          //             ),
+                          //           ),
+                          //           SizedBox(height: 8),
+                          //           Text(
+                          //             "Available",
+                          //             style: TextStyle(
+                          //               fontSize: 14,
+                          //               color: Colors.grey[600],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+
+                          // Container(
+                          //   width: double.infinity,
+                          //   margin: EdgeInsets.all(5.0),
+                          //   padding: EdgeInsets.all(10.0),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.grey.shade300,
+                          //     borderRadius: BorderRadius.circular(20.0),
+                          //   ),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.start,
+                          //     children: [
+                          //       Container(
+                          //         width: 30,
+                          //         height: 30,
+                          //         child: Center(
+                          //           child: Icon(
+                          //             Icons.monetization_on,
+                          //             size: 30,
+                          //             color: Colors.blueAccent,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 15),
+                          //       Column(
+                          //         crossAxisAlignment:
+                          //             CrossAxisAlignment.start,
+                          //         children: [
+                          //           SizedBox(height: 8),
+                          //           Text(
+                          //             "Bonus Tahunan",
+                          //             style: TextStyle(
+                          //               fontSize: 18,
+                          //               fontWeight: FontWeight.bold,
+                          //             ),
+                          //           ),
+                          //           SizedBox(height: 8),
+                          //           Text(
+                          //             "Available",
+                          //             style: TextStyle(
+                          //               fontSize: 14,
+                          //               color: Colors.grey[600],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          // ],
                         ),
                       ],
                     ),
@@ -602,7 +764,7 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                "Jl. Merdeka No.123, Jakarta, Indonesia",
+                                dataCompany?.alamat ?? "",
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black87,
@@ -617,7 +779,7 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                             const Icon(Icons.phone, color: Colors.green),
                             const SizedBox(width: 10),
                             Text(
-                              "+62 812 3456 7890",
+                              dataCompany?.noTelp ?? "",
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.black87,
@@ -631,7 +793,7 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                             const Icon(Icons.email, color: Colors.redAccent),
                             const SizedBox(width: 10),
                             Text(
-                              "contact@company.com",
+                              dataCompany?.email ?? "",
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.black87,
@@ -645,7 +807,7 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                             const Icon(Icons.public, color: Colors.blueGrey),
                             const SizedBox(width: 10),
                             Text(
-                              "www.astra.com",
+                              dataCompany?.domain ?? "",
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.black87,
@@ -659,7 +821,72 @@ Visi kami adalah menjadi mitra strategis dalam perjalanan digitalisasi, sementar
                             Icon(Icons.facebook, color: Colors.blue),
                             SizedBox(width: 10),
                             Text(
-                              "Astra",
+                              dataCompany?.facebook ?? "",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.xTwitter,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              dataCompany?.twitter ?? "",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.instagram,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              dataCompany?.instagram ?? "",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.linkedin,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              dataCompany?.linkedin ?? "",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: [
+                            FaIcon(FontAwesomeIcons.tiktok, color: Colors.blue),
+                            SizedBox(width: 10),
+                            Text(
+                              dataCompany?.tiktok ?? "",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.black87,
