@@ -41,6 +41,10 @@ class ProfileUsecase {
     return repository.editProfile(profile);
   }
 
+  Future<ProfileResponse> editProfileCompany(ProfileCompanyRequest profile) {
+    return repository.editProfileCompany(profile);
+  }
+
   Future<ProfileResponse> editProfileAvatar(ProfileRequest profile) {
     return repository.editProfileAvatar(profile);
   }

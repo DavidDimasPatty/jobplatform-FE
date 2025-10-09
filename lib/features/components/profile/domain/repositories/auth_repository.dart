@@ -26,6 +26,7 @@ abstract class AuthRepository {
   Future<ProfileModel?> profile(String id);
   Future<ProfileCompanydata?> profileCompany(String id);
   Future<ProfileResponse> editProfile(ProfileRequest profile);
+  Future<ProfileResponse> editProfileCompany(ProfileCompanyRequest profile);
   Future<ProfileResponse> editProfileAvatar(ProfileRequest profile);
   Future<ProfileResponse> editProfileAvatarCompany(
     ProfileCompanyRequest profile,

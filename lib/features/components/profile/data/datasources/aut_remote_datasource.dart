@@ -111,6 +111,41 @@ class AuthRemoteDataSource {
     }
   }
 
+  Future<ProfileResponse> profileEditCompany(
+    ProfileCompanyRequest profile,
+  ) async {
+    try {
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_COMPANY']}/api/v1/profile-management/update-company-info',
+      );
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(profile.toJson()),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        ProfileResponse profileResponse = ProfileResponse.fromJson(jsonData);
+        return profileResponse;
+      } else {
+        final Map<String, dynamic> dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return ProfileResponse.fromJson(dataFailed);
+      }
+    } catch (e) {
+      print('Error during edit profile: $e');
+      return ProfileResponse(
+        responseCode: '500',
+        responseMessage: 'Failed',
+        data: null,
+      );
+    }
+  }
+
   Future<ProfileResponse> profileAvatarEdit(ProfileRequest profile) async {
     try {
       await dotenv.load(fileName: '.env');

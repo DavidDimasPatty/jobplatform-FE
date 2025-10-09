@@ -50,6 +50,14 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<ProfileResponse> editProfileCompany(
+    ProfileCompanyRequest profile,
+  ) async {
+    final result = await remoteDataSource.profileEditCompany(profile);
+    return result;
+  }
+
+  @override
   Future<ProfileResponse> editProfileAvatar(ProfileRequest profile) async {
     final result = await remoteDataSource.profileAvatarEdit(profile);
     return result;

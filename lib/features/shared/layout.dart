@@ -23,7 +23,7 @@ class _LayoutState extends State<Layout> {
   String? namaUser;
   String? emailUser;
   String? noTelpUser;
-
+  bool isLoading = true;
   String? idCompany;
   String? namaCompany;
   String? domainCompany;
@@ -56,7 +56,7 @@ class _LayoutState extends State<Layout> {
     // }
   }
 
-  void getDataPref() async {
+  Future<void> getDataPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       loginAs = prefs.getString('loginAs');
@@ -74,10 +74,8 @@ class _LayoutState extends State<Layout> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getDataPref();
+  Future<void> _initialize() async {
+    await getDataPref();
     dataNotif = [
       Notificationitem(
         icon: Icons.warning,
@@ -110,10 +108,24 @@ class _LayoutState extends State<Layout> {
         bgColor: Colors.green.shade200,
       ),
     ];
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return PopScope(
       canPop: false,
       child: Stack(

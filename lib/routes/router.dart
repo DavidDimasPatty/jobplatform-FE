@@ -69,8 +69,7 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: '/personalInfoCompany',
     builder: (context, state) {
-      final data = state.extra as ProfileCompanydata;
-      return Personalinfocompany(dataCompany: data);
+      return Personalinfocompany();
     },
   ),
   GoRoute(path: '/profile', builder: (context, state) => Profile()),

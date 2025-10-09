@@ -293,10 +293,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                             size: 20,
                           ),
                           onPressed: () {
-                            context.go(
-                              "/personalInfoCompany",
-                              extra: dataCompany,
-                            );
+                            context.go("/personalInfoCompany");
                           },
                         ),
                       ),
@@ -521,7 +518,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        index.toString(),
+                                        (index + 1).toString(),
                                         style: TextStyle(
                                           fontSize: 20,
                                           color: Colors.white,
@@ -557,155 +554,6 @@ class _ProfileCompany extends State<ProfileCompany> {
                             );
                           },
                           padding: EdgeInsets.zero,
-                          // children: [
-
-                          // Container(
-                          //   width: double.infinity,
-                          //   margin: EdgeInsets.all(5.0),
-                          //   padding: EdgeInsets.all(10.0),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.grey.shade300,
-                          //     borderRadius: BorderRadius.circular(20.0),
-                          //   ),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.start,
-                          //     children: [
-                          //       Container(
-                          //         width: 30,
-                          //         height: 30,
-                          //         child: Center(
-                          //           child: Icon(
-                          //             Icons.health_and_safety,
-                          //             size: 30,
-                          //             color: Colors.blueAccent,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: 15),
-                          //       Column(
-                          //         crossAxisAlignment:
-                          //             CrossAxisAlignment.start,
-                          //         children: [
-                          //           SizedBox(height: 8),
-                          //           Text(
-                          //             "BPJS Kesehatan",
-                          //             style: TextStyle(
-                          //               fontSize: 18,
-                          //               fontWeight: FontWeight.bold,
-                          //             ),
-                          //           ),
-                          //           SizedBox(height: 8),
-                          //           Text(
-                          //             "Available",
-                          //             style: TextStyle(
-                          //               fontSize: 14,
-                          //               color: Colors.grey[600],
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-
-                          // Container(
-                          //   width: double.infinity,
-                          //   margin: EdgeInsets.all(5.0),
-                          //   padding: EdgeInsets.all(10.0),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.grey.shade300,
-                          //     borderRadius: BorderRadius.circular(20.0),
-                          //   ),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.start,
-                          //     children: [
-                          //       Container(
-                          //         width: 30,
-                          //         height: 30,
-                          //         child: Center(
-                          //           child: Icon(
-                          //             Icons.money,
-                          //             size: 30,
-                          //             color: Colors.blueAccent,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: 15),
-                          //       Column(
-                          //         crossAxisAlignment:
-                          //             CrossAxisAlignment.start,
-                          //         children: [
-                          //           SizedBox(height: 8),
-                          //           Text(
-                          //             "Salary",
-                          //             style: TextStyle(
-                          //               fontSize: 18,
-                          //               fontWeight: FontWeight.bold,
-                          //             ),
-                          //           ),
-                          //           SizedBox(height: 8),
-                          //           Text(
-                          //             "Available",
-                          //             style: TextStyle(
-                          //               fontSize: 14,
-                          //               color: Colors.grey[600],
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-
-                          // Container(
-                          //   width: double.infinity,
-                          //   margin: EdgeInsets.all(5.0),
-                          //   padding: EdgeInsets.all(10.0),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.grey.shade300,
-                          //     borderRadius: BorderRadius.circular(20.0),
-                          //   ),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.start,
-                          //     children: [
-                          //       Container(
-                          //         width: 30,
-                          //         height: 30,
-                          //         child: Center(
-                          //           child: Icon(
-                          //             Icons.monetization_on,
-                          //             size: 30,
-                          //             color: Colors.blueAccent,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: 15),
-                          //       Column(
-                          //         crossAxisAlignment:
-                          //             CrossAxisAlignment.start,
-                          //         children: [
-                          //           SizedBox(height: 8),
-                          //           Text(
-                          //             "Bonus Tahunan",
-                          //             style: TextStyle(
-                          //               fontSize: 18,
-                          //               fontWeight: FontWeight.bold,
-                          //             ),
-                          //           ),
-                          //           SizedBox(height: 8),
-                          //           Text(
-                          //             "Available",
-                          //             style: TextStyle(
-                          //               fontSize: 14,
-                          //               color: Colors.grey[600],
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                          // ],
                         ),
                       ],
                     ),
@@ -802,98 +650,101 @@ class _ProfileCompany extends State<ProfileCompany> {
                           ],
                         ),
 
-                        Row(
-                          children: [
-                            const Icon(Icons.public, color: Colors.blueGrey),
-                            const SizedBox(width: 10),
-                            Text(
-                              dataCompany?.domain ?? "",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
+                        if (dataCompany?.domain?.isNotEmpty ?? false)
+                          Row(
+                            children: [
+                              const Icon(Icons.public, color: Colors.blueGrey),
+                              const SizedBox(width: 10),
+                              Text(
+                                dataCompany?.domain ?? "",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
 
-                        Row(
-                          children: [
-                            Icon(Icons.facebook, color: Colors.blue),
-                            SizedBox(width: 10),
-                            Text(
-                              dataCompany?.facebook ?? "",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
+                        if (dataCompany?.facebook?.isNotEmpty ?? false)
+                          Row(
+                            children: [
+                              Icon(Icons.facebook, color: Colors.blue),
+                              SizedBox(width: 10),
+                              Text(
+                                dataCompany?.facebook ?? "",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
 
-                        Row(
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.xTwitter,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              dataCompany?.twitter ?? "",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
+                        if (dataCompany?.twitter?.isNotEmpty ?? false)
+                          Row(
+                            children: [
+                              FaIcon(FontAwesomeIcons.xTwitter),
+                              SizedBox(width: 10),
+                              Text(
+                                dataCompany?.twitter ?? "",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
 
-                        Row(
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.instagram,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              dataCompany?.instagram ?? "",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
+                        if (dataCompany?.instagram?.isNotEmpty ?? false)
+                          Row(
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.instagram,
+                                color: Colors.purpleAccent,
                               ),
-                            ),
-                          ],
-                        ),
+                              SizedBox(width: 10),
+                              Text(
+                                dataCompany?.instagram ?? "",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
 
-                        Row(
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.linkedin,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              dataCompany?.linkedin ?? "",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
+                        if (dataCompany?.linkedin?.isNotEmpty ?? false)
+                          Row(
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.linkedin,
+                                color: Colors.blue,
                               ),
-                            ),
-                          ],
-                        ),
+                              SizedBox(width: 10),
+                              Text(
+                                dataCompany?.linkedin ?? "",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
 
-                        Row(
-                          children: [
-                            FaIcon(FontAwesomeIcons.tiktok, color: Colors.blue),
-                            SizedBox(width: 10),
-                            Text(
-                              dataCompany?.tiktok ?? "",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black87,
+                        if (dataCompany?.tiktok?.isNotEmpty ?? false)
+                          Row(
+                            children: [
+                              FaIcon(FontAwesomeIcons.tiktok),
+                              SizedBox(width: 10),
+                              Text(
+                                dataCompany?.tiktok ?? "",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
