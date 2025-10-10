@@ -212,7 +212,7 @@ class _Managehrd extends State<Managehrd> {
       if (response!.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('HRD Delete successfully!')));
+        ).showSnackBar(SnackBar(content: Text('HRD Added successfully!')));
         setState(() {
           _loadHRD();
         });

@@ -133,7 +133,7 @@ class Managehrditems extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: onDelete,
                                     label: const Text("Delete"),
                                     icon: const Icon(Icons.delete),
                                   ),
