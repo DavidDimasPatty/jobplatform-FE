@@ -10,7 +10,7 @@ class AuthRemoteDataSource {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
-        '${dotenv.env['BACKEND_URL_DEV_HR']}/api/v1/vacancy/list-vacancies',
+        '${dotenv.env['BACKEND_URL_DEV_COMPANY']}/api/v1/vacancy/list-vacancies',
       ).replace(queryParameters: {'id': id});
       List<VacancyModel>? data;
       final response = await http.get(url);
@@ -42,7 +42,7 @@ class AuthRemoteDataSource {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
-        '${dotenv.env['BACKEND_URL_DEV_HR']}/api/v1/vacancy/add-vacancy',
+        '${dotenv.env['BACKEND_URL_DEV_COMPANY']}/api/v1/vacancy/add-vacancy',
       );
       final response = await http.post(
         url,
@@ -76,7 +76,7 @@ class AuthRemoteDataSource {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
-        '${dotenv.env['BACKEND_URL_DEV_HR']}/api/v1/vacancy/update-vacancy',
+        '${dotenv.env['BACKEND_URL_DEV_COMPANY']}/api/v1/vacancy/update-vacancy',
       );
       final response = await http.put(
         url,
@@ -109,7 +109,7 @@ class AuthRemoteDataSource {
     try {
       await dotenv.load(fileName: '.env');
       final url = Uri.parse(
-        '${dotenv.env['BACKEND_URL_DEV_HR']}/api/v1/vacancy/delete-vacancy',
+        '${dotenv.env['BACKEND_URL_DEV_COMPANY']}/api/v1/vacancy/delete-vacancy',
       ).replace(queryParameters: {'idCompanyVacancy': idVacancy});
       final response = await http.delete(url);
       print(response.body.toString());
