@@ -759,8 +759,8 @@ class _ProfileCompany extends State<ProfileCompany> {
                       ListTile(
                         onTap: () {},
                         leading: Icon(Icons.account_box),
-                        title: Text("Account Configuration"),
-                        subtitle: Text("Konfigurasi Account"),
+                        title: Text("Email Configuration"),
+                        subtitle: Text("Ubah Email Akun Perusahaan"),
                       ),
                       Divider(height: 1, thickness: 1),
                       ListTile(
@@ -768,12 +768,6 @@ class _ProfileCompany extends State<ProfileCompany> {
                         leading: Icon(Icons.call),
                         title: Text("Contact Support"),
                         subtitle: Text("Support Aplikasi Customer Service"),
-                      ),
-                      Divider(height: 1, thickness: 1),
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.logout),
-                        title: Text("Log Out"),
                       ),
                       Divider(height: 1, thickness: 1),
                     ],

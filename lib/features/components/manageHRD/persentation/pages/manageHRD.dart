@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartBody.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
+import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/manageHRD/data/datasources/aut_remote_datasource.dart'
+    show AuthRemoteDataSource;
+import 'package:job_platform/features/components/manageHRD/data/models/GetAllHRDTransaction.dart';
+import 'package:job_platform/features/components/manageHRD/domain/entities/HRDDataVM.dart';
+import 'package:job_platform/features/components/manageHRD/domain/entities/ManageHRDResponse.dart';
+import 'package:job_platform/features/components/manageHRD/domain/repositories/auth_repository.dart';
+import 'package:job_platform/features/components/manageHRD/domain/usecases/manageHRD_usecase.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDBody.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDItems.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
-    show SettingsGroup;
-import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
+import 'package:job_platform/features/components/manageHRD/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Managehrd extends StatefulWidget {
   Managehrd({super.key});
@@ -27,60 +27,49 @@ class _Managehrd extends State<Managehrd> {
   bool isLoading = true;
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  Future<void> _loadProfileData() async {
-    try {
-      // setState(() {
-      //   isLoading = true;
-      //   errorMessage = null;
-      // });
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? userId = prefs.getString('idUser');
+  AuthRepositoryImpl? _repoManageHRD;
+  AuthRemoteDataSource? _dataSourceHRD;
+  ManagehrdUsecase? _hrdUseCase;
 
-      // if (userId != null) {
-      //   var profile = await _profileUseCase.getProfile(userId);
-      //   if (profile != null) {
-      //     setState(() {
-      //       dataUser = profile.user;
-      //       dataEdu = profile.educations ?? [];
-      //       dataOrg = profile.organizations ?? [];
-      //       dataWork = profile.experiences ?? [];
-      //       dataCertificate = profile.certificates ?? [];
-      //       dataSkill = profile.skills ?? [];
-      //       dataPreference = profile.preferences ?? [];
-      //       isLoading = false;
-      //     });
-      //   }
-      // } else {
-      //   print("User ID not found in SharedPreferences");
-      // }
+  final TextEditingController _emailController = TextEditingController();
+  Future<void> _loadHRD() async {
+    try {
       setState(() {
-        isLoading = false;
+        isLoading = true;
         errorMessage = null;
-        dataSub = [
-          Managehrditems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "Nando Witin",
-            subtitle: "email@email.com",
-          ),
-          Managehrditems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "Nando Sitorus",
-            subtitle: "email@email.com",
-          ),
-          Managehrditems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "Nando Baltwin",
-            subtitle: "email@email.com",
-          ),
-        ];
       });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idCompany = prefs.getString('idCompany');
+
+      if (idCompany != null) {
+        List<HRDDataVM?>? profile = await _hrdUseCase!.getAllHRD(idCompany!);
+        if (profile != null) {
+          setState(() {
+            isLoading = false;
+            errorMessage = null;
+
+            dataSub = profile
+                .map(
+                  (e) => Managehrditems(
+                    title: e!.nama!,
+                    subtitle: e!.email,
+                    url: e.photoURL,
+                    status: e!.status!,
+                    onDelete: () => deleteHRD(e!.id!),
+                  ),
+                )
+                .toList();
+          });
+        }
+      } else {
+        print("Company ID not found");
+      }
     } catch (e) {
-      print("Error loading profile data: $e");
+      print("Error loading Load HRD data: $e");
       if (mounted) {
         setState(() {
           isLoading = false;
-          errorMessage = "Error loading profile: $e";
+          errorMessage = "Error Load HRD Data: $e";
         });
       }
     }
@@ -91,47 +80,69 @@ class _Managehrd extends State<Managehrd> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           title: const Text("Masukkan Email"),
-          content: Form(
-            key: _formKey,
-            child: TextFormField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: "Email",
-                hintText: "contoh@email.com",
-                border: OutlineInputBorder(),
+          content: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: 500, maxWidth: 500),
+            child: Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: "Email User Terdaftar....",
+                  hintText: "contoh@email.com",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Email tidak boleh kosong";
+                  }
+                  final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                  if (!regex.hasMatch(value)) {
+                    return "Format email tidak valid";
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Email tidak boleh kosong";
-                }
-                final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                if (!regex.hasMatch(value)) {
-                  return "Format email tidak valid";
-                }
-                return null;
-              },
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Batal"),
+              child: Text("Batal", style: TextStyle(color: Colors.blue)),
             ),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Colors.blue,
+                ), // Set background color
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Colors.white,
+                ), // Text/icon color
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                ),
+                elevation: MaterialStateProperty.all<double>(6), // Shadow depth
+              ),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
+                  AddHRD(_emailController.text);
                   Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Email: ${_emailController.text}")),
-                  );
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   SnackBar(content: Text("Email: ${_emailController.text}")),
+                  // );
                 }
               },
-              child: const Text("Submit"),
+              child: Text("Submit", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -139,10 +150,93 @@ class _Managehrd extends State<Managehrd> {
     );
   }
 
+  Future deleteHRD(String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idCompany = prefs.getString('idCompany');
+
+      if (idCompany == null)
+        throw Exception("Company ID not found in preferences");
+
+      GetAllHRDTransaction profile = new GetAllHRDTransaction(id: id);
+
+      ManageHRDResponse? response = await _hrdUseCase!.deleteHRD(profile);
+      if (response!.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('HRD Delete successfully!')));
+        setState(() {
+          _loadHRD();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response!.responseMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during edit profile: $e');
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Internal Error"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future AddHRD(String email) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idCompany = prefs.getString('idCompany');
+
+      if (idCompany == null)
+        throw Exception("Company ID not found in preferences");
+
+      GetAllHRDTransaction profile = new GetAllHRDTransaction(
+        idCompany: idCompany,
+      );
+
+      ManageHRDResponse? response = await _hrdUseCase!.addHRD(profile, email);
+      if (response!.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('HRD Delete successfully!')));
+        setState(() {
+          _loadHRD();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response!.responseMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during edit profile: $e');
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Internal Error"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
+    _dataSourceHRD = AuthRemoteDataSource();
+    _repoManageHRD = AuthRepositoryImpl(_dataSourceHRD!);
+    _hrdUseCase = ManagehrdUsecase(_repoManageHRD!);
+    _loadHRD();
   }
 
   @override

@@ -136,6 +136,7 @@ class _LayoutState extends State<Layout> {
               onToggleNotification: toggleNotification,
               currentIndex: selectedIndex,
               onTabSelected: _onTabSelected,
+              loginAs: loginAs!,
             ),
             body: widget.child,
             bottomNavigationBar: BottomApplayout(

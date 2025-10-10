@@ -1,34 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Managehrditems extends StatelessWidget {
   final String? url;
-  final List<String>? skill;
   final String title;
-  final TextStyle? titleStyle;
   final String? subtitle;
-  final TextStyle? subtitleStyle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-  final int? titleMaxLine;
-  final int? subtitleMaxLine;
-  final TextOverflow? overflow;
-  final Color? colorIcon;
-  final Color? colorBGIcon;
+  final String status;
+  final Future<void> Function()? onDelete;
 
   Managehrditems({
     this.url,
     required this.title,
-    this.titleStyle,
     this.subtitle,
-    this.subtitleStyle,
-    this.trailing,
-    this.onTap,
-    this.titleMaxLine,
-    this.subtitleMaxLine,
-    this.overflow = TextOverflow.ellipsis,
-    this.colorIcon,
-    this.colorBGIcon,
-    this.skill,
+    required this.status,
+    required this.onDelete,
   });
 
   @override
@@ -37,23 +22,23 @@ class Managehrditems extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5,
-              spreadRadius: 2,
-              offset: Offset(3, 3),
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 8,
+              offset: Offset(0, 4),
             ),
           ],
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          border: Border.all(color: Colors.grey.withOpacity(0.2)),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: ListTile(
-            onTap: onTap,
+            onTap: () {},
             leading: Container(
               decoration: BoxDecoration(
                 // color: (colorBGIcon != null ? colorBGIcon : Colors.lightBlueAccent),
@@ -61,20 +46,22 @@ class Managehrditems extends StatelessWidget {
               ),
               // padding: EdgeInsets.all(5),
               child: ClipOval(
-                child: Image.asset(
-                  "assets/images/BG_Pelamar.png",
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.cover,
-                ),
+                child: url!.isNotEmpty
+                    ? Image.network(
+                        url!,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        "assets/images/BG_HRD.png",
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
-            title: Text(
-              title,
-              style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-              maxLines: titleMaxLine,
-              overflow: titleMaxLine != null ? overflow : null,
-            ),
+            title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
             subtitle: (subtitle != null
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,19 +89,42 @@ class Managehrditems extends StatelessWidget {
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  // ElevatedButton.icon(
-                                  //   style: ElevatedButton.styleFrom(
-                                  //     backgroundColor: Colors.blue,
-                                  //     foregroundColor: Colors.white,
-                                  //     shape: RoundedRectangleBorder(
-                                  //       borderRadius: BorderRadius.circular(8),
-                                  //     ),
-                                  //   ),
-                                  //   onPressed: () {},
-                                  //   label: const Text("See Profile"),
-                                  //   icon: const Icon(Icons.visibility),
-                                  // ),
-                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FaIcon(
+                                        status == "Active"
+                                            ? FontAwesomeIcons.peopleGroup
+                                            : status == "Inactive"
+                                            ? FontAwesomeIcons.timeline
+                                            : status == "Reject"
+                                            ? FontAwesomeIcons.x
+                                            : FontAwesomeIcons.circleQuestion,
+                                        color: status == "Active"
+                                            ? Colors.blue
+                                            : status == "Inactive"
+                                            ? Colors.orange
+                                            : status == "Reject"
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        status,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: status == "Active"
+                                              ? Colors.blue
+                                              : status == "Inactive"
+                                              ? Colors.orange
+                                              : status == "Reject"
+                                              ? Colors.red
+                                              : Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 8),
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
@@ -132,19 +142,43 @@ class Managehrditems extends StatelessWidget {
                             : Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // ElevatedButton.icon(
-                                  //   style: ElevatedButton.styleFrom(
-                                  //     backgroundColor: Colors.blue,
-                                  //     foregroundColor: Colors.white,
-                                  //     shape: RoundedRectangleBorder(
-                                  //       borderRadius: BorderRadius.circular(8),
-                                  //     ),
-                                  //   ),
-                                  //   onPressed: () {},
-                                  //   label: const Text("See Profile"),
-                                  //   icon: const Icon(Icons.visibility),
-                                  // ),
+                                  Row(
+                                    children: [
+                                      FaIcon(
+                                        status == "Active"
+                                            ? FontAwesomeIcons.peopleGroup
+                                            : status == "Inactive"
+                                            ? FontAwesomeIcons.timeline
+                                            : status == "Reject"
+                                            ? FontAwesomeIcons.x
+                                            : FontAwesomeIcons.circleQuestion,
+                                        color: status == "Active"
+                                            ? Colors.blue
+                                            : status == "Inactive"
+                                            ? Colors.orange
+                                            : status == "Reject"
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        status,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: status == "Active"
+                                              ? Colors.blue
+                                              : status == "Inactive"
+                                              ? Colors.orange
+                                              : status == "Reject"
+                                              ? Colors.red
+                                              : Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 8),
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
@@ -153,7 +187,7 @@ class Managehrditems extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: onDelete,
                                     label: const Text("Delete"),
                                     icon: const Icon(Icons.delete),
                                   ),

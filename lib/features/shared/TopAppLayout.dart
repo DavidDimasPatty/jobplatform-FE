@@ -3,14 +3,14 @@ import 'package:job_platform/features/components/setting/persentation/pages/sett
 
 class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onToggleNotification;
-  //final VoidCallback onToggleMessages;
+  final String loginAs;
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
 
   const TopApplayout({
     super.key,
     required this.onToggleNotification,
-    //required this.onToggleMessages,
+    required this.loginAs,
     required this.currentIndex,
     required this.onTabSelected,
   });
@@ -35,16 +35,16 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
               onPressed: onToggleNotification,
               icon: const Icon(Icons.notifications, color: Colors.white),
             ),
-            SizedBox(width: 10),
-            IconButton(
-              onPressed: () => onTabSelected(5),
-              icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            ),
-            SizedBox(width: 10),
-            IconButton(
-              onPressed: () => onTabSelected(4),
-              icon: const Icon(Icons.chat, color: Colors.white),
-            ),
+            if (loginAs.isNotEmpty && loginAs == "userHRD" ?? false)
+              IconButton(
+                onPressed: () => onTabSelected(5),
+                icon: const Icon(Icons.shopping_cart, color: Colors.white),
+              ),
+            if (loginAs.isNotEmpty && loginAs != "company" ?? false)
+              IconButton(
+                onPressed: () => onTabSelected(4),
+                icon: const Icon(Icons.chat, color: Colors.white),
+              ),
             SizedBox(width: 10),
             IconButton(
               onPressed: () => onTabSelected(3),

@@ -38,14 +38,14 @@ class BottomApplayout extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.home,
-                      color: currentState.uri.toString() == "/home"
+                      color: currentState.uri.toString().contains("home")
                           ? Colors.lightBlueAccent
                           : Colors.white,
                     ),
                     Text(
                       "Home",
                       style: TextStyle(
-                        color: currentState.uri.toString() == "/home"
+                        color: currentState.uri.toString().contains("home")
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
@@ -54,135 +54,141 @@ class BottomApplayout extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: InkWell(
-                onTap: () => onTabSelected(1),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.shopping_bag,
-                      color: currentState.uri.toString() == "/candidate"
-                          ? Colors.lightBlueAccent
-                          : Colors.white,
-                    ),
-                    Text(
-                      "Candidate",
-                      style: TextStyle(
+
+            if (loginAs.isNotEmpty && loginAs == "userHRD" ?? false)
+              Expanded(
+                child: InkWell(
+                  onTap: () => onTabSelected(1),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shopping_bag,
                         color: currentState.uri.toString() == "/candidate"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      Text(
+                        "Candidate",
+                        style: TextStyle(
+                          color: currentState.uri.toString() == "/candidate"
+                              ? Colors.lightBlueAccent
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            Expanded(
-              child: InkWell(
-                onTap: () => onTabSelected(6),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.group_work,
-                      color: currentState.uri.toString() == "/statusJob"
-                          ? Colors.lightBlueAccent
-                          : Colors.white,
-                    ),
-                    Text(
-                      "Status",
-                      style: TextStyle(
+            if (loginAs.isNotEmpty && loginAs == "user" ?? false)
+              Expanded(
+                child: InkWell(
+                  onTap: () => onTabSelected(6),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.group_work,
                         color: currentState.uri.toString() == "/statusJob"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      Text(
+                        "Status",
+                        style: TextStyle(
+                          color: currentState.uri.toString() == "/statusJob"
+                              ? Colors.lightBlueAccent
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            Expanded(
-              child: InkWell(
-                onTap: () => onTabSelected(7),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.work_history,
-                      color: currentState.uri.toString() == "/progress"
-                          ? Colors.lightBlueAccent
-                          : Colors.white,
-                    ),
-                    Text(
-                      "Progress",
-                      style: TextStyle(
+            if (loginAs.isNotEmpty && loginAs == "userHRD" ?? false)
+              Expanded(
+                child: InkWell(
+                  onTap: () => onTabSelected(7),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.work_history,
                         color: currentState.uri.toString() == "/progress"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      Text(
+                        "Progress",
+                        style: TextStyle(
+                          color: currentState.uri.toString() == "/progress"
+                              ? Colors.lightBlueAccent
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            Expanded(
-              child: InkWell(
-                onTap: () => onTabSelected(8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.home_work,
-                      color: currentState.uri.toString() == "/vacancy"
-                          ? Colors.lightBlueAccent
-                          : Colors.white,
-                    ),
-                    Text(
-                      "Vacancy",
-                      style: TextStyle(
+            if (loginAs.isNotEmpty && loginAs == "company" ?? false)
+              Expanded(
+                child: InkWell(
+                  onTap: () => onTabSelected(8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.home_work,
                         color: currentState.uri.toString() == "/vacancy"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      Text(
+                        "Vacancy",
+                        style: TextStyle(
+                          color: currentState.uri.toString() == "/vacancy"
+                              ? Colors.lightBlueAccent
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            Expanded(
-              child: InkWell(
-                onTap: () => onTabSelected(9),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.people,
-                      color: currentState.uri.toString() == "/manageHRD"
-                          ? Colors.lightBlueAccent
-                          : Colors.white,
-                    ),
-                    Text(
-                      "Manage HRD",
-                      style: TextStyle(
+            if (loginAs.isNotEmpty && loginAs == "company" ?? false)
+              Expanded(
+                child: InkWell(
+                  onTap: () => onTabSelected(9),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.people,
                         color: currentState.uri.toString() == "/manageHRD"
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      Text(
+                        "Manage HRD",
+                        style: TextStyle(
+                          color: currentState.uri.toString() == "/manageHRD"
+                              ? Colors.lightBlueAccent
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
             Expanded(
               child: InkWell(
@@ -198,14 +204,14 @@ class BottomApplayout extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.account_circle,
-                      color: currentState.uri.toString() == "/profile"
+                      color: currentState.uri.toString().contains("profile")
                           ? Colors.lightBlueAccent
                           : Colors.white,
                     ),
                     Text(
                       "Profile",
                       style: TextStyle(
-                        color: currentState.uri.toString() == "/profile"
+                        color: currentState.uri.toString().contains("profile")
                             ? Colors.lightBlueAccent
                             : Colors.white,
                       ),
