@@ -8,14 +8,21 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Vacancybody extends StatefulWidget {
   final List<Vacancyitems> items;
-  Vacancybody({super.key, required this.items});
+  final VoidCallback onSearchChanged;
+  TextEditingController searchController;
+
+  Vacancybody({
+    super.key,
+    required this.items,
+    required this.onSearchChanged,
+    required this.searchController,
+  });
 
   @override
   State<Vacancybody> createState() => _Vacancybody();
 }
 
 class _Vacancybody extends State<Vacancybody> {
-  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,7 +64,10 @@ class _Vacancybody extends State<Vacancybody> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: _searchController,
+                      onChanged: (value) {
+                        widget.onSearchChanged();
+                      },
+                      controller: widget.searchController,
                       decoration: InputDecoration(
                         labelText: 'Cari Vacancy',
                         hintText: 'Masukan Vacancy',

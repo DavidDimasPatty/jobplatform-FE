@@ -46,6 +46,7 @@ import 'package:job_platform/features/components/signup/persentation/pages/signu
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
 import 'package:job_platform/features/components/statusJob/persentation/pages/statusJob.dart';
 import 'package:job_platform/features/components/statusJob/persentation/pages/statusJobDetail.dart';
+import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancy.dart';
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyAdd.dart';
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyEdit.dart';
@@ -166,7 +167,7 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: '/vacancyEdit',
     builder: (context, state) {
-      final data = state.extra as PreferenceMV;
+      final data = state.extra as VacancyData;
       return Vacancyedit(data: data);
     },
   ),

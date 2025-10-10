@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
+import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
 
 class Vacancyitems extends StatelessWidget {
   final String? url;
@@ -10,6 +10,7 @@ class Vacancyitems extends StatelessWidget {
   final TextStyle? titleStyle;
   final String? subtitle;
   final TextStyle? subtitleStyle;
+  final VacancyData vacancy;
   final Widget? trailing;
   final VoidCallback? onTap;
   final int? titleMaxLine;
@@ -17,6 +18,7 @@ class Vacancyitems extends StatelessWidget {
   final TextOverflow? overflow;
   final Color? colorIcon;
   final Color? colorBGIcon;
+  final Future<void> Function()? onDelete;
 
   Vacancyitems({
     this.url,
@@ -25,6 +27,7 @@ class Vacancyitems extends StatelessWidget {
     this.index,
     this.subtitle,
     this.subtitleStyle,
+    required this.vacancy,
     this.trailing,
     this.onTap,
     this.titleMaxLine,
@@ -33,6 +36,7 @@ class Vacancyitems extends StatelessWidget {
     this.colorIcon,
     this.colorBGIcon,
     this.skill,
+    this.onDelete,
   });
 
   @override
@@ -98,16 +102,16 @@ class Vacancyitems extends StatelessWidget {
                                 color: Colors.black87,
                               ),
                             ),
-                            const Text(
-                              "Full Time",
+                            Text(
+                              vacancy.tipeKerja ?? "Full Time",
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.black54,
                               ),
                             ),
-                            const Text(
-                              "WFO",
+                            Text(
+                              vacancy.sistemKerja ?? "WFO",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -134,18 +138,7 @@ class Vacancyitems extends StatelessWidget {
                                     onPressed: () {
                                       context.go(
                                         "/vacancyEdit",
-                                        extra: PreferenceMV(
-                                          "1",
-                                          "1",
-                                          "Jakarta",
-                                          "Back End Developer",
-                                          "Supervisor",
-                                          40000000,
-                                          50000000,
-                                          "Full Time",
-                                          "WFO",
-                                          DateTime.parse("2025-05-05"),
-                                        ),
+                                        extra: vacancy,
                                       );
                                     },
                                     label: const Text("Edit"),
@@ -160,7 +153,7 @@ class Vacancyitems extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: onDelete,
                                     label: const Text("Delete"),
                                     icon: const Icon(Icons.delete),
                                   ),
@@ -181,18 +174,7 @@ class Vacancyitems extends StatelessWidget {
                                     onPressed: () {
                                       context.go(
                                         "/vacancyEdit",
-                                        extra: PreferenceMV(
-                                          "1",
-                                          "1",
-                                          "Jakarta",
-                                          "Back End Developer",
-                                          "Supervisor",
-                                          40000000,
-                                          50000000,
-                                          "Full Time",
-                                          "WFO",
-                                          DateTime.parse("2025-05-05"),
-                                        ),
+                                        extra: vacancy,
                                       );
                                     },
                                     label: const Text("Edit"),
@@ -206,7 +188,7 @@ class Vacancyitems extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: onDelete,
                                     label: const Text("Delete"),
                                     icon: const Icon(Icons.delete),
                                   ),

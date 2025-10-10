@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
-import 'package:job_platform/features/components/profile/data/models/preferenceResponse.dart';
-import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
-import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/vacancy/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/vacancy/domain/usecases/vacancy_usecase.dart';
+import 'package:job_platform/features/components/vacancy/data/models/vacancyRequest.dart';
+import 'package:job_platform/features/components/vacancy/data/models/vacancyResponse.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +27,6 @@ class _Vacancyadd extends State<Vacancyadd> {
   final TextEditingController _workSystemController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _careerLevelController = TextEditingController();
-  final TextEditingController _availabilityController = TextEditingController();
 
   // Helper variables
   bool _isLoading = false;
@@ -34,7 +34,7 @@ class _Vacancyadd extends State<Vacancyadd> {
   int maxSalary = 0;
 
   // Use case instance
-  late ProfileUsecase _profileUseCase;
+  late VacancyUseCase _vacancyUseCase;
 
   @override
   void initState() {
@@ -51,14 +51,13 @@ class _Vacancyadd extends State<Vacancyadd> {
     _workSystemController.dispose();
     _locationController.dispose();
     _careerLevelController.dispose();
-    _availabilityController.dispose();
     super.dispose();
   }
 
   void _initializeUseCase() {
     final dataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(dataSource);
-    _profileUseCase = ProfileUsecase(repository);
+    _vacancyUseCase = VacancyUseCase(repository);
   }
 
   Future<void> _submitForm() async {
@@ -69,45 +68,35 @@ class _Vacancyadd extends State<Vacancyadd> {
 
       try {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? idUser = prefs.getString('idUser');
+        String? idCompany = prefs.getString('idCompany');
 
-        // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        // Ensure idCompany is not null
+        if (idCompany == null)
+          throw Exception("Company ID not found in preferences");
 
-        // Format dates to 'yyyy-MM-dd'
-        final workDate = DateFormat('yyyy-MM-dd').format(
-          DateFormat(
-            'dd MMMM yyyy',
-            'en_US',
-          ).parse(_availabilityController.text),
-        );
-
-        PreferenceRequest newPreference = PreferenceRequest(
-          idUser: idUser,
+        VacancyRequest newVacancy = VacancyRequest(
+          idCompany: idCompany,
           gajiMin: int.parse(_salaryMinController.text),
           gajiMax: int.parse(_salaryMaxController.text),
-          posisi: _positionController.text,
-          tipePekerjaan: _jobTypeController.text,
+          namaPosisi: _positionController.text,
+          tipeKerja: _jobTypeController.text,
           sistemKerja: _workSystemController.text,
           lokasi: _locationController.text,
-          levelJabatan: _careerLevelController.text,
-          dateWork: DateTime.parse(workDate),
+          jabatan: _careerLevelController.text,
         );
 
-        PreferenceResponse response = await _profileUseCase.addPreference(
-          newPreference,
-        );
+        VacancyResponse response = await _vacancyUseCase.vacancyAdd(newVacancy);
 
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Preference added successfully!')),
+            SnackBar(content: Text('Vacancy added successfully!')),
           );
-          Navigator.pop(context, true); // Go back to the previous screen
+          context.go('/vacancy');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to add preference. Please try again.'),
+              content: Text('Failed to add vacancy. Please try again.'),
               backgroundColor: Colors.red,
             ),
           );
@@ -117,7 +106,7 @@ class _Vacancyadd extends State<Vacancyadd> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add preference. Please try again.'),
+            content: Text('Failed to add vacancy. Please try again.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -280,22 +269,6 @@ class _Vacancyadd extends State<Vacancyadd> {
                               return 'Please enter career level';
                             }
                             return null;
-                          },
-                        ),
-                        buildDateField(
-                          'Availability',
-                          _availabilityController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter availability';
-                            }
-                            return null;
-                          },
-                          context,
-                          onDateSelected: (date) {
-                            _availabilityController.text = date != null
-                                ? DateFormat('dd MMMM yyyy').format(date)
-                                : '';
                           },
                         ),
                         SizedBox(height: 20),

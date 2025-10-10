@@ -1,18 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartBody.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
-    show SettingsGroup;
-import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
+import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/vacancy/data/models/vacancyResponse.dart';
+import 'package:job_platform/features/components/vacancy/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
+import 'package:job_platform/features/components/vacancy/domain/usecases/vacancy_usecase.dart';
 import 'package:job_platform/features/components/vacancy/persentation/widgets/vacancy/vacancyBody.dart';
 import 'package:job_platform/features/components/vacancy/persentation/widgets/vacancy/vacancyItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Vacancy extends StatefulWidget {
   Vacancy({super.key});
@@ -22,72 +20,144 @@ class Vacancy extends StatefulWidget {
 }
 
 class _Vacancy extends State<Vacancy> {
+  final _searchController = TextEditingController();
+
   List<Vacancyitems> dataSub = [];
+  List<Vacancyitems> tempSub = [];
+  Timer? _debounce;
+
   // Loading state
   bool isLoading = true;
   String? errorMessage;
-  Future<void> _loadProfileData() async {
-    try {
-      // setState(() {
-      //   isLoading = true;
-      //   errorMessage = null;
-      // });
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? userId = prefs.getString('idUser');
 
-      // if (userId != null) {
-      //   var profile = await _profileUseCase.getProfile(userId);
-      //   if (profile != null) {
-      //     setState(() {
-      //       dataUser = profile.user;
-      //       dataEdu = profile.educations ?? [];
-      //       dataOrg = profile.organizations ?? [];
-      //       dataWork = profile.experiences ?? [];
-      //       dataCertificate = profile.certificates ?? [];
-      //       dataSkill = profile.skills ?? [];
-      //       dataPreference = profile.preferences ?? [];
-      //       isLoading = false;
-      //     });
-      //   }
-      // } else {
-      //   print("User ID not found in SharedPreferences");
-      // }
+  // Usecase
+  late VacancyUseCase _vacancyUseCase;
+
+  @override
+  void initState() {
+    super.initState();
+    AuthRemoteDataSource _dataSourceVacancy = AuthRemoteDataSource();
+    AuthRepositoryImpl _repoVacancy = AuthRepositoryImpl(_dataSourceVacancy);
+    _vacancyUseCase = VacancyUseCase(_repoVacancy);
+    _loadVacancyData();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadVacancyData() async {
+    try {
       setState(() {
-        isLoading = false;
+        isLoading = true;
         errorMessage = null;
-        dataSub = [
-          Vacancyitems(
-            index: "1",
-            title: "Fresh Graduate",
-            subtitle: "Back End Developer",
-          ),
-          Vacancyitems(
-            index: "2",
-            title: "Junior Manager",
-            subtitle: "Back End Developer",
-          ),
-          Vacancyitems(
-            index: "3",
-            title: "Supervisor",
-            subtitle: "Front End Developer",
-          ),
-        ];
       });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? companyId = prefs.getString('idCompany');
+
+      if (companyId != null) {
+        var vacancy = await _vacancyUseCase.getListVacancy(companyId);
+        if (vacancy != null) {
+          int idx = 1;
+          setState(() {
+            isLoading = false;
+
+            dataSub = vacancy
+                .map(
+                  (item) => Vacancyitems(
+                    index: "${idx++}",
+                    title: item.jabatan!,
+                    subtitle: item.namaPosisi,
+                    vacancy: VacancyData(
+                      item.id,
+                      item.idCompany,
+                      item.lokasi,
+                      item.namaPosisi,
+                      item.jabatan,
+                      item.gajiMin,
+                      item.gajiMax,
+                      item.tipeKerja,
+                      item.sistemKerja,
+                    ),
+                    onDelete: () => _deleteVacancy(item.id),
+                  ),
+                )
+                .toList();
+                
+            tempSub = dataSub;
+          });
+        }
+      } else {
+        print("Company ID not found in SharedPreferences");
+      }
     } catch (e) {
-      print("Error loading profile data: $e");
+      print("Error loading vacancy data: $e");
       if (mounted) {
         setState(() {
           isLoading = false;
-          errorMessage = "Error loading profile: $e";
+          errorMessage = "Error loading vacancy: $e";
         });
       }
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadProfileData();
+  Future<void> _deleteVacancy(String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idCompany = prefs.getString('idCompany');
+
+      if (idCompany == null)
+        throw Exception("Company ID not found in preferences");
+
+      VacancyResponse response = await _vacancyUseCase.vacancyDelete(id);
+
+      if (response.responseMessage == 'Sukses') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Vacancy Delete successfully!')));
+        setState(() {
+          _loadVacancyData();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.responseMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during delete vacancy: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = "Error delete vacancy: $e";
+        });
+      }
+    }
+  }
+
+  void _onSearchChanged() {
+    _debounce?.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      final query = _searchController.text.trim().toLowerCase();
+
+      setState(() {
+        tempSub = query.isEmpty
+            ? dataSub
+            : dataSub
+                  .where(
+                    (data) =>
+                        data.title.toLowerCase().contains(query) ||
+                        (data.subtitle?.toLowerCase().contains(query) ?? false),
+                  )
+                  .toList();
+      });
+    });
   }
 
   @override
@@ -99,7 +169,7 @@ class _Vacancy extends State<Vacancy> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Setting data...'),
+            Text('Loading vacancy data...'),
           ],
         ),
       );
@@ -147,7 +217,11 @@ class _Vacancy extends State<Vacancy> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Vacancybody(items: dataSub),
+                child: Vacancybody(
+                  items: tempSub,
+                  onSearchChanged: _onSearchChanged,
+                  searchController: _searchController,
+                ),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
