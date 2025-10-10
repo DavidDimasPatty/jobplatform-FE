@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
 import 'package:job_platform/features/components/manageHRD/data/datasources/aut_remote_datasource.dart'
     show AuthRemoteDataSource;
 import 'package:job_platform/features/components/manageHRD/data/models/GetAllHRDTransaction.dart';
@@ -22,7 +23,11 @@ class Managehrd extends StatefulWidget {
 }
 
 class _Managehrd extends State<Managehrd> {
+  //data utama
   List<Managehrditems> dataSub = [];
+  //searching
+  List<Managehrditems> dumpSub = [];
+  String searchQuery = "";
   // Loading state
   bool isLoading = true;
   String? errorMessage;
@@ -30,6 +35,7 @@ class _Managehrd extends State<Managehrd> {
   AuthRepositoryImpl? _repoManageHRD;
   AuthRemoteDataSource? _dataSourceHRD;
   ManagehrdUsecase? _hrdUseCase;
+  final _searchController = TextEditingController();
 
   final TextEditingController _emailController = TextEditingController();
   Future<void> _loadHRD() async {
@@ -59,6 +65,7 @@ class _Managehrd extends State<Managehrd> {
                   ),
                 )
                 .toList();
+            dumpSub = dataSub;
           });
         }
       } else {
@@ -230,6 +237,29 @@ class _Managehrd extends State<Managehrd> {
     }
   }
 
+  void _applyFilter() {
+    setState(() {
+      if ((searchQuery.isEmpty || searchQuery.trim().isEmpty)) {
+        dumpSub = List.from(dataSub);
+        return;
+      }
+
+      dumpSub = dataSub.where((data) {
+        final matchSearch =
+            (data.title?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+                false) ||
+            (data.subtitle?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+                false);
+        return matchSearch;
+      }).toList();
+    });
+  }
+
+  void _onSearchChanged() {
+    searchQuery = _searchController.text;
+    _applyFilter();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -296,7 +326,12 @@ class _Managehrd extends State<Managehrd> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Managehrdbody(items: dataSub, popup: _showEmailDialog),
+                child: Managehrdbody(
+                  items: dumpSub,
+                  popup: _showEmailDialog,
+                  onSearchChanged: _onSearchChanged,
+                  searchController: _searchController,
+                ),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],

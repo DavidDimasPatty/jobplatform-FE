@@ -8,14 +8,21 @@ import 'package:responsive_framework/responsive_framework.dart';
 class Managehrdbody extends StatefulWidget {
   final List<Managehrditems> items;
   final VoidCallback popup;
-  Managehrdbody({super.key, required this.items, required this.popup});
+  final VoidCallback onSearchChanged;
+  TextEditingController searchController;
+  Managehrdbody({
+    super.key,
+    required this.items,
+    required this.popup,
+    required this.onSearchChanged,
+    required this.searchController,
+  });
 
   @override
   State<Managehrdbody> createState() => _Managehrdbody();
 }
 
 class _Managehrdbody extends State<Managehrdbody> {
-  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,7 +62,10 @@ class _Managehrdbody extends State<Managehrdbody> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    controller: _searchController,
+                    onChanged: (value) {
+                      widget.onSearchChanged();
+                    },
+                    controller: widget.searchController,
                     decoration: InputDecoration(
                       labelText: 'Cari HRD',
                       hintText: 'Masukan Nama HRD',

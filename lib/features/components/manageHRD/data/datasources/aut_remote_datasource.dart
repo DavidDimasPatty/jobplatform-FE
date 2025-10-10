@@ -14,7 +14,6 @@ class AuthRemoteDataSource {
       ).replace(queryParameters: {'id': idCompany});
       List<GetAllHRDTransaction?>? data;
       final response = await http.get(url);
-      print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -24,11 +23,9 @@ class AuthRemoteDataSource {
         return data;
       } else {
         final dataFailed = jsonDecode(response.body);
-        print('Gagal: ${response.statusCode} $dataFailed');
         return null;
       }
     } catch (e) {
-      print('Error Fetching HRD Data: $e');
       return null;
     }
   }
@@ -44,7 +41,6 @@ class AuthRemoteDataSource {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(profile.toJsonDeleteHRD()),
       );
-      print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -55,11 +51,9 @@ class AuthRemoteDataSource {
         return profileResponse;
       } else {
         final Map<String, dynamic> dataFailed = jsonDecode(response.body);
-        print('Gagal: ${response.statusCode} $dataFailed');
         return ManageHRDResponse.fromJson(dataFailed);
       }
     } catch (e) {
-      print('Error during edit profile: $e');
       return ManageHRDResponse(
         responseCode: '500',
         responseMessage: 'Failed',
@@ -82,7 +76,6 @@ class AuthRemoteDataSource {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(profile.toJsonAddHRD(email)),
       );
-      print(response.body.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -93,11 +86,9 @@ class AuthRemoteDataSource {
         return profileResponse;
       } else {
         final Map<String, dynamic> dataFailed = jsonDecode(response.body);
-        print('Gagal: ${response.statusCode} $dataFailed');
         return ManageHRDResponse.fromJson(dataFailed);
       }
     } catch (e) {
-      print('Error during edit profile: $e');
       return ManageHRDResponse(
         responseCode: '500',
         responseMessage: 'Failed',
