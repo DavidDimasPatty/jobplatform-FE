@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Notificationitem extends StatefulWidget {
   final IconData icon;
@@ -6,15 +7,18 @@ class Notificationitem extends StatefulWidget {
   final String subtitle;
   final Color bgColor;
   final Color iconColor;
-  //final List<GlobalKey<NavigatorState>> navigatorKeys;
+  final String? routeName;
+  final bool isRead;
+
   Notificationitem({
     super.key,
     required this.icon,
     required this.iconColor,
     required this.title,
     required this.subtitle,
-    //required this.navigatorKeys,
     required this.bgColor,
+    this.routeName,
+    this.isRead = false,
   });
 
   @override
@@ -26,10 +30,9 @@ class _Notificationitem extends State<Notificationitem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // widget.navigatorKeys.currentState!.pushNamed(
-        //   'detail-chat',
-        //   //arguments: {"navigatorKeys": widget.navigatorKeys},
-        // );
+        if (widget.routeName != null) {
+          context.go(widget.routeName!);
+        }
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),

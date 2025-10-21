@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class NotificationDetailitems extends StatefulWidget {
   final IconData icon;
@@ -7,16 +8,19 @@ class NotificationDetailitems extends StatefulWidget {
   final Color bgColor;
   final Color iconColor;
   final String about;
-  //final List<GlobalKey<NavigatorState>> navigatorKeys;
+  String? route;
+  bool isRead;
+
   NotificationDetailitems({
     super.key,
     required this.icon,
     required this.iconColor,
     required this.title,
     required this.subtitle,
-    //required this.navigatorKeys,
     required this.bgColor,
     required this.about,
+    this.route,
+    this.isRead = false,
   });
 
   @override
@@ -28,15 +32,14 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // widget.navigatorKeys.currentState!.pushNamed(
-        //   'detail-chat',
-        //   //arguments: {"navigatorKeys": widget.navigatorKeys},
-        // );
+        if (widget.route != null) {
+          context.go(widget.route!);
+        }
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(
-          // tileColor: widget.bgColor,
+          tileColor: widget.isRead ? Colors.white : Colors.blue.shade50,
           style: ListTileStyle.list,
           //onTap: onTap,
           leading: Container(
@@ -57,10 +60,11 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
                     Flexible(
                       flex: 3,
                       child: Column(
+                        spacing: 10,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.subtitle ?? "",
+                            widget.subtitle,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.normal,

@@ -1,5 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/notification/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/notification/data/models/notificationModel.dart';
+import 'package:job_platform/features/components/notification/data/models/notificationRequest.dart';
+import 'package:job_platform/features/components/notification/data/models/notificationResponse.dart';
+import 'package:job_platform/features/components/notification/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/notification/domain/usecases/notification_usecase.dart';
 import 'package:job_platform/features/shared/Notification/Notification.dart';
 import 'package:job_platform/features/shared/Notification/NotificationItem.dart';
 import 'package:job_platform/features/shared/TopAppLayout.dart';
@@ -18,6 +26,7 @@ class _LayoutState extends State<Layout> {
   int selectedIndex = 0;
   bool _showNotification = false;
   List<Notificationitem>? dataNotif;
+  List<NotificationModel>? notification;
   String? loginAs;
   String? idUser;
   String? namaUser;
@@ -29,9 +38,29 @@ class _LayoutState extends State<Layout> {
   String? domainCompany;
   String? noTelpCompany;
 
+  // Usecase
+  late NotificationUsecase _notificationUseCase;
+
   toggleNotification() {
     setState(() {
       _showNotification = !_showNotification;
+
+      if (_showNotification && notification != null) {
+        int unreadCount = notification!
+            .where((notif) => notif.isRead == false)
+            .length;
+
+        if (unreadCount > 0) {
+          _readNotification(
+            NotificationRequest(
+              idNotification: notification!
+                  .where((notif) => notif.isRead == false)
+                  .map((notif) => notif.id)
+                  .toList(),
+            ),
+          );
+        }
+      }
     });
   }
 
@@ -50,10 +79,8 @@ class _LayoutState extends State<Layout> {
   ];
 
   void _onTabSelected(int index) {
-    // if (selectedIndex != index) {
     setState(() => selectedIndex = index);
     context.go(_routes[index]);
-    // }
   }
 
   Future<void> getDataPref() async {
@@ -76,47 +103,84 @@ class _LayoutState extends State<Layout> {
 
   Future<void> _initialize() async {
     await getDataPref();
-    dataNotif = [
-      Notificationitem(
-        icon: Icons.warning,
-        iconColor: Colors.yellowAccent,
-        title: "HRD has seen your profile!🤗",
-        subtitle: "Let's we hope for the best!😇",
-        bgColor: Colors.yellow.shade200,
-      ),
-      Notificationitem(
-        icon: Icons.dangerous,
-        iconColor: Colors.redAccent,
-        title: "You have been rejected from PT. Indomarco Prismatama!🥺🥺",
-        subtitle:
-            "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Indomarco Prismatama",
-        bgColor: Colors.red.shade200,
-      ),
-      Notificationitem(
-        icon: Icons.dangerous,
-        iconColor: Colors.redAccent,
-        title: "You have been rejected from PT. Inti Dunia Sukses!🥺🥺",
-        subtitle:
-            "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Inti Dunia Sukses",
-        bgColor: Colors.red.shade200,
-      ),
-      Notificationitem(
-        icon: Icons.tag_faces_rounded,
-        iconColor: Colors.greenAccent,
-        title: "You are selected! 🥳🥳",
-        subtitle: "Let's continue to next progress!💪✊",
-        bgColor: Colors.green.shade200,
-      ),
-    ];
-
+    await _loadNotificationData();
     setState(() {
       isLoading = false;
+    });
+    _startPeriodicRefresh();
+  }
+
+  Future<void> _loadNotificationData() async {
+    var notification = await _notificationUseCase.getNotification(
+      idUser ?? idCompany ?? '',
+    );
+    if (notification != null) {
+      setState(() {
+        dataNotif = notification
+            .map<Notificationitem>(
+              (item) => Notificationitem(
+                icon: Icons.info,
+                iconColor: Colors.blueAccent,
+                title: item.title,
+                subtitle: item.message,
+                bgColor: Colors.blue.shade200,
+                routeName: item.route,
+                isRead: item.isRead,
+              ),
+            )
+            .toList();
+
+        this.notification = notification;
+      });
+    }
+  }
+
+  Future<void> _readNotification(NotificationRequest notificationId) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accountId =
+          prefs.getString('idUser') ?? prefs.getString('idCompany');
+
+      if (accountId != null) {
+        NotificationResponse response = await _notificationUseCase
+            .readNotification(notificationId);
+
+        if (response.responseMessage == 'Sukses') {
+          print("Notification marked as read successfully");
+          await _loadNotificationData();
+        } else {
+          print(
+            "Failed to mark notification as read: ${response.responseMessage}",
+          );
+        }
+      } else {
+        print("User ID or Company ID not found in SharedPreferences");
+      }
+    } catch (e) {
+      print("Error marking notifications as read: $e");
+    }
+  }
+
+  // Refresh notification data for every 5 minutes
+  Future<void> _refreshNotificationData() async {
+    await _loadNotificationData();
+  }
+
+  void _startPeriodicRefresh() {
+    Timer.periodic(Duration(minutes: 1), (timer) {
+      print("Refreshing notification data...");
+      _refreshNotificationData();
     });
   }
 
   @override
   void initState() {
     super.initState();
+    AuthRemoteDataSource _dataSourceNotification = AuthRemoteDataSource();
+    AuthRepositoryImpl _repoNotification = AuthRepositoryImpl(
+      _dataSourceNotification,
+    );
+    _notificationUseCase = NotificationUsecase(_repoNotification);
     _initialize();
   }
 
@@ -137,6 +201,8 @@ class _LayoutState extends State<Layout> {
               currentIndex: selectedIndex,
               onTabSelected: _onTabSelected,
               loginAs: loginAs!,
+              notificationCount:
+                  dataNotif?.where((item) => !item.isRead).length ?? 0,
             ),
             body: widget.child,
             bottomNavigationBar: BottomApplayout(
@@ -149,7 +215,7 @@ class _LayoutState extends State<Layout> {
           if (_showNotification)
             Notificationbody(
               toggleNotification: toggleNotification,
-              data: dataNotif!,
+              data: dataNotif ?? [],
             ),
         ],
       ),

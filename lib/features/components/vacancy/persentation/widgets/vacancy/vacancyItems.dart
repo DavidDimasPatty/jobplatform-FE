@@ -43,7 +43,12 @@ class Vacancyitems extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        context.go(
+          "/vacancyDetail",
+          extra: vacancy,
+        );
+      },
       child: Container(
         margin: EdgeInsets.all(7),
         decoration: BoxDecoration(

@@ -1,19 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartBody.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
+import 'package:job_platform/features/components/notification/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/notification/data/models/notificationRequest.dart';
+import 'package:job_platform/features/components/notification/data/models/notificationResponse.dart';
+import 'package:job_platform/features/components/notification/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/notification/domain/usecases/notification_usecase.dart';
 import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailBody.dart';
 import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailItems.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
-    show SettingsGroup;
-import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
-import 'package:job_platform/features/shared/Notification/Notification.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationDetail extends StatefulWidget {
   NotificationDetail({super.key});
@@ -23,92 +20,152 @@ class NotificationDetail extends StatefulWidget {
 }
 
 class _NotificationDetail extends State<NotificationDetail> {
+  final _searchController = TextEditingController();
+
   List<NotificationDetailitems> dataSub = [];
+  List<NotificationDetailitems> tempSub = [];
+  Timer? _debounce;
+
   // Loading state
   bool isLoading = true;
   String? errorMessage;
-  Future<void> _loadProfileData() async {
-    try {
-      // setState(() {
-      //   isLoading = true;
-      //   errorMessage = null;
-      // });
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? userId = prefs.getString('idUser');
 
-      // if (userId != null) {
-      //   var profile = await _profileUseCase.getProfile(userId);
-      //   if (profile != null) {
-      //     setState(() {
-      //       dataUser = profile.user;
-      //       dataEdu = profile.educations ?? [];
-      //       dataOrg = profile.organizations ?? [];
-      //       dataWork = profile.experiences ?? [];
-      //       dataCertificate = profile.certificates ?? [];
-      //       dataSkill = profile.skills ?? [];
-      //       dataPreference = profile.preferences ?? [];
-      //       isLoading = false;
-      //     });
-      //   }
-      // } else {
-      //   print("User ID not found in SharedPreferences");
-      // }
+  // Usecase
+  late NotificationUsecase _notificationUseCase;
+
+  @override
+  void initState() {
+    super.initState();
+    AuthRemoteDataSource _dataSourceNotification = AuthRemoteDataSource();
+    AuthRepositoryImpl _repoNotification = AuthRepositoryImpl(
+      _dataSourceNotification,
+    );
+    _notificationUseCase = NotificationUsecase(_repoNotification);
+    _loadNotificationData();
+    _startPeriodicRefresh();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadNotificationData() async {
+    try {
       setState(() {
-        isLoading = false;
+        isLoading = true;
         errorMessage = null;
-        dataSub = [
-          NotificationDetailitems(
-            icon: Icons.warning,
-            iconColor: Colors.yellowAccent,
-            title: "HRD has seen your profile!🤗",
-            subtitle: "Let's we hope for the best!😇",
-            bgColor: Colors.yellow.shade200,
-            about: "job",
-          ),
-          NotificationDetailitems(
-            icon: Icons.dangerous,
-            iconColor: Colors.redAccent,
-            title: "You have been rejected from PT. Indomarco Prismatama!🥺🥺",
-            subtitle:
-                "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Indomarco Prismatama",
-            bgColor: Colors.red.shade200,
-            about: "job",
-          ),
-          NotificationDetailitems(
-            icon: Icons.dangerous,
-            iconColor: Colors.redAccent,
-            title: "You have been rejected from PT. Inti Dunia Sukses!🥺🥺",
-            subtitle:
-                "We are really sorry to inform you, that you have been rejected at Interview Proses in PT. Inti Dunia Sukses",
-            bgColor: Colors.red.shade200,
-            about: "job",
-          ),
-          NotificationDetailitems(
-            icon: Icons.tag_faces_rounded,
-            iconColor: Colors.greenAccent,
-            title:
-                "Anda Telah Ditambahkan menjadi HRD PT.Indomaret Group! 🥳🥳",
-            subtitle: "Perlu Konfirmasi Anda (Memerlukan login ulang)!💪",
-            bgColor: Colors.green.shade200,
-            about: "offer",
-          ),
-        ];
       });
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accountId =
+          prefs.getString('idUser') ?? prefs.getString('idCompany');
+
+      if (accountId != null) {
+        var notification = await _notificationUseCase.getNotification(
+          accountId,
+        );
+        if (notification != null) {
+          setState(() {
+            dataSub = notification
+                .map<NotificationDetailitems>(
+                  (item) => NotificationDetailitems(
+                    icon: Icons.info,
+                    iconColor: Colors.blueAccent,
+                    title: item.title,
+                    subtitle: item.message,
+                    bgColor: Colors.blue.shade200,
+                    about: "job",
+                    route: item.route,
+                    isRead: item.isRead,
+                  ),
+                )
+                .toList();
+            isLoading = false;
+
+            tempSub = dataSub;
+          });
+          
+          // await _readNotification(
+          //   NotificationRequest(
+          //     idNotification: notification
+          //         .where((notif) => notif.isRead == false)
+          //         .map((notif) => notif.id)
+          //         .toList(),
+          //   ),
+          // );
+        }
+      } else {
+        print("User ID or Company ID not found in SharedPreferences");
+      }
     } catch (e) {
-      print("Error loading profile data: $e");
+      print("Error loading notification data: $e");
       if (mounted) {
         setState(() {
           isLoading = false;
-          errorMessage = "Error loading profile: $e";
+          errorMessage = "Error loading notification: $e";
         });
       }
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadProfileData();
+  Future<void> _readNotification(NotificationRequest notificationId) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accountId =
+          prefs.getString('idUser') ?? prefs.getString('idCompany');
+
+      if (accountId != null) {
+        NotificationResponse response = await _notificationUseCase
+            .readNotification(notificationId);
+
+        if (response.responseMessage == 'Sukses') {
+          print("Notification marked as read successfully");
+          await _loadNotificationData();
+        } else {
+          print(
+            "Failed to mark notification as read: ${response.responseMessage}",
+          );
+        }
+      } else {
+        print("User ID or Company ID not found in SharedPreferences");
+      }
+    } catch (e) {
+      print("Error marking notifications as read: $e");
+    }
+  }
+
+  // Refresh notification data for every 5 minutes
+  Future<void> _refreshNotificationData() async {
+    await _loadNotificationData();
+  }
+
+  void _startPeriodicRefresh() {
+    Timer.periodic(Duration(minutes: 1), (timer) {
+      _refreshNotificationData();
+    });
+  }
+
+  void _onSearchChanged() {
+    _debounce?.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      final query = _searchController.text.trim().toLowerCase();
+
+      setState(() {
+        tempSub = query.isEmpty
+            ? dataSub
+            : dataSub
+                  .where(
+                    (data) =>
+                        data.title.toLowerCase().contains(query) ||
+                        data.subtitle.toLowerCase().contains(query),
+                  )
+                  .toList();
+      });
+    });
   }
 
   @override
@@ -120,7 +177,7 @@ class _NotificationDetail extends State<NotificationDetail> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Setting data...'),
+            Text('Loading notification data...'),
           ],
         ),
       );
@@ -168,7 +225,11 @@ class _NotificationDetail extends State<NotificationDetail> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: NotificationDetailbody(items: dataSub),
+                child: NotificationDetailbody(
+                  items: tempSub,
+                  onSearchChanged: _onSearchChanged,
+                  searchController: _searchController,
+                ),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],

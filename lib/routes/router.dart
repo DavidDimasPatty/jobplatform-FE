@@ -49,6 +49,7 @@ import 'package:job_platform/features/components/statusJob/persentation/pages/st
 import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancy.dart';
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyAdd.dart';
+import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyDetail.dart';
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyEdit.dart';
 import 'package:job_platform/features/shared/layout.dart';
 
@@ -169,6 +170,13 @@ final List<GoRoute> _layoutRoutes = [
     builder: (context, state) {
       final data = state.extra as VacancyData;
       return Vacancyedit(data: data);
+    },
+  ),
+  GoRoute(
+    path: '/vacancyDetail',
+    builder: (context, state) {
+      final data = state.extra as VacancyData;
+      return VacancyDetail(data: data);
     },
   ),
   GoRoute(path: '/vacancyAdd', builder: (context, state) => Vacancyadd()),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/chat/domain/entities/ChatDetailItems.dart';
 
 class NotificationDetailheader extends StatefulWidget {
   ValueChanged<String> onSearchChanged;
@@ -19,7 +18,6 @@ class NotificationDetailheader extends StatefulWidget {
 class _NotificationDetailheader extends State<NotificationDetailheader> {
   @override
   Widget build(BuildContext context) {
-    var mediaQueryHeight = MediaQuery.of(context).size.height;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
@@ -38,7 +36,7 @@ class _NotificationDetailheader extends State<NotificationDetailheader> {
                   controller: widget.searchController,
                   onChanged: widget.onSearchChanged,
                   decoration: InputDecoration(
-                    hintText: "Search candidates...",
+                    hintText: "Search notification...",
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),

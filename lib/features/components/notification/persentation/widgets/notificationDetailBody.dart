@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailItems.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 class NotificationDetailbody extends StatefulWidget {
   final List<NotificationDetailitems> items;
-  NotificationDetailbody({super.key, required this.items});
+  final VoidCallback onSearchChanged;
+  TextEditingController searchController;
+
+  NotificationDetailbody({
+    super.key,
+    required this.items,
+    required this.onSearchChanged,
+    required this.searchController,
+  });
 
   @override
   State<NotificationDetailbody> createState() => _NotificationDetailbody();
 }
 
 class _NotificationDetailbody extends State<NotificationDetailbody> {
-  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,7 +43,10 @@ class _NotificationDetailbody extends State<NotificationDetailbody> {
             // height: 90,
             margin: EdgeInsets.all(20),
             child: TextFormField(
-              controller: _searchController,
+              onChanged: (value) {
+                widget.onSearchChanged();
+              },
+              controller: widget.searchController,
               decoration: InputDecoration(
                 labelText: 'Cari Notifications',
                 hintText: 'Cari Notifications',
