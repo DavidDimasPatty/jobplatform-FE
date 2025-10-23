@@ -1,39 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:intl/intl.dart';
-import 'package:job_platform/features/components/progress/data/models/preferenceProgressModel.dart';
+import 'package:job_platform/features/components/statusJob/data/models/CompanyVacancies.dart';
 
-class CareerPreferenceProgress extends StatelessWidget {
-  final List<PreferenceProgressModel>? dataPreferences;
+class VacancyProgress extends StatelessWidget {
+  final CompanyVacancies? dataVacancy;
 
-  CareerPreferenceProgress({super.key, required this.dataPreferences});
+  VacancyProgress({super.key, this.dataVacancy});
 
-  // Sample data for career preferences
   Map<String, String> get careerDescriptions => {
-    "Salary Expectation": dataPreferences!.isNotEmpty
-        ? "${NumberFormat('#,###').format(dataPreferences![0].gajiMin)} - ${NumberFormat('#,###').format(dataPreferences![0].gajiMax)}"
+    "Salary Expectation": dataVacancy != null
+        ? "${NumberFormat('#,###').format(dataVacancy?.gajiMin)} - ${NumberFormat('#,###').format(dataVacancy?.gajiMax)}"
         : "Not specified",
-    "Position": dataPreferences!.isNotEmpty
-        ? dataPreferences![0].posisi ?? "Not specified"
+    "Position": dataVacancy != null
+        ? dataVacancy?.namaPosisi ?? "Not specified"
         : "Not specified",
-    "Job Type": dataPreferences!.isNotEmpty
-        ? dataPreferences![0].tipePekerjaan ?? "Not specified"
+    "Job Type": dataVacancy != null
+        ? dataVacancy?.tipeKerja ?? "Not specified"
         : "Not specified",
-    "Work System": dataPreferences!.isNotEmpty
-        ? dataPreferences![0].sistemKerja ?? "Not specified"
+    "Work System": dataVacancy != null
+        ? dataVacancy?.sistemKerja ?? "Not specified"
         : "Not specified",
-    "Location": dataPreferences!.isNotEmpty
-        ? dataPreferences![0].lokasi ?? "Not specified"
+    "Location": dataVacancy != null
+        ? dataVacancy?.lokasi ?? "Not specified"
         : "Not specified",
-    "Career Level": dataPreferences!.isNotEmpty
-        ? dataPreferences![0].levelJabatan ?? "Not specified"
-        : "Not specified",
-    "Availability": dataPreferences!.isNotEmpty
-        ? "${DateFormat('dd/MM/yyyy').format(dataPreferences![0].dateWork ?? DateTime.now())}"
+    "Career Level": dataVacancy != null
+        ? dataVacancy?.jabatan ?? "Not specified"
         : "Not specified",
   };
 
-  // Map to store icon preferences for each career preference key
   final Map<String, IconData> careerIcons = {
     "Salary Expectation": Icons.attach_money,
     "Position": Icons.business,
@@ -59,7 +53,7 @@ class CareerPreferenceProgress extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Career Preferences",
+                "Offering Details",
                 style: TextStyle(
                   fontSize: 15,
                   letterSpacing: 1,

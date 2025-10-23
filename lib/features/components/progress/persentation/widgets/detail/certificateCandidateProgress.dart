@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:intl/intl.dart';
+import 'package:job_platform/features/components/progress/data/models/certificateProgressModel.dart';
 
 class CertificateProgress extends StatelessWidget {
-  final List<CertificateMV> dataCertificates;
-  // final VoidCallback onAddPressed;
-  // final ValueChanged<CertificateMV> onEditPressed;
+  final List<CertificateProgressModel>? dataCertificates;
 
-  CertificateProgress({
-    super.key,
-    required this.dataCertificates,
-    // required this.onAddPressed,
-    // required this.onEditPressed,
-  });
+  CertificateProgress({super.key, this.dataCertificates});
 
   @override
   Widget build(BuildContext context) {
@@ -38,30 +32,17 @@ class CertificateProgress extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              // ElevatedButton.icon(
-              //   //onPressed: onAddPressed,
-              //   onPressed: () {},
-              //   style: ElevatedButton.styleFrom(
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //     backgroundColor: Colors.blue, // Button color
-              //     foregroundColor: Colors.white, // Icon/text color
-              //   ),
-              //   icon: Icon(Icons.add),
-              //   label: Text("Add"),
-              // ),
             ],
           ),
           SizedBox(height: 20),
-          for (var cert in dataCertificates) ...[
+          for (var cert in dataCertificates!) ...[
             CertificateCard(
               idx: idx++,
-              title: cert.certificate.nama,
-              description: cert.certificate.publisher,
+              title: cert.nama ?? "",
+              description: cert.publisher ?? "",
               dateRange: (cert.expiredDate == null)
-                  ? "${DateFormat('MMM yyyy').format(cert.publishDate)} - Present"
-                  : "${DateFormat('MMM yyyy').format(cert.publishDate)} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
+                  ? "${DateFormat('MMM yyyy').format(cert.publishDate!)} - Present"
+                  : "${DateFormat('MMM yyyy').format(cert.publishDate!)} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
               //onPressed: () => onEditPressed(cert),
               onPressed: () {},
             ),

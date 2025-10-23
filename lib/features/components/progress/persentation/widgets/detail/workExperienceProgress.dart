@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:intl/intl.dart';
+import 'package:job_platform/features/components/progress/data/models/workExperienceProgressModel.dart';
 
 class WorkexperienceProgress extends StatelessWidget {
-  final List<WorkexperienceMV> dataWork;
-  // final VoidCallback onAddPressed;
-  // final ValueChanged<WorkexperienceMV> onEditPressed;
+  final List<WorkExperienceProgressModel>? dataWork;
 
-  WorkexperienceProgress({
-    super.key,
-    required this.dataWork,
-    // required this.onAddPressed,
-    // required this.onEditPressed,
-  });
+  WorkexperienceProgress({super.key, this.dataWork});
 
   @override
   Widget build(BuildContext context) {
@@ -41,29 +35,14 @@ class WorkexperienceProgress extends StatelessWidget {
                   ),
                 ),
               ),
-              // ElevatedButton.icon(
-              //   //onPressed: onAddPressed,
-              //   onPressed: () {},
-              //   icon: Icon(Icons.add, size: 20),
-              //   label: Text("Add"),
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.blue,
-              //     foregroundColor: Colors.white,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           SizedBox(height: 10),
           Column(
-            children: dataWork.asMap().entries.map((entry) {
+            children: dataWork!.asMap().entries.map((entry) {
               int idx = entry.key + 1;
               var data = entry.value;
               return InkWell(
-                // onTap: () => onEditPressed(data),
-                //onTap: () {},
                 child: Container(
                   margin: EdgeInsets.all(5),
                   padding: EdgeInsets.all(10),
@@ -92,14 +71,14 @@ class WorkexperienceProgress extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            data.experience.namaPerusahaan,
+                            data.namaPerusahaan ?? "",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            data.namaJabatan! + " - " + data.sistemKerja!,
+                            data.namaJabatan! + " - " + data.tipeKaryawan!,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],

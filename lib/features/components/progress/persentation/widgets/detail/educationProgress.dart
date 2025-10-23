@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:intl/intl.dart';
+import 'package:job_platform/features/components/progress/data/models/educationProgressModel.dart';
 
 class EducationProgress extends StatelessWidget {
-  final List<EducationMV> dataEdu;
-  // final VoidCallback onAddPressed;
-  // final ValueChanged<EducationMV> onEditPressed;
+  final List<EducationProgressModel>? dataEdu;
 
-  const EducationProgress({
-    super.key,
-    required this.dataEdu,
-    // required this.onAddPressed,
-    // required this.onEditPressed,
-  });
+  const EducationProgress({super.key, this.dataEdu});
 
   @override
   Widget build(BuildContext context) {
@@ -40,24 +34,11 @@ class EducationProgress extends StatelessWidget {
                   ),
                 ),
               ),
-              // ElevatedButton.icon(
-              //   //onPressed: onAddPressed,
-              //   onPressed: () {},
-              //   icon: Icon(Icons.add, size: 20),
-              //   label: Text("Add"),
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.blue,
-              //     foregroundColor: Colors.white,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           SizedBox(height: 10),
           Column(
-            children: dataEdu.asMap().entries.map((entry) {
+            children: dataEdu!.asMap().entries.map((entry) {
               int idx = entry.key + 1;
               var data = entry.value;
               return InkWell(
@@ -91,14 +72,14 @@ class EducationProgress extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            data.education.nama,
+                            data.nama ?? "",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            data.tingkat + " - " + data.penjurusan,
+                            "${data.tingkat ?? ""} - ${data.penjurusan ?? ""}",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],

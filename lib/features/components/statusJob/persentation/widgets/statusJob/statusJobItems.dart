@@ -3,42 +3,28 @@ import 'package:go_router/go_router.dart';
 
 class statusjobitems extends StatelessWidget {
   final String? url;
-  final List<String>? skill;
-  final String title;
-  final TextStyle? titleStyle;
-  final String? subtitle;
-  final TextStyle? subtitleStyle;
-  final Widget? trailing;
+  final String? namaPerusahaan;
+  final String? posisi;
+  final String? jabatan;
+  final String? tipeKerja;
+  final String? status;
   final VoidCallback? onTap;
-  final int? titleMaxLine;
-  final int? subtitleMaxLine;
-  final TextOverflow? overflow;
-  final Color? colorIcon;
-  final Color? colorBGIcon;
 
   statusjobitems({
     this.url,
-    required this.title,
-    this.titleStyle,
-    this.subtitle,
-    this.subtitleStyle,
-    this.trailing,
+    this.namaPerusahaan,
     this.onTap,
-    this.titleMaxLine,
-    this.subtitleMaxLine,
-    this.overflow = TextOverflow.ellipsis,
-    this.colorIcon,
-    this.colorBGIcon,
-    this.skill,
+    this.jabatan,
+    this.posisi,
+    this.status,
+    this.tipeKerja,
   });
 
   @override
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
-      onTap: () {
-        context.go("/statusJobDetail");
-      },
+      onTap: onTap,
       child: Container(
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -58,14 +44,10 @@ class statusjobitems extends StatelessWidget {
           child: ListTile(
             onTap: onTap,
             leading: Container(
-              decoration: BoxDecoration(
-                // color: (colorBGIcon != null ? colorBGIcon : Colors.lightBlueAccent),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              // padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               child: ClipOval(
-                child: Image.asset(
-                  "assets/images/BG_Pelamar.png",
+                child: Image.network(
+                  url!,
                   width: 40,
                   height: 40,
                   fit: BoxFit.cover,
@@ -73,47 +55,53 @@ class statusjobitems extends StatelessWidget {
                 ),
               ),
             ),
-            title: Text(
-              title,
-              style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-              maxLines: titleMaxLine,
-              overflow: titleMaxLine != null ? overflow : null,
-            ),
-            subtitle: (subtitle != null
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            title: Text(namaPerusahaan ?? ""),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 3,
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              subtitle ?? "",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            const Text(
-                              "Bandung, Jawa Barat",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
+                      Text(
+                        '${posisi ?? ''}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        '${jabatan ?? ''} - ${tipeKerja ?? ''}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black54,
                         ),
                       ),
                     ],
-                  )
-                : null),
+                  ),
+                ),
+              ],
+            ),
             trailing: Text(
-              "Need Action",
-              style: TextStyle(color: Colors.orange.shade600, fontSize: 17),
+              status ?? "",
+              style: TextStyle(
+                color: status == "Review"
+                    ? Colors.orange
+                    : status == "Interview"
+                    ? Colors.blue
+                    : status == "Offering"
+                    ? Colors.pink
+                    : status == "Menunggu Konfirmasi"
+                    ? Colors.indigo
+                    : status == "Close"
+                    ? Colors.green
+                    : Colors.red,
+                fontSize: 17,
+              ),
             ),
           ),
         ),

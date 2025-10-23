@@ -1,83 +1,110 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/statusJob/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/statusJob/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/statusJob/domain/entities/statusAllVM.dart';
+import 'package:job_platform/features/components/statusJob/domain/usecases/status_usecase.dart';
 import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobBody.dart';
 import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class statusJob extends StatefulWidget {
   statusJob({super.key});
-
   @override
   State<statusJob> createState() => _statusJob();
 }
 
 class _statusJob extends State<statusJob> {
   List<statusjobitems> dataSub = [];
-  // Loading state
   bool isLoading = true;
   String? errorMessage;
-  Future<void> _loadProfileData() async {
-    try {
-      // setState(() {
-      //   isLoading = true;
-      //   errorMessage = null;
-      // });
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? userId = prefs.getString('idUser');
+  AuthRepositoryImpl? _repoStatus;
+  AuthRemoteDataSource? _dataSourceStatus;
+  StatusUseCase? _statusUseCase;
 
-      // if (userId != null) {
-      //   var profile = await _profileUseCase.getProfile(userId);
-      //   if (profile != null) {
-      //     setState(() {
-      //       dataUser = profile.user;
-      //       dataEdu = profile.educations ?? [];
-      //       dataOrg = profile.organizations ?? [];
-      //       dataWork = profile.experiences ?? [];
-      //       dataCertificate = profile.certificates ?? [];
-      //       dataSkill = profile.skills ?? [];
-      //       dataPreference = profile.preferences ?? [];
-      //       isLoading = false;
-      //     });
-      //   }
-      // } else {
-      //   print("User ID not found in SharedPreferences");
-      // }
+  Future<void> _loadStatus() async {
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString('idUser');
+
+      if (userId != null) {
+        final result = await _statusUseCase!.getAllStatus(userId);
+        List<StatusAllVM>? statusData = result != null
+            ? List<StatusAllVM>.from(result)
+            : null;
+        if (statusData != null) {
+          setState(() {
+            statusData.map(
+              (x) => dataSub.add(
+                statusjobitems(
+                  namaPerusahaan: x.namaPerusahaan,
+                  jabatan: x.jabatan,
+                  onTap: () => TapItems(x.idUserVacancy!),
+                  posisi: x.namaPosisi,
+                  status: x.isAcceptUser == false && x.status == null
+                      ? "Menunggu Konfirmasi"
+                      : x.status == 0 &&
+                            x.isAcceptUser == true &&
+                            x.isRejectHRD == false
+                      ? "Review"
+                      : x.status == 1 &&
+                            x.isAcceptUser == true &&
+                            x.isRejectHRD == false
+                      ? "Interview"
+                      : x.status == 2 &&
+                            x.isAcceptUser == true &&
+                            x.isRejectHRD == false
+                      ? "Offering"
+                      : x.status == 3 &&
+                            x.isAcceptUser == true &&
+                            x.isRejectHRD == false
+                      ? "Close"
+                      : x.isAcceptUser == false
+                      ? "Reject Offering"
+                      : "Reject HRD",
+                  tipeKerja: x.tipeKerja,
+                  url: x.logoPerusahaan,
+                ),
+              ),
+            );
+            isLoading = false;
+            errorMessage = null;
+          });
+        }
+      } else {
+        print("User ID not found in SharedPreferences");
+      }
       setState(() {
         isLoading = false;
         errorMessage = null;
-        dataSub = [
-          statusjobitems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "PT. INDOMARCO PRISMATAMA",
-            subtitle: "Back End Developer",
-          ),
-          statusjobitems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "PT. INTI DUNIA SUKSES",
-            subtitle: "Back End Developer",
-          ),
-          statusjobitems(
-            url: "assets/images/BG_Pelamar.png",
-            title: "PT. ASTRA GROUP",
-            subtitle: "Front End Developer",
-          ),
-        ];
       });
     } catch (e) {
-      print("Error loading profile data: $e");
+      print("Error loading status data: $e");
       if (mounted) {
         setState(() {
           isLoading = false;
-          errorMessage = "Error loading profile: $e";
+          errorMessage = "Error loading status: $e";
         });
       }
     }
   }
 
+  void TapItems(String id) {
+    context.go("/statusJobDetail", extra: {"data": id});
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
+    _dataSourceStatus = AuthRemoteDataSource();
+    _repoStatus = AuthRepositoryImpl(_dataSourceStatus!);
+    _statusUseCase = StatusUseCase(_repoStatus!);
+    _loadStatus();
   }
 
   @override
@@ -89,13 +116,12 @@ class _statusJob extends State<statusJob> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Setting data...'),
+            Text('Loading data status...'),
           ],
         ),
       );
     }
 
-    // Show error message if there's an error
     if (errorMessage != null) {
       return Center(
         child: Column(
@@ -109,7 +135,6 @@ class _statusJob extends State<statusJob> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            // ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
           ],
         ),
       );
@@ -128,9 +153,6 @@ class _statusJob extends State<statusJob> {
             rowMainAxisAlignment: MainAxisAlignment.center,
             columnMainAxisAlignment: MainAxisAlignment.center,
             rowCrossAxisAlignment: CrossAxisAlignment.center,
-            // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-            //     ? ResponsiveRowColumnType.COLUMN
-            //     : ResponsiveRowColumnType.ROW,
             layout: ResponsiveRowColumnType.COLUMN,
             rowSpacing: 100,
             columnSpacing: 20,
@@ -139,7 +161,6 @@ class _statusJob extends State<statusJob> {
                 rowFlex: 2,
                 child: Statusjobbody(items: dataSub),
               ),
-              // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
           ),
         ),

@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:intl/intl.dart';
+import 'package:job_platform/features/components/progress/data/models/organizationProgressModel.dart';
 
 class OrganizationalProgress extends StatelessWidget {
-  final List<OrganizationMV> dataOrg;
-  // final VoidCallback onAddPressed;
-  // final ValueChanged onEditPressed;
+  final List<OrganizationProgressModel>? dataOrg;
 
-  OrganizationalProgress({
-    super.key,
-    required this.dataOrg,
-    // required this.onAddPressed,
-    // required this.onEditPressed,
-  });
+  OrganizationalProgress({super.key, this.dataOrg});
 
   @override
   Widget build(BuildContext context) {
@@ -40,24 +34,11 @@ class OrganizationalProgress extends StatelessWidget {
                   ),
                 ),
               ),
-              // ElevatedButton.icon(
-              //   // onPressed: onAddPressed,
-              //   onPressed: () {},
-              //   icon: Icon(Icons.add, size: 20),
-              //   label: Text("Add"),
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.blue,
-              //     foregroundColor: Colors.white,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           SizedBox(height: 10),
           Column(
-            children: dataOrg.asMap().entries.map((entry) {
+            children: dataOrg!.asMap().entries.map((entry) {
               int idx = entry.key + 1;
               var data = entry.value;
               return InkWell(
@@ -91,7 +72,7 @@ class OrganizationalProgress extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            data.organization.nama,
+                            data.nama ?? "",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

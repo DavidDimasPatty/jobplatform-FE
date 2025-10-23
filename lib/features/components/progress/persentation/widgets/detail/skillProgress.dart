@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
+import 'package:job_platform/features/components/progress/data/models/skillProgressModel.dart';
 
 class SkillProgress extends StatefulWidget {
-  final List<SkillMV> dataSkills;
+  final List<SkillProgressModel>? dataSkills;
   const SkillProgress({super.key, required this.dataSkills});
 
   @override
@@ -10,19 +11,9 @@ class SkillProgress extends StatefulWidget {
 }
 
 class _SkillStateProgress extends State<SkillProgress> {
-  final List<SkillMV> dataSkills;
+  final List<SkillProgressModel>? dataSkills;
 
   _SkillStateProgress(this.dataSkills);
-
-  void _addSkill() {
-    // Logic to add a new skill
-    print("Add Skill button pressed");
-  }
-
-  void _viewSkillDetails(String title) {
-    // Logic to view skill details
-    print("View details for Skill $title");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,27 +39,11 @@ class _SkillStateProgress extends State<SkillProgress> {
                   color: Colors.black,
                 ),
               ),
-              // ElevatedButton.icon(
-              //   onPressed: _addSkill,
-              //   style: ElevatedButton.styleFrom(
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //     backgroundColor: Colors.blue, // Button color
-              //     foregroundColor: Colors.white, // Icon/text color
-              //   ),
-              //   icon: Icon(Icons.add),
-              //   label: Text("Add"),
-              // ),
             ],
           ),
           SizedBox(height: 20),
-          for (var entry in dataSkills) ...[
-            SkillCard(
-              idx: idx++,
-              title: entry.skill.nama,
-              onPressed: () => _viewSkillDetails(entry.skill.nama),
-            ),
+          for (var entry in dataSkills!) ...[
+            SkillCard(idx: idx++, title: entry.nama),
             SizedBox(height: 10),
           ],
         ],
@@ -80,14 +55,9 @@ class _SkillStateProgress extends State<SkillProgress> {
 class SkillCard extends StatelessWidget {
   final int idx;
   final String title;
-  final VoidCallback onPressed;
 
-  const SkillCard({
-    required this.idx,
-    required this.title,
-    required this.onPressed,
-    Key? key,
-  }) : super(key: key);
+  const SkillCard({required this.idx, required this.title, Key? key})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -125,11 +95,6 @@ class SkillCard extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'test',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),

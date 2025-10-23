@@ -53,7 +53,7 @@ class _Statusjobbody extends State<Statusjobbody> {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: 'Cari Pekerjaan',
-                hintText: 'Masukan Chat',
+                hintText: 'Masukan Nama Pekerjaan',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),

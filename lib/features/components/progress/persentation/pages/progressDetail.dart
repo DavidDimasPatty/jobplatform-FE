@@ -8,13 +8,19 @@ import 'package:job_platform/features/components/profile/domain/entities/Profile
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
+import 'package:job_platform/features/components/progress/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/progress/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/progress/domain/entities/progressDetailVM.dart';
+import 'package:job_platform/features/components/progress/domain/usecases/progress_usecase.dart';
 import 'package:job_platform/features/components/progress/persentation/widgets/detail/careerPreferenceProgress.dart';
 import 'package:job_platform/features/components/progress/persentation/widgets/detail/certificateCandidateProgress.dart';
 import 'package:job_platform/features/components/progress/persentation/widgets/detail/educationProgress.dart';
 import 'package:job_platform/features/components/progress/persentation/widgets/detail/organizationalProgress.dart';
 import 'package:job_platform/features/components/progress/persentation/widgets/detail/skillProgress.dart';
+import 'package:job_platform/features/components/progress/persentation/widgets/detail/vacancyProgress.dart';
 import 'package:job_platform/features/components/progress/persentation/widgets/detail/workExperienceProgress.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Progressdetail extends StatefulWidget {
   final String? dataId;
@@ -25,94 +31,200 @@ class Progressdetail extends StatefulWidget {
 
 class _Progressdetail extends State<Progressdetail> {
   _Progressdetail();
-
-  // Data
-  Profiledata? dataUser;
-  List<EducationMV> dataEdu = [];
-  List<OrganizationMV> dataOrg = [];
-  List<WorkexperienceMV> dataWork = [];
-  List<CertificateMV> dataCertificate = [];
-  List<SkillMV> dataSkill = [];
-  List<PreferenceMV> dataPreference = [];
-  List<String> lowongan = ["Back End", "Front End", "Bussines Analyst"];
-  // Loading state
+  ProgressDetailVM? data;
   bool isLoading = true;
   String? errorMessage;
-  String? lowonganSelected;
+  AuthRepositoryImpl? _repoProgress;
+  AuthRemoteDataSource? _dataSourceProgress;
+  ProgressUsecase? _progressUseCase;
   int stepsImpl = 0;
-  List<String> steps = [];
-  // Usecase
-  late ProfileUsecase _profileUseCase;
-
+  List<String> steps = ["Review", "Interview", "Offering", "Close"];
   @override
   void initState() {
     super.initState();
     _initializeUseCase();
-    _loadProfileData();
-    steps = ["Review", "Interview", "Offering", "Close"];
+    _loadProgressDetail();
   }
 
   void _initializeUseCase() {
-    // final dataSource = AuthRemoteDataSource();
-    // final repository = AuthRepositoryImpl(dataSource);
-    // _profileUseCase = ProfileUsecase(repository);
+    _dataSourceProgress = AuthRemoteDataSource();
+    _repoProgress = AuthRepositoryImpl(_dataSourceProgress!);
+    _progressUseCase = ProgressUsecase(_repoProgress!);
   }
 
-  Future<void> _loadProfileData() async {
-    // try {
-    //   setState(() {
-    //     isLoading = true;
-    //     errorMessage = null;
-    //   });
-    //   SharedPreferences prefs = await SharedPreferences.getInstance();
-    //   String? userId = prefs.getString('idUser');
+  Future<void> _loadProgressDetail() async {
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
 
-    //   if (userId != null) {
-    //     var profile = await _profileUseCase.getProfile(userId);
-    //     if (!mounted) return;
+      var detailProgress = await _progressUseCase?.getDetailProgress(
+        widget.dataId!,
+      );
+      if (detailProgress != null) {
+        setState(() {
+          data = detailProgress;
+          isLoading = false;
+          errorMessage = null;
+        });
+      }
+    } catch (e) {
+      print("Error loading profile data: $e");
+      if (!mounted) return;
 
-    //     if (profile != null) {
-    //       setState(() {
-    //         dataUser = profile.user;
-    //         dataEdu = profile.educations ?? [];
-    //         dataOrg = profile.organizations ?? [];
-    //         dataWork = profile.experiences ?? [];
-    //         dataCertificate = profile.certificates ?? [];
-    //         dataSkill = profile.skills ?? [];
-    //         dataPreference = profile.preferences ?? [];
-    //         isLoading = false;
-    //       });
-    //     }
-    //   } else {
-    //     print("User ID not found in SharedPreferences");
-    //   }
-    // } catch (e) {
-    //   print("Error loading profile data: $e");
-    //   if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage = "Error loading profile: $e";
+      });
+    }
+  }
 
-    //   setState(() {
-    //     isLoading = false;
-    //     errorMessage = "Error loading profile: $e";
-    //   });
-    // }
+  Future<String?> showConfirmStatus(BuildContext context, bool status) {
+    final TextEditingController alasanController = TextEditingController();
+
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        if (status) {
+          // ✅ Konfirmasi biasa
+          return AlertDialog(
+            title: const Text('Konfirmasi Tahapan'),
+            content: const Text(
+              'Apakah Anda yakin ingin konfirmasi tahapan ini?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(null),
+                child: const Text('Batal'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop("CONFIRM"),
+                style: TextButton.styleFrom(foregroundColor: Colors.green),
+                child: const Text('Konfirmasi'),
+              ),
+            ],
+          );
+        } else {
+          return AlertDialog(
+            title: const Text('Tolak Tahapan'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Silakan masukkan alasan penolakan:'),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: alasanController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    hintText: 'Tulis alasan...',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(null),
+                child: const Text('Batal'),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (alasanController.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Alasan tidak boleh kosong'),
+                      ),
+                    );
+                    return;
+                  }
+                  Navigator.of(context).pop(alasanController.text.trim());
+                },
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: const Text('Tolak'),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Future konfirmasiTahapan(bool status) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? id = prefs.getString('id');
+      String? idUserVacancy = data?.dataUserVacancy?.id;
+      String? alasanReject;
+      if (id == null) throw Exception("User ID not found in preferences");
+
+      if (idUserVacancy == null) throw Exception("User ID Vacancy not found");
+
+      final result = await showConfirmStatus(context, status);
+      if (result == null) {
+        return;
+      }
+
+      if (!status) {
+        alasanReject = result;
+      }
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
+
+      if (status == false && alasanReject!.isEmpty)
+        throw Exception("Alasan Reject tidak boleh kosong jika penolakan");
+
+      String? response = await _progressUseCase!.validateProgress(
+        idUserVacancy,
+        status,
+        alasanReject,
+        id,
+      );
+      if (response == 'Sukses') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Confirm Vacancy Success!')));
+        setState(() {
+          _loadProgressDetail();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during edit profile: $e');
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Internal Error"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (isLoading) {
-    //   return const Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         CircularProgressIndicator(),
-    //         SizedBox(height: 16),
-    //         Text('Loading profile data...'),
-    //       ],
-    //     ),
-    //   );
-    // }
+    if (isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading profile data...'),
+          ],
+        ),
+      );
+    }
 
-    // Show error message if there's an error
     if (errorMessage != null) {
       return Center(
         child: Column(
@@ -126,7 +238,10 @@ class _Progressdetail extends State<Progressdetail> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
+            ElevatedButton(
+              onPressed: _loadProgressDetail,
+              child: Text('Retry'),
+            ),
           ],
         ),
       );
@@ -159,9 +274,6 @@ class _Progressdetail extends State<Progressdetail> {
               rowMainAxisAlignment: MainAxisAlignment.center,
               columnMainAxisAlignment: MainAxisAlignment.center,
               rowCrossAxisAlignment: CrossAxisAlignment.center,
-              // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-              //     ? ResponsiveRowColumnType.COLUMN
-              //     : ResponsiveRowColumnType.ROW,
               layout: ResponsiveRowColumnType.COLUMN,
               rowSpacing: 100,
               columnSpacing: 20,
@@ -175,30 +287,11 @@ class _Progressdetail extends State<Progressdetail> {
                         height: 250,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          // image: DecorationImage(
-                          //   image: AssetImage("assets/images/BG_Login.png"),
-                          //   fit: BoxFit.cover,
-                          // ),
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.blueAccent,
                         ),
                       ),
-                      Positioned(
-                        right: 10,
-                        top: 0,
-                        child: Container(
-                          // child: IconButton(
-                          //   icon: const Icon(
-                          //     Icons.edit,
-                          //     color: Colors.white,
-                          //     size: 20,
-                          //   ),
-                          //   onPressed: () {
-                          //     // onTabSelected(3);
-                          //   },
-                          // ),
-                        ),
-                      ),
+                      Positioned(right: 10, top: 0, child: Container()),
                       Column(
                         children: [
                           Center(
@@ -210,42 +303,16 @@ class _Progressdetail extends State<Progressdetail> {
                                   backgroundColor: Colors.white,
                                   child: const CircleAvatar(
                                     radius: 46,
-                                    //backgroundImage: AssetImage("assets/profile.jpg"),
                                     backgroundColor: Colors.blueGrey,
                                   ),
                                 ),
-
-                                // Positioned(
-                                //   right: 0,
-                                //   bottom: 0,
-                                //   child: Container(
-                                //     height: 30,
-                                //     width: 30,
-                                //     decoration: const BoxDecoration(
-                                //       shape: BoxShape.circle,
-                                //       color: Colors.grey,
-                                //     ),
-                                //     // child: IconButton(
-                                //     //   icon: const Icon(
-                                //     //     Icons.camera_alt,
-                                //     //     color: Colors.white,
-                                //     //     size: 20,
-                                //     //   ),
-                                //     //   padding: EdgeInsets.zero,
-                                //     //   constraints: const BoxConstraints(),
-                                //     //   onPressed: () {
-                                //     //     print("Ganti foto profil diklik");
-                                //     //   },
-                                //     // ),
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
 
                           Container(
                             child: Text(
-                              dataUser?.nama != null ? dataUser!.nama : "test",
+                              data?.dataUser?.user?.nama ?? "",
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
@@ -259,7 +326,7 @@ class _Progressdetail extends State<Progressdetail> {
 
                           Container(
                             child: Text(
-                              dataUser?.headline ?? '',
+                              data?.dataUser?.user?.headline ?? "",
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
@@ -276,31 +343,31 @@ class _Progressdetail extends State<Progressdetail> {
                   ),
                 ),
                 ResponsiveRowColumnItem(
-                  child: WorkexperienceProgress(
-                    dataWork: dataWork,
-                    // onAddPressed: () => _navigateAndRefresh('/add-experience'),
-                    // onEditPressed: (experience) => _navigateAndRefresh(
-                    //   '/edit-experience',
-                    //   arguments: experience,
-                    // ),
+                  child: WorkexperienceProgress(dataWork: data?.dataExperience),
+                ),
+                ResponsiveRowColumnItem(
+                  child: OrganizationalProgress(
+                    dataOrg: data?.dataOrganization,
                   ),
                 ),
                 ResponsiveRowColumnItem(
-                  child: OrganizationalProgress(dataOrg: dataOrg),
+                  child: EducationProgress(dataEdu: data?.dataEducation),
                 ),
                 ResponsiveRowColumnItem(
-                  child: EducationProgress(dataEdu: dataEdu),
+                  child: CertificateProgress(
+                    dataCertificates: data?.dataCertificate,
+                  ),
                 ),
                 ResponsiveRowColumnItem(
-                  child: CertificateProgress(dataCertificates: dataCertificate),
-                ),
-                ResponsiveRowColumnItem(
-                  child: SkillProgress(dataSkills: dataSkill),
+                  child: SkillProgress(dataSkills: data?.dataSkill),
                 ),
                 ResponsiveRowColumnItem(
                   child: CareerPreferenceProgress(
-                    dataPreferences: dataPreference,
+                    dataPreferences: data?.dataPreference,
                   ),
+                ),
+                ResponsiveRowColumnItem(
+                  child: VacancyProgress(dataVacancy: data?.dataVacancy),
                 ),
                 ResponsiveRowColumnItem(
                   child: Container(
@@ -502,10 +569,6 @@ class _Progressdetail extends State<Progressdetail> {
                                     MediaQuery.of(context).size.width * 0.4,
                                     60,
                                   ),
-                                  // padding: EdgeInsets.symmetric(
-                                  //   vertical: 16,
-                                  //   horizontal: 14,
-                                  // ),
                                 ),
                                 icon: Icon(Icons.check),
                                 label: Text("Accept (Offering)"),
@@ -525,10 +588,6 @@ class _Progressdetail extends State<Progressdetail> {
                                     MediaQuery.of(context).size.width * 0.4,
                                     60,
                                   ),
-                                  // padding: EdgeInsets.symmetric(
-                                  //   vertical: 16,
-                                  //   horizontal: 14,
-                                  // ),
                                 ),
                                 icon: Icon(Icons.close),
                                 label: Text("Reject"),

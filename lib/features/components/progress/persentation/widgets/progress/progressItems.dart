@@ -3,40 +3,30 @@ import 'package:go_router/go_router.dart';
 
 class Progressitems extends StatelessWidget {
   final String? url;
-  final List<String>? skill;
-  final String title;
-  final TextStyle? titleStyle;
-  final String? subtitle;
-  final TextStyle? subtitleStyle;
-  final Widget? trailing;
+  final String? namaKandidat;
+  final String? namaPosisi;
+  final String? jabatan;
+  final String? tipeKerja;
+  final String? umur;
   final VoidCallback? onTap;
-  final int? titleMaxLine;
-  final int? subtitleMaxLine;
-  final TextOverflow? overflow;
-  final Color? colorIcon;
-  final Color? colorBGIcon;
+  final String? status;
 
   Progressitems({
     this.url,
-    required this.title,
-    this.titleStyle,
-    this.subtitle,
-    this.subtitleStyle,
-    this.trailing,
+    this.namaKandidat,
+    this.namaPosisi,
+    this.jabatan,
+    this.tipeKerja,
+    this.umur,
     this.onTap,
-    this.titleMaxLine,
-    this.subtitleMaxLine,
-    this.overflow = TextOverflow.ellipsis,
-    this.colorIcon,
-    this.colorBGIcon,
-    this.skill,
+    this.status,
   });
 
   @override
   Widget build(BuildContext context) {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         margin: EdgeInsets.all(7),
         decoration: BoxDecoration(
@@ -71,107 +61,100 @@ class Progressitems extends StatelessWidget {
                 ),
               ),
             ),
-            title: Text(
-              title,
-              style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-              maxLines: titleMaxLine,
-              overflow: titleMaxLine != null ? overflow : null,
-            ),
-            subtitle: (subtitle != null
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            title: Text("${namaKandidat ?? ""} ({${umur ?? "0"}})"),
+            subtitle: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 3,
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Text(
+                        " ${namaPosisi ?? ""} - ${jabatan ?? ""} - ${tipeKerja ?? ""} ",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: TextStyle(fontSize: 14),
                           children: [
-                            Text(
-                              subtitle ?? "",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87,
+                            TextSpan(
+                              text: "Status : ",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                style: const TextStyle(fontSize: 14),
-                                children: [
-                                  const TextSpan(
-                                    text: "Status : ",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: "Interview",
-                                    style: TextStyle(
-                                      color: Colors.yellow,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ],
+                            TextSpan(
+                              text: status ?? "",
+                              style: TextStyle(
+                                color: status == "Review"
+                                    ? Colors.orange
+                                    : status == "Interview"
+                                    ? Colors.blue
+                                    : status == "Offering"
+                                    ? Colors.pink
+                                    : status == "Menunggu Konfirmasi"
+                                    ? Colors.indigo
+                                    : status == "Close"
+                                    ? Colors.green
+                                    : Colors.red,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Flexible(
-                        flex: 3,
-                        fit: FlexFit.loose,
-                        child: isSmallScreen
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      context.go(
-                                        "/progressDetail",
-                                        extra: "tes",
-                                      );
-                                    },
-                                    label: Text("Validasi"),
-                                    icon: Icon(Icons.skip_next),
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      context.go(
-                                        "/progressDetail",
-                                        extra: "tes",
-                                      );
-                                    },
-                                    label: Text("Validasi"),
-                                    icon: Icon(Icons.skip_next),
-                                  ),
-                                ],
-                              ),
-                      ),
                     ],
-                  )
-                : null),
+                  ),
+                ),
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.loose,
+                  child: isSmallScreen
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: onTap,
+                              label: Text("Validasi"),
+                              icon: Icon(Icons.skip_next),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: onTap,
+                              label: Text("Validasi"),
+                              icon: Icon(Icons.skip_next),
+                            ),
+                          ],
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
