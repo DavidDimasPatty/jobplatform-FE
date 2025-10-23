@@ -2,19 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
 import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Statusjobbody extends StatefulWidget {
   final List<statusjobitems> items;
-  Statusjobbody({super.key, required this.items});
+  final VoidCallback onSearchChanged;
+  final TextEditingController searchController;
+  Statusjobbody({
+    super.key,
+    required this.items,
+    required this.onSearchChanged,
+    required this.searchController,
+  });
 
   @override
   State<Statusjobbody> createState() => _Statusjobbody();
 }
 
 class _Statusjobbody extends State<Statusjobbody> {
-  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,7 +57,7 @@ class _Statusjobbody extends State<Statusjobbody> {
             // height: 90,
             margin: EdgeInsets.all(20),
             child: TextFormField(
-              controller: _searchController,
+              controller: widget.searchController,
               decoration: InputDecoration(
                 labelText: 'Cari Pekerjaan',
                 hintText: 'Masukan Nama Pekerjaan',
@@ -65,8 +72,9 @@ class _Statusjobbody extends State<Statusjobbody> {
                 ),
               ),
               // initialValue: email,
-              validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+              onChanged: (value) {
+                widget.onSearchChanged();
+              },
             ),
           ),
           ListView.builder(

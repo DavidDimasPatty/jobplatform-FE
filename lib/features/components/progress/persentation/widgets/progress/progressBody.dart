@@ -7,14 +7,20 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class Progressbody extends StatefulWidget {
   final List<Progressitems> items;
-  Progressbody({super.key, required this.items});
+  final VoidCallback onSearchChanged;
+  final TextEditingController searchController;
+  Progressbody({
+    super.key,
+    required this.items,
+    required this.onSearchChanged,
+    required this.searchController,
+  });
 
   @override
   State<Progressbody> createState() => _Progressbody();
 }
 
 class _Progressbody extends State<Progressbody> {
-  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +58,10 @@ class _Progressbody extends State<Progressbody> {
               // height: 90,
               margin: EdgeInsets.all(20),
               child: TextFormField(
-                controller: _searchController,
+                onChanged: (value) {
+                  widget.onSearchChanged();
+                },
+                controller: widget.searchController,
                 decoration: InputDecoration(
                   labelText: 'Cari Progress Candidate',
                   hintText: 'Masukan Nama Candidate',

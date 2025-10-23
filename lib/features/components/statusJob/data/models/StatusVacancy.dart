@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class StatusVacancy {
   final String? id;
   final String? idUserVacancy;

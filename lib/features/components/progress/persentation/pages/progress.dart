@@ -19,12 +19,14 @@ class Progress extends StatefulWidget {
 
 class _Progress extends State<Progress> {
   List<Progressitems> dataSub = [];
+  List<Progressitems> dumpSub = [];
+  String searchQuery = "";
   bool isLoading = true;
   String? errorMessage;
   AuthRepositoryImpl? _repoProgress;
   AuthRemoteDataSource? _dataSourceProgress;
   ProgressUsecase? _progressUseCase;
-
+  final _searchController = TextEditingController();
   Future<void> _loadProgress() async {
     try {
       setState(() {
@@ -74,6 +76,7 @@ class _Progress extends State<Progress> {
                 ),
               ),
             );
+            dumpSub = dataSub;
             isLoading = false;
             errorMessage = null;
           });
@@ -107,6 +110,33 @@ class _Progress extends State<Progress> {
     _repoProgress = AuthRepositoryImpl(_dataSourceProgress!);
     _progressUseCase = ProgressUsecase(_repoProgress!);
     _loadProgress();
+  }
+
+  void _applyFilter() {
+    setState(() {
+      if ((searchQuery.isEmpty || searchQuery.trim().isEmpty)) {
+        dumpSub = List.from(dataSub);
+        return;
+      }
+
+      dumpSub = dataSub.where((data) {
+        final matchSearch =
+            (data.namaKandidat?.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ) ??
+                false) ||
+            (data.namaPosisi?.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ) ??
+                false);
+        return matchSearch;
+      }).toList();
+    });
+  }
+
+  void _onSearchChanged() {
+    searchQuery = _searchController.text;
+    _applyFilter();
   }
 
   @override
@@ -160,7 +190,11 @@ class _Progress extends State<Progress> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Progressbody(items: dataSub),
+                child: Progressbody(
+                  items: dumpSub,
+                  onSearchChanged: _onSearchChanged,
+                  searchController: _searchController,
+                ),
               ),
             ],
           ),

@@ -23,12 +23,9 @@ class Managehrd extends StatefulWidget {
 }
 
 class _Managehrd extends State<Managehrd> {
-  //data utama
   List<Managehrditems> dataSub = [];
-  //searching
   List<Managehrditems> dumpSub = [];
   String searchQuery = "";
-  // Loading state
   bool isLoading = true;
   String? errorMessage;
   final _formKey = GlobalKey<FormState>();
@@ -358,7 +355,6 @@ class _Managehrd extends State<Managehrd> {
             rowMainAxisAlignment: MainAxisAlignment.center,
             columnMainAxisAlignment: MainAxisAlignment.center,
             rowCrossAxisAlignment: CrossAxisAlignment.center,
-            // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
             //     ? ResponsiveRowColumnType.COLUMN
             //     : ResponsiveRowColumnType.ROW,
             layout: ResponsiveRowColumnType.COLUMN,
@@ -374,7 +370,6 @@ class _Managehrd extends State<Managehrd> {
                   searchController: _searchController,
                 ),
               ),
-              // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
           ),
         ),

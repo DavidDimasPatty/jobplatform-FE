@@ -17,12 +17,14 @@ class statusJob extends StatefulWidget {
 
 class _statusJob extends State<statusJob> {
   List<statusjobitems> dataSub = [];
+  List<statusjobitems> dumpSub = [];
+  String searchQuery = "";
   bool isLoading = true;
   String? errorMessage;
   AuthRepositoryImpl? _repoStatus;
   AuthRemoteDataSource? _dataSourceStatus;
   StatusUseCase? _statusUseCase;
-
+  final _searchController = TextEditingController();
   Future<void> _loadStatus() async {
     try {
       setState(() {
@@ -72,6 +74,7 @@ class _statusJob extends State<statusJob> {
                 ),
               ),
             );
+            dumpSub = dataSub;
             isLoading = false;
             errorMessage = null;
           });
@@ -105,6 +108,31 @@ class _statusJob extends State<statusJob> {
     _repoStatus = AuthRepositoryImpl(_dataSourceStatus!);
     _statusUseCase = StatusUseCase(_repoStatus!);
     _loadStatus();
+  }
+
+  void _applyFilter() {
+    setState(() {
+      if ((searchQuery.isEmpty || searchQuery.trim().isEmpty)) {
+        dumpSub = List.from(dataSub);
+        return;
+      }
+
+      dumpSub = dataSub.where((data) {
+        final matchSearch =
+            (data.namaPerusahaan?.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ) ??
+                false) ||
+            (data.posisi?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+                false);
+        return matchSearch;
+      }).toList();
+    });
+  }
+
+  void _onSearchChanged() {
+    searchQuery = _searchController.text;
+    _applyFilter();
   }
 
   @override
@@ -159,7 +187,11 @@ class _statusJob extends State<statusJob> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Statusjobbody(items: dataSub),
+                child: Statusjobbody(
+                  items: dumpSub,
+                  onSearchChanged: _onSearchChanged,
+                  searchController: _searchController,
+                ),
               ),
             ],
           ),
