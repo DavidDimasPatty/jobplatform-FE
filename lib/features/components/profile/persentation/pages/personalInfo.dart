@@ -526,10 +526,18 @@ class _Personalinfo extends State<Personalinfo> {
                                       ),
                                     ),
                                     // initialValue: name,
-                                    validator: (value) =>
-                                        value == null || value.isEmpty
-                                        ? 'Wajib diisi'
-                                        : null,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Nama Tidak Boleh Kosong";
+                                      }
+                                      final regex = RegExp(
+                                        r'^[a-zA-Z0-9\s\-\.,]+$',
+                                      );
+                                      if (!regex.hasMatch(value)) {
+                                        return "Format nama tidak valid";
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                               ],
@@ -552,10 +560,18 @@ class _Personalinfo extends State<Personalinfo> {
                                 ),
                               ),
                               // initialValue: email,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return null;
+                                }
+                                final regex = RegExp(
+                                  r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
+                                );
+                                if (!regex.hasMatch(value)) {
+                                  return "Format Headline tidak valid";
+                                }
+                                return null;
+                              },
                             ),
                           ),
 
@@ -577,10 +593,18 @@ class _Personalinfo extends State<Personalinfo> {
                               keyboardType: TextInputType.multiline,
                               minLines: 3,
                               maxLines: 5,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return null;
+                                }
+                                final regex = RegExp(
+                                  r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
+                                );
+                                if (!regex.hasMatch(value)) {
+                                  return "Format deskripsi tidak valid";
+                                }
+                                return null;
+                              },
                             ),
                           ),
 
@@ -600,10 +624,21 @@ class _Personalinfo extends State<Personalinfo> {
                                 ),
                               ),
                               // initialValue: email,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return null;
+                                }
+
+                                final regex = RegExp(
+                                  r'^(https?:\/\/)?(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$',
+                                );
+
+                                if (!regex.hasMatch(value)) {
+                                  return 'Format portofolio tidak valid';
+                                }
+
+                                return null;
+                              },
                             ),
                           ),
 
@@ -651,377 +686,6 @@ class _Personalinfo extends State<Personalinfo> {
                             ),
                           ),
 
-                          // SizedBox(width: 90),
-                          // Container(
-                          //   margin: EdgeInsets.symmetric(vertical: 20),
-                          //   child: Row(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     mainAxisAlignment: MainAxisAlignment.center,
-                          //     children: [
-                          //       Flexible(
-                          //         flex: 1,
-                          //         // height: 40,
-                          //         child: DropdownButtonFormField<Country>(
-                          //           value: selectedCountry,
-                          //           isExpanded: true,
-                          //           hint: Text("Pilih Negara"),
-                          //           items: countries.map((country) {
-                          //             return DropdownMenuItem<Country>(
-                          //               value: country,
-                          //               child: Row(
-                          //                 mainAxisSize: MainAxisSize.min,
-                          //                 children: [
-                          //                   Text(
-                          //                     country.flag,
-                          //                     style: const TextStyle(
-                          //                       fontSize: 16,
-                          //                     ),
-                          //                   ),
-                          //                   const SizedBox(width: 4),
-                          //                   Flexible(
-                          //                     child: Text(
-                          //                       country.code,
-                          //                       style: const TextStyle(
-                          //                         fontSize: 14,
-                          //                       ),
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                     ),
-                          //                   ),
-                          //                   const SizedBox(width: 4),
-                          //                   Flexible(
-                          //                     child: Text(
-                          //                       country.dialCode,
-                          //                       style: const TextStyle(
-                          //                         fontSize: 14,
-                          //                       ),
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                     ),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             );
-                          //           }).toList(),
-                          //           onChanged: (value) {
-                          //             setState(() {
-                          //               selectedCountry = value;
-                          //             });
-                          //           },
-                          //           decoration: InputDecoration(
-                          //             border: OutlineInputBorder(),
-                          //             contentPadding: EdgeInsets.symmetric(
-                          //               horizontal: 12,
-                          //               vertical: 8,
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: 10),
-                          //       Flexible(
-                          //         flex: 2,
-                          //         // height: 40,
-                          //         child: TextFormField(
-                          //           key: ValueKey(selectedCountry?.dialCode),
-                          //           controller: _phoneController,
-                          //           keyboardType: TextInputType.phone,
-                          //           decoration: InputDecoration(
-                          //             labelText: 'Nomor Telepon',
-                          //             hintText: 'Masukkan nomor telepon Anda',
-                          //             border: const OutlineInputBorder(),
-                          //             prefixIcon: IntrinsicWidth(
-                          //               child: Container(
-                          //                 alignment: Alignment.center,
-                          //                 padding: const EdgeInsets.symmetric(
-                          //                   horizontal: 8,
-                          //                 ),
-                          //                 child: Text(
-                          //                   selectedCountry?.dialCode ?? '+62',
-                          //                   style: const TextStyle(
-                          //                     fontWeight: FontWeight.bold,
-                          //                   ),
-                          //                 ),
-                          //               ),
-                          //             ),
-                          //           ),
-                          //           validator: (value) {
-                          //             if (value == null || value.isEmpty) {
-                          //               return 'Nomor telepon tidak boleh kosong';
-                          //             }
-                          //             if (!RegExp(
-                          //               r'^[0-9]{8,13}$',
-                          //             ).hasMatch(value)) {
-                          //               return 'Masukkan nomor telepon yang valid';
-                          //             }
-                          //             return null;
-                          //           },
-                          //           onChanged: (value) {
-                          //             // Remove leading zeros as user types
-                          //             if (value.startsWith('0')) {
-                          //               final newValue = value.replaceFirst(
-                          //                 RegExp(r'^0+'),
-                          //                 '',
-                          //               );
-                          //               _phoneController
-                          //                   .value = TextEditingValue(
-                          //                 text: newValue,
-                          //                 selection: TextSelection.collapsed(
-                          //                   offset: newValue.length,
-                          //                 ),
-                          //               );
-                          //             }
-                          //           },
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-
-                          // SizedBox(height: 90),
-                          // Container(
-                          //   // height: 90,
-                          //   margin: EdgeInsets.symmetric(vertical: 20),
-                          //   child: Row(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          //     children: [
-                          //       Expanded(
-                          //         // height: 90,
-                          //         //width: 300,
-                          //         child: TextFormField(
-                          //           readOnly: true,
-                          //           controller: _namaController,
-                          //           decoration: InputDecoration(
-                          //             labelText: 'Nama Lengkap',
-                          //             hintText: 'Masukan Nama Lengkap',
-                          //             border: OutlineInputBorder(),
-                          //             prefixIcon: Icon(Icons.account_circle),
-                          //             contentPadding: EdgeInsets.symmetric(
-                          //               vertical: 8,
-                          //               horizontal: 11,
-                          //             ),
-                          //           ),
-                          //           // initialValue: name,
-                          //           validator: (value) =>
-                          //               value == null || value.isEmpty
-                          //               ? 'Wajib diisi'
-                          //               : null,
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-
-                          // Container(
-                          //   // height: 90,
-                          //   margin: EdgeInsets.symmetric(vertical: 20),
-                          //   child: LayoutBuilder(
-                          //     builder: (context, constraints) {
-                          //       bool isMobile = ResponsiveBreakpoints.of(
-                          //         context,
-                          //       ).smallerThan(DESKTOP);
-                          //       return isMobile
-                          //           ? Column(
-                          //               crossAxisAlignment:
-                          //                   CrossAxisAlignment.center,
-                          //               children: [
-                          //                 Padding(
-                          //                   padding: const EdgeInsets.only(
-                          //                     bottom: 10,
-                          //                   ),
-                          //                   child: Text(
-                          //                     "Pilih Jenis Kelamin ",
-                          //                     style: GoogleFonts.figtree(
-                          //                       textStyle: TextStyle(
-                          //                         color: Colors.black,
-                          //                         letterSpacing: 2,
-                          //                         fontSize: 16,
-                          //                       ),
-                          //                     ),
-                          //                     textAlign: TextAlign.center,
-                          //                   ),
-                          //                 ),
-                          //                 // Row(
-                          //                 //   children: [
-                          //                 //     Expanded(
-                          //                 //       child: ElevatedButton.icon(
-                          //                 //         onPressed: () =>
-                          //                 //             _changeGender("L"),
-                          //                 //         style: ElevatedButton.styleFrom(
-                          //                 //           backgroundColor: gender == "L"
-                          //                 //               ? Colors.green
-                          //                 //               : Colors.blue,
-                          //                 //         ),
-                          //                 //         icon: const Icon(
-                          //                 //           Icons.boy,
-                          //                 //           color: Colors.white,
-                          //                 //         ),
-                          //                 //         label: const Text(
-                          //                 //           'Laki Laki',
-                          //                 //           style: TextStyle(
-                          //                 //             color: Colors.white,
-                          //                 //           ),
-                          //                 //         ),
-                          //                 //       ),
-                          //                 //     ),
-                          //                 //     const SizedBox(width: 10),
-                          //                 //     Expanded(
-                          //                 //       child: ElevatedButton.icon(
-                          //                 //         onPressed: () =>
-                          //                 //             _changeGender("P"),
-                          //                 //         style: ElevatedButton.styleFrom(
-                          //                 //           backgroundColor: gender == "P"
-                          //                 //               ? Colors.pink
-                          //                 //               : Colors.blue,
-                          //                 //         ),
-                          //                 //         icon: const Icon(
-                          //                 //           Icons.girl,
-                          //                 //           color: Colors.white,
-                          //                 //         ),
-                          //                 //         label: const Text(
-                          //                 //           'Perempuan',
-                          //                 //           style: TextStyle(
-                          //                 //             color: Colors.white,
-                          //                 //           ),
-                          //                 //         ),
-                          //                 //       ),
-                          //                 //     ),
-                          //                 //   ],
-                          //                 // ),
-                          //               ],
-                          //             )
-                          //           : Row(
-                          //               crossAxisAlignment:
-                          //                   CrossAxisAlignment.start,
-                          //               children: [
-                          //                 Padding(
-                          //                   padding: EdgeInsets.only(right: 10),
-                          //                   child: Text(
-                          //                     "Pilih Jenis Kelamin ",
-                          //                     style: GoogleFonts.figtree(
-                          //                       textStyle: TextStyle(
-                          //                         color: Colors.black,
-                          //                         letterSpacing: 2,
-                          //                         fontSize: 16,
-                          //                       ),
-                          //                     ),
-                          //                   ),
-                          //                 ),
-                          //                 Row(
-                          //                   children: [
-                          //                     ElevatedButton.icon(
-                          //                       onPressed: () => _changeGender("L"),
-                          //                       style: ElevatedButton.styleFrom(
-                          //                         backgroundColor: gender == "L"
-                          //                             ? Colors.green
-                          //                             : Colors.blue,
-                          //                       ),
-                          //                       icon: const Icon(
-                          //                         Icons.boy,
-                          //                         color: Colors.white,
-                          //                       ),
-                          //                       label: const Text(
-                          //                         'Laki Laki',
-                          //                         style: TextStyle(
-                          //                           color: Colors.white,
-                          //                         ),
-                          //                       ),
-                          //                     ),
-                          //                     const SizedBox(width: 20),
-                          //                     ElevatedButton.icon(
-                          //                       onPressed: () => _changeGender("P"),
-                          //                       style: ElevatedButton.styleFrom(
-                          //                         backgroundColor: gender == "P"
-                          //                             ? Colors.pink
-                          //                             : Colors.blue,
-                          //                       ),
-                          //                       icon: const Icon(
-                          //                         Icons.girl,
-                          //                         color: Colors.white,
-                          //                       ),
-                          //                       label: const Text(
-                          //                         'Perempuan',
-                          //                         style: TextStyle(
-                          //                           color: Colors.white,
-                          //                         ),
-                          //                       ),
-                          //                     ),
-                          //                   ],
-                          //                 ),
-                          //               ],
-                          //             );
-                          //     },
-                          //   ),
-                          // ),
-
-                          // SizedBox(height: 90, width: 300),
-                          // ConstrainedBox(
-                          //   constraints: BoxConstraints(
-                          //     maxWidth: 500,
-                          //     minWidth: 200,
-                          //     maxHeight: 400,
-                          //   ),
-                          //   child: Column(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     children: [
-                          //       Text(
-                          //         "Tanggal Lahir",
-                          //         style: GoogleFonts.figtree(
-                          //           textStyle: TextStyle(
-                          //             color: Colors.black,
-                          //             letterSpacing: 2,
-                          //             fontSize: 16,
-                          //           ),
-                          //         ),
-                          //         textAlign: TextAlign.center,
-                          //       ),
-                          //       SizedBox(height: 8),
-                          //       Expanded(
-                          //         child: ClipRRect(
-                          //           borderRadius: BorderRadius.circular(20),
-                          //           child: SfDateRangePicker(
-                          //             monthCellStyle:
-                          //                 DateRangePickerMonthCellStyle(
-                          //                   todayTextStyle: TextStyle(
-                          //                     color: Colors
-                          //                         .black, // warna teks hari ini
-                          //                     fontWeight: FontWeight.bold,
-                          //                   ),
-                          //                 ),
-                          //             yearCellStyle:
-                          //                 DateRangePickerYearCellStyle(
-                          //                   todayTextStyle: TextStyle(
-                          //                     color: Colors.black,
-                          //                     fontWeight: FontWeight.bold,
-                          //                   ),
-                          //                 ),
-                          //             selectionTextStyle: TextStyle(
-                          //               color: Colors.blue,
-                          //               fontWeight: FontWeight.bold,
-                          //             ),
-                          //             startRangeSelectionColor: Colors.blue,
-                          //             selectionColor: Colors.white,
-                          //             todayHighlightColor: Colors.transparent,
-                          //             backgroundColor: Colors.blue.shade50,
-                          //             headerStyle: DateRangePickerHeaderStyle(
-                          //               textAlign: TextAlign.center,
-                          //               backgroundColor: Colors.blue.shade50,
-                          //               textStyle: TextStyle(
-                          //                 backgroundColor: Colors.blue.shade50,
-                          //                 fontSize: 18,
-                          //                 fontWeight: FontWeight.bold,
-                          //                 color: Colors.black,
-                          //               ),
-                          //             ),
-                          //             controller: _tanggalLahirController,
-                          //             selectionMode:
-                          //                 DateRangePickerSelectionMode.single,
-                          //             maxDate: DateTime.now(),
-                          //             view: DateRangePickerView.year,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                           SizedBox(height: 20),
                           InkWell(
                             onTap: () => _pickTanggalLahir(context),
@@ -1300,10 +964,20 @@ class _Personalinfo extends State<Personalinfo> {
                               keyboardType: TextInputType.multiline,
                               minLines: 3,
                               maxLines: 5,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Wajib diisi'
-                                  : null,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Alamat Tidak Boleh Kosong";
+                                }
+
+                                final regex = RegExp(
+                                  r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
+                                );
+                                if (!regex.hasMatch(value)) {
+                                  return "Format alamat domisili tidak valid";
+                                }
+
+                                return null;
+                              },
                             ),
                           ),
 
@@ -1392,13 +1066,6 @@ class _Personalinfo extends State<Personalinfo> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // ElevatedButton(
-                              //   onPressed: _handleSignUp,
-                              //   child: Text(
-                              //     'Daftar',
-                              //     style: TextStyle(color: Colors.black),
-                              //   ),
-                              // ),
                               Directionality(
                                 textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(

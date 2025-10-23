@@ -468,10 +468,18 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     ),
                                   ),
                                   // initialValue: email,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Nama Tidak Boleh Kosong";
+                                    }
+                                    final regex = RegExp(
+                                      r'^[a-zA-Z0-9\s\-\.,]+$',
+                                    );
+                                    if (!regex.hasMatch(value)) {
+                                      return "Format nama tidak valid";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -493,10 +501,18 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                   keyboardType: TextInputType.multiline,
                                   minLines: 3,
                                   maxLines: 5,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return null;
+                                    }
+                                    final regex = RegExp(
+                                      r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
+                                    );
+                                    if (!regex.hasMatch(value)) {
+                                      return "Format deskripsi tidak valid";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -803,10 +819,20 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                         keyboardType: TextInputType.multiline,
                                         minLines: 3,
                                         maxLines: 5,
-                                        validator: (value) =>
-                                            value == null || value.isEmpty
-                                            ? 'Wajib diisi'
-                                            : null,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "Alamat Tidak Boleh Kosong";
+                                          }
+
+                                          final regex = RegExp(
+                                            r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
+                                          );
+                                          if (!regex.hasMatch(value)) {
+                                            return "Format alamat tidak valid";
+                                          }
+
+                                          return null;
+                                        },
                                       ),
                                     ),
                                   ],
@@ -888,10 +914,21 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     ),
                                   ),
                                   // initialValue: email,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return null;
+                                    }
+
+                                    final regex = RegExp(
+                                      r'^(https?:\/\/)?(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$',
+                                    );
+
+                                    if (!regex.hasMatch(value)) {
+                                      return 'Format domain tidak valid';
+                                    }
+
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -919,10 +956,18 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     ),
                                   ),
                                   // initialValue: email,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return null;
+                                    }
+                                    final regex = RegExp(
+                                      r'^[a-zA-Z0-9\s\-\.,]+$',
+                                    );
+                                    if (!regex.hasMatch(value)) {
+                                      return "Format username LinkedIn tidak valid";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -950,10 +995,18 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     ),
                                   ),
                                   // initialValue: email,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return null;
+                                    }
+                                    final regex = RegExp(
+                                      r'^[a-zA-Z0-9\s\-\.,]+$',
+                                    );
+                                    if (!regex.hasMatch(value)) {
+                                      return "Format username Facebook tidak valid";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -978,10 +1031,18 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     ),
                                   ),
                                   // initialValue: email,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return null;
+                                    }
+                                    final regex = RegExp(
+                                      r'^[a-zA-Z0-9\s\-\.,]+$',
+                                    );
+                                    if (!regex.hasMatch(value)) {
+                                      return "Format username Twitter tidak valid";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -1009,10 +1070,18 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     ),
                                   ),
                                   // initialValue: email,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return null;
+                                    }
+                                    final regex = RegExp(
+                                      r'^[a-zA-Z0-9\s\-\.,]+$',
+                                    );
+                                    if (!regex.hasMatch(value)) {
+                                      return "Format username Instagram tidak valid";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -1040,10 +1109,18 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     ),
                                   ),
                                   // initialValue: email,
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                      ? 'Wajib diisi'
-                                      : null,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return null;
+                                    }
+                                    final regex = RegExp(
+                                      r'^[a-zA-Z0-9\s\-\.,]+$',
+                                    );
+                                    if (!regex.hasMatch(value)) {
+                                      return "Format username TikTok tidak valid";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 

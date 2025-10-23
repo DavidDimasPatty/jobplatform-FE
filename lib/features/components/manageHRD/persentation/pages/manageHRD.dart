@@ -157,13 +157,54 @@ class _Managehrd extends State<Managehrd> {
     );
   }
 
+  Future<bool?> showConfirmDeleteDialog(
+    BuildContext context, {
+    String? title,
+    String? content,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title ?? 'Konfirmasi Hapus'),
+          content: Text(
+            content ?? 'Apakah Anda yakin ingin menghapus HRD ini?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red, // tombol destruktif
+              ),
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future deleteHRD(String id) async {
     try {
+      final confirmed = await showConfirmDeleteDialog(context);
+      if (confirmed != true) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? idCompany = prefs.getString('idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");
+
+      if (id == null) throw Exception("HRD ID not found");
 
       GetAllHRDTransaction profile = new GetAllHRDTransaction(id: id);
 
