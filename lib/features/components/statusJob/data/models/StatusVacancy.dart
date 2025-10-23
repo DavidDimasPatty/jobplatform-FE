@@ -23,7 +23,9 @@ class StatusVacancy {
     return StatusVacancy(
       id: json["id"] ?? null,
       idUserVacancy: json["idUserVacancy"] ?? null,
-      status: json["status"] != null ? int.parse(json["status"]) : null,
+      status: json["status"] != null
+          ? int.parse(json["status"].toString())
+          : null,
       alasanReject: json["alasanReject"] ?? null,
       addTime: json["addTime"] != null ? DateTime.parse(json["addTime"]) : null,
       addId: json["addId"] ?? null,

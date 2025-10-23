@@ -43,8 +43,8 @@ class _Progress extends State<Progress> {
             : null;
         if (statusData != null) {
           setState(() {
-            statusData.map(
-              (x) => dataSub.add(
+            statusData.forEach((x) {
+              dataSub.add(
                 Progressitems(
                   namaKandidat: x.namaKandidat,
                   jabatan: x.jabatanPosisi,
@@ -74,8 +74,8 @@ class _Progress extends State<Progress> {
                   tipeKerja: x.tipeKerja,
                   url: x.url,
                 ),
-              ),
-            );
+              );
+            });
             dumpSub = dataSub;
             isLoading = false;
             errorMessage = null;

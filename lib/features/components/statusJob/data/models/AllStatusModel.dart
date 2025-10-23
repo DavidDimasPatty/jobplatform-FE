@@ -30,19 +30,4 @@ class AllStatusModel {
           : null,
     );
   }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     "_id": id,
-  //     "nama": nama,
-  //     "alamat": alamat,
-  //     "domain": domain,
-  //     "addTime": addTime?.toIso8601String(),
-  //     "updTime": updTime?.toIso8601String(),
-  //     "noTelp": noTelp,
-  //     "lastLogin": lastLogin?.toIso8601String(),
-  //     "email": email,
-  //     "statusAccount": statusAccount,
-  //   };
-  // }
 }

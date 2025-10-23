@@ -46,13 +46,24 @@ class statusjobitems extends StatelessWidget {
             leading: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               child: ClipOval(
-                child: Image.network(
-                  url!,
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.cover,
-                  color: Colors.cyan,
-                ),
+                child: url!.isNotEmpty
+                    ? Image.network(
+                        url!,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                        color: Colors.cyan,
+                      )
+                    : Container(
+                        width: 40,
+                        height: 40,
+                        color: Colors.grey[300],
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
               ),
             ),
             title: Text(namaPerusahaan ?? ""),

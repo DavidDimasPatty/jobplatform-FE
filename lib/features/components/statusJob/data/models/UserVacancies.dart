@@ -31,7 +31,7 @@ class UserVacancies {
       addId: json["addId"] ?? null,
       updId: json["updId"] ?? null,
       updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
-      isAccept: bool.tryParse(json["isAccept"]) ?? null,
+      isAccept: bool.tryParse(json["isAccept"].toString()) ?? null,
     );
   }
 }

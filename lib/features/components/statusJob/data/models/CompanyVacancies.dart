@@ -30,8 +30,12 @@ class CompanyVacancies {
       id: json["id"] ?? null,
       idCompany: json["idCompany"] ?? null,
       namaPosisi: json["namaPosisi"] ?? null,
-      gajiMin: json["gajiMin"] != null ? double.parse(json["gajiMin"]) : null,
-      gajiMax: json["gajiMax"] != null ? double.parse(json["gajiMax"]) : null,
+      gajiMin: json["gajiMin"] != null
+          ? double.parse(json["gajiMin"].toString())
+          : null,
+      gajiMax: json["gajiMax"] != null
+          ? double.parse(json["gajiMax"].toString())
+          : null,
       sistemKerja: json["sistemKerja"] ?? null,
       tipeKerja: json["tipeKerja"] ?? null,
       jabatan: json["jabatan"] ?? null,

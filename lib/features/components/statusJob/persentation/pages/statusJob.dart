@@ -41,13 +41,13 @@ class _statusJob extends State<statusJob> {
             : null;
         if (statusData != null) {
           setState(() {
-            statusData.map(
-              (x) => dataSub.add(
+            statusData.forEach((x) {
+              dataSub.add(
                 statusjobitems(
-                  namaPerusahaan: x.namaPerusahaan,
-                  jabatan: x.jabatan,
-                  onTap: () => TapItems(x.idUserVacancy!),
-                  posisi: x.namaPosisi,
+                  namaPerusahaan: x.namaPerusahaan ?? "",
+                  jabatan: x.jabatan ?? "",
+                  onTap: () => TapItems(x.idUserVacancy ?? ""),
+                  posisi: x.namaPosisi ?? "",
                   status: x.isAcceptUser == false && x.status == null
                       ? "Menunggu Konfirmasi"
                       : x.status == 0 &&
@@ -69,23 +69,23 @@ class _statusJob extends State<statusJob> {
                       : x.isAcceptUser == false
                       ? "Reject Offering"
                       : "Reject HRD",
-                  tipeKerja: x.tipeKerja,
-                  url: x.logoPerusahaan,
+                  tipeKerja: x.tipeKerja ?? "",
+                  url: x.logoPerusahaan ?? "",
                 ),
-              ),
-            );
+              );
+            });
             dumpSub = dataSub;
             isLoading = false;
             errorMessage = null;
           });
         }
       } else {
+        setState(() {
+          isLoading = false;
+          errorMessage = null;
+        });
         print("User ID not found in SharedPreferences");
       }
-      setState(() {
-        isLoading = false;
-        errorMessage = null;
-      });
     } catch (e) {
       print("Error loading status data: $e");
       if (mounted) {
