@@ -34,7 +34,7 @@ class SettingsGroup extends StatelessWidget {
                   child: Text(
                     settingsGroupTitle!,
                     style: (settingsGroupTitleStyle == null)
-                        ? TextStyle(fontSize: 25, fontWeight: FontWeight.bold)
+                        ? TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                         : settingsGroupTitleStyle,
                   ),
                 )

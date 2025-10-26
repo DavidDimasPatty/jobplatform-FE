@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class topSetting extends StatelessWidget {
-  // final Color? cardColor;
-  // final double? cardRadius;
-  // final Color? backgroundMotifColor;
-  // final VoidCallback? onTap;
-  // final String? userName;
-  // final Widget? userMoreInfo;
-  // final ImageProvider userProfilePic;
+  final String nama;
+  final String loginAs;
+  final bool isPremium;
+  final String? url;
+  final int? profileComplete;
+  topSetting({
+    required this.nama,
+    required this.loginAs,
+    required this.isPremium,
+    this.url,
+    this.profileComplete,
+  });
 
-  // topSetting({
-  // required this.cardColor,
-  // this.cardRadius = 30,
-  // required this.userName,
-  // this.backgroundMotifColor = Colors.white,
-  // this.userMoreInfo,
-  // required this.userProfilePic,
-  // required this.onTap,
-  // });
   Widget build(BuildContext context) {
     var mediaQueryHeight = MediaQuery.of(context).size.height;
     return GestureDetector(
-      //onTap: onTap,
+      onTap: () => {
+        if (loginAs == "company")
+          {context.go("/profileCompany")}
+        else
+          {context.go("/profile")},
+      },
       child: Container(
-        // height: mediaQueryHeight / 3,
         margin: EdgeInsets.only(bottom: 20, top: 10),
         decoration: BoxDecoration(
           color: Colors.blue,
@@ -91,16 +92,25 @@ class topSetting extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.bottomRight,
                             children: [
-                              CircleAvatar(
-                                radius: 64,
-                                backgroundColor: Colors.white,
-                                child: const CircleAvatar(
-                                  radius: 60,
-                                  backgroundImage: AssetImage(
-                                    "assets/images/BG_Pelamar.png",
-                                  ),
-                                  backgroundColor: Colors.blueGrey,
-                                ),
+                              ClipOval(
+                                child: url!.isNotEmpty
+                                    ? Image.network(
+                                        url!,
+                                        width: 60,
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                        color: Colors.cyan,
+                                      )
+                                    : Container(
+                                        width: 60,
+                                        height: 60,
+                                        color: Colors.grey[300],
+                                        child: const Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                          size: 24,
+                                        ),
+                                      ),
                               ),
                             ],
                           ),
@@ -112,7 +122,7 @@ class topSetting extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "Alexander Nando Regex",
+                              "${nama.isEmpty ? "Unknown" : nama}",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: mediaQueryHeight / 30,
@@ -129,7 +139,7 @@ class topSetting extends StatelessWidget {
                               onPressed: () {},
                               icon: Icon(Icons.star, color: Colors.white),
                               label: Text(
-                                "Job Seeker | Regular Account",
+                                "${loginAs == "user" ? "Job Seeker" : "Company"} | ${isPremium ? "Premium Account" : "Regular Account"}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: mediaQueryHeight / 60,
@@ -159,15 +169,21 @@ class topSetting extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           padding: EdgeInsets.all(5),
-                          child: Icon(
-                            Icons.priority_high_rounded,
-                            size: 20,
-                            color: Colors.white,
-                          ),
+                          child: profileComplete != 100
+                              ? Icon(
+                                  Icons.priority_high_rounded,
+                                  size: 20,
+                                  color: Colors.white,
+                                )
+                              : Icon(
+                                  Icons.check,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
                         ),
 
                         title: Text(
-                          "Profile Complete",
+                          "${profileComplete == 100 ? "Profile Complete" : "${profileComplete}%"}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -176,7 +192,7 @@ class topSetting extends StatelessWidget {
                           //overflow: titleMaxLine != null ? overflow : null,
                         ),
                         subtitle: Text(
-                          "Profile Anda Sudah Lengkap!",
+                          "${profileComplete == 100 ? "Profile Anda Sudah Lengkap!" : "Lengkapi Profile Anda"}",
                           style: TextStyle(color: Colors.white),
                           maxLines: 3,
                           // overflow:
@@ -199,19 +215,23 @@ class topSetting extends StatelessWidget {
                         //onTap: onTap,
                         leading: Container(
                           decoration: BoxDecoration(
-                            color: Colors.yellowAccent,
+                            color: isPremium
+                                ? Colors.yellowAccent
+                                : Colors.blue,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           padding: EdgeInsets.all(5),
-                          child: Icon(
-                            Icons.star,
-                            size: 20,
-                            color: Colors.white,
-                          ),
+                          child: isPremium
+                              ? Icon(Icons.star, size: 20, color: Colors.white)
+                              : Icon(
+                                  Icons.upgrade,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
                         ),
 
                         title: Text(
-                          "Upgrade Account",
+                          "${!isPremium ? "Upgrade Account" : "Premium Account"}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

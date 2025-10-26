@@ -200,7 +200,7 @@ class _LayoutState extends State<Layout> {
               onToggleNotification: toggleNotification,
               currentIndex: selectedIndex,
               onTabSelected: _onTabSelected,
-              loginAs: loginAs!,
+              loginAs: loginAs ?? "",
               notificationCount:
                   dataNotif?.where((item) => !item.isRead).length ?? 0,
             ),
@@ -208,7 +208,7 @@ class _LayoutState extends State<Layout> {
             bottomNavigationBar: BottomApplayout(
               currentIndex: selectedIndex,
               onTabSelected: _onTabSelected,
-              loginAs: loginAs!,
+              loginAs: loginAs ?? "",
             ),
           ),
 

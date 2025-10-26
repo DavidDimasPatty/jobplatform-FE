@@ -40,7 +40,10 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profileCompany/personalInfoCompany.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progress.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progressDetail.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/aboutUs.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/faq.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/tos.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
@@ -76,6 +79,9 @@ final List<GoRoute> _layoutRoutes = [
   ),
   GoRoute(path: '/profile', builder: (context, state) => Profile()),
   GoRoute(path: '/setting', builder: (context, state) => Setting()),
+  GoRoute(path: '/tos', builder: (context, state) => Tos()),
+  GoRoute(path: "/aboutUs", builder: (context, state) => Aboutus()),
+  GoRoute(path: "/faq", builder: (context, state) => FAQ()),
   GoRoute(
     path: '/edit-profile',
     builder: (context, state) {
@@ -196,7 +202,7 @@ final List<GoRoute> _layoutRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/setting',
   routes: [
     GoRoute(path: '/landing', builder: (context, state) => Landing()),
     GoRoute(path: '/login', builder: (context, state) => Login()),

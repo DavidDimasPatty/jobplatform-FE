@@ -1,105 +1,125 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
 
 class bodySetting extends StatelessWidget {
-  // final Color? cardColor;
-  // final double? cardRadius;
-  // final Color? backgroundMotifColor;
-  // final VoidCallback? onTap;
-  // final String? userName;
-  // final Widget? userMoreInfo;
-  // final ImageProvider userProfilePic;
-
-  // topSetting({
-  // required this.cardColor,
-  // this.cardRadius = 30,
-  // required this.userName,
-  // this.backgroundMotifColor = Colors.white,
-  // this.userMoreInfo,
-  // required this.userProfilePic,
-  // required this.onTap,
-  // });
   Widget build(BuildContext context) {
     var mediaQueryHeight = MediaQuery.of(context).size.height;
     return Column(
       //onTap: onTap,
       children: [
         SettingsGroup(
-          settingsGroupTitle: "Pengaturan Aplikasi",
+          settingsGroupTitle: "App Configuration",
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
               onTap: () {},
               icons: CupertinoIcons.pencil_outline,
-              //iconStyle: IconStyle(),
               title: 'Appearance',
-              //subtitle: "",
+              colorBGIcon: Colors.orangeAccent,
             ),
             SettingsItem(
               onTap: () {},
               icons: Icons.dark_mode_rounded,
-              //iconStyle: IconStyle(
-              //   iconsColor: Colors.white,
-              //   withBackground: true,
-              //   backgroundColor: Colors.red,
-              // ),
               title: 'Dark mode',
               subtitle: "Automatic",
+              colorBGIcon: Colors.black,
               trailing: Switch.adaptive(value: false, onChanged: (value) {}),
             ),
-          ],
-        ),
-        SettingsGroup(
-          // settingsGroupTitle: "Pengaturan Aplikasi",
-          backgroundColor: Colors.grey.shade100,
-          items: [
             SettingsItem(
               onTap: () {},
-              icons: Icons.info_rounded,
-              title: 'About',
-              subtitle: "Learn more about Skillen",
+              icons: Icons.notifications_active_sharp,
+              colorBGIcon: Colors.green,
+              title: 'Setting Notification',
             ),
           ],
         ),
 
         SettingsGroup(
-          // settingsGroupTitle: "Pengaturan Aplikasi",
+          settingsGroupTitle: "Account Configuration",
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
               onTap: () {},
-              icons: Icons.terminal,
-              title: 'Terms Of Service',
+              icons: Icons.star,
+              colorBGIcon: Colors.yellow.shade700,
+              title: 'Upgrade Account',
+              subtitle: "Upgrade to premium",
+            ),
+            SettingsItem(
+              onTap: () {},
+              icons: Icons.attach_email,
+              title: 'Setting Email',
+              colorBGIcon: Colors.red,
+              subtitle: "Change account email",
+            ),
+
+            SettingsItem(
+              onTap: () {},
+              icons: Icons.security,
+              title: '2FA',
+              colorBGIcon: Colors.indigo,
+              subtitle: "Add 2 Factor Authentication",
             ),
           ],
         ),
+
         SettingsGroup(
-          // settingsGroupTitle: "Pengaturan Aplikasi",
+          settingsGroupTitle: "Information Center",
+          backgroundColor: Colors.grey.shade100,
+          items: [
+            SettingsItem(
+              onTap: () => context.go("/aboutUs"),
+              icons: Icons.info_rounded,
+              colorBGIcon: Colors.blue.shade400,
+              title: 'About',
+              subtitle: "Learn more about Skillen",
+            ),
+            SettingsItem(
+              onTap: () => context.go("/faq"),
+              icons: Icons.question_answer,
+              colorBGIcon: Colors.blue.shade400,
+              title: 'FAQ',
+              subtitle: "Frequent Asked Questions",
+            ),
+            SettingsItem(
+              onTap: () => context.go("/tos"),
+              icons: Icons.design_services_rounded,
+              colorBGIcon: Colors.blue.shade400,
+              title: 'Terms Of Service',
+              subtitle: "See our guidelines",
+            ),
+          ],
+        ),
+
+        SettingsGroup(
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
               onTap: () {},
               icons: Icons.insert_chart,
               title: 'Send Feedback',
+              colorBGIcon: Colors.orange,
               subtitle: "Help us improve Skillen",
             ),
             SettingsItem(
               onTap: () {},
-              icons: Icons.star,
+              icons: Icons.favorite_outlined,
+              colorIcon: Colors.red,
+              colorBGIcon: Colors.white,
               title: 'Rate Us',
-              //subtitle: "Help us improve Skillen",
             ),
           ],
         ),
         SettingsGroup(
           backgroundColor: Colors.grey.shade100,
-          settingsGroupTitle: "Account",
           items: [
             SettingsItem(
               onTap: () {},
               icons: Icons.exit_to_app_rounded,
+              colorBGIcon: Colors.redAccent,
               title: "Sign Out",
             ),
             SettingsItem(
@@ -118,3 +138,9 @@ class bodySetting extends StatelessWidget {
     );
   }
 }
+
+  //FAQ
+  //Upgrade plan
+  //Setting notif
+  //2FA
+  //Setting email

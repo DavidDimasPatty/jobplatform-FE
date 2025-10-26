@@ -7,6 +7,7 @@ import 'package:job_platform/features/components/setting/persentation/widgets/se
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -16,11 +17,22 @@ class Setting extends StatefulWidget {
 }
 
 class _Setting extends State<Setting> {
-  // Loading state
   bool isLoading = true;
   String? errorMessage;
-  Future<void> _loadProfileData() async {
+  String? nama;
+  String? loginAs;
+  String? url;
+  bool? isPremium;
+  int? profileComplete;
+
+  Future<void> _loadSetting() async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      nama = prefs.getString('nama');
+      loginAs = prefs.getString('loginAs');
+      url = prefs.getString('url');
+      isPremium = prefs.getBool("isPremium");
+      profileComplete = prefs.getInt("profileComplete");
       // setState(() {
       //   isLoading = true;
       //   errorMessage = null;
@@ -63,7 +75,7 @@ class _Setting extends State<Setting> {
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
+    _loadSetting();
   }
 
   @override
@@ -95,7 +107,6 @@ class _Setting extends State<Setting> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            // ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
           ],
         ),
       );
@@ -114,14 +125,20 @@ class _Setting extends State<Setting> {
             rowMainAxisAlignment: MainAxisAlignment.center,
             columnMainAxisAlignment: MainAxisAlignment.center,
             rowCrossAxisAlignment: CrossAxisAlignment.center,
-            // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-            //     ? ResponsiveRowColumnType.COLUMN
-            //     : ResponsiveRowColumnType.ROW,
             layout: ResponsiveRowColumnType.COLUMN,
             rowSpacing: 100,
             columnSpacing: 20,
             children: [
-              ResponsiveRowColumnItem(rowFlex: 2, child: topSetting()),
+              ResponsiveRowColumnItem(
+                rowFlex: 2,
+                child: topSetting(
+                  nama: nama ?? "",
+                  isPremium: isPremium ?? false,
+                  loginAs: loginAs ?? "user",
+                  profileComplete: profileComplete ?? 0,
+                  url: url ?? "",
+                ),
+              ),
               ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
           ),
