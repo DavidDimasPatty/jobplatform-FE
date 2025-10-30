@@ -22,7 +22,6 @@ class statusjobitems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -52,7 +51,6 @@ class statusjobitems extends StatelessWidget {
                         width: 40,
                         height: 40,
                         fit: BoxFit.cover,
-                        color: Colors.cyan,
                       )
                     : Container(
                         width: 40,

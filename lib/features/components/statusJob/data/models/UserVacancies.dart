@@ -23,10 +23,13 @@ class UserVacancies {
 
   factory UserVacancies.fromJson(Map<String, dynamic> json) {
     return UserVacancies(
-      id: json["id"] ?? null,
+      id: json["_id"] ?? null,
       idUserVacancy: json["idUserVacancy"] ?? null,
       status: json["status"] ?? null,
-      alasanReject: json["alasanReject"] ?? null,
+      alasanReject:
+          (json["alasanReject"] == null || json["alasanReject"] == "BsonNull")
+          ? null
+          : json["alasanReject"],
       addTime: json["addTime"] != null ? DateTime.parse(json["addTime"]) : null,
       addId: json["addId"] ?? null,
       updId: json["updId"] ?? null,

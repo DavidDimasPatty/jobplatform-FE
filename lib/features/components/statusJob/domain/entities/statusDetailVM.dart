@@ -1,3 +1,4 @@
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/statusJob/data/models/StatusVacancy.dart';
 import 'package:job_platform/features/components/statusJob/data/models/UserVacancies.dart';
 
@@ -16,6 +17,8 @@ class StatusDetailVM {
   final List<String>? benefit;
   final List<StatusVacancy>? userStatus;
   final UserVacancies? userVacancy;
+  final int? minExperience;
+  final List<SkillModel>? skill;
 
   StatusDetailVM({
     this.namaPerusahaan,
@@ -32,5 +35,7 @@ class StatusDetailVM {
     this.benefit,
     this.userStatus,
     this.userVacancy,
+    this.minExperience,
+    this.skill,
   });
 }

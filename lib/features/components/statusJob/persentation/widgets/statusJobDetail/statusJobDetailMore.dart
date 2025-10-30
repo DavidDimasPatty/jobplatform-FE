@@ -8,7 +8,6 @@ class statusJobDetailMore extends StatelessWidget {
   final StatusDetailVM? data;
 
   statusJobDetailMore({super.key, this.data});
-
   Map<String, String> get careerDescriptions => {
     "Salary Expectation": data != null
         ? "${NumberFormat('#,###').format(data?.gajiMin)} - ${NumberFormat('#,###').format(data?.gajiMax)}"
@@ -28,6 +27,12 @@ class statusJobDetailMore extends StatelessWidget {
     "Career Level": data != null
         ? data?.jabatan ?? "Not specified"
         : "Not specified",
+    "Min. Exprience": data != null
+        ? "${data?.minExperience.toString()} Tahun" ?? "Not specified"
+        : "Not specified",
+    "Skill Required": data != null && data?.skill != null
+        ? data!.skill!.map((x) => x.nama).join(", ")
+        : "Not specified",
   };
 
   final Map<String, IconData> careerIcons = {
@@ -38,6 +43,8 @@ class statusJobDetailMore extends StatelessWidget {
     "Location": Icons.location_on,
     "Career Level": Icons.trending_up,
     "Availability": Icons.event_available,
+    "Min. Exprience": Icons.work,
+    "Skill Required": Icons.add_chart,
   };
 
   @override

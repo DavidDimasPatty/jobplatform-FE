@@ -158,16 +158,18 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: '/progressDetail',
     builder: (context, state) {
-      final data = state.extra as String?;
-      return Progressdetail(dataId: data);
+      final extraData = state.extra as Map<String, dynamic>?;
+      final dataId = extraData?['data'] as String?;
+      return Progressdetail(dataId: dataId);
     },
   ),
   GoRoute(path: '/statusJob', builder: (context, state) => statusJob()),
   GoRoute(
     path: '/statusJobDetail',
     builder: (context, state) {
-      final data = state.extra as String?;
-      return Statusjobdetail(dataId: data);
+      final extraData = state.extra as Map<String, dynamic>?;
+      final dataId = extraData?['data'] as String?;
+      return Statusjobdetail(dataId: dataId);
     },
   ),
   GoRoute(path: '/vacancy', builder: (context, state) => Vacancy()),
@@ -202,7 +204,7 @@ final List<GoRoute> _layoutRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: '/setting',
+  initialLocation: '/login',
   routes: [
     GoRoute(path: '/landing', builder: (context, state) => Landing()),
     GoRoute(path: '/login', builder: (context, state) => Login()),

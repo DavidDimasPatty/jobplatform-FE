@@ -48,7 +48,10 @@ class _statusJob extends State<statusJob> {
                   jabatan: x.jabatan ?? "",
                   onTap: () => TapItems(x.idUserVacancy ?? ""),
                   posisi: x.namaPosisi ?? "",
-                  status: x.isAcceptUser == false && x.status == null
+                  status:
+                      x.isAcceptUser == false &&
+                          x.status == null &&
+                          x.alasanRejectUser == null
                       ? "Menunggu Konfirmasi"
                       : x.status == 0 &&
                             x.isAcceptUser == true &&
@@ -66,6 +69,10 @@ class _statusJob extends State<statusJob> {
                             x.isAcceptUser == true &&
                             x.isRejectHRD == false
                       ? "Close"
+                      : x.isAcceptUser == false &&
+                            x.status == null &&
+                            x.alasanRejectUser != null
+                      ? "Reject Vacancy"
                       : x.isAcceptUser == false
                       ? "Reject Offering"
                       : "Reject HRD",

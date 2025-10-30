@@ -8,6 +8,7 @@ class StatusAllVM {
   final String? idUserVacancy;
   final bool? isAcceptUser;
   final bool? isRejectHRD;
+  final String? alasanRejectUser;
 
   StatusAllVM({
     this.namaPerusahaan,
@@ -19,5 +20,6 @@ class StatusAllVM {
     this.idUserVacancy,
     this.isAcceptUser,
     this.isRejectHRD,
+    this.alasanRejectUser,
   });
 }

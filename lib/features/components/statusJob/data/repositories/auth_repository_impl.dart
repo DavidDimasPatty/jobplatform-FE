@@ -23,10 +23,14 @@ class AuthRepositoryImpl implements AuthRepository {
               tipeKerja: x.vacancy?.tipeKerja ?? null,
               idUserVacancy: x.userVacancy?.id ?? null,
               logoPerusahaan: x.company?.logo ?? null,
-              status: x.status?.last.status ?? null,
+              status: x.status!.length > 0 ? x.status!.last.status : null,
               isAcceptUser: x.userVacancy?.isAccept ?? null,
-              isRejectHRD:
-                  (x.status?.last.alasanReject?.trim().isNotEmpty ?? false),
+              isRejectHRD: x.status!.length > 0
+                  ? (x.status?.last.alasanReject?.trim().isNotEmpty ?? false)
+                  : false,
+              alasanRejectUser: x.userVacancy?.alasanReject != null
+                  ? x.userVacancy!.alasanReject
+                  : null,
             ),
           )
           .toList();
@@ -54,8 +58,12 @@ class AuthRepositoryImpl implements AuthRepository {
         namaPosisi: statusDetailModel.vacancy?.namaPosisi ?? null,
         sistemKerja: statusDetailModel.vacancy?.sistemKerja ?? null,
         tipePekerjaan: statusDetailModel.vacancy?.tipeKerja ?? null,
-        userStatus: statusDetailModel.status ?? null,
+        userStatus: statusDetailModel.status!.length > 0
+            ? statusDetailModel.status ?? null
+            : null,
         userVacancy: statusDetailModel.userVacancy ?? null,
+        minExperience: statusDetailModel.vacancy?.minExperience ?? 0,
+        skill: statusDetailModel.vacancy?.skill ?? null,
       );
       return dataStatusVM;
     } else {

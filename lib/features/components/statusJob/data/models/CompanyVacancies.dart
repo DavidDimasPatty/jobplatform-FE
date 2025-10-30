@@ -1,3 +1,5 @@
+import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
+
 class CompanyVacancies {
   final String? id;
   final String? idCompany;
@@ -10,6 +12,8 @@ class CompanyVacancies {
   final String? lokasi;
   final DateTime? addTime;
   final DateTime? updTime;
+  final List<SkillModel>? skill;
+  final int? minExperience;
 
   CompanyVacancies({
     this.id,
@@ -23,11 +27,13 @@ class CompanyVacancies {
     this.lokasi,
     this.addTime,
     this.updTime,
+    this.skill,
+    this.minExperience,
   });
 
   factory CompanyVacancies.fromJson(Map<String, dynamic> json) {
     return CompanyVacancies(
-      id: json["id"] ?? null,
+      id: json["_id"] ?? null,
       idCompany: json["idCompany"] ?? null,
       namaPosisi: json["namaPosisi"] ?? null,
       gajiMin: json["gajiMin"] != null
@@ -42,6 +48,14 @@ class CompanyVacancies {
       lokasi: json["lokasi"] ?? null,
       addTime: json["addTime"] != null ? DateTime.parse(json["addTime"]) : null,
       updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
+      skill: json["skills"] != null
+          ? List<SkillModel>.from(
+              json["skills"].map((x) => SkillModel.fromJson(x)),
+            )
+          : null,
+      minExperience: json["minExperience"] != null
+          ? int.tryParse(json["minExperience"].toString())
+          : 0,
     );
   }
 }

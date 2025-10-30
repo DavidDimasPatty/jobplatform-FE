@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class FAQ extends StatefulWidget {
-  const FAQ({Key? key}) : super(key: key);
+  FAQ({Key? key}) : super(key: key);
 
   @override
   State<FAQ> createState() => _FAQPageState();
@@ -47,10 +47,10 @@ class _FAQPageState extends State<FAQ> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 20),
+      child: Center(
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -83,7 +83,7 @@ class _FAQPageState extends State<FAQ> {
                         color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
 
                     ...List.generate(faqs.length, (index) {
                       final faq = faqs[index];
@@ -122,14 +122,14 @@ class _FAQPageState extends State<FAQ> {
                             ),
                           ),
 
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Container(
                             height: 1,
                             color: Colors.blueAccent.withOpacity(0.2),
                           ),
 
                           if (isExpanded) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Text(
                               faq['answer'],
                               style: TextStyle(
@@ -140,7 +140,7 @@ class _FAQPageState extends State<FAQ> {
                             ),
                           ],
 
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20),
                         ],
                       );
                     }),

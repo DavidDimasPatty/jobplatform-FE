@@ -13,8 +13,8 @@ class StatusUseCase {
     return repository.getAllStatus(id);
   }
 
-  Future<StatusDetailVM?> getDetailStatus(String email) {
-    return repository.getStatusDetail(email);
+  Future<StatusDetailVM?> getDetailStatus(String id) {
+    return repository.getStatusDetail(id);
   }
 
   Future<String?> validateVacancy(

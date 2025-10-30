@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/statusJob/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/statusJob/data/repositories/auth_repository_impl.dart';
@@ -47,20 +48,20 @@ class _Statusjobdetail extends State<Statusjobdetail> {
         isLoading = true;
         errorMessage = null;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
-
-      if (userId != null) {
-        var detailStatus = await _statusUseCase?.getDetailStatus(userId);
+      if (widget.dataId!.isNotEmpty) {
+        var detailStatus = await _statusUseCase?.getDetailStatus(
+          widget.dataId!,
+        );
         if (detailStatus != null) {
           setState(() {
             data = detailStatus;
             isLoading = false;
             errorMessage = null;
+            stepsImpl = data?.userStatus?.last.status ?? 0;
           });
         }
       } else {
-        print("User ID not found in SharedPreferences");
+        print("Id User Vacancy not found in SharedPreferences");
       }
     } catch (e) {
       print("Error loading status data: $e");
@@ -81,37 +82,43 @@ class _Statusjobdetail extends State<Statusjobdetail> {
       barrierDismissible: false,
       builder: (context) {
         if (status) {
-          // ✅ Konfirmasi biasa
           return AlertDialog(
-            title: const Text('Konfirmasi Tahapan'),
-            content: const Text(
-              'Apakah Anda yakin ingin konfirmasi tahapan ini?',
-            ),
+            backgroundColor: Colors.white,
+            title: Text('Konfirmasi Lowongan'),
+            content: Text('Apakah Anda yakin ingin menerima tawaran ini?'),
             actions: [
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: () => Navigator.of(context).pop(null),
-                child: const Text('Batal'),
+                child: Text('Batal'),
               ),
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: () => Navigator.of(context).pop("CONFIRM"),
-                style: TextButton.styleFrom(foregroundColor: Colors.green),
-                child: const Text('Konfirmasi'),
+                child: Text('Konfirmasi'),
               ),
             ],
           );
         } else {
           return AlertDialog(
-            title: const Text('Tolak Tahapan'),
+            backgroundColor: Colors.white,
+            title: Text('Tolak Lowongan'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Silakan masukkan alasan penolakan:'),
-                const SizedBox(height: 10),
+                Text('Silakan masukkan alasan penolakan:'),
+                SizedBox(height: 10),
                 TextField(
                   controller: alasanController,
                   maxLines: 3,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Tulis alasan...',
                     border: OutlineInputBorder(),
                   ),
@@ -121,22 +128,30 @@ class _Statusjobdetail extends State<Statusjobdetail> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(null),
-                child: const Text('Batal'),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Batal', style: TextStyle(color: Colors.white)),
               ),
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: () {
                   if (alasanController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text('Alasan tidak boleh kosong'),
+                        backgroundColor: Colors.red,
                       ),
                     );
                     return;
                   }
                   Navigator.of(context).pop(alasanController.text.trim());
                 },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('Tolak'),
+                child: Text('Tolak'),
               ),
             ],
           );
@@ -148,7 +163,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
   Future konfirmasiTahapan(bool status) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? id = prefs.getString('id');
+      String? id = prefs.getString('idUser');
       String? idUserVacancy = data?.userVacancy?.id;
       String? alasanReject;
       if (id == null) throw Exception("User ID not found in preferences");
@@ -163,11 +178,10 @@ class _Statusjobdetail extends State<Statusjobdetail> {
       if (!status) {
         alasanReject = result;
       }
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => const Center(child: CircularProgressIndicator()),
-      );
+
+      setState(() {
+        isLoading = true;
+      });
 
       if (status == false && alasanReject!.isEmpty)
         throw Exception("Alasan Reject tidak boleh kosong jika penolakan");
@@ -183,14 +197,21 @@ class _Statusjobdetail extends State<Statusjobdetail> {
           context,
         ).showSnackBar(SnackBar(content: Text('Confirm Vacancy Success!')));
         setState(() {
+          isLoading = false;
           _loadDetailStatus();
         });
       } else {
+        setState(() {
+          isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(response!), backgroundColor: Colors.red),
         );
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       debugPrint('Error during edit profile: $e');
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
@@ -212,13 +233,12 @@ class _Statusjobdetail extends State<Statusjobdetail> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading profile data...'),
+            Text('Loading Job Data...'),
           ],
         ),
       );
     }
 
-    // Show error message if there's an error
     if (errorMessage != null) {
       return Center(
         child: Column(
@@ -289,16 +309,24 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                             child: Stack(
                               alignment: Alignment.bottomRight,
                               children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.white,
-                                  child: CircleAvatar(
-                                    radius: 46,
-                                    backgroundImage: NetworkImage(
-                                      data!.logoPerusahaan!,
-                                    ),
-                                    backgroundColor: Colors.blueGrey,
-                                  ),
+                                ClipOval(
+                                  child: data!.logoPerusahaan != null
+                                      ? Image.network(
+                                          data!.logoPerusahaan!,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Container(
+                                          width: 100,
+                                          height: 100,
+                                          color: Colors.grey[300],
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                        ),
                                 ),
                               ],
                             ),
@@ -353,42 +381,44 @@ class _Statusjobdetail extends State<Statusjobdetail> {
 
                 ResponsiveRowColumnItem(child: statusJobDetailMore(data: data)),
 
-                ResponsiveRowColumnItem(
-                  child: Container(
-                    child: Column(
-                      spacing: 40,
-                      children: [
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            bool isMobile = ResponsiveBreakpoints.of(
-                              context,
-                            ).smallerThan(TABLET);
-                            if (!isMobile) {
-                              return SizedBox(
-                                width: 800,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(20),
-                                      child: Text(
-                                        "Proses Rekrutment",
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.davidLibre(
-                                          textStyle: TextStyle(
-                                            color: Colors.blue,
-                                            letterSpacing: 2,
-                                            fontSize: 25,
+                if (data?.userVacancy?.isAccept == true ||
+                    data?.userStatus != null)
+                  ResponsiveRowColumnItem(
+                    child: Container(
+                      child: Column(
+                        spacing: 40,
+                        children: [
+                          LayoutBuilder(
+                            builder: (context, raints) {
+                              bool isMobile = ResponsiveBreakpoints.of(
+                                context,
+                              ).smallerThan(TABLET);
+                              if (!isMobile) {
+                                return SizedBox(
+                                  width: 800,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(20),
+                                        child: Text(
+                                          "Proses Rekrutment",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.davidLibre(
+                                            textStyle: TextStyle(
+                                              color: Colors.blue,
+                                              letterSpacing: 2,
+                                              fontSize: 25,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: List.generate(
-                                        steps.length * 2 - 1,
-                                        (index) {
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: List.generate(steps.length * 2 - 1, (
+                                          index,
+                                        ) {
                                           if (index.isEven) {
                                             int stepIndex = index ~/ 2;
                                             return Container(
@@ -398,8 +428,15 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                                   CircleAvatar(
                                                     radius: 25,
                                                     backgroundColor:
-                                                        stepsImpl >= stepIndex
-                                                        ? Colors.blue
+                                                        (data
+                                                                    ?.userVacancy
+                                                                    ?.isAccept ==
+                                                                false &&
+                                                            stepIndex == 2)
+                                                        ? Colors.red
+                                                        : (stepsImpl >=
+                                                              stepIndex)
+                                                        ? Colors.green
                                                         : Colors.grey.shade200,
                                                     child: Text(
                                                       "${stepIndex + 1}",
@@ -408,7 +445,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                                             stepsImpl >=
                                                                 stepIndex
                                                             ? Colors.white
-                                                            : Colors.black,
+                                                            : Colors.blue,
                                                         fontSize: 12,
                                                       ),
                                                     ),
@@ -426,12 +463,15 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                                       style: GoogleFonts.ptSerif(
                                                         textStyle: TextStyle(
                                                           color:
-                                                              stepsImpl >=
-                                                                  stepIndex
-                                                              ? Colors.blue
-                                                              : Colors
-                                                                    .grey
-                                                                    .shade600,
+                                                              (data?.userVacancy?.isAccept ==
+                                                                      false &&
+                                                                  stepIndex ==
+                                                                      2)
+                                                              ? Colors.red
+                                                              : (stepsImpl >=
+                                                                    stepIndex)
+                                                              ? Colors.green
+                                                              : Colors.blue,
                                                           letterSpacing: 1,
                                                           fontSize: 14,
                                                         ),
@@ -446,170 +486,198 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                             return Expanded(
                                               child: Container(
                                                 height: 2,
-                                                color: stepsImpl >= stepIndex
-                                                    ? Colors.blue
-                                                    : Colors.grey.shade600,
+                                                color:
+                                                    (data
+                                                                ?.userVacancy
+                                                                ?.isAccept ==
+                                                            false &&
+                                                        stepIndex == 2)
+                                                    ? Colors.grey.shade200
+                                                    : (stepsImpl >= stepIndex)
+                                                    ? Colors.green
+                                                    : Colors.grey.shade200,
                                               ),
                                             );
                                           }
+                                        }),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(20),
+                                      child: Text(
+                                        "Proses Rekrutment",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.davidLibre(
+                                          textStyle: TextStyle(
+                                            color: Colors.blue,
+                                            letterSpacing: 2,
+                                            fontSize: 25,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: GridView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              crossAxisSpacing: 20,
+                                              mainAxisSpacing: 20,
+                                              childAspectRatio: 1,
+                                            ),
+                                        itemCount: steps.length,
+                                        itemBuilder: (context, index) {
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor:
+                                                    (data
+                                                                ?.userVacancy
+                                                                ?.isAccept ==
+                                                            false &&
+                                                        index == 2)
+                                                    ? Colors.red
+                                                    : (stepsImpl >= index)
+                                                    ? Colors.green
+                                                    : Colors.grey.shade200,
+                                                child: Text(
+                                                  "${index + 1}",
+                                                  style: TextStyle(
+                                                    color: stepsImpl >= index
+                                                        ? Colors.white
+                                                        : Colors.blue,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                steps[index],
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.ptSerif(
+                                                  textStyle: TextStyle(
+                                                    color:
+                                                        (data
+                                                                    ?.userVacancy
+                                                                    ?.isAccept ==
+                                                                false &&
+                                                            index == 2)
+                                                        ? Colors.red
+                                                        : (stepsImpl >= index)
+                                                        ? Colors.green
+                                                        : Colors.blue,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
                                         },
                                       ),
                                     ),
                                   ],
-                                ),
-                              );
-                            } else {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(20),
-                                    child: Text(
-                                      "Proses Rekrutment",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.davidLibre(
-                                        textStyle: TextStyle(
-                                          color: Colors.blue,
-                                          letterSpacing: 2,
-                                          fontSize: 25,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: GridView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            crossAxisSpacing: 20,
-                                            mainAxisSpacing: 20,
-                                            childAspectRatio: 1,
-                                          ),
-                                      itemCount: steps.length,
-                                      itemBuilder: (context, index) {
-                                        return Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 25,
-                                              backgroundColor:
-                                                  stepsImpl >= index
-                                                  ? Colors.blue
-                                                  : Colors.grey.shade200,
-                                              child: Text(
-                                                "${index + 1}",
-                                                style: TextStyle(
-                                                  color: stepsImpl >= index
-                                                      ? Colors.white
-                                                      : Colors.blue,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              steps[index],
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.ptSerif(
-                                                textStyle: TextStyle(
-                                                  color: stepsImpl >= index
-                                                      ? Colors.blue
-                                                      : Colors.grey.shade600,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                        ),
-                      ],
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                ResponsiveRowColumnItem(
-                  child: Container(
-                    child: Column(
-                      spacing: 40,
-                      children: [
-                        Row(
-                          spacing: 40,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Flexible(
-                              flex: 3,
-                              child: ElevatedButton.icon(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                if ((data?.userVacancy?.alasanReject?.isEmpty ?? true) &&
+                    (data?.userStatus?.isNotEmpty == true
+                        ? (data?.userStatus?.last.alasanReject?.isEmpty ?? true)
+                        : true) &&
+                    data!.userStatus?.last.status != 3 &&
+                    data!.userStatus?.last.status != 1 &&
+                    data!.userStatus?.last.status != 0)
+                  ResponsiveRowColumnItem(
+                    child: Container(
+                      child: Column(
+                        spacing: 40,
+                        children: [
+                          Row(
+                            spacing: 40,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Flexible(
+                                flex: 3,
+                                child: ElevatedButton.icon(
+                                  onPressed: () => konfirmasiTahapan(true),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
+                                    minimumSize: Size(
+                                      MediaQuery.of(context).size.width * 0.4,
+                                      60,
+                                    ),
                                   ),
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.4,
-                                    60,
-                                  ),
+                                  icon: Icon(Icons.check),
+                                  label: Text("Accept"),
                                 ),
-                                icon: Icon(Icons.check),
-                                label: Text("Accept"),
                               ),
-                            ),
-                            Flexible(
-                              flex: 3,
-                              child: ElevatedButton.icon(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                              Flexible(
+                                flex: 3,
+                                child: ElevatedButton.icon(
+                                  onPressed: () => konfirmasiTahapan(false),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    minimumSize: Size(
+                                      MediaQuery.of(context).size.width * 0.4,
+                                      60,
+                                    ),
                                   ),
-                                  backgroundColor: Colors.red,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.4,
-                                    60,
-                                  ),
+                                  icon: Icon(Icons.close),
+                                  label: Text("Reject"),
                                 ),
-                                icon: Icon(Icons.close),
-                                label: Text("Reject"),
                               ),
-                            ),
-                            Flexible(
-                              flex: 4,
-                              child: ElevatedButton.icon(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                              Flexible(
+                                flex: 3,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    context.go("/chat");
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white,
+                                    minimumSize: Size(
+                                      MediaQuery.of(context).size.width * 0.4,
+                                      60,
+                                    ),
                                   ),
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.4,
-                                    60,
-                                  ),
+                                  icon: Icon(Icons.chat),
+                                  label: Text("Chat"),
                                 ),
-                                icon: Icon(Icons.chat),
-                                label: Text("Chat"),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

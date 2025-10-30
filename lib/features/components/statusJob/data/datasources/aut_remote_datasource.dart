@@ -41,7 +41,6 @@ class AuthRemoteDataSource {
       ).replace(queryParameters: {'idUserVacancy': id});
       DetailStatusModel? data;
       final response = await http.get(url);
-      print(response.body.toString());
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
         if (jsonData["responseCode"].toString()!.contains("200")) {
