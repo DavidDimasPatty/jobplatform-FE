@@ -18,16 +18,22 @@ class AuthRepositoryImpl implements AuthRepository {
             (x) => ProgressAllVM(
               namaKandidat: x.dataUser?.nama ?? null,
               namaPosisi: x.vacancy?.namaPosisi ?? null,
-              tipeKerja: x.vacancy?.tipeKerja ?? null,
+              tipeKerja: x.userVacancy?.tipeKerja != null
+                  ? x.userVacancy?.tipeKerja
+                  : x.vacancy?.tipeKerja ?? null,
               idUserVacancy: x.userVacancy?.id ?? null,
               domisiliKandidat: x.dataUser?.domisili ?? null,
-              status: x.status?.last.status ?? null,
               jabatanPosisi: x.vacancy?.jabatan ?? null,
               tanggalLahirKandidat: x.dataUser?.tanggalLahir ?? null,
               url: x.dataUser?.photoURL ?? null,
+              status: x.status!.length > 0 ? x.status!.last.status : null,
               isAcceptUser: x.userVacancy?.isAccept ?? null,
-              isRejectHRD:
-                  (x.status?.last.alasanReject?.trim().isNotEmpty ?? false),
+              isRejectHRD: x.status!.length > 0
+                  ? (x.status?.last.alasanReject?.trim().isNotEmpty ?? false)
+                  : false,
+              alasanRejectUser: x.userVacancy?.alasanReject != null
+                  ? x.userVacancy!.alasanReject
+                  : null,
             ),
           )
           .toList();
@@ -72,6 +78,26 @@ class AuthRepositoryImpl implements AuthRepository {
       status,
       alasanReject,
       idUser,
+    );
+    return result;
+  }
+
+  @override
+  Future<String?> editVacancyCandidate(
+    String idUserVacancy,
+    String idUser,
+    String? tipeKerja,
+    String? sistemKerja,
+    double? gajiMin,
+    double? gajiMax,
+  ) async {
+    final result = await remoteDataSource.editVacancyCandidate(
+      idUserVacancy,
+      idUser,
+      tipeKerja,
+      sistemKerja,
+      gajiMin,
+      gajiMax,
     );
     return result;
   }

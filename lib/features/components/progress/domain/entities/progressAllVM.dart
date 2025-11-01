@@ -10,6 +10,7 @@ class ProgressAllVM {
   final String? url;
   final bool? isAcceptUser;
   final bool? isRejectHRD;
+  final String? alasanRejectUser;
 
   ProgressAllVM({
     this.namaKandidat,
@@ -23,5 +24,6 @@ class ProgressAllVM {
     this.url,
     this.isAcceptUser,
     this.isRejectHRD,
+    this.alasanRejectUser,
   });
 }

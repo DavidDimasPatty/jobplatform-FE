@@ -60,6 +60,43 @@ class ProfileModel {
     );
   }
 
+  factory ProfileModel.fromJsonProgress(Map<String, dynamic> json) {
+    return ProfileModel(
+      user: json["user"] != null ? Profiledata.fromJson(json["user"]) : null,
+      preferences: json["preference"] != null
+          ? List<PreferenceMV>.from(
+              json["preference"].map((x) => PreferenceMV.fromJson(x)),
+            )
+          : null,
+      experiences: json["experience"] != null
+          ? List<WorkexperienceMV>.from(
+              json["experience"].map((x) => WorkexperienceMV.fromJson(x)),
+            )
+          : null,
+      certificates: json["certificate"] != null
+          ? List<CertificateMV>.from(
+              json["certificate"].map((x) => CertificateMV.fromJson(x)),
+            )
+          : null,
+      skills: json["linkSkill"] != null
+          ? List<SkillMV>.from(
+              json["linkSkill"].map((x) => SkillMV.fromJson(x)),
+            )
+          : null,
+      educations: json["education"] != null
+          ? List<EducationMV>.from(
+              json["education"].map((x) => EducationMV.fromJson(x)),
+            )
+          : null,
+      organizations: json["organization"] != null
+          ? List<OrganizationMV>.from(
+              json["organization"].map((x) => OrganizationMV.fromJson(x)),
+            )
+          : null,
+      // companies: json["data"]["linkCompany"],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "user": user ?? {},

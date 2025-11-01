@@ -35,10 +35,16 @@ class CertificateProgressModel {
           ? json['userCertificate']['codeURL'] ?? null
           : null,
       expiredDate: json['userCertificate'] != null
-          ? DateTime.tryParse(json['userCertificate']['expiredDate']) ?? null
+          ? json['userCertificate']['expiredDate'] != null
+                ? DateTime.tryParse(json['userCertificate']['expiredDate']) ??
+                      null
+                : null
           : null,
       publishDate: json['userCertificate'] != null
-          ? DateTime.tryParse(json['userCertificate']['publishDate']) ?? null
+          ? json['userCertificate']['expiredDate'] != null
+                ? DateTime.tryParse(json['userCertificate']['publishDate']) ??
+                      null
+                : null
           : null,
     );
   }

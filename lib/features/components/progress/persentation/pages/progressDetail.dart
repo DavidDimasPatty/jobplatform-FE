@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
@@ -67,6 +68,7 @@ class _Progressdetail extends State<Progressdetail> {
           data = detailProgress;
           isLoading = false;
           errorMessage = null;
+          stepsImpl = detailProgress?.dataStatusVacancy?.last.status ?? 0;
         });
       }
     } catch (e) {
@@ -88,7 +90,6 @@ class _Progressdetail extends State<Progressdetail> {
       barrierDismissible: false,
       builder: (context) {
         if (status) {
-          // ✅ Konfirmasi biasa
           return AlertDialog(
             title: const Text('Konfirmasi Tahapan'),
             content: const Text(
@@ -155,7 +156,7 @@ class _Progressdetail extends State<Progressdetail> {
   Future konfirmasiTahapan(bool status) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? id = prefs.getString('id');
+      String? id = prefs.getString('idUser');
       String? idUserVacancy = data?.dataUserVacancy?.id;
       String? alasanReject;
       if (id == null) throw Exception("User ID not found in preferences");
@@ -170,11 +171,10 @@ class _Progressdetail extends State<Progressdetail> {
       if (!status) {
         alasanReject = result;
       }
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => const Center(child: CircularProgressIndicator()),
-      );
+
+      setState(() {
+        isLoading = true;
+      });
 
       if (status == false && alasanReject!.isEmpty)
         throw Exception("Alasan Reject tidak boleh kosong jika penolakan");
@@ -190,14 +190,21 @@ class _Progressdetail extends State<Progressdetail> {
           context,
         ).showSnackBar(SnackBar(content: Text('Confirm Vacancy Success!')));
         setState(() {
+          isLoading = false;
           _loadProgressDetail();
         });
       } else {
+        setState(() {
+          isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(response!), backgroundColor: Colors.red),
         );
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       debugPrint('Error during edit profile: $e');
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
@@ -298,13 +305,25 @@ class _Progressdetail extends State<Progressdetail> {
                             child: Stack(
                               alignment: Alignment.bottomRight,
                               children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.white,
-                                  child: const CircleAvatar(
-                                    radius: 46,
-                                    backgroundColor: Colors.blueGrey,
-                                  ),
+                                ClipOval(
+                                  child:
+                                      !(data!.dataUser!.user!.photoURL!.isEmpty)
+                                      ? Image.network(
+                                          data!.dataUser!.user!.photoURL!,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Container(
+                                          width: 100,
+                                          height: 100,
+                                          color: Colors.grey[300],
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                        ),
                                 ),
                               ],
                             ),
@@ -362,239 +381,361 @@ class _Progressdetail extends State<Progressdetail> {
                   child: SkillProgress(dataSkills: data?.dataSkill),
                 ),
                 ResponsiveRowColumnItem(
-                  child: CareerPreferenceProgress(
-                    dataPreferences: data?.dataPreference,
+                  child: VacancyProgress(
+                    dataVacancy: data?.dataVacancy,
+                    dataUserVacancy: data?.dataUserVacancy,
+                    status: steps[stepsImpl],
                   ),
                 ),
-                ResponsiveRowColumnItem(
-                  child: VacancyProgress(dataVacancy: data?.dataVacancy),
-                ),
+
                 ResponsiveRowColumnItem(
                   child: Container(
-                    //height: 200,
                     child: Column(
                       spacing: 40,
                       children: [
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            bool isMobile = ResponsiveBreakpoints.of(
-                              context,
-                            ).smallerThan(TABLET);
-                            if (!isMobile) {
-                              return SizedBox(
-                                width: 800,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(20),
-                                      child: Text(
-                                        "Proses Rekrutment",
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.davidLibre(
-                                          textStyle: TextStyle(
-                                            color: Colors.blue,
-                                            letterSpacing: 2,
-                                            fontSize: 25,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: List.generate(
-                                        steps.length * 2 - 1,
-                                        (index) {
-                                          if (index.isEven) {
-                                            int stepIndex = index ~/ 2;
-                                            return Container(
-                                              margin: EdgeInsets.only(top: 60),
-                                              child: Column(
-                                                children: [
-                                                  CircleAvatar(
-                                                    radius: 25,
-                                                    backgroundColor:
-                                                        stepsImpl >= stepIndex
-                                                        ? Colors.blue
-                                                        : Colors.grey.shade200,
-                                                    child: Text(
-                                                      "${stepIndex + 1}",
-                                                      style: TextStyle(
-                                                        color:
-                                                            stepsImpl >=
-                                                                stepIndex
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width: 100,
-                                                    height: 60,
-                                                    margin: EdgeInsets.only(
-                                                      top: 10,
-                                                    ),
-                                                    child: Text(
-                                                      steps[stepIndex],
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: GoogleFonts.ptSerif(
-                                                        textStyle: TextStyle(
-                                                          color:
-                                                              stepsImpl >=
-                                                                  stepIndex
-                                                              ? Colors.blue
-                                                              : Colors
-                                                                    .grey
-                                                                    .shade600,
-                                                          letterSpacing: 1,
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          } else {
-                                            int stepIndex = index ~/ 2;
-                                            return Expanded(
-                                              child: Container(
-                                                height: 2,
-                                                color: stepsImpl >= stepIndex
-                                                    ? Colors.blue
-                                                    : Colors.grey.shade600,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                        if (data?.dataUserVacancy?.isAccept == true ||
+                            data?.dataStatusVacancy != null)
+                          ResponsiveRowColumnItem(
+                            child: Container(
+                              child: Column(
+                                spacing: 40,
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.all(20),
-                                    child: Text(
-                                      "Proses Rekrutment",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.davidLibre(
-                                        textStyle: TextStyle(
-                                          color: Colors.blue,
-                                          letterSpacing: 2,
-                                          fontSize: 25,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: GridView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            crossAxisSpacing: 20,
-                                            mainAxisSpacing: 20,
-                                            childAspectRatio: 1,
+                                  LayoutBuilder(
+                                    builder: (context, raints) {
+                                      bool isMobile = ResponsiveBreakpoints.of(
+                                        context,
+                                      ).smallerThan(TABLET);
+                                      if (!isMobile) {
+                                        return SizedBox(
+                                          width: 800,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(20),
+                                                child: Text(
+                                                  "Proses Rekrutment",
+                                                  textAlign: TextAlign.center,
+                                                  style: GoogleFonts.davidLibre(
+                                                    textStyle: TextStyle(
+                                                      color: Colors.blue,
+                                                      letterSpacing: 2,
+                                                      fontSize: 25,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: List.generate(steps.length * 2 - 1, (
+                                                  index,
+                                                ) {
+                                                  if (index.isEven) {
+                                                    int stepIndex = index ~/ 2;
+                                                    return Container(
+                                                      margin: EdgeInsets.only(
+                                                        top: 60,
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          CircleAvatar(
+                                                            radius: 25,
+                                                            backgroundColor:
+                                                                (data?.dataUserVacancy?.isAccept ==
+                                                                        false &&
+                                                                    stepIndex ==
+                                                                        2)
+                                                                ? Colors.red
+                                                                : (stepsImpl >=
+                                                                      stepIndex)
+                                                                ? Colors.green
+                                                                : Colors
+                                                                      .grey
+                                                                      .shade200,
+                                                            child: Text(
+                                                              "${stepIndex + 1}",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    stepsImpl >=
+                                                                        stepIndex
+                                                                    ? Colors
+                                                                          .white
+                                                                    : Colors
+                                                                          .blue,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: 100,
+                                                            height: 60,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                  top: 10,
+                                                                ),
+                                                            child: Text(
+                                                              steps[stepIndex],
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: GoogleFonts.ptSerif(
+                                                                textStyle: TextStyle(
+                                                                  color:
+                                                                      (data?.dataUserVacancy?.isAccept ==
+                                                                              false &&
+                                                                          stepIndex ==
+                                                                              2)
+                                                                      ? Colors
+                                                                            .red
+                                                                      : (stepsImpl >=
+                                                                            stepIndex)
+                                                                      ? Colors
+                                                                            .green
+                                                                      : Colors
+                                                                            .blue,
+                                                                  letterSpacing:
+                                                                      1,
+                                                                  fontSize: 14,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    int stepIndex = index ~/ 2;
+                                                    return Expanded(
+                                                      child: Container(
+                                                        height: 2,
+                                                        color:
+                                                            (data
+                                                                        ?.dataUserVacancy
+                                                                        ?.isAccept ==
+                                                                    false &&
+                                                                stepIndex == 2)
+                                                            ? Colors
+                                                                  .grey
+                                                                  .shade200
+                                                            : (stepsImpl >=
+                                                                  stepIndex)
+                                                            ? Colors.green
+                                                            : Colors
+                                                                  .grey
+                                                                  .shade200,
+                                                      ),
+                                                    );
+                                                  }
+                                                }),
+                                              ),
+                                            ],
                                           ),
-                                      itemCount: steps.length,
-                                      itemBuilder: (context, index) {
+                                        );
+                                      } else {
                                         return Column(
-                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
-                                            CircleAvatar(
-                                              radius: 25,
-                                              backgroundColor:
-                                                  stepsImpl >= index
-                                                  ? Colors.blue
-                                                  : Colors.grey.shade200,
+                                            Container(
+                                              padding: EdgeInsets.all(20),
                                               child: Text(
-                                                "${index + 1}",
-                                                style: TextStyle(
-                                                  color: stepsImpl >= index
-                                                      ? Colors.white
-                                                      : Colors.blue,
+                                                "Proses Rekrutment",
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.davidLibre(
+                                                  textStyle: TextStyle(
+                                                    color: Colors.blue,
+                                                    letterSpacing: 2,
+                                                    fontSize: 25,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              steps[index],
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.ptSerif(
-                                                textStyle: TextStyle(
-                                                  color: stepsImpl >= index
-                                                      ? Colors.blue
-                                                      : Colors.grey.shade600,
-                                                  fontSize: 14,
-                                                ),
+                                            Padding(
+                                              padding: EdgeInsets.all(16.0),
+                                              child: GridView.builder(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                gridDelegate:
+                                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                      crossAxisSpacing: 20,
+                                                      mainAxisSpacing: 20,
+                                                      childAspectRatio: 1,
+                                                    ),
+                                                itemCount: steps.length,
+                                                itemBuilder: (context, index) {
+                                                  return Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 25,
+                                                        backgroundColor:
+                                                            (data
+                                                                        ?.dataUserVacancy
+                                                                        ?.isAccept ==
+                                                                    false &&
+                                                                index == 2)
+                                                            ? Colors.red
+                                                            : (stepsImpl >=
+                                                                  index)
+                                                            ? Colors.green
+                                                            : Colors
+                                                                  .grey
+                                                                  .shade200,
+                                                        child: Text(
+                                                          "${index + 1}",
+                                                          style: TextStyle(
+                                                            color:
+                                                                stepsImpl >=
+                                                                    index
+                                                                ? Colors.white
+                                                                : Colors.blue,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8),
+                                                      Text(
+                                                        steps[index],
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: GoogleFonts.ptSerif(
+                                                          textStyle: TextStyle(
+                                                            color:
+                                                                (data?.dataUserVacancy?.isAccept ==
+                                                                        false &&
+                                                                    index == 2)
+                                                                ? Colors.red
+                                                                : (stepsImpl >=
+                                                                      index)
+                                                                ? Colors.green
+                                                                : Colors.blue,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
                                               ),
                                             ),
                                           ],
                                         );
-                                      },
-                                    ),
+                                      }
+                                    },
                                   ),
                                 ],
-                              );
-                            }
-                          },
-                        ),
+                              ),
+                            ),
+                          ),
 
-                        Row(
-                          spacing: 40,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Flexible(
-                              flex: 4,
-                              child: ElevatedButton.icon(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                        if ((data?.dataUserVacancy?.alasanReject?.isEmpty ??
+                                true) &&
+                            (data?.dataStatusVacancy?.isNotEmpty == true
+                                ? (data
+                                          ?.dataStatusVacancy
+                                          ?.last
+                                          .alasanReject
+                                          ?.isEmpty ??
+                                      true)
+                                : true) &&
+                            data!.dataStatusVacancy?.last.status != 2 &&
+                            data!.dataStatusVacancy?.last.status != 3)
+                          ResponsiveRowColumnItem(
+                            child: Container(
+                              child: Column(
+                                spacing: 40,
+                                children: [
+                                  Row(
+                                    spacing: 40,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Flexible(
+                                        flex: 3,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () =>
+                                              konfirmasiTahapan(true),
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            backgroundColor: Colors.green,
+                                            foregroundColor: Colors.white,
+                                            minimumSize: Size(
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.width *
+                                                  0.4,
+                                              60,
+                                            ),
+                                          ),
+                                          icon: Icon(Icons.check),
+                                          label: Text("Accept"),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 3,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () =>
+                                              konfirmasiTahapan(false),
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                            foregroundColor: Colors.white,
+                                            minimumSize: Size(
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.width *
+                                                  0.4,
+                                              60,
+                                            ),
+                                          ),
+                                          icon: Icon(Icons.close),
+                                          label: Text("Reject"),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 3,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () {
+                                            context.go("/chat");
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            backgroundColor: Colors.blue,
+                                            foregroundColor: Colors.white,
+                                            minimumSize: Size(
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.width *
+                                                  0.4,
+                                              60,
+                                            ),
+                                          ),
+                                          icon: Icon(Icons.chat),
+                                          label: Text("Chat"),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.4,
-                                    60,
-                                  ),
-                                ),
-                                icon: Icon(Icons.check),
-                                label: Text("Accept (Offering)"),
+                                ],
                               ),
                             ),
-                            Flexible(
-                              flex: 4,
-                              child: ElevatedButton.icon(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: Size(
-                                    MediaQuery.of(context).size.width * 0.4,
-                                    60,
-                                  ),
-                                ),
-                                icon: Icon(Icons.close),
-                                label: Text("Reject"),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
                       ],
                     ),
                   ),

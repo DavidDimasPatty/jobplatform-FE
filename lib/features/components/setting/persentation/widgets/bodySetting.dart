@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
 
@@ -117,7 +118,9 @@ class bodySetting extends StatelessWidget {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () {},
+              onTap: () {
+                context.pushReplacement("/login");
+              },
               icons: Icons.exit_to_app_rounded,
               colorBGIcon: Colors.redAccent,
               title: "Sign Out",

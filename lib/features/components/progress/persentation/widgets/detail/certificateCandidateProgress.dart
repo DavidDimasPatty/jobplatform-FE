@@ -41,8 +41,8 @@ class CertificateProgress extends StatelessWidget {
               title: cert.nama ?? "",
               description: cert.publisher ?? "",
               dateRange: (cert.expiredDate == null)
-                  ? "${DateFormat('MMM yyyy').format(cert.publishDate!)} - Present"
-                  : "${DateFormat('MMM yyyy').format(cert.publishDate!)} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
+                  ? "${DateFormat('MMM yyyy').format(cert.publishDate ?? DateTime.now())} - Present"
+                  : "${DateFormat('MMM yyyy').format(cert.publishDate ?? DateTime.now())} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
               //onPressed: () => onEditPressed(cert),
               onPressed: () {},
             ),

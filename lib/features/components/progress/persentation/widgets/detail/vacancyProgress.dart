@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:job_platform/features/components/statusJob/data/models/CompanyVacancies.dart';
+import 'package:job_platform/features/components/statusJob/data/models/UserVacancies.dart';
 
 class VacancyProgress extends StatelessWidget {
   final CompanyVacancies? dataVacancy;
+  final UserVacancies? dataUserVacancy;
+  final String? status;
 
-  VacancyProgress({super.key, this.dataVacancy});
+  VacancyProgress({
+    super.key,
+    this.dataVacancy,
+    this.dataUserVacancy,
+    this.status,
+  });
 
   Map<String, String> get careerDescriptions => {
-    "Salary Expectation": dataVacancy != null
-        ? "${NumberFormat('#,###').format(dataVacancy?.gajiMin)} - ${NumberFormat('#,###').format(dataVacancy?.gajiMax)}"
+    "Salary Expectation": dataUserVacancy != null
+        ? dataUserVacancy?.gajiMax != null && dataUserVacancy?.gajiMin != null
+              ? "${NumberFormat('#,###').format(dataUserVacancy?.gajiMin)} - ${NumberFormat('#,###').format(dataUserVacancy?.gajiMax)}"
+              : dataVacancy != null
+              ? "${NumberFormat('#,###').format(dataVacancy?.gajiMin)} - ${NumberFormat('#,###').format(dataVacancy?.gajiMax)}"
+              : "Not specified"
         : "Not specified",
     "Position": dataVacancy != null
         ? dataVacancy?.namaPosisi ?? "Not specified"
         : "Not specified",
-    "Job Type": dataVacancy != null
-        ? dataVacancy?.tipeKerja ?? "Not specified"
+    "Job Type": dataUserVacancy != null
+        ? dataUserVacancy?.tipeKerja != null
+              ? dataUserVacancy!.tipeKerja!
+              : dataVacancy != null
+              ? dataVacancy?.tipeKerja ?? "Not specified"
+              : "Not specified"
         : "Not specified",
-    "Work System": dataVacancy != null
-        ? dataVacancy?.sistemKerja ?? "Not specified"
+    "Work System": dataUserVacancy != null
+        ? dataUserVacancy?.sistemKerja != null
+              ? dataUserVacancy!.sistemKerja!
+              : dataVacancy != null
+              ? dataVacancy?.sistemKerja ?? "Not specified"
+              : "Not specified"
         : "Not specified",
     "Location": dataVacancy != null
         ? dataVacancy?.lokasi ?? "Not specified"
@@ -60,6 +81,25 @@ class VacancyProgress extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
+              if (status == "Offering")
+                ElevatedButton.icon(
+                  onPressed: () => context.go(
+                    "/editVacancyCandidate",
+                    extra: {
+                      "dataVacancy": dataVacancy,
+                      "dataUserVacancy": dataUserVacancy,
+                    },
+                  ),
+                  icon: Icon(Icons.edit, size: 16),
+                  label: Text("Edit"),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
             ],
           ),
           SizedBox(height: 20),

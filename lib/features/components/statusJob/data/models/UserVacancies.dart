@@ -8,6 +8,10 @@ class UserVacancies {
   final DateTime? updTime;
   final String? updId;
   final bool? isAccept;
+  final double? gajiMin;
+  final double? gajiMax;
+  final String? sistemKerja;
+  final String? tipeKerja;
 
   UserVacancies({
     this.id,
@@ -19,6 +23,10 @@ class UserVacancies {
     this.updTime,
     this.updId,
     this.isAccept,
+    this.gajiMax,
+    this.gajiMin,
+    this.sistemKerja,
+    this.tipeKerja,
   });
 
   factory UserVacancies.fromJson(Map<String, dynamic> json) {
@@ -35,6 +43,18 @@ class UserVacancies {
       updId: json["updId"] ?? null,
       updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
       isAccept: bool.tryParse(json["isAccept"].toString()) ?? null,
+      gajiMax: json["gajiMax"] != null
+          ? double.parse(json["gajiMax"].toString())
+          : null,
+      gajiMin: json["gajiMin"] != null
+          ? double.parse(json["gajiMin"].toString())
+          : null,
+      sistemKerja: json["sistemKerja"] != null
+          ? json["sistemKerja"].toString()
+          : null,
+      tipeKerja: json["tipeKerja"] != null
+          ? json["tipeKerja"].toString()
+          : null,
     );
   }
 }

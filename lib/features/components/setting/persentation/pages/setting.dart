@@ -33,30 +33,6 @@ class _Setting extends State<Setting> {
       url = prefs.getString('url');
       isPremium = prefs.getBool("isPremium");
       profileComplete = prefs.getInt("profileComplete");
-      // setState(() {
-      //   isLoading = true;
-      //   errorMessage = null;
-      // });
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? userId = prefs.getString('idUser');
-
-      // if (userId != null) {
-      //   var profile = await _profileUseCase.getProfile(userId);
-      //   if (profile != null) {
-      //     setState(() {
-      //       dataUser = profile.user;
-      //       dataEdu = profile.educations ?? [];
-      //       dataOrg = profile.organizations ?? [];
-      //       dataWork = profile.experiences ?? [];
-      //       dataCertificate = profile.certificates ?? [];
-      //       dataSkill = profile.skills ?? [];
-      //       dataPreference = profile.preferences ?? [];
-      //       isLoading = false;
-      //     });
-      //   }
-      // } else {
-      //   print("User ID not found in SharedPreferences");
-      // }
       setState(() {
         isLoading = false;
         errorMessage = null;

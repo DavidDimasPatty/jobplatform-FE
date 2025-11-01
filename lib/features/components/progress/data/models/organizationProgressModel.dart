@@ -29,10 +29,13 @@ class OrganizationProgressModel {
           ? json['organization']["lokasi"] ?? null
           : null,
       endDate: json['userOrganization'] != null
-          ? DateTime.tryParse(json['userOrganization']["endDate"]) ?? null
+          ? json['userOrganization']["endDate"] != null
+                ? DateTime.tryParse(json['userOrganization']["endDate"]) ?? null
+                : null
           : null,
       isActive: json['userOrganization'] != null
-          ? bool.tryParse(json['userOrganization']["isActive"]) ?? null
+          ? bool.tryParse(json['userOrganization']["isActive"].toString()) ??
+                null
           : null,
       jabatan: json['userOrganization'] != null
           ? json['userOrganization']["jabatan"] ?? null

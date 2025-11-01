@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:intl/intl.dart';
+import 'package:job_platform/features/components/statusJob/data/models/UserVacancies.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusDetailVM.dart';
 import 'package:job_platform/features/components/statusJob/persentation/pages/statusJobDetail.dart';
 
 class statusJobDetailMore extends StatelessWidget {
   final StatusDetailVM? data;
+  final String? status;
 
-  statusJobDetailMore({super.key, this.data});
+  statusJobDetailMore({super.key, this.data, this.status});
   Map<String, String> get careerDescriptions => {
     "Salary Expectation": data != null
-        ? "${NumberFormat('#,###').format(data?.gajiMin)} - ${NumberFormat('#,###').format(data?.gajiMax)}"
+        ? data?.gajiMaxNego != null && data?.gajiMin != null
+              ? "${NumberFormat('#,###').format(data?.gajiMinNego)} - ${NumberFormat('#,###').format(data?.gajiMaxNego)}"
+              : "${NumberFormat('#,###').format(data?.gajiMin)} - ${NumberFormat('#,###').format(data?.gajiMax)}"
         : "Not specified",
     "Position": data != null
         ? data?.namaPosisi ?? "Not specified"
         : "Not specified",
     "Job Type": data != null
-        ? data?.tipePekerjaan ?? "Not specified"
+        ? data?.tipePekerjaanNego != null
+              ? data!.tipePekerjaanNego!
+              : data?.tipePekerjaan ?? "Not specified"
         : "Not specified",
     "Work System": data != null
-        ? data?.sistemKerja ?? "Not specified"
+        ? data?.sistemKerjaNego != null
+              ? data!.sistemKerjaNego!
+              : data?.sistemKerja ?? "Not specified"
         : "Not specified",
     "Location": data != null
         ? data?.lokasiKerja ?? "Not specified"

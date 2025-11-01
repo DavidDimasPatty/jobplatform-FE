@@ -50,7 +50,13 @@ class _Progress extends State<Progress> {
                   jabatan: x.jabatanPosisi,
                   onTap: () => TapItems(x.idUserVacancy!),
                   namaPosisi: x.namaPosisi,
-                  status: x.isAcceptUser == false && x.status == null
+                  umur:
+                      (DateTime.now().year - x.tanggalLahirKandidat!.year ?? 0)
+                          .toString(),
+                  status:
+                      x.isAcceptUser == false &&
+                          x.status == null &&
+                          x.alasanRejectUser == null
                       ? "Menunggu Konfirmasi"
                       : x.status == 0 &&
                             x.isAcceptUser == true &&
@@ -68,11 +74,15 @@ class _Progress extends State<Progress> {
                             x.isAcceptUser == true &&
                             x.isRejectHRD == false
                       ? "Close"
+                      : x.isAcceptUser == false &&
+                            x.status == null &&
+                            x.alasanRejectUser != null
+                      ? "Reject Vacancy"
                       : x.isAcceptUser == false
                       ? "Reject Offering"
                       : "Reject HRD",
                   tipeKerja: x.tipeKerja,
-                  url: x.url,
+                  url: x.url != null && x.url != "BsonNull" ? x.url : "",
                 ),
               );
             });
@@ -148,7 +158,7 @@ class _Progress extends State<Progress> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Setting data...'),
+            Text('Loading Progress data...'),
           ],
         ),
       );

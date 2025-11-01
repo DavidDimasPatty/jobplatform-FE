@@ -53,15 +53,26 @@ class Progressitems extends StatelessWidget {
               ),
               // padding: EdgeInsets.all(5),
               child: ClipOval(
-                child: Image.asset(
-                  "assets/images/BG_Pelamar.png",
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.cover,
-                ),
+                child: url!.isNotEmpty
+                    ? Image.network(
+                        url!,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        width: 40,
+                        height: 40,
+                        color: Colors.grey[300],
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
               ),
             ),
-            title: Text("${namaKandidat ?? ""} ({${umur ?? "0"}})"),
+            title: Text("${namaKandidat ?? ""} (${umur ?? "0"})"),
             subtitle: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,18 +132,20 @@ class Progressitems extends StatelessWidget {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                            if (status != "Close" &&
+                                !status!.contains("Reject"))
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
+                                onPressed: onTap,
+                                label: Text("Validasi"),
+                                icon: Icon(Icons.skip_next),
                               ),
-                              onPressed: onTap,
-                              label: Text("Validasi"),
-                              icon: Icon(Icons.skip_next),
-                            ),
                           ],
                         )
                       : Row(

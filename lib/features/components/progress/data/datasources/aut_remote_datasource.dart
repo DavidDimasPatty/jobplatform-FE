@@ -13,7 +13,6 @@ class AuthRemoteDataSource {
       ).replace(queryParameters: {'idUser': id});
       List<AllProgressModel>? data;
       final response = await http.get(url);
-      print(response.body.toString());
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
         if (jsonData["responseCode"].toString()!.contains("200")) {
@@ -38,7 +37,7 @@ class AuthRemoteDataSource {
   Future<DetailProgressModel?> getDetailProgress(String id) async {
     try {
       final url = Uri.parse(
-        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/status/get-detail-progress',
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/Progress/get-detail-progress',
       ).replace(queryParameters: {'idUserVacancy': id});
       DetailProgressModel? data;
       final response = await http.get(url);
@@ -70,7 +69,7 @@ class AuthRemoteDataSource {
   ) async {
     try {
       final url = Uri.parse(
-        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/status/validate-progress',
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/Progress/validate-progress',
       );
       final response = await http.post(
         url,
@@ -80,6 +79,50 @@ class AuthRemoteDataSource {
           "status": status,
           "alasanReject": alasanReject,
           "idUser": idUser,
+        }),
+      );
+      print(response.body.toString());
+      final Map<String, dynamic> jsonData;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        jsonData = jsonDecode(response.body);
+        if (jsonData["responseCode"].toString()!.contains("200")) {
+          return jsonData["responseMessage"].toString();
+        } else {
+          return "Gagal : ${jsonData["responseMessage"]}";
+        }
+      } else {
+        jsonData = jsonDecode(response.body);
+        print('Gagal : ${response.statusCode} ${jsonData}');
+        return "Gagal : ${jsonData["ressponseMessage"]}";
+      }
+    } catch (e) {
+      print('Error: $e');
+      return "Gagal $e";
+    }
+  }
+
+  Future<String?> editVacancyCandidate(
+    String idUserVacancy,
+    String idUser,
+    String? tipeKerja,
+    String? sistemKerja,
+    double? gajiMin,
+    double? gajiMax,
+  ) async {
+    try {
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV_USER']}/api/v1/Progress/edit-vacancy-candidate',
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "idUserVacancy": idUserVacancy,
+          "idUser": idUser,
+          "gajiMin": gajiMin,
+          "gajiMax": gajiMax,
+          "sistemKerja": sistemKerja,
+          "tipeKerja": tipeKerja,
         }),
       );
       print(response.body.toString());

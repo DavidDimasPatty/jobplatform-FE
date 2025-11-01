@@ -6,12 +6,14 @@ class BottomApplayout extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
   final String loginAs;
+  final String? hrCompanyId;
 
   BottomApplayout({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
     required this.loginAs,
+    this.hrCompanyId,
   });
 
   @override
@@ -109,7 +111,8 @@ class BottomApplayout extends StatelessWidget {
                 ),
               ),
 
-            if (loginAs.isNotEmpty && loginAs == "userHRD" ?? false)
+            if ((loginAs.isNotEmpty && loginAs == "user" ?? false) &&
+                hrCompanyId != null)
               Expanded(
                 child: InkWell(
                   onTap: () => onTabSelected(7),

@@ -54,18 +54,26 @@ class Profiledata {
       statusAccount: json['statusAccount'] ?? '',
       addTime: DateTime.parse(json['addTime'] ?? DateTime.now().toString()),
       updTime: DateTime.parse(json['updTime'] ?? DateTime.now().toString()),
-      noTelp: json['noTelp'],
-      linkPorto: (json['linkPorto'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList(),
-      domisili: json['domisili'],
-      cv: json['cv'],
-      headline: json['headline'],
-      photoURL: json['photoURL'],
-      ringkasan: json['ringkasan'],
-      isVisible: json['visibility'],
-      seekStatus: json['seekStatus'],
-      privacy: json['privacy'],
+      noTelp: json['noTelp'] ?? "",
+      linkPorto: json['linkPorto'] != null
+          ? (json['linkPorto'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList()
+          : null,
+      domisili: json['domisili'] ?? '',
+      cv: json['cv'] ?? '',
+      headline: json['headline'] ?? '',
+      photoURL: json['photoURL'] ?? '',
+      ringkasan: json['ringkasan'] ?? '',
+      isVisible: json['visibility'] != null
+          ? bool.tryParse(json["visibility"].toString())
+          : null,
+      seekStatus: json['seekStatus'] != null
+          ? int.tryParse(json["seekStatus"].toString())
+          : null,
+      privacy: json['privacy'] != null
+          ? bool.tryParse(json["privacy"].toString())
+          : null,
     );
   }
 }

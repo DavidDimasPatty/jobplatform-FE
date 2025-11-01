@@ -37,7 +37,7 @@ class _LayoutState extends State<Layout> {
   String? namaCompany;
   String? domainCompany;
   String? noTelpCompany;
-
+  String? hrCompanyId;
   // Usecase
   late NotificationUsecase _notificationUseCase;
 
@@ -93,6 +93,7 @@ class _LayoutState extends State<Layout> {
       namaUser = prefs.getString('nama');
       emailUser = prefs.getString('email');
       noTelpUser = prefs.getString('noTelp');
+      hrCompanyId = prefs.getString("hrCompanyId");
     } else if (loginAs == "company") {
       idCompany = prefs.getString('idCompany');
       namaCompany = prefs.getString('nama');
@@ -209,6 +210,7 @@ class _LayoutState extends State<Layout> {
               currentIndex: selectedIndex,
               onTabSelected: _onTabSelected,
               loginAs: loginAs ?? "",
+              hrCompanyId: hrCompanyId ?? null,
             ),
           ),
 

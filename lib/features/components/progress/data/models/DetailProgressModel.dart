@@ -46,9 +46,7 @@ class DetailProgressModel {
 
   factory DetailProgressModel.fromJson(Map<String, dynamic> json) {
     return DetailProgressModel(
-      dataUser: json["user"] != null
-          ? ProfileModel.fromJson(json["user"])
-          : null,
+      dataUser: json != null ? ProfileModel.fromJsonProgress(json) : null,
       dataVacancy: json["vacancy"] != null
           ? CompanyVacancies.fromJson(json["vacancy"])
           : null,

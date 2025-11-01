@@ -30,4 +30,22 @@ class ProgressUsecase {
       idUser,
     );
   }
+
+  Future<String?> editVacancyCandidate(
+    String idUserVacancy,
+    String idUser,
+    String? tipeKerja,
+    String? sistemKerja,
+    double? gajiMin,
+    double? gajiMax,
+  ) {
+    return repository.editVacancyCandidate(
+      idUserVacancy,
+      idUser,
+      tipeKerja,
+      sistemKerja,
+      gajiMin,
+      gajiMax,
+    );
+  }
 }

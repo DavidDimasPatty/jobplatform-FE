@@ -38,6 +38,7 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/profile/persentation/pages/profile/skillEdit.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profileCompany.dart';
 import 'package:job_platform/features/components/profile/persentation/pages/profileCompany/personalInfoCompany.dart';
+import 'package:job_platform/features/components/progress/persentation/pages/editVacancyCandidate.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progress.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progressDetail.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/aboutUs.dart';
@@ -47,6 +48,8 @@ import 'package:job_platform/features/components/setting/persentation/pages/tos.
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
+import 'package:job_platform/features/components/statusJob/data/models/CompanyVacancies.dart';
+import 'package:job_platform/features/components/statusJob/data/models/UserVacancies.dart';
 import 'package:job_platform/features/components/statusJob/persentation/pages/statusJob.dart';
 import 'package:job_platform/features/components/statusJob/persentation/pages/statusJobDetail.dart';
 import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
@@ -155,6 +158,18 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(path: '/chat', builder: (context, state) => Chat()),
   GoRoute(path: '/chatDetail', builder: (context, state) => ChatDetail()),
   GoRoute(path: '/progress', builder: (context, state) => Progress()),
+  GoRoute(
+    path: '/editVacancyCandidate',
+    builder: (context, state) {
+      final extraData = state.extra as Map<String, dynamic>?;
+      final dataVacancy = extraData?['dataVacancy'] as CompanyVacancies;
+      final dataUserVacancy = extraData?['dataUserVacancy'] as UserVacancies;
+      return editVacancyCandidate(
+        dataUserVacancy: dataUserVacancy,
+        dataVacancy: dataVacancy,
+      );
+    },
+  ),
   GoRoute(
     path: '/progressDetail',
     builder: (context, state) {

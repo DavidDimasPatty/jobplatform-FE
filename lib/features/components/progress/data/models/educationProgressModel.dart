@@ -36,10 +36,12 @@ class EducationProgressModel {
           ? json['userEducation']['gpa'] ?? null
           : null,
       endDate: json['userEducation'] != null
-          ? DateTime.tryParse(json['userEducation']['endDate']) ?? null
+          ? json['userEducation']['endDate'] != null
+                ? DateTime.tryParse(json['userEducation']['endDate']) ?? null
+                : null
           : null,
       isActive: json['userEducation'] != null
-          ? bool.tryParse(json['userEducation']['isActive']) ?? null
+          ? bool.tryParse(json['userEducation']['isActive'].toString()) ?? null
           : null,
       penjurusan: json['userEducation'] != null
           ? json['userEducation']['penjurusan'] ?? null

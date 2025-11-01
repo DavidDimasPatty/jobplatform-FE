@@ -19,7 +19,12 @@ class StatusDetailVM {
   final UserVacancies? userVacancy;
   final int? minExperience;
   final List<SkillModel>? skill;
-
+  final double? gajiMinNego;
+  final double? gajiMaxNego;
+  final String? tipePekerjaanNego;
+  final String? sistemKerjaNego;
+  final DateTime? updTime;
+  final String? updId;
   StatusDetailVM({
     this.namaPerusahaan,
     this.logoPerusahaan,
@@ -37,5 +42,11 @@ class StatusDetailVM {
     this.userVacancy,
     this.minExperience,
     this.skill,
+    this.gajiMaxNego,
+    this.gajiMinNego,
+    this.tipePekerjaanNego,
+    this.sistemKerjaNego,
+    this.updTime,
+    this.updId,
   });
 }

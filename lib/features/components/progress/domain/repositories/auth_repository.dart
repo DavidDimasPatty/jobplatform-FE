@@ -11,4 +11,12 @@ abstract class AuthRepository {
     String? alasanReject,
     String? idUser,
   );
+  Future<String?> editVacancyCandidate(
+    String idUserVacancy,
+    String idUser,
+    String? tipeKerja,
+    String? sistemKerja,
+    double? gajiMin,
+    double? gajiMax,
+  );
 }

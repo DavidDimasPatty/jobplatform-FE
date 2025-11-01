@@ -38,10 +38,14 @@ class WorkExperienceProgressModel {
           ? json["experience"]["industri"] ?? null
           : null,
       endDate: json['userExperience'] != null
-          ? DateTime.tryParse(json["userExperience"]["endDate"]) ?? null
+          ? json["userExperience"]["endDate"] != null
+                ? DateTime.tryParse(json["userExperience"]["endDate"]) ?? null
+                : null
           : null,
       isActive: json['userExperience'] != null
-          ? json["userExperience"]["isActive"] ?? null
+          ? json["userExperience"]["isActive"] != null
+                ? bool.tryParse(json['userExperience']["isActive"].toString())
+                : null
           : null,
       lokasi: json['experience'] != null
           ? json["experience"]["lokasi"] ?? null

@@ -335,7 +335,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
     final profileRepository = profileRepo.AuthRepositoryImpl(profileSource);
     profileUsecase = ProfileUsecase(profileRepository);
 
-    await _loadProfileData(); // Tunggu profile data selesai diambil
+    await _loadProfileData();
 
     await Future.wait([
       fetchDataProvinsi(),
@@ -344,8 +344,6 @@ class _Personalinfocompany extends State<Personalinfocompany> {
       loadIndustries(),
       loadBenefits(),
     ]);
-
-    // Setelah semua data siap dan dataCompany sudah ada
     setState(() {
       _domainController.text = dataCompany?.domain ?? '';
       _facebookController.text = dataCompany?.facebook ?? '';
