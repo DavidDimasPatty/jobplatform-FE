@@ -11,6 +11,7 @@ class UserModel {
   final DateTime? updTime;
   final String? noTelp;
   final String? domisili;
+  final String? photoURL;
 
   UserModel({
     this.id,
@@ -25,6 +26,7 @@ class UserModel {
     this.updTime,
     this.noTelp,
     this.domisili,
+    this.photoURL,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class UserModel {
       updTime: json["updTime"] != null ? DateTime.parse(json["updTime"]) : null,
       noTelp: json["noTelp"],
       domisili: json["domisili"],
+      photoURL: json["photoURL"] ?? null,
     );
   }
 

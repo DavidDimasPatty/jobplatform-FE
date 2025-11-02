@@ -30,7 +30,7 @@ class _Setting extends State<Setting> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       nama = prefs.getString('nama');
       loginAs = prefs.getString('loginAs');
-      url = prefs.getString('url');
+      url = prefs.getString('urlAva');
       isPremium = prefs.getBool("isPremium");
       profileComplete = prefs.getInt("profileComplete");
       setState(() {

@@ -99,7 +99,6 @@ class topSetting extends StatelessWidget {
                                         width: 60,
                                         height: 60,
                                         fit: BoxFit.cover,
-                                        color: Colors.cyan,
                                       )
                                     : Container(
                                         width: 60,

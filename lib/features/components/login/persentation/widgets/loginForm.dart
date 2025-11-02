@@ -96,6 +96,7 @@ class _LoginFormState extends State<LoginForm> {
               await prefs.setString("nama", data.user!.nama!);
               await prefs.setString("email", data.user!.email!);
               await prefs.setString("noTelp", data.user!.noTelp!);
+              await prefs.setString("urlAva", data.user!.photoURL!);
               if (data.hrCompanies != null) {
                 await prefs.setString(
                   "hrCompanyName",
@@ -114,6 +115,7 @@ class _LoginFormState extends State<LoginForm> {
                 await prefs.setString("nama", data.company!.nama!);
                 await prefs.setString("domain", data.company!.email!);
                 await prefs.setString("noTelp", data.company!.noTelp!);
+                await prefs.setString("urlAva", data.company!.logo!);
                 return context.go("/homeCompany");
               } else if (data.progress!.lastAdmin!.status ==
                   "Reject oleh Admin") {

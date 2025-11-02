@@ -60,7 +60,7 @@ class _SkillState extends State<Skill> {
             children: List<Widget>.generate(dataSkills.length, (int index) {
               return SkillChip(
                 title: dataSkills[index].skill.nama,
-                source: dataSkills[index].source!,
+                source: dataSkills[index].source ?? "",
               );
             }).toList(),
           ),

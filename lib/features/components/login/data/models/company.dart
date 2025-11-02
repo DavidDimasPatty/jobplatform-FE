@@ -9,7 +9,7 @@ class Company {
   final DateTime? lastLogin;
   final String? email;
   final String? statusAccount;
-
+  final String? logo;
   Company({
     this.id,
     this.nama,
@@ -21,6 +21,7 @@ class Company {
     this.lastLogin,
     this.email,
     this.statusAccount,
+    this.logo,
   });
 
   factory Company.fromJson(Map<String, dynamic> json) {
@@ -37,6 +38,7 @@ class Company {
           : null,
       email: json["email"],
       statusAccount: json["statusAccount"],
+      logo: json["logo"] ?? null,
     );
   }
 
