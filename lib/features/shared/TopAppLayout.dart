@@ -75,7 +75,6 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
                 onPressed: () => onTabSelected(4),
                 icon: const Icon(Icons.chat, color: Colors.white),
               ),
-            SizedBox(width: 10),
             IconButton(
               onPressed: () => onTabSelected(3),
               icon: const Icon(Icons.settings, color: Colors.white),

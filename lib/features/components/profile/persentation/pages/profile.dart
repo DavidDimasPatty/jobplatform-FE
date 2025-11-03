@@ -436,7 +436,7 @@ class _Profile extends State<Profile> {
               ),
               ResponsiveRowColumnItem(
                 child: Container(
-                  height: 300,
+                  constraints: BoxConstraints(maxHeight: 150),
                   child: ListView(
                     children: [
                       ListTile(
@@ -455,25 +455,25 @@ class _Profile extends State<Profile> {
                       ),
                       Divider(height: 1, thickness: 1),
                       ListTile(
-                        onTap: () {},
+                        onTap: () => context.go("/setting"),
                         leading: Icon(Icons.account_box),
                         title: Text("Account Configuration"),
                         subtitle: Text("Konfigurasi Account"),
                       ),
-                      Divider(height: 1, thickness: 1),
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.call),
-                        title: Text("Contact Support"),
-                        subtitle: Text("Support Aplikasi Customer Service"),
-                      ),
-                      Divider(height: 1, thickness: 1),
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.logout),
-                        title: Text("Log Out"),
-                      ),
-                      Divider(height: 1, thickness: 1),
+                      // Divider(height: 1, thickness: 1),
+                      // ListTile(
+                      //   onTap: () {},
+                      //   leading: Icon(Icons.call),
+                      //   title: Text("Contact Support"),
+                      //   subtitle: Text("Support Aplikasi Customer Service"),
+                      // ),
+                      // Divider(height: 1, thickness: 1),
+                      // ListTile(
+                      //   onTap: () {},
+                      //   leading: Icon(Icons.logout),
+                      //   title: Text("Log Out"),
+                      // ),
+                      // Divider(height: 1, thickness: 1),
                     ],
                   ),
                 ),

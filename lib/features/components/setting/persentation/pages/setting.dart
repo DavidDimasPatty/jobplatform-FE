@@ -24,6 +24,7 @@ class _Setting extends State<Setting> {
   String? url;
   bool? isPremium;
   int? profileComplete;
+  final String packageName = 'com.whatsapp';
 
   Future<void> _loadSetting() async {
     try {
@@ -115,7 +116,10 @@ class _Setting extends State<Setting> {
                   url: url ?? "",
                 ),
               ),
-              ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
+              ResponsiveRowColumnItem(
+                rowFlex: 2,
+                child: bodySetting(packageName),
+              ),
             ],
           ),
         ),

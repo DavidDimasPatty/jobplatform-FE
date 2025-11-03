@@ -4,8 +4,29 @@ import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class bodySetting extends StatelessWidget {
+  final String? packageName;
+  bodySetting(this.packageName);
+
+  Future<void> openPlayStore(String packageName) async {
+    final Uri androidUri = Uri.parse('market://details?id=$packageName');
+    final Uri webUri = Uri.parse(
+      'https://play.google.com/store/apps/details?id=$packageName',
+    );
+
+    try {
+      if (await canLaunchUrl(androidUri)) {
+        await launchUrl(androidUri, mode: LaunchMode.externalApplication);
+      } else {
+        await launchUrl(webUri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      await launchUrl(webUri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   Widget build(BuildContext context) {
     var mediaQueryHeight = MediaQuery.of(context).size.height;
     return Column(
@@ -99,14 +120,14 @@ class bodySetting extends StatelessWidget {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () {},
+              onTap: () => openPlayStore(packageName!),
               icons: Icons.insert_chart,
               title: 'Send Feedback',
               colorBGIcon: Colors.orange,
               subtitle: "Help us improve Skillen",
             ),
             SettingsItem(
-              onTap: () {},
+              onTap: () => openPlayStore(packageName!),
               icons: Icons.favorite_outlined,
               colorIcon: Colors.red,
               colorBGIcon: Colors.white,

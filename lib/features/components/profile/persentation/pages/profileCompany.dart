@@ -751,29 +751,29 @@ class _ProfileCompany extends State<ProfileCompany> {
                 ),
               ),
 
-              ResponsiveRowColumnItem(
-                child: Container(
-                  height: 200,
-                  child: ListView(
-                    children: [
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.account_box),
-                        title: Text("Email Configuration"),
-                        subtitle: Text("Ubah Email Akun Perusahaan"),
-                      ),
-                      Divider(height: 1, thickness: 1),
-                      ListTile(
-                        onTap: () {},
-                        leading: Icon(Icons.call),
-                        title: Text("Contact Support"),
-                        subtitle: Text("Support Aplikasi Customer Service"),
-                      ),
-                      Divider(height: 1, thickness: 1),
-                    ],
-                  ),
-                ),
-              ),
+              // ResponsiveRowColumnItem(
+              //   child: Container(
+              //     height: 200,
+              //     child: ListView(
+              //       children: [
+              //         ListTile(
+              //           onTap: () {},
+              //           leading: Icon(Icons.account_box),
+              //           title: Text("Email Configuration"),
+              //           subtitle: Text("Ubah Email Akun Perusahaan"),
+              //         ),
+              //         Divider(height: 1, thickness: 1),
+              //         ListTile(
+              //           onTap: () {},
+              //           leading: Icon(Icons.call),
+              //           title: Text("Contact Support"),
+              //           subtitle: Text("Support Aplikasi Customer Service"),
+              //         ),
+              //         Divider(height: 1, thickness: 1),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
