@@ -219,9 +219,9 @@ final List<GoRoute> _layoutRoutes = [
 ];
 
 final router = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/',
   routes: [
-    GoRoute(path: '/landing', builder: (context, state) => Landing()),
+    GoRoute(path: '/', builder: (context, state) => Landing()),
     GoRoute(path: '/login', builder: (context, state) => Login()),
     GoRoute(
       path: '/signUp',
