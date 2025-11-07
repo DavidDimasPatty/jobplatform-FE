@@ -97,6 +97,31 @@ class _LoginFormState extends State<LoginForm> {
               await prefs.setString("email", data.user!.email!);
               await prefs.setString("noTelp", data.user!.noTelp!);
               await prefs.setString("urlAva", data.user!.photoURL!);
+              await prefs.setBool("isPremium", data.user!.isPremium!);
+              await prefs.setBool("is2FA", data.user!.is2FA!);
+
+              if (data.user!.fontSize == null) {
+                await prefs.setInt("fontSizeHead", 18);
+                await prefs.setInt("fontSizeSubHead", 16);
+                await prefs.setInt("fontSizeBody", 14);
+                await prefs.setInt("fontSizeIcon", 12);
+              } else {
+                List<String> arrFont = data.user!.fontSize!.split(',');
+                await prefs.setInt("fontSizeHead", int.parse(arrFont[0]));
+                await prefs.setInt("fontSizeSubHead", int.parse(arrFont[1]));
+                await prefs.setInt("fontSizeBody", int.parse(arrFont[2]));
+                await prefs.setInt("fontSizeIcon", int.parse(arrFont[3]));
+              }
+              await prefs.setBool(
+                "isNotifInternal",
+                data.user!.isNotifInternal!,
+              );
+              await prefs.setBool(
+                "isNotifExternal",
+                data.user!.isNotifExternal!,
+              );
+              await prefs.setBool("isDarkMode", data.user!.isDarkMode!);
+              await prefs.setString("language", data.user!.language!);
               if (data.hrCompanies != null) {
                 await prefs.setString(
                   "hrCompanyName",
@@ -116,6 +141,31 @@ class _LoginFormState extends State<LoginForm> {
                 await prefs.setString("domain", data.company!.email!);
                 await prefs.setString("noTelp", data.company!.noTelp!);
                 await prefs.setString("urlAva", data.company!.logo!);
+                await prefs.setBool("isPremium", data.company!.isPremium!);
+                await prefs.setBool("is2FA", data.company!.is2FA!);
+
+                if (data.company!.fontSize == null) {
+                  await prefs.setInt("fontSizeHead", 18);
+                  await prefs.setInt("fontSizeSubHead", 16);
+                  await prefs.setInt("fontSizeBody", 14);
+                  await prefs.setInt("fontSizeIcon", 12);
+                } else {
+                  List<String> arrFont = data.company!.fontSize!.split(',');
+                  await prefs.setInt("fontSizeHead", int.parse(arrFont[0]));
+                  await prefs.setInt("fontSizeSubHead", int.parse(arrFont[1]));
+                  await prefs.setInt("fontSizeBody", int.parse(arrFont[2]));
+                  await prefs.setInt("fontSizeIcon", int.parse(arrFont[3]));
+                }
+                await prefs.setBool(
+                  "isNotifInternal",
+                  data.company!.isNotifInternal!,
+                );
+                await prefs.setBool(
+                  "isNotifExternal",
+                  data.company!.isNotifExternal!,
+                );
+                await prefs.setBool("isDarkMode", data.company!.isDarkMode!);
+                await prefs.setString("language", data.company!.language!);
                 return context.go("/homeCompany");
               } else if (data.progress!.lastAdmin!.status ==
                   "Reject oleh Admin") {

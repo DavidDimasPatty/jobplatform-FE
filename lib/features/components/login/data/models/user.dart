@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class UserModel {
   final String? id;
   final String? nama;
@@ -12,6 +14,13 @@ class UserModel {
   final String? noTelp;
   final String? domisili;
   final String? photoURL;
+  final bool? is2FA;
+  final bool? isNotifInternal;
+  final bool? isNotifExternal;
+  final bool? isPremium;
+  final bool? isDarkMode;
+  final String? language;
+  final String? fontSize;
 
   UserModel({
     this.id,
@@ -27,6 +36,13 @@ class UserModel {
     this.noTelp,
     this.domisili,
     this.photoURL,
+    this.is2FA,
+    this.isNotifInternal,
+    this.isNotifExternal,
+    this.isPremium,
+    this.isDarkMode,
+    this.language,
+    this.fontSize,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -48,6 +64,21 @@ class UserModel {
       noTelp: json["noTelp"],
       domisili: json["domisili"],
       photoURL: json["photoURL"] ?? null,
+      is2FA: json["is2FA"] != null ? bool.parse(json["is2FA"]) : false,
+      isDarkMode: json["isDarkMode"] != null
+          ? bool.parse(json["isDarkMode"])
+          : false,
+      isNotifExternal: json["isNotifExternal"] != null
+          ? bool.parse(json["isNotifExternal"])
+          : false,
+      isNotifInternal: json["isNotifInternal"] != null
+          ? bool.parse(json["isNotifInternal"])
+          : false,
+      isPremium: json["isPremium"] != null
+          ? bool.parse(json["isPremium"])
+          : false,
+      language: json["language"] ?? null,
+      fontSize: json["fontSize"] ?? null,
     );
   }
 
