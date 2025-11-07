@@ -1,11 +1,6 @@
-import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
@@ -13,13 +8,9 @@ import 'package:job_platform/features/components/profile/domain/entities/Educati
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
-import 'package:job_platform/features/components/signup/data/models/country.dart';
-import 'package:job_platform/features/components/signup/domain/entities/kota.dart';
-import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
 
 class EducationalEdit extends StatefulWidget {
@@ -305,7 +296,7 @@ class _EducationalEdit extends State<EducationalEdit> {
         ),
       );
     }
-    
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(20),
       child: Center(
@@ -564,7 +555,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                                 ),
                               ),
                             ),
-                            
+
                           SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/shared/Notification/NotificationItem.dart';
 
@@ -7,7 +6,7 @@ class Notificationbody extends StatefulWidget {
   // final CandidateItems item;
   List<Notificationitem> data;
   VoidCallback toggleNotification;
-  
+
   Notificationbody({
     super.key,
     required this.toggleNotification,

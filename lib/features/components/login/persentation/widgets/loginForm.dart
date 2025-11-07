@@ -1,28 +1,19 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:job_platform/features/components/home/persentation/pages/homePage.dart';
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
-import 'package:job_platform/features/components/login/domain/entities/loginData.dart'
-    hide User;
 import 'package:job_platform/features/components/login/persentation/pages/companyWaiting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
-import 'package:job_platform/features/shared/layout.dart';
-import 'package:job_platform/routes/router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/datasources/aut_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/usecases/login_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginForm extends StatefulWidget {

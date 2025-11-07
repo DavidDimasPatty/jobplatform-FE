@@ -20,7 +20,6 @@ import 'package:job_platform/features/components/profile/data/models/workExperie
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
-import 'package:job_platform/features/components/profile/persentation/pages/profileCompany.dart';
 
 import '../repositories/auth_repository.dart';
 

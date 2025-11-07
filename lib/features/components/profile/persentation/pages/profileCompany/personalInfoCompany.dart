@@ -521,7 +521,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       )
                                     : DropdownButtonFormField<String>(
                                         isExpanded: true,
-                                        value: selectedIndustries,
+                                        initialValue: selectedIndustries,
                                         hint: Text("Pilih Industri"),
                                         items: industries.map((ind) {
                                           return DropdownMenuItem<String>(
@@ -551,7 +551,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       flex: 1,
                                       // height: 40,
                                       child: DropdownButtonFormField<Country>(
-                                        value: selectedCountry,
+                                        initialValue: selectedCountry,
                                         isExpanded: true,
                                         hint: Text("Pilih Negara"),
                                         items: countries.map((country) {
@@ -707,7 +707,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                                   ProvinsiModel
                                                 >(
                                                   isExpanded: true,
-                                                  value: selectedProvinsi,
+                                                  initialValue:
+                                                      selectedProvinsi,
                                                   hint: Text("Pilih Provinsi"),
                                                   items: provinsi.map((prov) {
                                                     return DropdownMenuItem<
@@ -761,7 +762,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                                   KotaModel
                                                 >(
                                                   isExpanded: true,
-                                                  value:
+                                                  initialValue:
                                                       kota.contains(
                                                         selectedKota,
                                                       )

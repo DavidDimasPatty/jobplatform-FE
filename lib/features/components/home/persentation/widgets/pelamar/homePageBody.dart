@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkApplicant.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/graficProfil.dart';

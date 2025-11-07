@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/chat/domain/entities/ChatDetailItems.dart';
 
 class Progressheader extends StatefulWidget {
   ValueChanged<String> onSearchChanged;

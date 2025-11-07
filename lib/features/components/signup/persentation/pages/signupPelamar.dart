@@ -370,7 +370,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                 flex: 1,
                                 // height: 40,
                                 child: DropdownButtonFormField<Country>(
-                                  value: selectedCountry,
+                                  initialValue: selectedCountry,
                                   isExpanded: true,
                                   hint: Text("Pilih Negara"),
                                   items: countries.map((country) {
@@ -767,7 +767,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                             ProvinsiModel
                                           >(
                                             isExpanded: true,
-                                            value: selectedProvinsiLahir,
+                                            initialValue: selectedProvinsiLahir,
                                             hint: Text("Pilih Provinsi"),
                                             items: provinsiLahir.map((prov) {
                                               return DropdownMenuItem<
@@ -814,7 +814,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                           )
                                         : DropdownButtonFormField<KotaModel>(
                                             isExpanded: true,
-                                            value: selectedKotaLahir,
+                                            initialValue: selectedKotaLahir,
                                             hint: Text("Pilih Kota"),
 
                                             items: kotaLahir.map((kota) {
@@ -885,7 +885,7 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                             ProvinsiModel
                                           >(
                                             isExpanded: true,
-                                            value: selectedProvinsi,
+                                            initialValue: selectedProvinsi,
                                             hint: Text("Pilih Provinsi"),
                                             items: provinsi.map((prov) {
                                               return DropdownMenuItem<
@@ -932,7 +932,8 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                           )
                                         : DropdownButtonFormField<KotaModel>(
                                             isExpanded: true,
-                                            value: kota.contains(selectedKota)
+                                            initialValue:
+                                                kota.contains(selectedKota)
                                                 ? selectedKota
                                                 : null,
                                             hint: Text("Pilih Kota"),

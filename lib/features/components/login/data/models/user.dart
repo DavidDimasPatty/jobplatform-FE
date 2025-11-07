@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class UserModel {
   final String? id;
   final String? nama;
@@ -64,19 +62,13 @@ class UserModel {
       noTelp: json["noTelp"],
       domisili: json["domisili"],
       photoURL: json["photoURL"] ?? null,
-      is2FA: json["is2FA"] != null ? bool.parse(json["is2FA"]) : false,
-      isDarkMode: json["isDarkMode"] != null
-          ? bool.parse(json["isDarkMode"])
-          : false,
-      isNotifExternal: json["isNotifExternal"] != null
-          ? bool.parse(json["isNotifExternal"])
-          : false,
-      isNotifInternal: json["isNotifInternal"] != null
-          ? bool.parse(json["isNotifInternal"])
-          : false,
-      isPremium: json["isPremium"] != null
-          ? bool.parse(json["isPremium"])
-          : false,
+      is2FA: bool.tryParse(json["is2FA"].toString()) ?? null,
+      isDarkMode: bool.tryParse(json["isDarkMode"].toString()) ?? null,
+      isNotifExternal:
+          bool.tryParse(json["isNotifExternal"].toString()) ?? null,
+      isNotifInternal:
+          bool.tryParse(json["isNotifInternal"].toString()) ?? null,
+      isPremium: bool.tryParse(json["isPremium"].toString()) ?? null,
       language: json["language"] ?? null,
       fontSize: json["fontSize"] ?? null,
     );

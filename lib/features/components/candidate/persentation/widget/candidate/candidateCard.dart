@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 class Candidatecard extends StatefulWidget {
   final CandidateItems item;

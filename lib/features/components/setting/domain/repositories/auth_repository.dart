@@ -1,5 +1,3 @@
-import 'package:job_platform/features/components/login/data/models/loginModel.dart';
-
 abstract class AuthRepository {
   Future<String?> deleteAccount(String userId, String loginAs);
   Future<String?> changeThemeMode(String userId, String loginAs);

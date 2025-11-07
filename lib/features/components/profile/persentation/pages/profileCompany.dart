@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,22 +11,8 @@ import 'package:job_platform/features/components/profile/data/models/profileComp
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
-import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
-import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
-import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
-import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
-import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
-import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
-import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
-import 'package:job_platform/features/components/profile/persentation/pages/profileCompany/personalInfoCompany.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/careerPreference.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/certificate.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/education.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/organizational.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/skill.dart';
-import 'package:job_platform/features/components/profile/persentation/widgets/profile/workExperience.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

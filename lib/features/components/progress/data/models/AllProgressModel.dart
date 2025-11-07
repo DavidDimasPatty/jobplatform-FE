@@ -1,9 +1,7 @@
 import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
-import 'package:job_platform/features/components/statusJob/data/models/Companies.dart';
 import 'package:job_platform/features/components/statusJob/data/models/CompanyVacancies.dart';
 import 'package:job_platform/features/components/statusJob/data/models/StatusVacancy.dart';
 import 'package:job_platform/features/components/statusJob/data/models/UserVacancies.dart';
-import 'package:job_platform/features/components/vacancy/persentation/pages/vacancy.dart';
 
 class AllProgressModel {
   final Profiledata? dataUser;

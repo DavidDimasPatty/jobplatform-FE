@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailItems.dart';
 
 class NotificationDetailbody extends StatefulWidget {

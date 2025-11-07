@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:intl/intl.dart';
-import 'package:job_platform/features/components/statusJob/data/models/UserVacancies.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusDetailVM.dart';
-import 'package:job_platform/features/components/statusJob/persentation/pages/statusJobDetail.dart';
 
 class statusJobDetailMore extends StatelessWidget {
   final StatusDetailVM? data;

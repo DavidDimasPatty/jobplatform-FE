@@ -20,7 +20,6 @@ import 'package:job_platform/features/components/profile/data/models/workExperie
 import 'package:job_platform/features/components/profile/data/models/workExperienceRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceResponse.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
-import 'package:job_platform/features/components/profile/persentation/pages/profile/skillEdit.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/aut_remote_datasource.dart';
 

@@ -373,7 +373,7 @@ class _Candidatedetail extends State<Candidatedetail> {
                               flex: 4,
                               // height: 40,
                               child: DropdownButtonFormField<String>(
-                                value: lowonganSelected,
+                                initialValue: lowonganSelected,
                                 isExpanded: true,
                                 hint: Text("Pilih Lowongan Anda"),
                                 items: lowongan.map((item) {

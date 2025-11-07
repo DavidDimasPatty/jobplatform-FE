@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDItems.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 class Managehrdbody extends StatefulWidget {
   final List<Managehrditems> items;

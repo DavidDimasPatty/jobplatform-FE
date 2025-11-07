@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 
 class Vacancytableitem extends StatelessWidget {
   final String? url;

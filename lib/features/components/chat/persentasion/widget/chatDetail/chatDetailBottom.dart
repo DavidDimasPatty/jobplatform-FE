@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/chat/domain/entities/ChatDetailItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chatDetail/chatDetailBubble.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chatDetail/chatDetailTop.dart';
 
 class Chatdetailbottom extends StatefulWidget {
   Chatdetailbottom({super.key});

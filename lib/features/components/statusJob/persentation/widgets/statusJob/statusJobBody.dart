@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
 import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobItems.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 class Statusjobbody extends StatefulWidget {
   final List<statusjobitems> items;

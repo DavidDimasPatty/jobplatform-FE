@@ -1,4 +1,3 @@
-import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/manageHRD/data/models/GetAllHRDTransaction.dart';
 import 'package:job_platform/features/components/manageHRD/domain/entities/HRDDataVM.dart';
 import 'package:job_platform/features/components/manageHRD/domain/entities/ManageHRDResponse.dart';

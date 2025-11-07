@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class Hrseen extends StatefulWidget {

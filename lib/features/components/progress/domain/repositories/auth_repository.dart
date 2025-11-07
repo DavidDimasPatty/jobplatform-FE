@@ -1,4 +1,3 @@
-import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/progress/domain/entities/progressAllVM.dart';
 import 'package:job_platform/features/components/progress/domain/entities/progressDetailVM.dart';
 

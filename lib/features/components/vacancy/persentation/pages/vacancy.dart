@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/vacancy/data/models/vacancyResponse.dart';
@@ -86,7 +85,7 @@ class _Vacancy extends State<Vacancy> {
                   ),
                 )
                 .toList();
-                
+
             tempSub = dataSub;
           });
         }

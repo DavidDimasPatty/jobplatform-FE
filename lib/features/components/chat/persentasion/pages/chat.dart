@@ -1,13 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
-    show SettingsGroup;
-import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Chat extends StatefulWidget {

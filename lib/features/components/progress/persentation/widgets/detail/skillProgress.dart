@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/progress/data/models/skillProgressModel.dart';
 
 class SkillProgress extends StatefulWidget {

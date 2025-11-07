@@ -375,7 +375,7 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
-        value: value != null ? value : null,
+        initialValue: value != null ? value : null,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),

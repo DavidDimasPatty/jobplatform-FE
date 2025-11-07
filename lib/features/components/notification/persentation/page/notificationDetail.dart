@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/notification/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/notification/data/models/notificationRequest.dart';
@@ -87,7 +86,7 @@ class _NotificationDetail extends State<NotificationDetail> {
 
             tempSub = dataSub;
           });
-          
+
           // await _readNotification(
           //   NotificationRequest(
           //     idNotification: notification

@@ -45,7 +45,7 @@ class _Managehrd extends State<Managehrd> {
       String? idCompany = prefs.getString('idCompany');
 
       if (idCompany != null) {
-        List<HRDDataVM?>? profile = await _hrdUseCase!.getAllHRD(idCompany!);
+        List<HRDDataVM?>? profile = await _hrdUseCase!.getAllHRD(idCompany);
         if (profile != null) {
           setState(() {
             isLoading = false;
@@ -55,10 +55,10 @@ class _Managehrd extends State<Managehrd> {
                 .map(
                   (e) => Managehrditems(
                     title: e!.nama!,
-                    subtitle: e!.email,
+                    subtitle: e.email,
                     url: e.photoURL,
-                    status: e!.status!,
-                    onDelete: () => deleteHRD(e!.id!),
+                    status: e.status!,
+                    onDelete: () => deleteHRD(e.id!),
                   ),
                 )
                 .toList();
@@ -121,21 +121,21 @@ class _Managehrd extends State<Managehrd> {
             ),
             ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
+                backgroundColor: WidgetStateProperty.all<Color>(
                   Colors.blue,
                 ), // Set background color
-                foregroundColor: MaterialStateProperty.all<Color>(
+                foregroundColor: WidgetStateProperty.all<Color>(
                   Colors.white,
                 ), // Text/icon color
-                padding: MaterialStateProperty.all<EdgeInsets>(
+                padding: WidgetStateProperty.all<EdgeInsets>(
                   EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
-                elevation: MaterialStateProperty.all<double>(6), // Shadow depth
+                elevation: WidgetStateProperty.all<double>(6), // Shadow depth
               ),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
@@ -201,8 +201,6 @@ class _Managehrd extends State<Managehrd> {
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");
 
-      if (id == null) throw Exception("HRD ID not found");
-
       GetAllHRDTransaction profile = new GetAllHRDTransaction(id: id);
 
       ManageHRDResponse? response = await _hrdUseCase!.deleteHRD(profile);
@@ -216,7 +214,7 @@ class _Managehrd extends State<Managehrd> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response!.responseMessage),
+            content: Text(response.responseMessage),
             backgroundColor: Colors.red,
           ),
         );
@@ -257,7 +255,7 @@ class _Managehrd extends State<Managehrd> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response!.responseMessage),
+            content: Text(response.responseMessage),
             backgroundColor: Colors.red,
           ),
         );
@@ -284,7 +282,7 @@ class _Managehrd extends State<Managehrd> {
 
       dumpSub = dataSub.where((data) {
         final matchSearch =
-            (data.title?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+            (data.title.toLowerCase().contains(searchQuery.toLowerCase()) ??
                 false) ||
             (data.subtitle?.toLowerCase().contains(searchQuery.toLowerCase()) ??
                 false);

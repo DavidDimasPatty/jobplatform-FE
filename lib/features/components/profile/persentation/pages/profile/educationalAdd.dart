@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:ui' as ui;
 import 'package:job_platform/features/components/profile/data/models/educationModel.dart';
@@ -598,7 +596,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                 ),
                               ),
                             ),
-                            
+
                           SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

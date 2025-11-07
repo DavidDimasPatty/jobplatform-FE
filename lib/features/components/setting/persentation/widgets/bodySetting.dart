@@ -1,20 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class bodySetting extends StatefulWidget {
   final Future<void> Function()? deleteAccount;
   final Future<void> Function()? openPlayStore;
   final Future<void> Function()? logOut;
-  final Future<void> Function()? changeThemeMode;
-  final Future<void> Function()? upgradePlan;
-  final Future<void> Function()? changeNotifApp;
-  final Future<void> Function()? changeExternalNotifApp;
-  final Future<void> Function(String newEmail)? changeEmailAccount;
+  final Future<void> Function(bool value)? changeThemeMode;
+  final Future<void> Function(bool value)? upgradePlan;
+  final Future<void> Function(bool value)? changeNotifApp;
+  final Future<void> Function(bool value)? changeExternalNotifApp;
+  final Future<void> Function(String oldEmail, String newEmail)?
+  changeEmailAccount;
   final Future<void> Function(bool isActive)? change2FA;
   final Future<void> Function(String language)? changeLanguage;
   final Future<void> Function(bool isActive, String OTP)? validate2FA;
@@ -25,6 +24,7 @@ class bodySetting extends StatefulWidget {
     String fontSizeIcon,
   )?
   changeFontSize;
+  final Future<void> Function()? reload;
   final bool? is2FA;
   final bool? isNotifInternal;
   final bool? isNotifExternal;
@@ -59,6 +59,7 @@ class bodySetting extends StatefulWidget {
     this.fontSizeBody,
     this.fontSizeIcon,
     this.validate2FA,
+    this.reload,
   });
 
   @override
@@ -66,6 +67,15 @@ class bodySetting extends StatefulWidget {
 }
 
 class _bodySetting extends State<bodySetting> {
+  late bool? isDarkMode;
+
+  void initState() {
+    super.initState();
+    setState(() {
+      isDarkMode = widget.isDarkMode!;
+    });
+  }
+
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -74,7 +84,19 @@ class _bodySetting extends State<bodySetting> {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () {},
+              onTap: () => context.go(
+                "/appearance",
+                extra: {
+                  "changeLanguage": widget.changeLanguage,
+                  "changeFontSize": widget.changeFontSize,
+                  "language": widget.language,
+                  "fontSizeHead": widget.fontSizeHead,
+                  "fontSizeSubHead": widget.fontSizeSubHead,
+                  "fontSizeBody": widget.fontSizeBody,
+                  "fontSizeIcon": widget.fontSizeIcon,
+                  "reload": widget.reload,
+                },
+              ),
               icons: CupertinoIcons.pencil_outline,
               title: 'Appearance',
               colorBGIcon: Colors.orangeAccent,
@@ -82,20 +104,30 @@ class _bodySetting extends State<bodySetting> {
             SettingsItem(
               icons: Icons.dark_mode_rounded,
               title: 'Dark mode',
-              subtitle: "Automatic",
+              subtitle: "Change theme color application",
               colorBGIcon: Colors.black,
               trailing: Switch.adaptive(
-                value: widget.isDarkMode ?? false,
-                onChanged: (value) {
-                  widget.changeThemeMode;
+                activeColor: Colors.blue,
+                value: isDarkMode!,
+                onChanged: (value) async {
                   setState(() {
-                    value = !value;
+                    isDarkMode = value;
                   });
+                  await widget!.changeThemeMode!(value);
                 },
               ),
             ),
             SettingsItem(
-              onTap: () {},
+              onTap: () => context.go(
+                "/setNotification",
+                extra: {
+                  "changeNotifApp": widget.changeNotifApp,
+                  "changeExternalNotifApp": widget.changeExternalNotifApp,
+                  "isNotifInternal": widget.isNotifInternal,
+                  "isNotifExternal": widget.isNotifExternal,
+                  "reload": widget.reload,
+                },
+              ),
               icons: Icons.notifications_active_sharp,
               colorBGIcon: Colors.green,
               title: 'Setting Notification',
@@ -108,26 +140,31 @@ class _bodySetting extends State<bodySetting> {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () {},
+              onTap: () => context.go(
+                "/upgradeAccount",
+                extra: {
+                  "upgradePlan": widget.upgradePlan,
+                  "isPremium": widget.isPremium,
+                  "reload": widget.reload,
+                },
+              ),
               icons: Icons.star,
               colorBGIcon: Colors.yellow.shade700,
               title: 'Upgrade Account',
               subtitle: "Upgrade to premium",
             ),
             SettingsItem(
-              onTap: () {},
+              onTap: () => context.go(
+                "/settingEmail",
+                extra: {
+                  "changeEmailAccount": widget.changeEmailAccount,
+                  "reload": widget.reload,
+                },
+              ),
               icons: Icons.attach_email,
               title: 'Setting Email',
               colorBGIcon: Colors.red,
               subtitle: "Change account email",
-            ),
-
-            SettingsItem(
-              onTap: () {},
-              icons: Icons.security,
-              title: '2FA',
-              colorBGIcon: Colors.indigo,
-              subtitle: "Add 2 Factor Authentication",
             ),
           ],
         ),
@@ -164,14 +201,14 @@ class _bodySetting extends State<bodySetting> {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () => widget.openPlayStore!,
+              onTap: widget.openPlayStore!,
               icons: Icons.insert_chart,
               title: 'Send Feedback',
               colorBGIcon: Colors.orange,
               subtitle: "Help us improve Skillen",
             ),
             SettingsItem(
-              onTap: () => widget.openPlayStore!,
+              onTap: widget.openPlayStore!,
               icons: Icons.favorite_outlined,
               colorIcon: Colors.red,
               colorBGIcon: Colors.white,
@@ -183,13 +220,13 @@ class _bodySetting extends State<bodySetting> {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () => widget.logOut,
+              onTap: widget.logOut,
               icons: Icons.exit_to_app_rounded,
               colorBGIcon: Colors.redAccent,
               title: "Sign Out",
             ),
             SettingsItem(
-              onTap: () => widget.deleteAccount,
+              onTap: widget.deleteAccount,
               icons: CupertinoIcons.delete_solid,
               title: "Delete account",
               colorBGIcon: Colors.red,

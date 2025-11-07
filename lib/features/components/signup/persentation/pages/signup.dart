@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
-import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
-import 'package:job_platform/features/components/signup/data/repositories/auth_repository_impl.dart';
-import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class SignUp extends StatefulWidget {

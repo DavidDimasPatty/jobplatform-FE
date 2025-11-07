@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/manageHRD/data/models/GetAllHRDTransaction.dart';
 import 'package:job_platform/features/components/manageHRD/domain/entities/ManageHRDResponse.dart';
 

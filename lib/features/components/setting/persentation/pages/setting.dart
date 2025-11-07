@@ -1,14 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
 import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
-import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart'
-    show SettingsGroup;
-import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,10 +37,10 @@ class _Setting extends State<Setting> {
   AuthRepositoryImpl? _repoSetting;
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
-
+  late SharedPreferences prefs;
   Future<void> _loadSetting() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs = await SharedPreferences.getInstance();
       nama = prefs.getString('nama');
       loginAs = prefs.getString('loginAs');
       url = prefs.getString('urlAva');
@@ -75,7 +70,11 @@ class _Setting extends State<Setting> {
     }
   }
 
-  Future<String?> showConfirmStatus(BuildContext context) {
+  Future<String?> showConfirmStatus(
+    BuildContext context,
+    String title,
+    String content,
+  ) {
     final TextEditingController alasanController = TextEditingController();
 
     return showDialog<String>(
@@ -84,8 +83,8 @@ class _Setting extends State<Setting> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text('Konfirmasi Lowongan'),
-          content: Text('Apakah Anda yakin ingin menerima tawaran ini?'),
+          title: Text(title),
+          content: Text(content),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
@@ -111,12 +110,15 @@ class _Setting extends State<Setting> {
 
   Future deleteAccount() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      final result = await showConfirmStatus(context);
+      final result = await showConfirmStatus(
+        context,
+        "Konfirmasi Delete Account",
+        "Yakin ingin menghapus akun ini?",
+      );
       if (result == null) return;
 
       setState(() {
@@ -127,6 +129,8 @@ class _Setting extends State<Setting> {
       if (response == 'Sukses') {
         setState(() {
           isLoading = false;
+          prefs.clear();
+          context.go("/");
         });
       } else {
         setState(() {
@@ -154,12 +158,15 @@ class _Setting extends State<Setting> {
 
   Future logOut() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      final result = await showConfirmStatus(context);
+      final result = await showConfirmStatus(
+        context,
+        "Konfirmasi Log Out",
+        "Yakin ingin log out dari aplikasi?",
+      );
       if (result == null) return;
 
       setState(() {
@@ -197,19 +204,11 @@ class _Setting extends State<Setting> {
     }
   }
 
-  Future changeThemeMode() async {
+  Future changeThemeMode(bool value) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
-
-      final result = await showConfirmStatus(context);
-      if (result == null) return;
-
-      setState(() {
-        isLoading = true;
-      });
 
       String? response = await _settingUseCase!.changeThemeMode(id, loginAs!);
       if (response == 'Sukses') {
@@ -217,7 +216,7 @@ class _Setting extends State<Setting> {
           context,
         ).showSnackBar(SnackBar(content: Text('Success change theme mode!')));
         setState(() {
-          isLoading = false;
+          prefs.setBool("isDarkMode", value);
         });
       } else {
         setState(() {
@@ -260,155 +259,163 @@ class _Setting extends State<Setting> {
     }
   }
 
-  Future upgradePlan() async {
+  Future upgradePlan(bool value) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      final result = await showConfirmStatus(context);
-      if (result == null) return;
+      // final result = await showConfirmStatus(
+      //   context,
+      //   "Yakin ingin upgrade plan?",
+      //   "Upgrade Plan Rp. 250.000/ bulan",
+      // );
+      // if (result == null) return;
 
-      setState(() {
-        isLoading = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
 
       String? response = await _settingUseCase!.upgradePlan(id, loginAs!);
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Success Upgrade Plan!')));
-        setState(() {
-          isLoading = false;
-        });
+        prefs.setBool("isPremium", value);
+        // context.go("/setting");
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text('Success Upgrade Plan!')));
+        // setState(() {
+        //   isLoading = false;
+        // });
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        );
+        // setState(() {
+        //   isLoading = false;
+        // });
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        // );
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      debugPrint('Error during delete account: $e');
-      if (mounted) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Internal Error"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // setState(() {
+      //   isLoading = false;
+      // });
+      // debugPrint('Error during delete account: $e');
+      // if (mounted) {
+      //   return ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text("Internal Error"),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
     }
   }
 
-  Future changeNotifApp() async {
+  Future changeNotifApp(bool value) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      setState(() {
-        isLoading = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
 
       String? response = await _settingUseCase!.changeNotifApp(id, loginAs!);
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
-        setState(() {
-          isLoading = false;
-        });
+        prefs.setBool("isNotifInternal", value);
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
+        // setState(() {
+        //   isLoading = false;
+        // });
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        );
+        // setState(() {
+        //   isLoading = false;
+        // });
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        // );
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      debugPrint('Error during delete account: $e');
-      if (mounted) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Internal Error"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // setState(() {
+      //   isLoading = false;
+      // });
+      // debugPrint('Error during delete account: $e');
+      // if (mounted) {
+      //   return ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text("Internal Error"),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
     }
   }
 
-  Future changeExternalNotifApp() async {
+  Future changeExternalNotifApp(bool value) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      setState(() {
-        isLoading = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
 
       String? response = await _settingUseCase!.changeExternalNotifApp(
         id,
         loginAs!,
       );
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
-        setState(() {
-          isLoading = false;
-        });
+        prefs.setBool("isNotifExternal", value);
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
+        // setState(() {
+        //   isLoading = false;
+        // });
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        );
+        // setState(() {
+        //   isLoading = false;
+        // });
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        // );
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      debugPrint('Error during delete account: $e');
-      if (mounted) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Internal Error"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // setState(() {
+      //   isLoading = false;
+      // });
+      // debugPrint('Error during delete account: $e');
+      // if (mounted) {
+      //   return ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text("Internal Error"),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
     }
   }
 
-  Future changeEmailAccount(String newEmail) async {
+  Future changeEmailAccount(String oldEmail, String newEmail) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       String? oldEmail = prefs.getString('email');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      final result = await showConfirmStatus(context);
-      if (result == null) return;
+      // final result = await showConfirmStatus(
+      //   context,
+      //   "Change Email",
+      //   "Yakin ingin mengganti email sekarang?",
+      // );
+      // if (result == null) return;
 
-      setState(() {
-        isLoading = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
 
       String? response = await _settingUseCase!.changeEmailAccount(
         id,
@@ -417,46 +424,46 @@ class _Setting extends State<Setting> {
         newEmail,
       );
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Success Change Email')));
-        setState(() {
-          isLoading = false;
-        });
-        prefs.setString('email', newEmail);
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        );
+        //   ScaffoldMessenger.of(
+        //     context,
+        //   ).showSnackBar(SnackBar(content: Text('Success Change Email')));
+        //   setState(() {
+        //     isLoading = false;
+        //   });
+        //   prefs.setString('email', newEmail);
+        // } else {
+        //   setState(() {
+        //     isLoading = false;
+        //   });
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        //   );
+        await logOut();
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      debugPrint('Error during delete account: $e');
-      if (mounted) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Internal Error"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // setState(() {
+      //   isLoading = false;
+      // });
+      // debugPrint('Error during delete account: $e');
+      // if (mounted) {
+      //   return ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text("Internal Error"),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
     }
   }
 
   Future change2FA(bool isActive) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       String? email = prefs.getString('email');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      final result = await showConfirmStatus(context);
+      final result = await showConfirmStatus(context, "Ganti 2FA", "Yakin?");
       if (result == null) return;
 
       setState(() {
@@ -500,14 +507,13 @@ class _Setting extends State<Setting> {
 
   Future validate2FA(bool isActive, String OTP) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       String? email = prefs.getString('email');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      final result = await showConfirmStatus(context);
-      if (result == null) return;
+      // final result = await showConfirmStatus(context);
+      // if (result == null) return;
 
       setState(() {
         isLoading = true;
@@ -553,14 +559,13 @@ class _Setting extends State<Setting> {
 
   Future changeLanguage(String language) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      setState(() {
-        isLoading = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
 
       String? response = await _settingUseCase!.changeLanguage(
         id,
@@ -568,24 +573,25 @@ class _Setting extends State<Setting> {
         language,
       );
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Success Change Language!')));
-        setState(() {
-          isLoading = false;
-        });
+        prefs.setString("language", language);
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text('Success Change Language!')));
+        // setState(() {
+        //   isLoading = false;
+        // });
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        );
+        // setState(() {
+        //   isLoading = false;
+        // });
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        // );
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      // setState(() {
+      //   isLoading = false;
+      // });
       debugPrint('Error during change language: $e');
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
@@ -605,14 +611,15 @@ class _Setting extends State<Setting> {
     String fontSizeIcon,
   ) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      //if (!mounted) return;
+
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
-      setState(() {
-        isLoading = true;
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
 
       String? response = await _settingUseCase!.changeFontSize(
         id,
@@ -639,24 +646,56 @@ class _Setting extends State<Setting> {
             : 8,
       );
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Success Change Font Size!')));
-        setState(() {
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text('Success Change Font Size!')));
+        // setState(() {
+        //   isLoading = false;
+        // });
+        prefs.setInt(
+          "fontSizeHead",
+          fontSizeHead == "big"
+              ? 22
+              : fontSizeHead == "medium"
+              ? 18
+              : 14,
         );
+        prefs.setInt(
+          "fontSizeSubHead",
+          fontSizeSubHead == "big"
+              ? 20
+              : fontSizeSubHead == "medium"
+              ? 16
+              : 12,
+        );
+        prefs.setInt(
+          "fontSizeBody",
+          fontSizeBody == "big"
+              ? 18
+              : fontSizeBody == "medium"
+              ? 14
+              : 10,
+        );
+        prefs.setInt(
+          "fontSizeIcon",
+          fontSizeIcon == "big"
+              ? 16
+              : fontSizeIcon == "medium"
+              ? 12
+              : 8,
+        );
+      } else {
+        // setState(() {
+        //   isLoading = false;
+        // });
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        // );
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      // setState(() {
+      //   isLoading = false;
+      // });
       debugPrint('Error during change font: $e');
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
@@ -768,6 +807,7 @@ class _Setting extends State<Setting> {
                   fontSizeSubHead: fontSizeSubHead,
                   fontSizeBody: fontSizeBody,
                   fontSizeIcon: fontSizeIcon,
+                  reload: _loadSetting,
                 ),
               ),
             ],

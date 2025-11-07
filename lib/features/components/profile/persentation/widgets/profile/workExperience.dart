@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
 import 'package:intl/intl.dart';
 
@@ -8,7 +7,12 @@ class Workexperience extends StatelessWidget {
   final VoidCallback onAddPressed;
   final ValueChanged<WorkexperienceMV> onEditPressed;
 
-  Workexperience({super.key, required this.dataWork, required this.onAddPressed, required this.onEditPressed});
+  Workexperience({
+    super.key,
+    required this.dataWork,
+    required this.onAddPressed,
+    required this.onEditPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +113,7 @@ class Workexperience extends StatelessWidget {
                           textAlign: TextAlign.center,
                           (data.endDate == null)
                               ? "${DateFormat('MMM yyyy').format(data.startDate!)} - Present"
-                              : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}"
+                              : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}",
                         ),
                       ),
                     ],

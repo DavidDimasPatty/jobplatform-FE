@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
-import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/graph1.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/graph2.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/hrList.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/hrListitem.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/vacancyTable.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/vacancyTableItem.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkApplicant.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/graficProfil.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/hrSeen.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class HomepageCompanybody extends StatefulWidget {

@@ -15,7 +15,7 @@ class AuthRemoteDataSource {
       final response = await http.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           data = List<AllProgressModel>.from(
             jsonData["data"].map((x) => AllProgressModel.fromJson(x)),
           );
@@ -44,7 +44,7 @@ class AuthRemoteDataSource {
       print(response.body.toString());
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           data = DetailProgressModel.fromJson(jsonData["data"]);
           return data;
         } else {
@@ -85,7 +85,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -129,7 +129,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";

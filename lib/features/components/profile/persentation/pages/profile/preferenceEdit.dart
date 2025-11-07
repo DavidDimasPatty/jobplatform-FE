@@ -64,7 +64,7 @@ class _PreferenceEditState extends State<PreferenceEdit> {
     super.dispose();
   }
 
-  void _loadData(){
+  void _loadData() {
     _salaryMinController.text = data.gajiMin.toString();
     _salaryMaxController.text = data.gajiMax.toString();
     _positionController.text = data.posisi ?? '';
@@ -72,7 +72,9 @@ class _PreferenceEditState extends State<PreferenceEdit> {
     _workSystemController.text = data.sistemKerja ?? '';
     _locationController.text = data.lokasi ?? '';
     _careerLevelController.text = data.levelJabatan ?? '';
-    _availabilityController.text = DateFormat('dd MMMM yyyy').format(data.dateWork ?? DateTime.now());
+    _availabilityController.text = DateFormat(
+      'dd MMMM yyyy',
+    ).format(data.dateWork ?? DateTime.now());
   }
 
   void _initializeUseCase() {
@@ -164,7 +166,7 @@ class _PreferenceEditState extends State<PreferenceEdit> {
         ),
       );
     }
-    
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Center(
@@ -374,7 +376,7 @@ class _PreferenceEditState extends State<PreferenceEdit> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
-        value: value,
+        initialValue: value,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),

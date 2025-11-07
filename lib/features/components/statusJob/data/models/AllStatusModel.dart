@@ -2,7 +2,6 @@ import 'package:job_platform/features/components/statusJob/data/models/Companies
 import 'package:job_platform/features/components/statusJob/data/models/CompanyVacancies.dart';
 import 'package:job_platform/features/components/statusJob/data/models/StatusVacancy.dart';
 import 'package:job_platform/features/components/statusJob/data/models/UserVacancies.dart';
-import 'package:job_platform/features/components/vacancy/persentation/pages/vacancy.dart';
 
 class AllStatusModel {
   final CompanyVacancies? vacancy;

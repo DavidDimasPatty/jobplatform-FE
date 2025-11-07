@@ -1,4 +1,3 @@
-import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusAllVM.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusDetailVM.dart';
 

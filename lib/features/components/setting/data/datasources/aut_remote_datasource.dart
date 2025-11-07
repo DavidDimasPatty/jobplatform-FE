@@ -18,7 +18,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -48,7 +48,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -78,7 +78,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -108,7 +108,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -138,7 +138,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -178,7 +178,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -218,7 +218,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -260,7 +260,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -298,7 +298,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -342,7 +342,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";
@@ -372,7 +372,7 @@ class AuthRemoteDataSource {
       final Map<String, dynamic> jsonData;
       if (response.statusCode == 200 || response.statusCode == 201) {
         jsonData = jsonDecode(response.body);
-        if (jsonData["responseCode"].toString()!.contains("200")) {
+        if (jsonData["responseCode"].toString().contains("200")) {
           return jsonData["responseMessage"].toString();
         } else {
           return "Gagal : ${jsonData["responseMessage"]}";

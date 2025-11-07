@@ -440,7 +440,7 @@ class __FormContentState extends State<_FormContent> {
 
   Widget _buildProvinsiDropdown() {
     return DropdownButtonFormField<ProvinsiModel>(
-      value: _selectedProvinsi,
+      initialValue: _selectedProvinsi,
       decoration: const InputDecoration(
         labelText: 'Provinsi',
         border: OutlineInputBorder(),
@@ -462,7 +462,7 @@ class __FormContentState extends State<_FormContent> {
 
   Widget _buildKotaDropdown() {
     return DropdownButtonFormField<KotaModel>(
-      value: _selectedKota,
+      initialValue: _selectedKota,
       decoration: InputDecoration(
         labelText: 'Kota',
         border: const OutlineInputBorder(),

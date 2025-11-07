@@ -68,7 +68,7 @@ class _Progressdetail extends State<Progressdetail> {
           data = detailProgress;
           isLoading = false;
           errorMessage = null;
-          stepsImpl = detailProgress?.dataStatusVacancy?.last.status ?? 0;
+          stepsImpl = detailProgress.dataStatusVacancy?.last.status ?? 0;
         });
       }
     } catch (e) {

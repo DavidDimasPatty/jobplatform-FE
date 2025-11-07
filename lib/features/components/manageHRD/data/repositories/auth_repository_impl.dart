@@ -19,10 +19,10 @@ class AuthRepositoryImpl implements AuthRepository {
       List<HRDDataVM>? dataHRDVM = HRDModel.map(
         (e) => HRDDataVM(
           id: e!.dataHRD!.id,
-          nama: e!.dataHRD!.nama,
-          email: e!.dataHRD!.email,
-          photoURL: e!.dataHRD!.photoURL,
-          status: e!.dataHRD!.status,
+          nama: e.dataHRD!.nama,
+          email: e.dataHRD!.email,
+          photoURL: e.dataHRD!.photoURL,
+          status: e.dataHRD!.status,
         ),
       ).toList();
 

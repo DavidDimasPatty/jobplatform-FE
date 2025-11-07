@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:job_platform/features/components/login/persentation/widgets/loginForm.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class CompanyWaiting extends StatefulWidget {

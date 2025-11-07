@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' hide Notification;
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidateDetail.dart';
@@ -14,12 +13,10 @@ import 'package:job_platform/features/components/manageHRD/persentation/pages/ma
 import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRDAdd.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/pages/manageHRDEdit.dart';
 import 'package:job_platform/features/components/notification/persentation/page/notificationDetail.dart';
-import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailBody.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
-import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 import 'package:job_platform/features/components/profile/domain/entities/WorkExperienceMV.dart';
@@ -41,9 +38,13 @@ import 'package:job_platform/features/components/profile/persentation/pages/prof
 import 'package:job_platform/features/components/progress/persentation/pages/editVacancyCandidate.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progress.dart';
 import 'package:job_platform/features/components/progress/persentation/pages/progressDetail.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/UpgradeAccount.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/aboutUs.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/appearance.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/faq.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/setting.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/settingEmail.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/settingNotification.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/tos.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
@@ -81,10 +82,95 @@ final List<GoRoute> _layoutRoutes = [
     },
   ),
   GoRoute(path: '/profile', builder: (context, state) => Profile()),
+  //setting
   GoRoute(path: '/setting', builder: (context, state) => Setting()),
   GoRoute(path: '/tos', builder: (context, state) => Tos()),
   GoRoute(path: "/aboutUs", builder: (context, state) => Aboutus()),
   GoRoute(path: "/faq", builder: (context, state) => FAQ()),
+
+  GoRoute(
+    path: "/appearance",
+    builder: (context, state) {
+      final extraData = state.extra as Map<String, dynamic>?;
+      Future<void> Function(String language)? changeLanguage =
+          extraData?['changeLanguage'];
+      Future<void> Function(
+        String fontSizeHead,
+        String fontSizeSubHead,
+        String fontSizeBody,
+        String fontSizeIcon,
+      )?
+      changeFontSize = extraData?['changeFontSize'];
+      final fontSizeBody = extraData?['fontSizeBody'] as int?;
+      final fontSizeHead = extraData?['fontSizeHead'] as int?;
+      final fontSizeIcon = extraData?['fontSizeIcon'] as int?;
+      final fontSizeSubHead = extraData?['fontSizeSubHead'] as int?;
+      final language = extraData?['language'] as String?;
+      final Future<void> Function() reload = extraData?['reload'];
+      return Appearance(
+        changeFontSize: changeFontSize,
+        changeLanguage: changeLanguage,
+        fontSizeBody: fontSizeBody,
+        fontSizeHead: fontSizeHead,
+        fontSizeIcon: fontSizeIcon,
+        fontSizeSubHead: fontSizeSubHead,
+        language: language,
+        reload: reload,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: "/setNotification",
+    builder: (context, state) {
+      final extraData = state.extra as Map<String, dynamic>?;
+      Future<void> Function(bool value) changeExternalNotifApp =
+          extraData?['changeExternalNotifApp'];
+      Future<void> Function(bool value)? changeNotifApp =
+          extraData?['changeNotifApp'];
+      final isNotifExternal = extraData?['isNotifExternal'] as bool?;
+      final isNotifInternal = extraData?['isNotifInternal'] as bool?;
+      final Future<void> Function() reload = extraData?['reload'];
+      return Settingnotification(
+        changeExternalNotifApp: changeExternalNotifApp,
+        changeNotifApp: changeNotifApp,
+        isNotifExternal: isNotifExternal,
+        isNotifInternal: isNotifInternal,
+        reload: reload,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: "/upgradeAccount",
+    builder: (context, state) {
+      final extraData = state.extra as Map<String, dynamic>?;
+      Future<void> Function(bool value)? upgradePlan =
+          extraData?['upgradePlan'];
+      final isPremium = extraData?['isPremium'] as bool?;
+      final Future<void> Function() reload = extraData?['reload'];
+      return Upgradeaccount(
+        isPremium: isPremium,
+        upgradePlan: upgradePlan,
+        reload: reload,
+      );
+    },
+  ),
+
+  GoRoute(
+    path: "/settingEmail",
+    builder: (context, state) {
+      final extraData = state.extra as Map<String, dynamic>?;
+      Future<void> Function(String oldEmail, String newEmail)?
+      changeEmailAccount = extraData?['changeEmailAccount'];
+      final Future<void> Function() reload = extraData?['reload'];
+      return Settingemail(
+        changeEmailAccount: changeEmailAccount,
+        reload: reload,
+      );
+    },
+  ),
+
   GoRoute(
     path: '/edit-profile',
     builder: (context, state) {

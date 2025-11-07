@@ -3,14 +3,15 @@ import 'package:flutter/widgets.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Appearance extends StatefulWidget {
-  final Future<void> Function(String? language)? changeLanguage;
+  final Future<void> Function(String language)? changeLanguage;
   final Future<void> Function(
-    String? fontSizeHead,
-    String? fontSizeSubHead,
-    String? fontSizeBody,
-    String? fontSizeIcon,
+    String fontSizeHead,
+    String fontSizeSubHead,
+    String fontSizeBody,
+    String fontSizeIcon,
   )?
   changeFontSize;
+  final Future<void> Function()? reload;
   final String? language;
   final int? fontSizeHead;
   final int? fontSizeSubHead;
@@ -25,6 +26,7 @@ class Appearance extends StatefulWidget {
     this.fontSizeSubHead,
     this.fontSizeBody,
     this.fontSizeIcon,
+    this.reload,
   });
 
   @override
@@ -40,43 +42,39 @@ class _Appearance extends State<Appearance> {
   List<String>? fontType;
   List<String>? language;
   bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    _loadData();
-  }
 
-  Future<void> _loadData() async {
-    setState(() {
-      fontType = ["big", "medium", "small"];
-      language = ["EN", "IND"];
-      _fontSizeHeadController = widget.fontSizeHead == 22
-          ? "big"
-          : widget.fontSizeHead == 18
-          ? "medium"
-          : "small";
+    fontType = ["big", "medium", "small"];
+    language = ["ENG", "IND"];
+    _fontSizeHeadController = widget.fontSizeHead == 22
+        ? "big"
+        : widget.fontSizeHead == 18
+        ? "medium"
+        : "small";
 
-      _fontSizeSubHeadController = widget.fontSizeSubHead == 22
-          ? "big"
-          : widget.fontSizeSubHead == 18
-          ? "medium"
-          : "small";
+    _fontSizeSubHeadController = widget.fontSizeSubHead == 20
+        ? "big"
+        : widget.fontSizeSubHead == 16
+        ? "medium"
+        : "small";
 
-      _fontSizeBodyController = widget.fontSizeBody == 22
-          ? "big"
-          : widget.fontSizeBody == 18
-          ? "medium"
-          : "small";
+    _fontSizeBodyController = widget.fontSizeBody == 18
+        ? "big"
+        : widget.fontSizeBody == 14
+        ? "medium"
+        : "small";
 
-      _fontSizeIconontroller = widget.fontSizeIcon == 22
-          ? "big"
-          : widget.fontSizeIcon == 18
-          ? "medium"
-          : "small";
+    _fontSizeIconontroller = widget.fontSizeIcon == 16
+        ? "big"
+        : widget.fontSizeIcon == 12
+        ? "medium"
+        : "small";
 
-      _languageController = widget.language;
-      _isLoading = true;
-    });
+    _languageController = widget.language;
+    _isLoading = true;
   }
 
   @override
@@ -136,9 +134,19 @@ class _Appearance extends State<Appearance> {
                               )
                             : buildDropdownField(
                                 'Font Size Head',
-                                _fontSizeHeadController,
+                                _fontSizeHeadController != null
+                                    ? fontType!.contains(
+                                            _fontSizeHeadController,
+                                          )
+                                          ? _fontSizeHeadController
+                                          : fontType![1]
+                                    : fontType![1],
                                 fontType!,
-                                (value) => _fontSizeHeadController = value,
+                                (value) {
+                                  setState(() {
+                                    _fontSizeHeadController = value;
+                                  });
+                                },
                                 (value) {
                                   return null;
                                 },
@@ -150,9 +158,19 @@ class _Appearance extends State<Appearance> {
                               )
                             : buildDropdownField(
                                 'Font Size Sub Head',
-                                _fontSizeSubHeadController,
+                                _fontSizeSubHeadController != null
+                                    ? fontType!.contains(
+                                            _fontSizeSubHeadController,
+                                          )
+                                          ? _fontSizeSubHeadController
+                                          : fontType![1]
+                                    : fontType![1],
                                 fontType!,
-                                (value) => _fontSizeSubHeadController = value,
+                                (value) {
+                                  setState(() {
+                                    _fontSizeSubHeadController = value;
+                                  });
+                                },
                                 (value) {
                                   return null;
                                 },
@@ -164,9 +182,19 @@ class _Appearance extends State<Appearance> {
                               )
                             : buildDropdownField(
                                 'Font Size Body',
-                                _fontSizeBodyController,
+                                _fontSizeBodyController != null
+                                    ? fontType!.contains(
+                                            _fontSizeBodyController,
+                                          )
+                                          ? _fontSizeBodyController
+                                          : fontType![1]
+                                    : fontType![1],
                                 fontType!,
-                                (value) => _fontSizeBodyController = value,
+                                (value) {
+                                  setState(() {
+                                    _fontSizeBodyController = value;
+                                  });
+                                },
                                 (value) {
                                   return null;
                                 },
@@ -178,24 +206,43 @@ class _Appearance extends State<Appearance> {
                               )
                             : buildDropdownField(
                                 'Font Size Icon',
-                                _fontSizeIconontroller,
+                                _fontSizeIconontroller != null
+                                    ? fontType!.contains(_fontSizeIconontroller)
+                                          ? _fontSizeIconontroller
+                                          : fontType![1]
+                                    : fontType![1],
                                 fontType!,
-                                (value) => _fontSizeIconontroller = value,
+                                (value) {
+                                  setState(() {
+                                    _fontSizeIconontroller = value;
+                                  });
+                                },
                                 (value) {
                                   return null;
                                 },
                               ),
 
                         SizedBox(height: 20),
-                        _isLoading
+                        !_isLoading
                             ? CircularProgressIndicator()
                             : ElevatedButton.icon(
-                                onPressed: () => widget.changeFontSize!(
-                                  _fontSizeHeadController ?? null,
-                                  _fontSizeSubHeadController ?? null,
-                                  _fontSizeBodyController ?? null,
-                                  _fontSizeIconontroller ?? null,
-                                )!,
+                                onPressed: () async {
+                                  await widget.changeFontSize!(
+                                    _fontSizeHeadController!,
+                                    _fontSizeSubHeadController!,
+                                    _fontSizeBodyController!,
+                                    _fontSizeIconontroller!,
+                                  );
+                                  await widget!.reload!();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text(
+                                        'Success Change Font Size!',
+                                      ),
+                                    ),
+                                  );
+                                },
                                 icon: Icon(Icons.check),
                                 iconAlignment: IconAlignment.end,
                                 label: Text('Submit'),
@@ -237,8 +284,12 @@ class _Appearance extends State<Appearance> {
                               )
                             : buildDropdownField(
                                 'Language',
-                                _languageController,
-                                fontType!,
+                                _languageController != null
+                                    ? language!.contains(_languageController)
+                                          ? _languageController
+                                          : language![1]
+                                    : language![1],
+                                language!,
                                 (value) => _languageController = value,
                                 (value) {
                                   return null;
@@ -246,12 +297,23 @@ class _Appearance extends State<Appearance> {
                               ),
 
                         SizedBox(height: 20),
-                        _isLoading
+                        !_isLoading
                             ? CircularProgressIndicator()
                             : ElevatedButton.icon(
-                                onPressed: () => widget.changeLanguage!(
-                                  _languageController ?? null,
-                                )!,
+                                onPressed: () async {
+                                  await widget.changeLanguage!(
+                                    _languageController!,
+                                  );
+
+                                  await widget!.reload!();
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text('Success Change Language!'),
+                                    ),
+                                  );
+                                },
                                 icon: Icon(Icons.check),
                                 iconAlignment: IconAlignment.end,
                                 label: Text('Submit'),
@@ -304,7 +366,7 @@ class _Appearance extends State<Appearance> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
-        value: value != null ? value : null,
+        initialValue: value != null ? value : null,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),

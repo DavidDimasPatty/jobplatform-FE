@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:intl/intl.dart';
 import 'package:job_platform/features/components/progress/data/models/organizationProgressModel.dart';
 

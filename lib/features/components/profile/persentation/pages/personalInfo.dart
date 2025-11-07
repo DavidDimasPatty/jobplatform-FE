@@ -741,7 +741,8 @@ class _Personalinfo extends State<Personalinfo> {
                                               ProvinsiModel
                                             >(
                                               isExpanded: true,
-                                              value: selectedProvinsiLahir,
+                                              initialValue:
+                                                  selectedProvinsiLahir,
                                               hint: Text("Pilih Provinsi"),
                                               items: provinsiLahir.map((prov) {
                                                 return DropdownMenuItem<
@@ -790,7 +791,7 @@ class _Personalinfo extends State<Personalinfo> {
                                             )
                                           : DropdownButtonFormField<KotaModel>(
                                               isExpanded: true,
-                                              value: selectedKotaLahir,
+                                              initialValue: selectedKotaLahir,
                                               hint: Text("Pilih Kota"),
 
                                               items: kotaLahir.map((kota) {
@@ -861,7 +862,7 @@ class _Personalinfo extends State<Personalinfo> {
                                               ProvinsiModel
                                             >(
                                               isExpanded: true,
-                                              value: selectedProvinsi,
+                                              initialValue: selectedProvinsi,
                                               hint: Text("Pilih Provinsi"),
                                               items: provinsi.map((prov) {
                                                 return DropdownMenuItem<
@@ -910,7 +911,8 @@ class _Personalinfo extends State<Personalinfo> {
                                             )
                                           : DropdownButtonFormField<KotaModel>(
                                               isExpanded: true,
-                                              value: kota.contains(selectedKota)
+                                              initialValue:
+                                                  kota.contains(selectedKota)
                                                   ? selectedKota
                                                   : null,
                                               hint: Text("Pilih Kota"),
