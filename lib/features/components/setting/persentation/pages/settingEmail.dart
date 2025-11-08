@@ -6,11 +6,18 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
+import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart'
+    show AuthRemoteDataSource;
+import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
+
+import '../../domain/usecases/setting_usecase.dart' show SettingUseCase;
 
 class Settingemail extends StatefulWidget {
-  final Future<String> Function(String oldEmail, String newEmail)?
-  changeEmailAccount;
-  const Settingemail({super.key, this.changeEmailAccount});
+  // final Future<String> Function(String oldEmail, String newEmail)?
+  // changeEmailAccount;
+  const Settingemail({super.key});
 
   @override
   State<Settingemail> createState() => _Settingemail();
@@ -18,12 +25,16 @@ class Settingemail extends StatefulWidget {
 
 class _Settingemail extends State<Settingemail> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   User? oldUser;
   User? newUser;
   String? token;
   bool _isWaiting = false;
   String _statusMessage = "Verifikasi akun lama...";
+  AuthRepositoryImpl? _repoSetting;
+  AuthRemoteDataSource? _dataSourceSetting;
+  SettingUseCase? _settingUseCase;
+  late SharedPreferences prefs;
+  bool isLoading = true;
 
   Future _handleValidateEmail() async {
     await Firebase.initializeApp();
@@ -125,10 +136,7 @@ class _Settingemail extends State<Settingemail> {
       }
     }
     try {
-      String res = await widget.changeEmailAccount!(
-        oldUser!.email!,
-        newUser!.email!,
-      );
+      String res = await changeEmailAccount!(oldUser!.email!, newUser!.email!);
       if (res == "Sukses") {
         setState(() {
           _statusMessage =
@@ -165,6 +173,43 @@ class _Settingemail extends State<Settingemail> {
         SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
     }
+  }
+
+  Future<String> changeEmailAccount(String oldEmail, String newEmail) async {
+    try {
+      String? id = prefs.getString('idUser');
+      String? loginAs = prefs.getString('loginAs');
+      String? oldEmail = prefs.getString('email');
+      if (id == null) throw Exception("User ID not found in preferences");
+
+      String? response = await _settingUseCase!.changeEmailAccount(
+        id,
+        loginAs!,
+        oldEmail!,
+        newEmail,
+      );
+      if (response == 'Sukses') {
+        prefs.clear();
+        return "Sukses";
+      } else {
+        return response!;
+      }
+    } catch (e) {
+      throw new Exception(e);
+    }
+  }
+
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      _dataSourceSetting = AuthRemoteDataSource();
+      _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
+      _settingUseCase = SettingUseCase(_repoSetting!);
+      prefs = await SharedPreferences.getInstance();
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   Widget build(BuildContext context) {

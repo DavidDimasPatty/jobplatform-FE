@@ -25,15 +25,15 @@ class _Setting extends State<Setting> {
   String? loginAs;
   String? url;
   bool? is2FA;
-  bool? isNotifInternal;
-  bool? isNotifExternal;
+  // bool? isNotifInternal;
+  // bool? isNotifExternal;
   bool? isPremium;
   late bool isDarkMode;
-  String? language;
-  int? fontSizeHead;
-  int? fontSizeSubHead;
-  int? fontSizeBody;
-  int? fontSizeIcon;
+  // String? language;
+  // int? fontSizeHead;
+  // int? fontSizeSubHead;
+  // int? fontSizeBody;
+  // int? fontSizeIcon;
   int? profileComplete;
   final String packageName = 'com.whatsapp';
   AuthRepositoryImpl? _repoSetting;
@@ -77,8 +77,6 @@ class _Setting extends State<Setting> {
     String title,
     String content,
   ) {
-    final TextEditingController alasanController = TextEditingController();
-
     return showDialog<String>(
       context: context,
       barrierDismissible: false,
@@ -264,145 +262,94 @@ class _Setting extends State<Setting> {
     }
   }
 
-  Future upgradePlan(bool value) async {
-    try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
-      if (id == null) throw Exception("User ID not found in preferences");
+  // Future changeNotifApp(bool value) async {
+  //   try {
+  //     String? id = prefs.getString('idUser');
+  //     String? loginAs = prefs.getString('loginAs');
+  //     if (id == null) throw Exception("User ID not found in preferences");
 
-      // final result = await showConfirmStatus(
-      //   context,
-      //   "Yakin ingin upgrade plan?",
-      //   "Upgrade Plan Rp. 250.000/ bulan",
-      // );
-      // if (result == null) return;
+  //     // setState(() {
+  //     //   isLoading = true;
+  //     // });
 
-      // setState(() {
-      //   isLoading = true;
-      // });
+  //     String? response = await _settingUseCase!.changeNotifApp(id, loginAs!);
+  //     if (response == 'Sukses') {
+  //       prefs.setBool("isNotifInternal", value);
+  //       // ScaffoldMessenger.of(
+  //       //   context,
+  //       // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //     } else {
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //       // ScaffoldMessenger.of(context).showSnackBar(
+  //       //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+  //       // );
+  //     }
+  //   } catch (e) {
+  //     // setState(() {
+  //     //   isLoading = false;
+  //     // });
+  //     // debugPrint('Error during delete account: $e');
+  //     // if (mounted) {
+  //     //   return ScaffoldMessenger.of(context).showSnackBar(
+  //     //     SnackBar(
+  //     //       content: Text("Internal Error"),
+  //     //       backgroundColor: Colors.red,
+  //     //     ),
+  //     //   );
+  //     // }
+  //   }
+  // }
 
-      String? response = await _settingUseCase!.upgradePlan(id, loginAs!);
-      if (response == 'Sukses') {
-        prefs.setBool("isPremium", value);
-        // context.go("/setting");
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text('Success Upgrade Plan!')));
-        // setState(() {
-        //   isLoading = false;
-        // });
-      } else {
-        // setState(() {
-        //   isLoading = false;
-        // });
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        // );
-      }
-    } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
-      // debugPrint('Error during delete account: $e');
-      // if (mounted) {
-      //   return ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text("Internal Error"),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
-    }
-  }
+  // Future changeExternalNotifApp(bool value) async {
+  //   try {
+  //     String? id = prefs.getString('idUser');
+  //     String? loginAs = prefs.getString('loginAs');
+  //     if (id == null) throw Exception("User ID not found in preferences");
 
-  Future changeNotifApp(bool value) async {
-    try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
-      if (id == null) throw Exception("User ID not found in preferences");
+  //     // setState(() {
+  //     //   isLoading = true;
+  //     // });
 
-      // setState(() {
-      //   isLoading = true;
-      // });
-
-      String? response = await _settingUseCase!.changeNotifApp(id, loginAs!);
-      if (response == 'Sukses') {
-        prefs.setBool("isNotifInternal", value);
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
-        // setState(() {
-        //   isLoading = false;
-        // });
-      } else {
-        // setState(() {
-        //   isLoading = false;
-        // });
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        // );
-      }
-    } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
-      // debugPrint('Error during delete account: $e');
-      // if (mounted) {
-      //   return ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text("Internal Error"),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
-    }
-  }
-
-  Future changeExternalNotifApp(bool value) async {
-    try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
-      if (id == null) throw Exception("User ID not found in preferences");
-
-      // setState(() {
-      //   isLoading = true;
-      // });
-
-      String? response = await _settingUseCase!.changeExternalNotifApp(
-        id,
-        loginAs!,
-      );
-      if (response == 'Sukses') {
-        prefs.setBool("isNotifExternal", value);
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
-        // setState(() {
-        //   isLoading = false;
-        // });
-      } else {
-        // setState(() {
-        //   isLoading = false;
-        // });
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        // );
-      }
-    } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
-      // debugPrint('Error during delete account: $e');
-      // if (mounted) {
-      //   return ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text("Internal Error"),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
-    }
-  }
+  //     String? response = await _settingUseCase!.changeExternalNotifApp(
+  //       id,
+  //       loginAs!,
+  //     );
+  //     if (response == 'Sukses') {
+  //       prefs.setBool("isNotifExternal", value);
+  //       // ScaffoldMessenger.of(
+  //       //   context,
+  //       // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //     } else {
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //       // ScaffoldMessenger.of(context).showSnackBar(
+  //       //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+  //       // );
+  //     }
+  //   } catch (e) {
+  //     // setState(() {
+  //     //   isLoading = false;
+  //     // });
+  //     // debugPrint('Error during delete account: $e');
+  //     // if (mounted) {
+  //     //   return ScaffoldMessenger.of(context).showSnackBar(
+  //     //     SnackBar(
+  //     //       content: Text("Internal Error"),
+  //     //       backgroundColor: Colors.red,
+  //     //     ),
+  //     //   );
+  //     // }
+  //   }
+  // }
 
   Future<String> changeEmailAccount(String oldEmail, String newEmail) async {
     try {
@@ -477,194 +424,194 @@ class _Setting extends State<Setting> {
     }
   }
 
-  Future validate2FA(bool isActive, String OTP) async {
-    try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
-      String? email = prefs.getString('email');
-      if (id == null) throw Exception("User ID not found in preferences");
+  // Future validate2FA(bool isActive, String OTP) async {
+  //   try {
+  //     String? id = prefs.getString('idUser');
+  //     String? loginAs = prefs.getString('loginAs');
+  //     String? email = prefs.getString('email');
+  //     if (id == null) throw Exception("User ID not found in preferences");
 
-      // final result = await showConfirmStatus(context);
-      // if (result == null) return;
+  //     // final result = await showConfirmStatus(context);
+  //     // if (result == null) return;
 
-      setState(() {
-        isLoading = true;
-      });
+  //     setState(() {
+  //       isLoading = true;
+  //     });
 
-      String? response = await _settingUseCase!.validate2FA(
-        id,
-        loginAs!,
-        email!,
-        OTP,
-        isActive ? "activate" : "deactivate",
-      );
-      if (response == 'Sukses') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Success Validate 2FA Account!')),
-        );
-        setState(() {
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      debugPrint('Error during delete account: $e');
-      if (mounted) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Internal Error"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
+  //     String? response = await _settingUseCase!.validate2FA(
+  //       id,
+  //       loginAs!,
+  //       email!,
+  //       OTP,
+  //       isActive ? "activate" : "deactivate",
+  //     );
+  //     if (response == 'Sukses') {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Success Validate 2FA Account!')),
+  //       );
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text(response!), backgroundColor: Colors.red),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //     debugPrint('Error during delete account: $e');
+  //     if (mounted) {
+  //       return ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text("Internal Error"),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
-  Future changeLanguage(String language) async {
-    try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
-      if (id == null) throw Exception("User ID not found in preferences");
+  // Future changeLanguage(String language) async {
+  //   try {
+  //     String? id = prefs.getString('idUser');
+  //     String? loginAs = prefs.getString('loginAs');
+  //     if (id == null) throw Exception("User ID not found in preferences");
 
-      // setState(() {
-      //   isLoading = true;
-      // });
+  //     // setState(() {
+  //     //   isLoading = true;
+  //     // });
 
-      String? response = await _settingUseCase!.changeLanguage(
-        id,
-        loginAs!,
-        language,
-      );
-      if (response == 'Sukses') {
-        prefs.setString("language", language);
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text('Success Change Language!')));
-        // setState(() {
-        //   isLoading = false;
-        // });
-      } else {
-        // setState(() {
-        //   isLoading = false;
-        // });
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        // );
-      }
-    } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
-      debugPrint('Error during change language: $e');
-      if (mounted) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Internal Error"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
+  //     String? response = await _settingUseCase!.changeLanguage(
+  //       id,
+  //       loginAs!,
+  //       language,
+  //     );
+  //     if (response == 'Sukses') {
+  //       prefs.setString("language", language);
+  //       // ScaffoldMessenger.of(
+  //       //   context,
+  //       // ).showSnackBar(SnackBar(content: Text('Success Change Language!')));
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //     } else {
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //       // ScaffoldMessenger.of(context).showSnackBar(
+  //       //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+  //       // );
+  //     }
+  //   } catch (e) {
+  //     // setState(() {
+  //     //   isLoading = false;
+  //     // });
+  //     debugPrint('Error during change language: $e');
+  //     if (mounted) {
+  //       return ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text("Internal Error"),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
-  Future changeFontSize(
-    String fontSizeHead,
-    String fontSizeSubHead,
-    String fontSizeBody,
-    String fontSizeIcon,
-  ) async {
-    try {
-      //if (!mounted) return;
+  // Future changeFontSize(
+  //   String fontSizeHead,
+  //   String fontSizeSubHead,
+  //   String fontSizeBody,
+  //   String fontSizeIcon,
+  // ) async {
+  //   try {
+  //     //if (!mounted) return;
 
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
-      if (id == null) throw Exception("User ID not found in preferences");
+  //     String? id = prefs.getString('idUser');
+  //     String? loginAs = prefs.getString('loginAs');
+  //     if (id == null) throw Exception("User ID not found in preferences");
 
-      // setState(() {
-      //   isLoading = true;
-      // });
+  //     // setState(() {
+  //     //   isLoading = true;
+  //     // });
 
-      String? response = await _settingUseCase!.changeFontSize(
-        id,
-        loginAs!,
-        fontSizeHead == "big"
-            ? 22
-            : fontSizeHead == "medium"
-            ? 18
-            : 14,
-        fontSizeSubHead == "big"
-            ? 20
-            : fontSizeSubHead == "medium"
-            ? 16
-            : 12,
-        fontSizeBody == "big"
-            ? 18
-            : fontSizeBody == "medium"
-            ? 14
-            : 10,
-        fontSizeIcon == "big"
-            ? 16
-            : fontSizeIcon == "medium"
-            ? 12
-            : 8,
-      );
-      if (response == 'Sukses') {
-        // final provider = context.read<SettingProvider>();
+  //     String? response = await _settingUseCase!.changeFontSize(
+  //       id,
+  //       loginAs!,
+  //       fontSizeHead == "big"
+  //           ? 22
+  //           : fontSizeHead == "medium"
+  //           ? 18
+  //           : 14,
+  //       fontSizeSubHead == "big"
+  //           ? 20
+  //           : fontSizeSubHead == "medium"
+  //           ? 16
+  //           : 12,
+  //       fontSizeBody == "big"
+  //           ? 18
+  //           : fontSizeBody == "medium"
+  //           ? 14
+  //           : 10,
+  //       fontSizeIcon == "big"
+  //           ? 16
+  //           : fontSizeIcon == "medium"
+  //           ? 12
+  //           : 8,
+  //     );
+  //     if (response == 'Sukses') {
+  //       // final provider = context.read<SettingProvider>();
 
-        prefs.setInt(
-          "fontSizeHead",
-          fontSizeHead == "big"
-              ? 22
-              : fontSizeHead == "medium"
-              ? 18
-              : 14,
-        );
-        prefs.setInt(
-          "fontSizeSubHead",
-          fontSizeSubHead == "big"
-              ? 20
-              : fontSizeSubHead == "medium"
-              ? 16
-              : 12,
-        );
-        prefs.setInt(
-          "fontSizeBody",
-          fontSizeBody == "big"
-              ? 18
-              : fontSizeBody == "medium"
-              ? 14
-              : 10,
-        );
-        prefs.setInt(
-          "fontSizeIcon",
-          fontSizeIcon == "big"
-              ? 16
-              : fontSizeIcon == "medium"
-              ? 12
-              : 8,
-        );
-      } else {}
-    } catch (e) {
-      debugPrint('Error during change font: $e');
-      if (mounted) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Internal Error"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
+  //       prefs.setInt(
+  //         "fontSizeHead",
+  //         fontSizeHead == "big"
+  //             ? 22
+  //             : fontSizeHead == "medium"
+  //             ? 18
+  //             : 14,
+  //       );
+  //       prefs.setInt(
+  //         "fontSizeSubHead",
+  //         fontSizeSubHead == "big"
+  //             ? 20
+  //             : fontSizeSubHead == "medium"
+  //             ? 16
+  //             : 12,
+  //       );
+  //       prefs.setInt(
+  //         "fontSizeBody",
+  //         fontSizeBody == "big"
+  //             ? 18
+  //             : fontSizeBody == "medium"
+  //             ? 14
+  //             : 10,
+  //       );
+  //       prefs.setInt(
+  //         "fontSizeIcon",
+  //         fontSizeIcon == "big"
+  //             ? 16
+  //             : fontSizeIcon == "medium"
+  //             ? 12
+  //             : 8,
+  //       );
+  //     } else {}
+  //   } catch (e) {
+  //     debugPrint('Error during change font: $e');
+  //     if (mounted) {
+  //       return ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text("Internal Error"),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
@@ -682,14 +629,14 @@ class _Setting extends State<Setting> {
         profileComplete = provider.profileComplete;
         isPremium = provider.isPremium;
         is2FA = provider.is2FA;
-        isNotifInternal = provider.isNotifInternal;
-        isNotifExternal = provider.isNotifExternal;
+        //isNotifInternal = provider.isNotifInternal;
+        //isNotifExternal = provider.isNotifExternal;
         isDarkMode = provider.isDarkMode!;
-        language = provider.language;
-        fontSizeHead = provider.fontSizeHead;
-        fontSizeSubHead = provider.fontSizeSubHead;
-        fontSizeBody = provider.fontSizeBody;
-        fontSizeIcon = provider.fontSizeIcon;
+        //language = provider.language;
+        //fontSizeHead = provider.fontSizeHead;
+        //fontSizeSubHead = provider.fontSizeSubHead;
+        //fontSizeBody = provider.fontSizeBody;
+        //fontSizeIcon = provider.fontSizeIcon;
         isLoading = false;
         errorMessage = null;
       });
@@ -768,27 +715,27 @@ class _Setting extends State<Setting> {
                 rowFlex: 2,
                 child: bodySetting(
                   deleteAccount: deleteAccount,
-                  change2FA: change2FA,
+                  //change2FA: change2FA,
                   changeEmailAccount: changeEmailAccount,
-                  changeExternalNotifApp: changeExternalNotifApp,
-                  changeFontSize: changeFontSize,
-                  changeLanguage: changeLanguage,
-                  changeNotifApp: changeNotifApp,
+                  //changeExternalNotifApp: changeExternalNotifApp,
+                  //changeFontSize: changeFontSize,
+                  //changeLanguage: changeLanguage,
+                  //changeNotifApp: changeNotifApp,
                   changeThemeMode: changeThemeMode,
                   logOut: logOut,
                   openPlayStore: openPlayStore,
-                  upgradePlan: upgradePlan,
-                  validate2FA: validate2FA,
-                  is2FA: is2FA,
+                  //upgradePlan: upgradePlan,
+                  //validate2FA: validate2FA,
+                  //is2FA: is2FA,
                   isDarkMode: isDarkMode,
-                  isNotifExternal: isNotifExternal,
-                  isNotifInternal: isNotifInternal,
-                  isPremium: isPremium,
-                  language: language,
-                  fontSizeHead: fontSizeHead,
-                  fontSizeSubHead: fontSizeSubHead,
-                  fontSizeBody: fontSizeBody,
-                  fontSizeIcon: fontSizeIcon,
+                  //isNotifExternal: isNotifExternal,
+                  //isNotifInternal: isNotifInternal,
+                  //isPremium: isPremium,
+                  //language: language,
+                  //fontSizeHead: fontSizeHead,
+                  //fontSizeSubHead: fontSizeSubHead,
+                  //fontSizeBody: fontSizeBody,
+                  //fontSizeIcon: fontSizeIcon,
                   // reload: _loadSetting,
                 ),
               ),

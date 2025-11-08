@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
+import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
+import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart'
+    show AuthRemoteDataSource;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settingnotification extends StatefulWidget {
-  final Future<void> Function(bool value)? changeNotifApp;
-  final Future<void> Function(bool value)? changeExternalNotifApp;
-  final bool? isNotifInternal;
-  final bool? isNotifExternal;
-  const Settingnotification({
-    super.key,
-    this.changeNotifApp,
-    this.changeExternalNotifApp,
-    this.isNotifInternal,
-    this.isNotifExternal,
-  });
+  const Settingnotification({super.key});
 
   @override
   State<Settingnotification> createState() => _Settingnotification();
@@ -25,23 +20,132 @@ class _Settingnotification extends State<Settingnotification> {
   bool _isLoading = true;
   late bool inChangeNotifApp;
   late bool inChangeNotifExternalApp;
+  AuthRepositoryImpl? _repoSetting;
+  AuthRemoteDataSource? _dataSourceSetting;
+  SettingUseCase? _settingUseCase;
+  late SharedPreferences prefs;
+  bool isLoading = true;
+  String? errorMessage;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() async {
+      _dataSourceSetting = AuthRemoteDataSource();
+      _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
+      _settingUseCase = SettingUseCase(_repoSetting!);
+      prefs = await SharedPreferences.getInstance();
       final setting = context.read<SettingProvider>();
       await setting.loadSetting();
 
       setState(() {
         inChangeNotifApp = setting.isNotifInternal!;
         inChangeNotifExternalApp = setting.isNotifExternal!;
+        isLoading = false;
         _isLoading = false;
       });
     });
   }
 
+  Future changeNotifApp(bool value) async {
+    try {
+      String? id = prefs.getString('idUser');
+      String? loginAs = prefs.getString('loginAs');
+      if (id == null) throw Exception("User ID not found in preferences");
+      String? response = await _settingUseCase!.changeNotifApp(id, loginAs!);
+      if (response == 'Sukses') {
+        prefs.setBool("isNotifInternal", value);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Success Change Internal Notification!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during Change Internal Notification: $e');
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Internal Error"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future changeExternalNotifApp(bool value) async {
+    try {
+      String? id = prefs.getString('idUser');
+      String? loginAs = prefs.getString('loginAs');
+      if (id == null) throw Exception("User ID not found in preferences");
+      String? response = await _settingUseCase!.changeExternalNotifApp(
+        id,
+        loginAs!,
+      );
+      if (response == 'Sukses') {
+        prefs.setBool("isNotifExternal", value);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Success Change External Notification!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error during Change External Notification: $e');
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Internal Error"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading Setting data...'),
+          ],
+        ),
+      );
+    }
+
+    if (errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: Colors.red),
+            SizedBox(height: 16),
+            Text(
+              errorMessage!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.red),
+            ),
+            SizedBox(height: 16),
+          ],
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Center(
@@ -114,24 +218,19 @@ class _Settingnotification extends State<Settingnotification> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    //maxLines: 2,
-                                    // overflow: titleMaxLine != null
-                                    //     ? overflow
-                                    //     : null,
                                   ),
                                   subtitle: Text(
                                     "Notifikasi status pelamaran kerja dan chat",
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyMedium!,
-                                    //maxLines: subtitleMaxLine,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   trailing: Switch.adaptive(
                                     activeColor: Colors.blue,
                                     value: inChangeNotifApp,
                                     onChanged: (value) async {
-                                      await widget!.changeNotifApp!(value);
+                                      await changeNotifApp!(value);
                                       final provider = context
                                           .read<SettingProvider>();
 
@@ -186,9 +285,7 @@ class _Settingnotification extends State<Settingnotification> {
                                     activeColor: Colors.blue,
                                     value: inChangeNotifExternalApp,
                                     onChanged: (value) async {
-                                      await widget!.changeExternalNotifApp!(
-                                        value,
-                                      );
+                                      await changeExternalNotifApp!(value);
                                       final provider = context
                                           .read<SettingProvider>();
 

@@ -91,29 +91,29 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: "/appearance",
     builder: (context, state) {
-      final extraData = state.extra as Map<String, dynamic>?;
-      Future<void> Function(String language)? changeLanguage =
-          extraData?['changeLanguage'];
-      Future<void> Function(
-        String fontSizeHead,
-        String fontSizeSubHead,
-        String fontSizeBody,
-        String fontSizeIcon,
-      )?
-      changeFontSize = extraData?['changeFontSize'];
-      final fontSizeBody = extraData?['fontSizeBody'] as int?;
-      final fontSizeHead = extraData?['fontSizeHead'] as int?;
-      final fontSizeIcon = extraData?['fontSizeIcon'] as int?;
-      final fontSizeSubHead = extraData?['fontSizeSubHead'] as int?;
-      final language = extraData?['language'] as String?;
+      //final extraData = state.extra as Map<String, dynamic>?;
+      // Future<void> Function(String language)? changeLanguage =
+      //     extraData?['changeLanguage'];
+      // Future<void> Function(
+      //   String fontSizeHead,
+      //   String fontSizeSubHead,
+      //   String fontSizeBody,
+      //   String fontSizeIcon,
+      // )?
+      // changeFontSize = extraData?['changeFontSize'];
+      // final fontSizeBody = extraData?['fontSizeBody'] as int?;
+      // final fontSizeHead = extraData?['fontSizeHead'] as int?;
+      // final fontSizeIcon = extraData?['fontSizeIcon'] as int?;
+      // final fontSizeSubHead = extraData?['fontSizeSubHead'] as int?;
+      // final language = extraData?['language'] as String?;
       return Appearance(
-        changeFontSize: changeFontSize,
-        changeLanguage: changeLanguage,
-        fontSizeBody: fontSizeBody,
-        fontSizeHead: fontSizeHead,
-        fontSizeIcon: fontSizeIcon,
-        fontSizeSubHead: fontSizeSubHead,
-        language: language,
+        // changeFontSize: changeFontSize,
+        // changeLanguage: changeLanguage,
+        // fontSizeBody: fontSizeBody,
+        // fontSizeHead: fontSizeHead,
+        // fontSizeIcon: fontSizeIcon,
+        // fontSizeSubHead: fontSizeSubHead,
+        // language: language,
       );
     },
   ),
@@ -121,19 +121,19 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: "/setNotification",
     builder: (context, state) {
-      final extraData = state.extra as Map<String, dynamic>?;
-      Future<void> Function(bool value) changeExternalNotifApp =
-          extraData?['changeExternalNotifApp'];
-      Future<void> Function(bool value) changeNotifApp =
-          extraData?['changeNotifApp'];
-      final isNotifExternal = extraData?['isNotifExternal'] as bool?;
-      final isNotifInternal = extraData?['isNotifInternal'] as bool?;
+      //final extraData = state.extra as Map<String, dynamic>?;
+      // Future<void> Function(bool value) changeExternalNotifApp =
+      //     extraData?['changeExternalNotifApp'];
+      // Future<void> Function(bool value) changeNotifApp =
+      //     extraData?['changeNotifApp'];
+      // final isNotifExternal = extraData?['isNotifExternal'] as bool?;
+      // final isNotifInternal = extraData?['isNotifInternal'] as bool?;
       // final Future<void> Function() reload = extraData?['reload'];
       return Settingnotification(
-        changeExternalNotifApp: changeExternalNotifApp,
-        changeNotifApp: changeNotifApp,
-        isNotifExternal: isNotifExternal,
-        isNotifInternal: isNotifInternal,
+        // changeExternalNotifApp: changeExternalNotifApp,
+        // changeNotifApp: changeNotifApp,
+        // isNotifExternal: isNotifExternal,
+        // isNotifInternal: isNotifInternal,
         // reload: reload,
       );
     },
@@ -142,20 +142,20 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: "/upgradeAccount",
     builder: (context, state) {
-      final extraData = state.extra as Map<String, dynamic>?;
-      Future<void> Function(bool value) upgradePlan = extraData?['upgradePlan'];
-      final isPremium = extraData?['isPremium'] as bool?;
-      return Upgradeaccount(isPremium: isPremium, upgradePlan: upgradePlan);
+      //final extraData = state.extra as Map<String, dynamic>?;
+      //Future<void> Function(bool value) upgradePlan = extraData?['upgradePlan'];
+      //final isPremium = extraData?['isPremium'] as bool?;
+      return Upgradeaccount();
     },
   ),
 
   GoRoute(
     path: "/settingEmail",
     builder: (context, state) {
-      final extraData = state.extra as Map<String, dynamic>?;
-      Future<String> Function(String oldEmail, String newEmail)?
-      changeEmailAccount = extraData?['changeEmailAccount'];
-      return Settingemail(changeEmailAccount: changeEmailAccount);
+      // final extraData = state.extra as Map<String, dynamic>?;
+      // Future<String> Function(String oldEmail, String newEmail)?
+      // changeEmailAccount = extraData?['changeEmailAccount'];
+      return Settingemail();
     },
   ),
 

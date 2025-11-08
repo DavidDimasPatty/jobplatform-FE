@@ -18,6 +18,7 @@ class _Validate2fa extends State<Validate2fa> {
   TextEditingController kode3 = TextEditingController();
   TextEditingController kode4 = TextEditingController();
   void initState() {
+    super.initState();
     setState(() {
       _isLoading = false;
       _isLoading = true;
