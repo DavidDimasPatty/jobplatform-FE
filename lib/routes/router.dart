@@ -163,11 +163,7 @@ final List<GoRoute> _layoutRoutes = [
       final extraData = state.extra as Map<String, dynamic>?;
       Future<void> Function(String oldEmail, String newEmail)?
       changeEmailAccount = extraData?['changeEmailAccount'];
-      final Future<void> Function() reload = extraData?['reload'];
-      return Settingemail(
-        changeEmailAccount: changeEmailAccount,
-        reload: reload,
-      );
+      return Settingemail(changeEmailAccount: changeEmailAccount);
     },
   ),
 

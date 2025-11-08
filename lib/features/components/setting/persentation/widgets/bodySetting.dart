@@ -156,10 +156,7 @@ class _bodySetting extends State<bodySetting> {
             SettingsItem(
               onTap: () => context.go(
                 "/settingEmail",
-                extra: {
-                  "changeEmailAccount": widget.changeEmailAccount,
-                  "reload": widget.reload,
-                },
+                extra: {"changeEmailAccount": widget.changeEmailAccount},
               ),
               icons: Icons.attach_email,
               title: 'Setting Email',

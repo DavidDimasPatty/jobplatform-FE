@@ -3,14 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Settingemail extends StatefulWidget {
   final Future<void> Function(String oldEmail, String newEmail)?
   changeEmailAccount;
-  final Future<void> Function()? reload;
-  const Settingemail({super.key, this.changeEmailAccount, this.reload});
+  const Settingemail({super.key, this.changeEmailAccount});
 
   @override
   State<Settingemail> createState() => _Settingemail();
@@ -34,8 +34,11 @@ class _Settingemail extends State<Settingemail> {
     await FirebaseAuth.instance.signOut();
     if (kIsWeb) {
       try {
+        final GoogleAuthProvider authProvider = GoogleAuthProvider();
+        authProvider.setCustomParameters({'prompt': 'select_account'});
+
         final userCredential = await FirebaseAuth.instance.signInWithPopup(
-          GoogleAuthProvider(),
+          authProvider,
         );
         oldUser = userCredential.user;
       } catch (e) {
@@ -69,8 +72,11 @@ class _Settingemail extends State<Settingemail> {
 
     if (kIsWeb) {
       try {
+        final GoogleAuthProvider authProvider = GoogleAuthProvider();
+        authProvider.setCustomParameters({'prompt': 'select_account'});
+
         final userCredential = await FirebaseAuth.instance.signInWithPopup(
-          GoogleAuthProvider(),
+          authProvider,
         );
         newUser = userCredential.user;
       } catch (e) {
@@ -98,6 +104,13 @@ class _Settingemail extends State<Settingemail> {
     }
     try {
       await widget.changeEmailAccount!(oldUser!.email!, newUser!.email!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Success ganti email"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      context.go("/");
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),

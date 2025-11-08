@@ -424,6 +424,7 @@ class _Setting extends State<Setting> {
         newEmail,
       );
       if (response == 'Sukses') {
+        prefs.clear();
         //   ScaffoldMessenger.of(
         //     context,
         //   ).showSnackBar(SnackBar(content: Text('Success Change Email')));
