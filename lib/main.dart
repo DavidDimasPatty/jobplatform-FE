@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:job_platform/core/utils/providers/setting_provider.dart';
 import 'package:job_platform/routes/router.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -21,7 +22,12 @@ Future<void> main() async {
     ),
   );
   usePathUrlStrategy();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => SettingProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

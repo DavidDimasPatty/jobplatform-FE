@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/providers/setting_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Upgradeaccount extends StatefulWidget {
   final Future<void> Function(bool value)? upgradePlan;
   final bool? isPremium;
-  final Future<void> Function()? reload;
-  const Upgradeaccount({
-    super.key,
-    this.upgradePlan,
-    this.isPremium,
-    this.reload,
-  });
+  const Upgradeaccount({super.key, this.upgradePlan, this.isPremium});
 
   @override
   State<Upgradeaccount> createState() => _Upgradeaccount();
@@ -19,10 +15,69 @@ class Upgradeaccount extends StatefulWidget {
 
 class _Upgradeaccount extends State<Upgradeaccount> {
   bool _isLoading = false;
+  late bool? inIsPremium;
+
+  // Future upgradePlan(bool value) async {
+  //   try {
+  //     String? id = prefs.getString('idUser');
+  //     String? loginAs = prefs.getString('loginAs');
+  //     if (id == null) throw Exception("User ID not found in preferences");
+
+  //     // final result = await showConfirmStatus(
+  //     //   context,
+  //     //   "Yakin ingin upgrade plan?",
+  //     //   "Upgrade Plan Rp. 250.000/ bulan",
+  //     // );
+  //     // if (result == null) return;
+
+  //     // setState(() {
+  //     //   isLoading = true;
+  //     // });
+
+  //     String? response = await _settingUseCase!.upgradePlan(id, loginAs!);
+  //     if (response == 'Sukses') {
+  //       prefs.setBool("isPremium", value);
+  //       // context.go("/setting");
+  //       // ScaffoldMessenger.of(
+  //       //   context,
+  //       // ).showSnackBar(SnackBar(content: Text('Success Upgrade Plan!')));
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //     } else {
+  //       // setState(() {
+  //       //   isLoading = false;
+  //       // });
+  //       // ScaffoldMessenger.of(context).showSnackBar(
+  //       //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
+  //       // );
+  //     }
+  //   } catch (e) {
+  //     // setState(() {
+  //     //   isLoading = false;
+  //     // });
+  //     // debugPrint('Error during delete account: $e');
+  //     // if (mounted) {
+  //     //   return ScaffoldMessenger.of(context).showSnackBar(
+  //     //     SnackBar(
+  //     //       content: Text("Internal Error"),
+  //     //       backgroundColor: Colors.red,
+  //     //     ),
+  //     //   );
+  //     // }
+  //   }
+  // }
+
   void initState() {
-    setState(() {
-      _isLoading = false;
-      _isLoading = true;
+    super.initState();
+    Future.microtask(() async {
+      final setting = context.read<SettingProvider>();
+      await setting.loadSetting();
+
+      setState(() {
+        inIsPremium = setting.isPremium!;
+        _isLoading = true;
+      });
     });
   }
 
@@ -83,9 +138,14 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                             ? CircularProgressIndicator(
                                 color: Colors.blue.shade400,
                               )
-                            : ElevatedButton.icon(
+                            : inIsPremium != true
+                            ? ElevatedButton.icon(
                                 onPressed: () async {
                                   await widget.upgradePlan!(true);
+                                  final provider = context
+                                      .read<SettingProvider>();
+
+                                  await provider.changePremium(true);
                                   context.go("/setting");
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -98,7 +158,8 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.amber,
                                 ),
-                              ),
+                              )
+                            : Text('Akun anda Sudah Premium!'),
                       ],
                     ),
                   ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:job_platform/core/utils/providers/setting_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Appearance extends StatefulWidget {
@@ -11,7 +13,6 @@ class Appearance extends StatefulWidget {
     String fontSizeIcon,
   )?
   changeFontSize;
-  final Future<void> Function()? reload;
   final String? language;
   final int? fontSizeHead;
   final int? fontSizeSubHead;
@@ -26,7 +27,6 @@ class Appearance extends StatefulWidget {
     this.fontSizeSubHead,
     this.fontSizeBody,
     this.fontSizeIcon,
-    this.reload,
   });
 
   @override
@@ -34,47 +34,49 @@ class Appearance extends StatefulWidget {
 }
 
 class _Appearance extends State<Appearance> {
+  final _formKeyChangeFont = GlobalKey<FormState>();
+  final _formKeyChangeLanguage = GlobalKey<FormState>();
   String? _fontSizeHeadController;
   String? _fontSizeSubHeadController;
   String? _fontSizeBodyController;
   String? _fontSizeIconontroller;
   String? _languageController;
-  List<String>? fontType;
-  List<String>? language;
+  List<String> fontType = ["big", "medium", "small"];
+  List<String> language = ["ENG", "IND"];
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    Future.microtask(() async {
+      final setting = context.read<SettingProvider>();
+      await setting.loadSetting();
 
-    fontType = ["big", "medium", "small"];
-    language = ["ENG", "IND"];
-    _fontSizeHeadController = widget.fontSizeHead == 22
-        ? "big"
-        : widget.fontSizeHead == 18
-        ? "medium"
-        : "small";
-
-    _fontSizeSubHeadController = widget.fontSizeSubHead == 20
-        ? "big"
-        : widget.fontSizeSubHead == 16
-        ? "medium"
-        : "small";
-
-    _fontSizeBodyController = widget.fontSizeBody == 18
-        ? "big"
-        : widget.fontSizeBody == 14
-        ? "medium"
-        : "small";
-
-    _fontSizeIconontroller = widget.fontSizeIcon == 16
-        ? "big"
-        : widget.fontSizeIcon == 12
-        ? "medium"
-        : "small";
-
-    _languageController = widget.language;
-    _isLoading = true;
+      setState(() {
+        _fontSizeHeadController = setting.fontSizeHead == 22
+            ? "big"
+            : setting.fontSizeHead == 18
+            ? "medium"
+            : "small";
+        _fontSizeSubHeadController = setting.fontSizeSubHead == 20
+            ? "big"
+            : setting.fontSizeSubHead == 16
+            ? "medium"
+            : "small";
+        _fontSizeBodyController = setting.fontSizeBody == 18
+            ? "big"
+            : setting.fontSizeBody == 14
+            ? "medium"
+            : "small";
+        _fontSizeIconontroller = setting.fontSizeIcon == 16
+            ? "big"
+            : setting.fontSizeIcon == 12
+            ? "medium"
+            : "small";
+        _languageController = setting.language;
+        _isLoading = true;
+      });
+    });
   }
 
   @override
@@ -110,7 +112,7 @@ class _Appearance extends State<Appearance> {
               ResponsiveRowColumnItem(
                 rowFlex: 2,
                 child: Form(
-                  // key: _formKey,
+                  key: _formKeyChangeFont,
                   child: Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(
@@ -233,7 +235,15 @@ class _Appearance extends State<Appearance> {
                                     _fontSizeBodyController!,
                                     _fontSizeIconontroller!,
                                   );
-                                  await widget!.reload!();
+                                  final provider = context
+                                      .read<SettingProvider>();
+
+                                  provider.changeFontSize(
+                                    _fontSizeHeadController!,
+                                    _fontSizeSubHeadController!,
+                                    _fontSizeBodyController!,
+                                    _fontSizeIconontroller!,
+                                  );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.green,
@@ -260,7 +270,7 @@ class _Appearance extends State<Appearance> {
               ResponsiveRowColumnItem(
                 rowFlex: 2,
                 child: Form(
-                  // key: _formKey,
+                  key: _formKeyChangeLanguage,
                   child: Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(
@@ -305,8 +315,10 @@ class _Appearance extends State<Appearance> {
                                     _languageController!,
                                   );
 
-                                  await widget!.reload!();
+                                  final provider = context
+                                      .read<SettingProvider>();
 
+                                  provider.changeLanguage(_languageController!);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.green,
@@ -366,7 +378,8 @@ class _Appearance extends State<Appearance> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
-        initialValue: value != null ? value : null,
+        key: ValueKey(label),
+        value: value,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),

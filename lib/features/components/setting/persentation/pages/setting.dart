@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/providers/setting_provider.dart';
 import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/bodySetting.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/topSetting.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,7 +28,7 @@ class _Setting extends State<Setting> {
   bool? isNotifInternal;
   bool? isNotifExternal;
   bool? isPremium;
-  bool? isDarkMode;
+  late bool isDarkMode;
   String? language;
   int? fontSizeHead;
   int? fontSizeSubHead;
@@ -38,37 +40,37 @@ class _Setting extends State<Setting> {
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
   late SharedPreferences prefs;
-  Future<void> _loadSetting() async {
-    try {
-      prefs = await SharedPreferences.getInstance();
-      nama = prefs.getString('nama');
-      loginAs = prefs.getString('loginAs');
-      url = prefs.getString('urlAva');
-      profileComplete = prefs.getInt("profileComplete");
-      isPremium = prefs.getBool("isPremium");
-      is2FA = prefs.getBool("is2FA");
-      isNotifInternal = prefs.getBool("isNotifInternal");
-      isNotifExternal = prefs.getBool("isNotifExternal");
-      isDarkMode = prefs.getBool("isDarkMode");
-      language = prefs.getString("language");
-      fontSizeHead = prefs.getInt("fontSizeHead");
-      fontSizeSubHead = prefs.getInt("fontSizeSubHead");
-      fontSizeBody = prefs.getInt("fontSizeBody");
-      fontSizeIcon = prefs.getInt("fontSizeIcon");
-      setState(() {
-        isLoading = false;
-        errorMessage = null;
-      });
-    } catch (e) {
-      print("Error loading profile data: $e");
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-          errorMessage = "Error loading profile: $e";
-        });
-      }
-    }
-  }
+  // Future<void> _loadSetting() async {
+  //   try {
+  //     prefs = await SharedPreferences.getInstance();
+  //     nama = prefs.getString('nama');
+  //     loginAs = prefs.getString('loginAs');
+  //     url = prefs.getString('urlAva');
+  //     profileComplete = prefs.getInt("profileComplete");
+  //     isPremium = prefs.getBool("isPremium");
+  //     is2FA = prefs.getBool("is2FA");
+  //     isNotifInternal = prefs.getBool("isNotifInternal");
+  //     isNotifExternal = prefs.getBool("isNotifExternal");
+  //     isDarkMode = prefs.getBool("isDarkMode");
+  //     language = prefs.getString("language");
+  //     fontSizeHead = prefs.getInt("fontSizeHead");
+  //     fontSizeSubHead = prefs.getInt("fontSizeSubHead");
+  //     fontSizeBody = prefs.getInt("fontSizeBody");
+  //     fontSizeIcon = prefs.getInt("fontSizeIcon");
+  //     setState(() {
+  //       isLoading = false;
+  //       errorMessage = null;
+  //     });
+  //   } catch (e) {
+  //     print("Error loading profile data: $e");
+  //     if (mounted) {
+  //       setState(() {
+  //         isLoading = false;
+  //         errorMessage = "Error loading profile: $e";
+  //       });
+  //     }
+  //   }
+  // }
 
   Future<String?> showConfirmStatus(
     BuildContext context,
@@ -212,9 +214,12 @@ class _Setting extends State<Setting> {
 
       String? response = await _settingUseCase!.changeThemeMode(id, loginAs!);
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Success change theme mode!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Success change theme mode!'),
+            backgroundColor: Colors.green,
+          ),
+        );
         setState(() {
           prefs.setBool("isDarkMode", value);
         });
@@ -399,23 +404,12 @@ class _Setting extends State<Setting> {
     }
   }
 
-  Future changeEmailAccount(String oldEmail, String newEmail) async {
+  Future<String> changeEmailAccount(String oldEmail, String newEmail) async {
     try {
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       String? oldEmail = prefs.getString('email');
       if (id == null) throw Exception("User ID not found in preferences");
-
-      // final result = await showConfirmStatus(
-      //   context,
-      //   "Change Email",
-      //   "Yakin ingin mengganti email sekarang?",
-      // );
-      // if (result == null) return;
-
-      // setState(() {
-      //   isLoading = true;
-      // });
 
       String? response = await _settingUseCase!.changeEmailAccount(
         id,
@@ -425,35 +419,12 @@ class _Setting extends State<Setting> {
       );
       if (response == 'Sukses') {
         prefs.clear();
-        //   ScaffoldMessenger.of(
-        //     context,
-        //   ).showSnackBar(SnackBar(content: Text('Success Change Email')));
-        //   setState(() {
-        //     isLoading = false;
-        //   });
-        //   prefs.setString('email', newEmail);
-        // } else {
-        //   setState(() {
-        //     isLoading = false;
-        //   });
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        //   );
-        await logOut();
+        return "Sukses";
+      } else {
+        return response!;
       }
     } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
-      // debugPrint('Error during delete account: $e');
-      // if (mounted) {
-      //   return ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text("Internal Error"),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
+      throw new Exception(e);
     }
   }
 
@@ -632,27 +603,23 @@ class _Setting extends State<Setting> {
             : 14,
         fontSizeSubHead == "big"
             ? 20
-            : fontSizeHead == "medium"
+            : fontSizeSubHead == "medium"
             ? 16
             : 12,
         fontSizeBody == "big"
             ? 18
-            : fontSizeHead == "medium"
+            : fontSizeBody == "medium"
             ? 14
             : 10,
         fontSizeIcon == "big"
             ? 16
-            : fontSizeHead == "medium"
+            : fontSizeIcon == "medium"
             ? 12
             : 8,
       );
       if (response == 'Sukses') {
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text('Success Change Font Size!')));
-        // setState(() {
-        //   isLoading = false;
-        // });
+        // final provider = context.read<SettingProvider>();
+
         prefs.setInt(
           "fontSizeHead",
           fontSizeHead == "big"
@@ -685,18 +652,8 @@ class _Setting extends State<Setting> {
               ? 12
               : 8,
         );
-      } else {
-        // setState(() {
-        //   isLoading = false;
-        // });
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        // );
-      }
+      } else {}
     } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
       debugPrint('Error during change font: $e');
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
@@ -712,14 +669,38 @@ class _Setting extends State<Setting> {
   @override
   void initState() {
     super.initState();
-    _loadSetting();
-    _initializeUseCase();
+    isLoading = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _initializeUseCase();
+      final provider = context.read<SettingProvider>();
+      await provider.loadSetting();
+
+      setState(() {
+        nama = provider.nama;
+        loginAs = provider.loginAs;
+        url = provider.url;
+        profileComplete = provider.profileComplete;
+        isPremium = provider.isPremium;
+        is2FA = provider.is2FA;
+        isNotifInternal = provider.isNotifInternal;
+        isNotifExternal = provider.isNotifExternal;
+        isDarkMode = provider.isDarkMode!;
+        language = provider.language;
+        fontSizeHead = provider.fontSizeHead;
+        fontSizeSubHead = provider.fontSizeSubHead;
+        fontSizeBody = provider.fontSizeBody;
+        fontSizeIcon = provider.fontSizeIcon;
+        isLoading = false;
+        errorMessage = null;
+      });
+    });
   }
 
-  void _initializeUseCase() {
+  void _initializeUseCase() async {
     _dataSourceSetting = AuthRemoteDataSource();
     _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
     _settingUseCase = SettingUseCase(_repoSetting!);
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -808,7 +789,7 @@ class _Setting extends State<Setting> {
                   fontSizeSubHead: fontSizeSubHead,
                   fontSizeBody: fontSizeBody,
                   fontSizeIcon: fontSizeIcon,
-                  reload: _loadSetting,
+                  // reload: _loadSetting,
                 ),
               ),
             ],

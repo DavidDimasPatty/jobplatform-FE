@@ -24,7 +24,7 @@ class bodySetting extends StatefulWidget {
     String fontSizeIcon,
   )?
   changeFontSize;
-  final Future<void> Function()? reload;
+  // final Future<void> Function()? reload;
   final bool? is2FA;
   final bool? isNotifInternal;
   final bool? isNotifExternal;
@@ -59,7 +59,7 @@ class bodySetting extends StatefulWidget {
     this.fontSizeBody,
     this.fontSizeIcon,
     this.validate2FA,
-    this.reload,
+    // this.reload,
   });
 
   @override
@@ -94,7 +94,7 @@ class _bodySetting extends State<bodySetting> {
                   "fontSizeSubHead": widget.fontSizeSubHead,
                   "fontSizeBody": widget.fontSizeBody,
                   "fontSizeIcon": widget.fontSizeIcon,
-                  "reload": widget.reload,
+                  // "reload": widget.reload,
                 },
               ),
               icons: CupertinoIcons.pencil_outline,
@@ -125,7 +125,7 @@ class _bodySetting extends State<bodySetting> {
                   "changeExternalNotifApp": widget.changeExternalNotifApp,
                   "isNotifInternal": widget.isNotifInternal,
                   "isNotifExternal": widget.isNotifExternal,
-                  "reload": widget.reload,
+                  // "reload": widget.reload,
                 },
               ),
               icons: Icons.notifications_active_sharp,
@@ -145,7 +145,7 @@ class _bodySetting extends State<bodySetting> {
                 extra: {
                   "upgradePlan": widget.upgradePlan,
                   "isPremium": widget.isPremium,
-                  "reload": widget.reload,
+                  // "reload": widget.reload,
                 },
               ),
               icons: Icons.star,

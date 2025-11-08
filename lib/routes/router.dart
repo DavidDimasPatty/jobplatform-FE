@@ -106,7 +106,6 @@ final List<GoRoute> _layoutRoutes = [
       final fontSizeIcon = extraData?['fontSizeIcon'] as int?;
       final fontSizeSubHead = extraData?['fontSizeSubHead'] as int?;
       final language = extraData?['language'] as String?;
-      final Future<void> Function() reload = extraData?['reload'];
       return Appearance(
         changeFontSize: changeFontSize,
         changeLanguage: changeLanguage,
@@ -115,7 +114,6 @@ final List<GoRoute> _layoutRoutes = [
         fontSizeIcon: fontSizeIcon,
         fontSizeSubHead: fontSizeSubHead,
         language: language,
-        reload: reload,
       );
     },
   ),
@@ -126,17 +124,17 @@ final List<GoRoute> _layoutRoutes = [
       final extraData = state.extra as Map<String, dynamic>?;
       Future<void> Function(bool value) changeExternalNotifApp =
           extraData?['changeExternalNotifApp'];
-      Future<void> Function(bool value)? changeNotifApp =
+      Future<void> Function(bool value) changeNotifApp =
           extraData?['changeNotifApp'];
       final isNotifExternal = extraData?['isNotifExternal'] as bool?;
       final isNotifInternal = extraData?['isNotifInternal'] as bool?;
-      final Future<void> Function() reload = extraData?['reload'];
+      // final Future<void> Function() reload = extraData?['reload'];
       return Settingnotification(
         changeExternalNotifApp: changeExternalNotifApp,
         changeNotifApp: changeNotifApp,
         isNotifExternal: isNotifExternal,
         isNotifInternal: isNotifInternal,
-        reload: reload,
+        // reload: reload,
       );
     },
   ),
@@ -145,15 +143,9 @@ final List<GoRoute> _layoutRoutes = [
     path: "/upgradeAccount",
     builder: (context, state) {
       final extraData = state.extra as Map<String, dynamic>?;
-      Future<void> Function(bool value)? upgradePlan =
-          extraData?['upgradePlan'];
+      Future<void> Function(bool value) upgradePlan = extraData?['upgradePlan'];
       final isPremium = extraData?['isPremium'] as bool?;
-      final Future<void> Function() reload = extraData?['reload'];
-      return Upgradeaccount(
-        isPremium: isPremium,
-        upgradePlan: upgradePlan,
-        reload: reload,
-      );
+      return Upgradeaccount(isPremium: isPremium, upgradePlan: upgradePlan);
     },
   ),
 
@@ -161,7 +153,7 @@ final List<GoRoute> _layoutRoutes = [
     path: "/settingEmail",
     builder: (context, state) {
       final extraData = state.extra as Map<String, dynamic>?;
-      Future<void> Function(String oldEmail, String newEmail)?
+      Future<String> Function(String oldEmail, String newEmail)?
       changeEmailAccount = extraData?['changeEmailAccount'];
       return Settingemail(changeEmailAccount: changeEmailAccount);
     },

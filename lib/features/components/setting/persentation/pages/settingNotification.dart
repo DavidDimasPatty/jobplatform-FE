@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:job_platform/core/utils/providers/setting_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Settingnotification extends StatefulWidget {
@@ -7,14 +9,12 @@ class Settingnotification extends StatefulWidget {
   final Future<void> Function(bool value)? changeExternalNotifApp;
   final bool? isNotifInternal;
   final bool? isNotifExternal;
-  final Future<void> Function()? reload;
   const Settingnotification({
     super.key,
     this.changeNotifApp,
     this.changeExternalNotifApp,
     this.isNotifInternal,
     this.isNotifExternal,
-    this.reload,
   });
 
   @override
@@ -22,16 +22,22 @@ class Settingnotification extends StatefulWidget {
 }
 
 class _Settingnotification extends State<Settingnotification> {
-  bool _isLoading = false;
-  late bool changeNotifApp;
-  late bool changeNotifExternalApp;
+  bool _isLoading = true;
+  late bool inChangeNotifApp;
+  late bool inChangeNotifExternalApp;
+
+  @override
   void initState() {
     super.initState();
-    setState(() {
-      _isLoading = true;
-      changeNotifApp = widget.isNotifInternal!;
-      changeNotifExternalApp = widget.isNotifExternal!;
-      _isLoading = false;
+    Future.microtask(() async {
+      final setting = context.read<SettingProvider>();
+      await setting.loadSetting();
+
+      setState(() {
+        inChangeNotifApp = setting.isNotifInternal!;
+        inChangeNotifExternalApp = setting.isNotifExternal!;
+        _isLoading = false;
+      });
     });
   }
 
@@ -123,12 +129,15 @@ class _Settingnotification extends State<Settingnotification> {
                                   ),
                                   trailing: Switch.adaptive(
                                     activeColor: Colors.blue,
-                                    value: changeNotifApp,
+                                    value: inChangeNotifApp,
                                     onChanged: (value) async {
                                       await widget!.changeNotifApp!(value);
-                                      await widget!.reload!();
+                                      final provider = context
+                                          .read<SettingProvider>();
+
+                                      await provider.changeNotifApp(value);
                                       setState(() {
-                                        changeNotifApp = value;
+                                        inChangeNotifApp = value;
                                       });
                                     },
                                   ),
@@ -175,14 +184,19 @@ class _Settingnotification extends State<Settingnotification> {
                                   ),
                                   trailing: Switch.adaptive(
                                     activeColor: Colors.blue,
-                                    value: changeNotifExternalApp,
+                                    value: inChangeNotifExternalApp,
                                     onChanged: (value) async {
                                       await widget!.changeExternalNotifApp!(
                                         value,
                                       );
-                                      await widget!.reload!();
+                                      final provider = context
+                                          .read<SettingProvider>();
+
+                                      await provider.changeNotifExternalApp(
+                                        value,
+                                      );
                                       setState(() {
-                                        changeNotifExternalApp = value;
+                                        inChangeNotifExternalApp = value;
                                       });
                                     },
                                   ),
