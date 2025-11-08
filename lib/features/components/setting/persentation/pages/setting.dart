@@ -25,53 +25,14 @@ class _Setting extends State<Setting> {
   String? loginAs;
   String? url;
   bool? is2FA;
-  // bool? isNotifInternal;
-  // bool? isNotifExternal;
   bool? isPremium;
   late bool isDarkMode;
-  // String? language;
-  // int? fontSizeHead;
-  // int? fontSizeSubHead;
-  // int? fontSizeBody;
-  // int? fontSizeIcon;
   int? profileComplete;
   final String packageName = 'com.whatsapp';
   AuthRepositoryImpl? _repoSetting;
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
   late SharedPreferences prefs;
-  // Future<void> _loadSetting() async {
-  //   try {
-  //     prefs = await SharedPreferences.getInstance();
-  //     nama = prefs.getString('nama');
-  //     loginAs = prefs.getString('loginAs');
-  //     url = prefs.getString('urlAva');
-  //     profileComplete = prefs.getInt("profileComplete");
-  //     isPremium = prefs.getBool("isPremium");
-  //     is2FA = prefs.getBool("is2FA");
-  //     isNotifInternal = prefs.getBool("isNotifInternal");
-  //     isNotifExternal = prefs.getBool("isNotifExternal");
-  //     isDarkMode = prefs.getBool("isDarkMode");
-  //     language = prefs.getString("language");
-  //     fontSizeHead = prefs.getInt("fontSizeHead");
-  //     fontSizeSubHead = prefs.getInt("fontSizeSubHead");
-  //     fontSizeBody = prefs.getInt("fontSizeBody");
-  //     fontSizeIcon = prefs.getInt("fontSizeIcon");
-  //     setState(() {
-  //       isLoading = false;
-  //       errorMessage = null;
-  //     });
-  //   } catch (e) {
-  //     print("Error loading profile data: $e");
-  //     if (mounted) {
-  //       setState(() {
-  //         isLoading = false;
-  //         errorMessage = "Error loading profile: $e";
-  //       });
-  //     }
-  //   }
-  // }
-
   Future<String?> showConfirmStatus(
     BuildContext context,
     String title,
@@ -262,95 +223,6 @@ class _Setting extends State<Setting> {
     }
   }
 
-  // Future changeNotifApp(bool value) async {
-  //   try {
-  //     String? id = prefs.getString('idUser');
-  //     String? loginAs = prefs.getString('loginAs');
-  //     if (id == null) throw Exception("User ID not found in preferences");
-
-  //     // setState(() {
-  //     //   isLoading = true;
-  //     // });
-
-  //     String? response = await _settingUseCase!.changeNotifApp(id, loginAs!);
-  //     if (response == 'Sukses') {
-  //       prefs.setBool("isNotifInternal", value);
-  //       // ScaffoldMessenger.of(
-  //       //   context,
-  //       // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
-  //       // setState(() {
-  //       //   isLoading = false;
-  //       // });
-  //     } else {
-  //       // setState(() {
-  //       //   isLoading = false;
-  //       // });
-  //       // ScaffoldMessenger.of(context).showSnackBar(
-  //       //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-  //       // );
-  //     }
-  //   } catch (e) {
-  //     // setState(() {
-  //     //   isLoading = false;
-  //     // });
-  //     // debugPrint('Error during delete account: $e');
-  //     // if (mounted) {
-  //     //   return ScaffoldMessenger.of(context).showSnackBar(
-  //     //     SnackBar(
-  //     //       content: Text("Internal Error"),
-  //     //       backgroundColor: Colors.red,
-  //     //     ),
-  //     //   );
-  //     // }
-  //   }
-  // }
-
-  // Future changeExternalNotifApp(bool value) async {
-  //   try {
-  //     String? id = prefs.getString('idUser');
-  //     String? loginAs = prefs.getString('loginAs');
-  //     if (id == null) throw Exception("User ID not found in preferences");
-
-  //     // setState(() {
-  //     //   isLoading = true;
-  //     // });
-
-  //     String? response = await _settingUseCase!.changeExternalNotifApp(
-  //       id,
-  //       loginAs!,
-  //     );
-  //     if (response == 'Sukses') {
-  //       prefs.setBool("isNotifExternal", value);
-  //       // ScaffoldMessenger.of(
-  //       //   context,
-  //       // ).showSnackBar(SnackBar(content: Text('Success Change Notification!')));
-  //       // setState(() {
-  //       //   isLoading = false;
-  //       // });
-  //     } else {
-  //       // setState(() {
-  //       //   isLoading = false;
-  //       // });
-  //       // ScaffoldMessenger.of(context).showSnackBar(
-  //       //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-  //       // );
-  //     }
-  //   } catch (e) {
-  //     // setState(() {
-  //     //   isLoading = false;
-  //     // });
-  //     // debugPrint('Error during delete account: $e');
-  //     // if (mounted) {
-  //     //   return ScaffoldMessenger.of(context).showSnackBar(
-  //     //     SnackBar(
-  //     //       content: Text("Internal Error"),
-  //     //       backgroundColor: Colors.red,
-  //     //     ),
-  //     //   );
-  //     // }
-  //   }
-  // }
-
   Future<String> changeEmailAccount(String oldEmail, String newEmail) async {
     try {
       String? id = prefs.getString('idUser');
@@ -424,195 +296,6 @@ class _Setting extends State<Setting> {
     }
   }
 
-  // Future validate2FA(bool isActive, String OTP) async {
-  //   try {
-  //     String? id = prefs.getString('idUser');
-  //     String? loginAs = prefs.getString('loginAs');
-  //     String? email = prefs.getString('email');
-  //     if (id == null) throw Exception("User ID not found in preferences");
-
-  //     // final result = await showConfirmStatus(context);
-  //     // if (result == null) return;
-
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-
-  //     String? response = await _settingUseCase!.validate2FA(
-  //       id,
-  //       loginAs!,
-  //       email!,
-  //       OTP,
-  //       isActive ? "activate" : "deactivate",
-  //     );
-  //     if (response == 'Sukses') {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Success Validate 2FA Account!')),
-  //       );
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text(response!), backgroundColor: Colors.red),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     debugPrint('Error during delete account: $e');
-  //     if (mounted) {
-  //       return ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text("Internal Error"),
-  //           backgroundColor: Colors.red,
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-
-  // Future changeLanguage(String language) async {
-  //   try {
-  //     String? id = prefs.getString('idUser');
-  //     String? loginAs = prefs.getString('loginAs');
-  //     if (id == null) throw Exception("User ID not found in preferences");
-
-  //     // setState(() {
-  //     //   isLoading = true;
-  //     // });
-
-  //     String? response = await _settingUseCase!.changeLanguage(
-  //       id,
-  //       loginAs!,
-  //       language,
-  //     );
-  //     if (response == 'Sukses') {
-  //       prefs.setString("language", language);
-  //       // ScaffoldMessenger.of(
-  //       //   context,
-  //       // ).showSnackBar(SnackBar(content: Text('Success Change Language!')));
-  //       // setState(() {
-  //       //   isLoading = false;
-  //       // });
-  //     } else {
-  //       // setState(() {
-  //       //   isLoading = false;
-  //       // });
-  //       // ScaffoldMessenger.of(context).showSnackBar(
-  //       //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-  //       // );
-  //     }
-  //   } catch (e) {
-  //     // setState(() {
-  //     //   isLoading = false;
-  //     // });
-  //     debugPrint('Error during change language: $e');
-  //     if (mounted) {
-  //       return ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text("Internal Error"),
-  //           backgroundColor: Colors.red,
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-
-  // Future changeFontSize(
-  //   String fontSizeHead,
-  //   String fontSizeSubHead,
-  //   String fontSizeBody,
-  //   String fontSizeIcon,
-  // ) async {
-  //   try {
-  //     //if (!mounted) return;
-
-  //     String? id = prefs.getString('idUser');
-  //     String? loginAs = prefs.getString('loginAs');
-  //     if (id == null) throw Exception("User ID not found in preferences");
-
-  //     // setState(() {
-  //     //   isLoading = true;
-  //     // });
-
-  //     String? response = await _settingUseCase!.changeFontSize(
-  //       id,
-  //       loginAs!,
-  //       fontSizeHead == "big"
-  //           ? 22
-  //           : fontSizeHead == "medium"
-  //           ? 18
-  //           : 14,
-  //       fontSizeSubHead == "big"
-  //           ? 20
-  //           : fontSizeSubHead == "medium"
-  //           ? 16
-  //           : 12,
-  //       fontSizeBody == "big"
-  //           ? 18
-  //           : fontSizeBody == "medium"
-  //           ? 14
-  //           : 10,
-  //       fontSizeIcon == "big"
-  //           ? 16
-  //           : fontSizeIcon == "medium"
-  //           ? 12
-  //           : 8,
-  //     );
-  //     if (response == 'Sukses') {
-  //       // final provider = context.read<SettingProvider>();
-
-  //       prefs.setInt(
-  //         "fontSizeHead",
-  //         fontSizeHead == "big"
-  //             ? 22
-  //             : fontSizeHead == "medium"
-  //             ? 18
-  //             : 14,
-  //       );
-  //       prefs.setInt(
-  //         "fontSizeSubHead",
-  //         fontSizeSubHead == "big"
-  //             ? 20
-  //             : fontSizeSubHead == "medium"
-  //             ? 16
-  //             : 12,
-  //       );
-  //       prefs.setInt(
-  //         "fontSizeBody",
-  //         fontSizeBody == "big"
-  //             ? 18
-  //             : fontSizeBody == "medium"
-  //             ? 14
-  //             : 10,
-  //       );
-  //       prefs.setInt(
-  //         "fontSizeIcon",
-  //         fontSizeIcon == "big"
-  //             ? 16
-  //             : fontSizeIcon == "medium"
-  //             ? 12
-  //             : 8,
-  //       );
-  //     } else {}
-  //   } catch (e) {
-  //     debugPrint('Error during change font: $e');
-  //     if (mounted) {
-  //       return ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text("Internal Error"),
-  //           backgroundColor: Colors.red,
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -629,14 +312,7 @@ class _Setting extends State<Setting> {
         profileComplete = provider.profileComplete;
         isPremium = provider.isPremium;
         is2FA = provider.is2FA;
-        //isNotifInternal = provider.isNotifInternal;
-        //isNotifExternal = provider.isNotifExternal;
         isDarkMode = provider.isDarkMode!;
-        //language = provider.language;
-        //fontSizeHead = provider.fontSizeHead;
-        //fontSizeSubHead = provider.fontSizeSubHead;
-        //fontSizeBody = provider.fontSizeBody;
-        //fontSizeIcon = provider.fontSizeIcon;
         isLoading = false;
         errorMessage = null;
       });
@@ -665,7 +341,6 @@ class _Setting extends State<Setting> {
       );
     }
 
-    // Show error message if there's an error
     if (errorMessage != null) {
       return Center(
         child: Column(
@@ -715,28 +390,11 @@ class _Setting extends State<Setting> {
                 rowFlex: 2,
                 child: bodySetting(
                   deleteAccount: deleteAccount,
-                  //change2FA: change2FA,
                   changeEmailAccount: changeEmailAccount,
-                  //changeExternalNotifApp: changeExternalNotifApp,
-                  //changeFontSize: changeFontSize,
-                  //changeLanguage: changeLanguage,
-                  //changeNotifApp: changeNotifApp,
                   changeThemeMode: changeThemeMode,
                   logOut: logOut,
                   openPlayStore: openPlayStore,
-                  //upgradePlan: upgradePlan,
-                  //validate2FA: validate2FA,
-                  //is2FA: is2FA,
                   isDarkMode: isDarkMode,
-                  //isNotifExternal: isNotifExternal,
-                  //isNotifInternal: isNotifInternal,
-                  //isPremium: isPremium,
-                  //language: language,
-                  //fontSizeHead: fontSizeHead,
-                  //fontSizeSubHead: fontSizeSubHead,
-                  //fontSizeBody: fontSizeBody,
-                  //fontSizeIcon: fontSizeIcon,
-                  // reload: _loadSetting,
                 ),
               ),
             ],

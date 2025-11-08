@@ -11,29 +11,7 @@ import 'package:job_platform/features/components/setting/data/datasources/aut_re
     show AuthRemoteDataSource;
 
 class Appearance extends StatefulWidget {
-  // final Future<void> Function(String language)? changeLanguage;
-  // final Future<void> Function(
-  //   String fontSizeHead,
-  //   String fontSizeSubHead,
-  //   String fontSizeBody,
-  //   String fontSizeIcon,
-  // )?
-  // changeFontSize;
-  // final String? language;
-  // final int? fontSizeHead;
-  // final int? fontSizeSubHead;
-  // final int? fontSizeBody;
-  // final int? fontSizeIcon;
-  const Appearance({
-    super.key,
-    // this.changeLanguage,
-    // this.changeFontSize,
-    // this.language,
-    // this.fontSizeHead,
-    // this.fontSizeSubHead,
-    // this.fontSizeBody,
-    // this.fontSizeIcon,
-  });
+  const Appearance({super.key});
 
   @override
   State<Appearance> createState() => _Appearance();
@@ -52,7 +30,7 @@ class _Appearance extends State<Appearance> {
   String? _fontSizeIconontroller;
   String? _languageController;
   List<String> fontType = ["big", "medium", "small"];
-  List<String> language = ["ENG", "IND"];
+  List<String> language = ["🇺🇸-ENG", "🇮🇩-IND"];
   bool _isLoading = false;
 
   @override
@@ -110,24 +88,8 @@ class _Appearance extends State<Appearance> {
       );
       if (response == 'Sukses') {
         prefs.setString("language", language);
-        // ScaffoldMessenger.of(
-        //   context,
-        // ).showSnackBar(SnackBar(content: Text('Success Change Language!')));
-        // setState(() {
-        //   isLoading = false;
-        // });
-      } else {
-        // setState(() {
-        //   isLoading = false;
-        // });
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(response!), backgroundColor: Colors.red),
-        // );
-      }
+      } else {}
     } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
       debugPrint('Error during change language: $e');
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
@@ -147,16 +109,9 @@ class _Appearance extends State<Appearance> {
     String fontSizeIcon,
   ) async {
     try {
-      //if (!mounted) return;
-
       String? id = prefs.getString('idUser');
       String? loginAs = prefs.getString('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
-
-      // setState(() {
-      //   isLoading = true;
-      // });
-
       String? response = await _settingUseCase!.changeFontSize(
         id,
         loginAs!,
@@ -182,8 +137,6 @@ class _Appearance extends State<Appearance> {
             : 8,
       );
       if (response == 'Sukses') {
-        // final provider = context.read<SettingProvider>();
-
         prefs.setInt(
           "fontSizeHead",
           fontSizeHead == "big"
@@ -265,8 +218,14 @@ class _Appearance extends State<Appearance> {
                 child: Form(
                   key: _formKeyChangeFont,
                   child: Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.only(
+                      left: 30,
+                      right: 30,
+                      top: 20,
+                      bottom: 20,
+                    ),
                     child: Column(
+                      spacing: 10,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
@@ -275,107 +234,253 @@ class _Appearance extends State<Appearance> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
-                              letterSpacing: 2,
+                              letterSpacing: 1,
                               color: Colors.blue,
                             ),
                           ),
                         ),
-
+                        SizedBox(height: 10),
                         !_isLoading
                             ? CircularProgressIndicator(
                                 color: Colors.blue.shade400,
                               )
-                            : buildDropdownField(
-                                'Font Size Head',
-                                _fontSizeHeadController != null
-                                    ? fontType!.contains(
-                                            _fontSizeHeadController,
-                                          )
-                                          ? _fontSizeHeadController
-                                          : fontType![1]
-                                    : fontType![1],
-                                fontType!,
-                                (value) {
-                                  setState(() {
-                                    _fontSizeHeadController = value;
-                                  });
-                                },
-                                (value) {
-                                  return null;
-                                },
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      style: TextStyle(fontSize: 14),
+                                      children: [
+                                        TextSpan(
+                                          text: "Example Size Head: ",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "Halo User Skillen!",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                                _fontSizeHeadController == "big"
+                                                ? 22
+                                                : _fontSizeHeadController ==
+                                                      "medium"
+                                                ? 18
+                                                : 14,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  buildDropdownField(
+                                    'Font Size Head',
+                                    _fontSizeHeadController != null
+                                        ? fontType!.contains(
+                                                _fontSizeHeadController,
+                                              )
+                                              ? _fontSizeHeadController
+                                              : fontType![1]
+                                        : fontType![1],
+                                    fontType!,
+                                    (value) {
+                                      setState(() {
+                                        _fontSizeHeadController = value;
+                                      });
+                                    },
+                                    (value) {
+                                      return null;
+                                    },
+                                  ),
+                                ],
                               ),
 
                         !_isLoading
                             ? CircularProgressIndicator(
                                 color: Colors.blue.shade400,
                               )
-                            : buildDropdownField(
-                                'Font Size Sub Head',
-                                _fontSizeSubHeadController != null
-                                    ? fontType!.contains(
-                                            _fontSizeSubHeadController,
-                                          )
-                                          ? _fontSizeSubHeadController
-                                          : fontType![1]
-                                    : fontType![1],
-                                fontType!,
-                                (value) {
-                                  setState(() {
-                                    _fontSizeSubHeadController = value;
-                                  });
-                                },
-                                (value) {
-                                  return null;
-                                },
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      style: TextStyle(fontSize: 14),
+                                      children: [
+                                        TextSpan(
+                                          text: "Example Size Sub Head: ",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "Halo User Skillen!",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                                _fontSizeSubHeadController ==
+                                                    "big"
+                                                ? 20
+                                                : _fontSizeSubHeadController ==
+                                                      "medium"
+                                                ? 16
+                                                : 12,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  buildDropdownField(
+                                    'Font Size Sub Head',
+                                    _fontSizeSubHeadController != null
+                                        ? fontType!.contains(
+                                                _fontSizeSubHeadController,
+                                              )
+                                              ? _fontSizeSubHeadController
+                                              : fontType![1]
+                                        : fontType![1],
+                                    fontType!,
+                                    (value) {
+                                      setState(() {
+                                        _fontSizeSubHeadController = value;
+                                      });
+                                    },
+                                    (value) {
+                                      return null;
+                                    },
+                                  ),
+                                ],
                               ),
 
                         !_isLoading
                             ? CircularProgressIndicator(
                                 color: Colors.blue.shade400,
                               )
-                            : buildDropdownField(
-                                'Font Size Body',
-                                _fontSizeBodyController != null
-                                    ? fontType!.contains(
-                                            _fontSizeBodyController,
-                                          )
-                                          ? _fontSizeBodyController
-                                          : fontType![1]
-                                    : fontType![1],
-                                fontType!,
-                                (value) {
-                                  setState(() {
-                                    _fontSizeBodyController = value;
-                                  });
-                                },
-                                (value) {
-                                  return null;
-                                },
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      style: TextStyle(fontSize: 14),
+                                      children: [
+                                        TextSpan(
+                                          text: "Example Size Body: ",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "Halo User Skillen!",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                                _fontSizeBodyController == "big"
+                                                ? 18
+                                                : _fontSizeBodyController ==
+                                                      "medium"
+                                                ? 14
+                                                : 10,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  buildDropdownField(
+                                    'Font Size Body',
+                                    _fontSizeBodyController != null
+                                        ? fontType!.contains(
+                                                _fontSizeBodyController,
+                                              )
+                                              ? _fontSizeBodyController
+                                              : fontType![1]
+                                        : fontType![1],
+                                    fontType!,
+                                    (value) {
+                                      setState(() {
+                                        _fontSizeBodyController = value;
+                                      });
+                                    },
+                                    (value) {
+                                      return null;
+                                    },
+                                  ),
+                                ],
                               ),
 
                         !_isLoading
                             ? CircularProgressIndicator(
                                 color: Colors.blue.shade400,
                               )
-                            : buildDropdownField(
-                                'Font Size Icon',
-                                _fontSizeIconontroller != null
-                                    ? fontType!.contains(_fontSizeIconontroller)
-                                          ? _fontSizeIconontroller
-                                          : fontType![1]
-                                    : fontType![1],
-                                fontType!,
-                                (value) {
-                                  setState(() {
-                                    _fontSizeIconontroller = value;
-                                  });
-                                },
-                                (value) {
-                                  return null;
-                                },
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      style: TextStyle(fontSize: 14),
+                                      children: [
+                                        TextSpan(
+                                          text: "Example Size Font Size: ",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "Halo User Skillen!",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                                _fontSizeIconontroller == "big"
+                                                ? 16
+                                                : _fontSizeIconontroller ==
+                                                      "medium"
+                                                ? 12
+                                                : 8,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  buildDropdownField(
+                                    'Font Size Icon',
+                                    _fontSizeIconontroller != null
+                                        ? fontType!.contains(
+                                                _fontSizeIconontroller,
+                                              )
+                                              ? _fontSizeIconontroller
+                                              : fontType![1]
+                                        : fontType![1],
+                                    fontType!,
+                                    (value) {
+                                      setState(() {
+                                        _fontSizeIconontroller = value;
+                                      });
+                                    },
+                                    (value) {
+                                      return null;
+                                    },
+                                  ),
+                                ],
                               ),
 
-                        SizedBox(height: 20),
                         !_isLoading
                             ? CircularProgressIndicator()
                             : ElevatedButton.icon(
@@ -417,13 +522,18 @@ class _Appearance extends State<Appearance> {
                   ),
                 ),
               ),
-
+              ResponsiveRowColumnItem(child: Divider()),
               ResponsiveRowColumnItem(
                 rowFlex: 2,
                 child: Form(
                   key: _formKeyChangeLanguage,
                   child: Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.only(
+                      left: 30,
+                      right: 30,
+                      top: 5,
+                      bottom: 20,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -433,12 +543,12 @@ class _Appearance extends State<Appearance> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
-                              letterSpacing: 2,
+                              letterSpacing: 1,
                               color: Colors.blue,
                             ),
                           ),
                         ),
-
+                        SizedBox(height: 15),
                         !_isLoading
                             ? CircularProgressIndicator(
                                 color: Colors.blue.shade400,
@@ -446,8 +556,16 @@ class _Appearance extends State<Appearance> {
                             : buildDropdownField(
                                 'Language',
                                 _languageController != null
-                                    ? language!.contains(_languageController)
-                                          ? _languageController
+                                    ? language!.any(
+                                            (x) => x.contains(
+                                              _languageController!,
+                                            ),
+                                          )
+                                          ? language![language!.indexWhere(
+                                              (x) => x.contains(
+                                                _languageController!,
+                                              ),
+                                            )]
                                           : language![1]
                                     : language![1],
                                 language!,
@@ -462,12 +580,16 @@ class _Appearance extends State<Appearance> {
                             ? CircularProgressIndicator()
                             : ElevatedButton.icon(
                                 onPressed: () async {
-                                  await changeLanguage(_languageController!);
+                                  await changeLanguage(
+                                    _languageController!.split('-')[1]!,
+                                  );
 
                                   final provider = context
                                       .read<SettingProvider>();
 
-                                  provider.changeLanguage(_languageController!);
+                                  provider.changeLanguage(
+                                    _languageController!.split('-')[1]!,
+                                  );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.green,
@@ -527,12 +649,17 @@ class _Appearance extends State<Appearance> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
+        focusColor: Colors.blue,
+        dropdownColor: Colors.white,
+        iconEnabledColor: Colors.blue,
         key: ValueKey(label),
         value: value,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),
-          prefixIcon: Icon(Icons.arrow_drop_down),
+          focusColor: Colors.blue,
+          hoverColor: Colors.blue,
+          fillColor: Colors.blue,
         ),
         items: items
             .map(

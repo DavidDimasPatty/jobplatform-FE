@@ -87,7 +87,102 @@ class _Upgradeaccount extends State<Upgradeaccount> {
             backgroundColor: Colors.green,
           ),
         );
-        context.go("/setting");
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: const EdgeInsets.all(20),
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.topCenter,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 40),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 53, 115, 183),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          'assets/images/premium_success.png',
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Anda Sudah Premium!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Terima kasih telah berpartisipasi untuk menjadi premium.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Tutup"),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // --- Bintang di atas popup ---
+                  Positioned(
+                    top: 0,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.blue.shade300,
+                        child: const Icon(
+                          Icons.star_rounded,
+                          color: Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+
+        //await Future.delayed(Duration(seconds: 3));
+        //context.go("/setting");
         setState(() {
           isLoading = false;
         });
@@ -227,15 +322,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                                   await upgradePlan(true);
                                   final provider = context
                                       .read<SettingProvider>();
-
                                   await provider.changePremium(true);
-                                  context.go("/setting");
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   SnackBar(
-                                  //     backgroundColor: Colors.green,
-                                  //     content: Text('Success Upgrade Plan!'),
-                                  //   ),
-                                  // );
                                 },
                                 label: Text("Upgrade Now"),
                                 style: ElevatedButton.styleFrom(

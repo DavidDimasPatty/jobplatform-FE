@@ -177,7 +177,6 @@ class _Settingnotification extends State<Settingnotification> {
               ResponsiveRowColumnItem(
                 rowFlex: 2,
                 child: Form(
-                  // key: _formKey,
                   child: Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(
@@ -220,7 +219,7 @@ class _Settingnotification extends State<Settingnotification> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                    "Notifikasi status pelamaran kerja dan chat",
+                                    "Notifikasi pelamaran kerja dan chat",
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyMedium!,
@@ -278,7 +277,6 @@ class _Settingnotification extends State<Settingnotification> {
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyMedium!,
-                                    //maxLines: subtitleMaxLine,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   trailing: Switch.adaptive(

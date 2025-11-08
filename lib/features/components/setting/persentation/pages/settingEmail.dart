@@ -261,6 +261,19 @@ class _Settingemail extends State<Settingemail> {
                     columnSpacing: 20,
                     children: [
                       ResponsiveRowColumnItem(
+                        child: Container(
+                          child: Text(
+                            'Change New Email',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 30,
+                              letterSpacing: 2,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ResponsiveRowColumnItem(
                         child: ElevatedButton.icon(
                           icon: Icon(Icons.input_sharp, color: Colors.white),
                           onPressed: _handleValidateEmail,

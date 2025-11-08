@@ -9,57 +9,17 @@ class bodySetting extends StatefulWidget {
   final Future<void> Function()? openPlayStore;
   final Future<void> Function()? logOut;
   final Future<void> Function(bool value)? changeThemeMode;
-  // final Future<void> Function(bool value)? upgradePlan;
-  // final Future<void> Function(bool value)? changeNotifApp;
-  // final Future<void> Function(bool value)? changeExternalNotifApp;
   final Future<void> Function(String oldEmail, String newEmail)?
   changeEmailAccount;
-  // final Future<void> Function(bool isActive)? change2FA;
-  // final Future<void> Function(String language)? changeLanguage;
-  // final Future<void> Function(bool isActive, String OTP)? validate2FA;
-  // final Future<void> Function(
-  //   String fontSizeHead,
-  //   String fontSizeSubHead,
-  //   String fontSizeBody,
-  //   String fontSizeIcon,
-  // )?
-  //changeFontSize;
-  // final Future<void> Function()? reload;
-  // final bool? is2FA;
-  // final bool? isNotifInternal;
-  // final bool? isNotifExternal;
-  // final bool? isPremium;
   final bool? isDarkMode;
-  // final String? language;
-  // final int? fontSizeHead;
-  // final int? fontSizeSubHead;
-  // final int? fontSizeBody;
-  // final int? fontSizeIcon;
   const bodySetting({
     super.key,
     this.deleteAccount,
     this.openPlayStore,
     this.logOut,
     this.changeThemeMode,
-    // this.upgradePlan,
-    // this.changeNotifApp,
-    // this.changeExternalNotifApp,
     this.changeEmailAccount,
-    // this.change2FA,
-    // this.changeLanguage,
-    // this.changeFontSize,
-    // this.is2FA,
-    // this.isNotifInternal,
-    // this.isNotifExternal,
-    // this.isPremium,
     this.isDarkMode,
-    // this.language,
-    // this.fontSizeHead,
-    // this.fontSizeSubHead,
-    // this.fontSizeBody,
-    // this.fontSizeIcon,
-    //this.validate2FA,
-    // this.reload,
   });
 
   @override
@@ -84,19 +44,7 @@ class _bodySetting extends State<bodySetting> {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () => context.go(
-                "/appearance",
-                extra: {
-                  // "changeLanguage": widget.changeLanguage,
-                  // "changeFontSize": widget.changeFontSize,
-                  // "language": widget.language,
-                  // "fontSizeHead": widget.fontSizeHead,
-                  // "fontSizeSubHead": widget.fontSizeSubHead,
-                  // "fontSizeBody": widget.fontSizeBody,
-                  // "fontSizeIcon": widget.fontSizeIcon,
-                  // "reload": widget.reload,
-                },
-              ),
+              onTap: () => context.go("/appearance"),
               icons: CupertinoIcons.pencil_outline,
               title: 'Appearance',
               colorBGIcon: Colors.orangeAccent,
@@ -118,16 +66,7 @@ class _bodySetting extends State<bodySetting> {
               ),
             ),
             SettingsItem(
-              onTap: () => context.go(
-                "/setNotification",
-                extra: {
-                  // "changeNotifApp": widget.changeNotifApp,
-                  // "changeExternalNotifApp": widget.changeExternalNotifApp,
-                  // "isNotifInternal": widget.isNotifInternal,
-                  // "isNotifExternal": widget.isNotifExternal,
-                  // "reload": widget.reload,
-                },
-              ),
+              onTap: () => context.go("/setNotification"),
               icons: Icons.notifications_active_sharp,
               colorBGIcon: Colors.green,
               title: 'Setting Notification',
@@ -140,24 +79,14 @@ class _bodySetting extends State<bodySetting> {
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
-              onTap: () => context.go(
-                "/upgradeAccount",
-                extra: {
-                  // "upgradePlan": widget.upgradePlan,
-                  // "isPremium": widget.isPremium,
-                  // "reload": widget.reload,
-                },
-              ),
+              onTap: () => context.go("/upgradeAccount"),
               icons: Icons.star,
               colorBGIcon: Colors.yellow.shade700,
               title: 'Upgrade Account',
               subtitle: "Upgrade to premium",
             ),
             SettingsItem(
-              onTap: () => context.go(
-                "/settingEmail",
-                // extra: {"changeEmailAccount": widget.changeEmailAccount},
-              ),
+              onTap: () => context.go("/settingEmail"),
               icons: Icons.attach_email,
               title: 'Setting Email',
               colorBGIcon: Colors.red,
@@ -238,9 +167,3 @@ class _bodySetting extends State<bodySetting> {
     );
   }
 }
-
-  //FAQ
-  //Upgrade plan
-  //Setting notif
-  //2FA
-  //Setting email
