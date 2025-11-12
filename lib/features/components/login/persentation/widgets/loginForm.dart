@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/network/websocket_client.dart';
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/login/persentation/pages/companyWaiting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
@@ -33,6 +35,9 @@ class _LoginFormState extends State<LoginForm> {
   String? userEmail;
   String? imageUrl;
   String? token;
+
+  final WebSocketClientImpl _webSocketClient = WebSocketClientImpl();
+
   // Fungsi ini dipanggil saat tombol ditekan
   Future _handleLogin() async {
     await Firebase.initializeApp();
@@ -87,7 +92,7 @@ class _LoginFormState extends State<LoginForm> {
               await prefs.setString("nama", data.user!.nama!);
               await prefs.setString("email", data.user!.email!);
               await prefs.setString("noTelp", data.user!.noTelp!);
-              await prefs.setString("urlAva", data.user!.photoURL!);
+              await prefs.setString("urlAva", data.user?.photoURL ?? '');
               await prefs.setBool("isPremium", data.user!.isPremium!);
               await prefs.setBool("is2FA", data.user!.is2FA!);
 
@@ -123,6 +128,10 @@ class _LoginFormState extends State<LoginForm> {
                   data.hrCompanies!.company.id!,
                 );
               }
+              // WebSocket Connection
+              await _webSocketClient.connect(
+                '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
+              );
               return context.go("/home");
             } else if (data.collection == "companies") {
               if (data.progress == null) {
@@ -157,6 +166,10 @@ class _LoginFormState extends State<LoginForm> {
                 );
                 await prefs.setBool("isDarkMode", data.company!.isDarkMode!);
                 await prefs.setString("language", data.company!.language!);
+                // WebSocket Connection
+                await _webSocketClient.connect(
+                  '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.company!.id!}',
+                );
                 return context.go("/homeCompany");
               } else if (data.progress!.lastAdmin!.status ==
                   "Reject oleh Admin") {
