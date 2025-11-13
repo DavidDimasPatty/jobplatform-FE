@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
 
 class Benchmarkapplicant extends StatefulWidget {
-  // final CandidateItems item;
   List<Benchmarkitem>? items;
   Benchmarkapplicant({super.key, this.items});
   @override
@@ -10,9 +9,6 @@ class Benchmarkapplicant extends StatefulWidget {
 }
 
 class _Benchmarkapplicant extends State<Benchmarkapplicant> {
-  // final CandidateItems item;
-  // _Listjobreceive(this.item);
-
   @override
   Widget build(BuildContext context) {
     return Container(

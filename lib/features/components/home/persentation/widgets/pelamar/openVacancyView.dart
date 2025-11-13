@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/company/hrListitem.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/openVacancyItem.dart';
 
-class hrList extends StatefulWidget {
-  List<hrListitem>? items;
-  hrList({super.key, this.items});
+class OpenVacancyView extends StatefulWidget {
+  List<OpenVacancyItem>? items;
+  OpenVacancyView({super.key, this.items});
   @override
-  State<hrList> createState() => _hrList();
+  State<OpenVacancyView> createState() => _OpenVacancyView();
 }
 
-class _hrList extends State<hrList> {
+class _OpenVacancyView extends State<OpenVacancyView> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +36,7 @@ class _hrList extends State<hrList> {
             width: double.infinity,
             child: Center(
               child: Text(
-                "HRD Terdaftar",
+                "Benchmark Profile Serupa",
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),

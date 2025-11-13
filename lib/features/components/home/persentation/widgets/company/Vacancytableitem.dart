@@ -6,37 +6,19 @@ class Vacancytableitem extends StatelessWidget {
   final List<String>? skill;
   final String? index;
   final String title;
-  final TextStyle? titleStyle;
   final String? subtitle;
-  final TextStyle? subtitleStyle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-  final int? titleMaxLine;
-  final int? subtitleMaxLine;
-  final TextOverflow? overflow;
-  final Color? colorIcon;
-  final Color? colorBGIcon;
 
   Vacancytableitem({
     this.url,
     required this.title,
-    this.titleStyle,
     this.index,
     this.subtitle,
-    this.subtitleStyle,
-    this.trailing,
-    this.onTap,
-    this.titleMaxLine,
-    this.subtitleMaxLine,
-    this.overflow = TextOverflow.ellipsis,
-    this.colorIcon,
-    this.colorBGIcon,
     this.skill,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isSmallScreen = MediaQuery.of(context).size.width < 600;
+    //final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
       onTap: () {
         context.go("/progress");
@@ -44,7 +26,7 @@ class Vacancytableitem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(
-          onTap: onTap,
+          //onTap: onTap,
           leading: SizedBox(
             width: 40,
             height: 40,
@@ -63,9 +45,9 @@ class Vacancytableitem extends StatelessWidget {
           ),
           title: Text(
             title,
-            style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-            maxLines: titleMaxLine,
-            overflow: titleMaxLine != null ? overflow : null,
+            // style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
+            // maxLines: titleMaxLine,
+            // overflow: titleMaxLine != null ? overflow : null,
           ),
           subtitle: (subtitle != null
               ? Row(
@@ -85,14 +67,14 @@ class Vacancytableitem extends StatelessWidget {
                               color: Colors.black87,
                             ),
                           ),
-                          const Text(
-                            "Full Time",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black54,
-                            ),
-                          ),
+                          // const Text(
+                          //   "Full Time",
+                          //   style: TextStyle(
+                          //     fontSize: 12,
+                          //     fontWeight: FontWeight.normal,
+                          //     color: Colors.black54,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

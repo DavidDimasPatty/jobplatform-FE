@@ -3,9 +3,9 @@ import 'package:job_platform/features/components/home/persentation/widgets/compa
 import 'package:job_platform/features/components/home/persentation/widgets/company/hrListitem.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/vacancyTableItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../domain/usecases/get_products_usecase.dart';
-import '../../data/datasources/product_remote_datasource.dart';
-import '../../data/repositories/product_repository_impl.dart';
+import '../../domain/usecases/homePageUseCase.dart';
+import '../../data/datasources/HomeRemoteDataSource.dart';
+import '../../data/repositories/homeRepositoryImpl.dart';
 
 class HomePageCompany extends StatefulWidget {
   const HomePageCompany({super.key});
@@ -15,7 +15,7 @@ class HomePageCompany extends StatefulWidget {
 }
 
 class _HomePageCompany extends State<HomePageCompany> {
-  late GetProductsUseCase getProductsUseCase;
+  late homePageUseCase homePageUseCases;
   String? loginAs;
   String? idUser;
   String? namaUser;
@@ -81,9 +81,9 @@ class _HomePageCompany extends State<HomePageCompany> {
     // await prefs.setString("noTelp", data!.user!.noTelp);
     super.initState();
     getDataPref();
-    final remoteDataSource = ProductRemoteDataSource();
-    final repository = ProductRepositoryImpl(remoteDataSource);
-    getProductsUseCase = GetProductsUseCase(repository);
+    final remoteDataSource = HomeRemoteDataSource();
+    final repository = homeRepositoryImpl(remoteDataSource);
+    homePageUseCases = homePageUseCase(repository);
     fetchData();
   }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/data/models/ProsesPelamaran.dart';
+import 'package:job_platform/features/components/home/data/models/ProsesPerekrutan.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/graph1.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/graph2.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/hrList.dart';
@@ -8,9 +10,10 @@ import 'package:job_platform/features/components/home/persentation/widgets/compa
 import 'package:responsive_framework/responsive_framework.dart';
 
 class HomepageCompanybody extends StatefulWidget {
-  // final CandidateItems item;
   List<Vacancytableitem>? items;
   List<hrListitem>? itemsHr;
+  ProsesPerekrutan? dataPerekrutan;
+  ProsesPelamaran? dataPelamaran;
   HomepageCompanybody({super.key, this.items, this.itemsHr});
 
   @override
@@ -18,7 +21,7 @@ class HomepageCompanybody extends StatefulWidget {
 }
 
 class _HomepageCompanybody extends State<HomepageCompanybody> {
-  final _searchController = TextEditingController();
+  //final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -36,7 +39,6 @@ class _HomepageCompanybody extends State<HomepageCompanybody> {
           layout: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
               ? ResponsiveRowColumnType.COLUMN
               : ResponsiveRowColumnType.ROW,
-          //layout: ResponsiveRowColumnType.COLUMN,
           rowSpacing: 100,
           columnSpacing: 20,
           children: [
@@ -50,15 +52,17 @@ class _HomepageCompanybody extends State<HomepageCompanybody> {
                   Vacancytable(items: widget.items),
                 ],
               ),
-              //child: Listjobreceive(navigatorKeys: widget.navigatorKeys),
             ),
 
-            // kelengkapan profil + grafik jadi satu kolom
             ResponsiveRowColumnItem(
               rowFlex: 4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Graph1(), SizedBox(height: 10), Graph2()],
+                children: [
+                  Graph1(item: widget.dataPerekrutan),
+                  SizedBox(height: 10),
+                  Graph2(item: widget.dataPelamaran),
+                ],
               ),
             ),
           ],

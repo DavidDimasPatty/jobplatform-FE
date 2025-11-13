@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:job_platform/features/components/home/data/models/KunjunganProfile.dart';
 
 class Hrseen extends StatefulWidget {
-  // final CandidateItems item;
-  Hrseen({super.key});
+  final KunjunganProfile? item;
+  Hrseen({super.key, this.item});
 
   @override
   State<Hrseen> createState() => _Hrseen();
 }
 
 class _Hrseen extends State<Hrseen> with SingleTickerProviderStateMixin {
-  // final CandidateItems item;
-  // _Listjobreceive(this.item);
   late TabController _tabController;
 
   @override
@@ -106,7 +105,7 @@ class _Hrseen extends State<Hrseen> with SingleTickerProviderStateMixin {
               ),
             ),
           ),
-          // Tab Bar
+
           TabBar(
             controller: _tabController,
             labelColor: Colors.blue,
@@ -124,23 +123,32 @@ class _Hrseen extends State<Hrseen> with SingleTickerProviderStateMixin {
               controller: _tabController,
               children: [
                 _buildLineChart([
-                  FlSpot(1, 2),
-                  FlSpot(2, 3),
-                  FlSpot(3, 1),
-                  FlSpot(4, 4),
-                  FlSpot(5, 2.5),
+                  FlSpot(1, widget.item!.harian![0].toDouble()),
+                  FlSpot(2, widget.item!.harian![1].toDouble()),
+                  FlSpot(3, widget.item!.harian![2].toDouble()),
+                  FlSpot(4, widget.item!.harian![3].toDouble()),
+                  FlSpot(5, widget.item!.harian![4].toDouble()),
+                  FlSpot(6, widget.item!.harian![5].toDouble()),
                 ], "Kunjungan Harian"),
                 _buildLineChart([
-                  FlSpot(1, 10),
-                  FlSpot(2, 12),
-                  FlSpot(3, 7),
-                  FlSpot(4, 14),
+                  FlSpot(1, widget.item!.mingguan![0].toDouble()),
+                  FlSpot(2, widget.item!.mingguan![1].toDouble()),
+                  FlSpot(3, widget.item!.mingguan![2].toDouble()),
+                  FlSpot(4, widget.item!.mingguan![3].toDouble()),
                 ], "Kunjungan Mingguan"),
                 _buildLineChart([
-                  FlSpot(1, 30),
-                  FlSpot(2, 40),
-                  FlSpot(3, 28),
-                  FlSpot(4, 45),
+                  FlSpot(1, widget.item!.bulanan![0].toDouble()),
+                  FlSpot(2, widget.item!.bulanan![1].toDouble()),
+                  FlSpot(3, widget.item!.bulanan![2].toDouble()),
+                  FlSpot(4, widget.item!.bulanan![3].toDouble()),
+                  FlSpot(5, widget.item!.bulanan![4].toDouble()),
+                  FlSpot(6, widget.item!.bulanan![5].toDouble()),
+                  FlSpot(7, widget.item!.bulanan![6].toDouble()),
+                  FlSpot(8, widget.item!.bulanan![7].toDouble()),
+                  FlSpot(9, widget.item!.bulanan![8].toDouble()),
+                  FlSpot(10, widget.item!.bulanan![9].toDouble()),
+                  FlSpot(11, widget.item!.bulanan![10].toDouble()),
+                  FlSpot(12, widget.item!.bulanan![11].toDouble()),
                 ], "Kunjungan Bulanan"),
               ],
             ),

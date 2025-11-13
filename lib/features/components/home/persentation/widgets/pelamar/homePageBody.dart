@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/data/models/KunjunganProfile.dart';
+import 'package:job_platform/features/components/home/data/models/OpenVacancy.dart';
+import 'package:job_platform/features/components/home/data/models/TawaranPekerjaan.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkApplicant.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/graficProfil.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/hrSeen.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/openVacancyItem.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/openVacancyView.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Homepagebody extends StatefulWidget {
-  // final CandidateItems item;
+  bool? isAdmin;
   List<Benchmarkitem>? items;
-  Homepagebody({super.key, this.items});
+  String? photoURL;
+  double? profileComplete;
+  String? username;
+  KunjunganProfile? dataKunjunganProfile;
+  List<OpenVacancyItem>? dataVacancies;
+  List<TawaranPekerjaan>? dataTawaranPekerjaan;
+  Homepagebody({
+    super.key,
+    this.items,
+    this.isAdmin,
+    this.dataKunjunganProfile,
+    this.username,
+    this.dataVacancies,
+    this.photoURL,
+    this.profileComplete,
+    this.dataTawaranPekerjaan,
+  });
 
   @override
   State<Homepagebody> createState() => _Homepagebody();
@@ -34,7 +55,6 @@ class _Homepagebody extends State<Homepagebody> {
           layout: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
               ? ResponsiveRowColumnType.COLUMN
               : ResponsiveRowColumnType.ROW,
-          //layout: ResponsiveRowColumnType.COLUMN,
           rowSpacing: 100,
           columnSpacing: 20,
           children: [
@@ -43,20 +63,28 @@ class _Homepagebody extends State<Homepagebody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Listjobreceive(),
+                  Listjobreceive(dataTawaran: widget.dataTawaranPekerjaan),
                   SizedBox(height: 20),
                   Benchmarkapplicant(items: widget.items),
+                  if (widget.isAdmin!)
+                    OpenVacancyView(items: widget.dataVacancies),
                 ],
               ),
-              //child: Listjobreceive(navigatorKeys: widget.navigatorKeys),
             ),
 
-            // kelengkapan profil + grafik jadi satu kolom
             ResponsiveRowColumnItem(
               rowFlex: 4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Graficprofil(), SizedBox(height: 20), Hrseen()],
+                children: [
+                  Graficprofil(
+                    photoURL: widget.photoURL,
+                    profileComplete: widget.profileComplete,
+                    username: widget.username,
+                  ),
+                  SizedBox(height: 20),
+                  Hrseen(item: widget.dataKunjunganProfile),
+                ],
               ),
             ),
           ],

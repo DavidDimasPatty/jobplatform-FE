@@ -40,18 +40,25 @@ class Benchmarkitem extends StatelessWidget {
         child: ListTile(
           onTap: onTap,
           leading: Container(
-            decoration: BoxDecoration(
-              // color: (colorBGIcon != null ? colorBGIcon : Colors.lightBlueAccent),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            // padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
             child: ClipOval(
-              child: Image.asset(
-                "assets/images/BG_Pelamar.png",
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-              ),
+              child: url!.isNotEmpty
+                  ? Image.network(
+                      url!,
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      width: 60,
+                      height: 60,
+                      color: Colors.grey[300],
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
             ),
           ),
           title: Text(
@@ -77,7 +84,6 @@ class Benchmarkitem extends StatelessWidget {
                     ),
                     Row(
                       children: skill!.asMap().entries.map((entry) {
-                        //String data = skill[entry.value];
                         return Container(
                           padding: EdgeInsets.all(5),
                           margin: EdgeInsets.all(5),

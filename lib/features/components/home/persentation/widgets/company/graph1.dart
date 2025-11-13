@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:job_platform/features/components/home/data/models/ProsesPerekrutan.dart';
 
 class Graph1 extends StatefulWidget {
-  // final CandidateItems item;
-  Graph1({super.key});
+  final ProsesPerekrutan? item;
+  const Graph1({super.key, this.item});
 
   @override
   State<Graph1> createState() => _Graph1();
 }
 
 class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
-  // final CandidateItems item;
-  // _Listjobreceive(this.item);
   late TabController _tabController;
 
   @override
@@ -30,29 +29,29 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
     return [
       PieChartSectionData(
         color: Colors.blue,
-        value: 40,
-        title: '40%',
+        value: widget!.item!.rekrutDiterima!.toDouble(),
+        title: "${widget!.item!.rekrutDiterima!}%",
         radius: 50,
         titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.red,
-        value: 30,
-        title: '30%',
+        value: widget!.item!.rekrutDitolak!.toDouble(),
+        title: "${widget!.item!.rekrutDitolak!}%",
         radius: 50,
         titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.green,
-        value: 20,
-        title: '20%',
+        value: widget!.item!.rekrutBerhasil!.toDouble(),
+        title: "${widget!.item!.rekrutBerhasil!}%",
         radius: 50,
         titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.orange,
-        value: 10,
-        title: '10%',
+        value: widget!.item!.rekrutPending!.toDouble(),
+        title: "${widget!.item!.rekrutPending!}%",
         radius: 50,
         titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),

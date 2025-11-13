@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/data/models/TawaranPekerjaan.dart';
 
 class Listjobreceive extends StatefulWidget {
-  // final CandidateItems item;
-  Listjobreceive({super.key});
+  final List<TawaranPekerjaan>? dataTawaran;
+  Listjobreceive({super.key, this.dataTawaran});
 
   @override
   State<Listjobreceive> createState() => _Listjobreceive();
 }
 
-onSearchChanged() {}
-
 class _Listjobreceive extends State<Listjobreceive> {
-  // final CandidateItems item;
-  // _Listjobreceive(this.item);
-
   final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -109,11 +105,26 @@ class _Listjobreceive extends State<Listjobreceive> {
                     indicatorColor: Colors.blue,
                     indicatorWeight: 3,
                     tabs: [
-                      Tab(text: "Semua Loker 0"),
-                      Tab(text: "Aktif 0"),
-                      Tab(text: "Nonaktif 0"),
-                      Tab(text: "Dalam Review 0"),
-                      Tab(text: "Semua Draft 0"),
+                      Tab(
+                        text:
+                            "Semua Tawaran ${widget.dataTawaran!.length.toString()}",
+                      ),
+                      Tab(
+                        text:
+                            "Butuh Konfirmasi ${widget.dataTawaran!.where((x) => x.status == "Konfirmasi User").length.toString()}",
+                      ),
+                      Tab(
+                        text:
+                            "Proses ${widget.dataTawaran!.where((x) => x.status == "Review" || x.status == "Interview" || x.status == "Offering").length.toString()}",
+                      ),
+                      Tab(
+                        text:
+                            "Close ${widget.dataTawaran!.where((x) => x.status == "Close").length.toString()}",
+                      ),
+                      Tab(
+                        text:
+                            "Reject ${widget.dataTawaran!.where((x) => x.status == "Reject HRD" || x.status == "User Menolak").length.toString()}",
+                      ),
                     ],
                   ),
                 ),
@@ -121,11 +132,441 @@ class _Listjobreceive extends State<Listjobreceive> {
                   height: 200,
                   child: TabBarView(
                     children: [
-                      Center(child: Text("Belum Ada Item")),
-                      Center(child: Text("Belum Ada Item")),
-                      Center(child: Text("Belum Ada Item")),
-                      Center(child: Text("Belum Ada Item")),
-                      Center(child: Text("Belum Ada Item")),
+                      Center(
+                        child: Column(
+                          children: widget.dataTawaran!.asMap().entries.map((
+                            entry,
+                          ) {
+                            //int idx = entry.key + 1;
+                            var data = entry.value;
+                            return InkWell(
+                              //onTap: () => onEditPressed(data),
+                              // onTap: () {},
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      child: ClipOval(
+                                        child: data.urlPhoto!.isNotEmpty
+                                            ? Image.network(
+                                                data.urlPhoto!,
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                width: 60,
+                                                height: 60,
+                                                color: Colors.grey[300],
+                                                child: const Icon(
+                                                  Icons.person,
+                                                  color: Colors.white,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          data.namaPerusahaan!,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    Flexible(
+                                      flex: 2,
+                                      child: Text(
+                                        softWrap: true,
+                                        textAlign: TextAlign.center,
+                                        data.status!,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+
+                      Center(
+                        child: Column(
+                          children: widget.dataTawaran!
+                              .where((x) => x.status == "Konfirmasi User")
+                              .map((entry) {
+                                //int idx = entry.key + 1;
+                                var data = entry;
+                                return InkWell(
+                                  //onTap: () => onEditPressed(data),
+                                  // onTap: () {},
+                                  child: Container(
+                                    margin: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.circular(
+                                              50,
+                                            ),
+                                          ),
+                                          child: ClipOval(
+                                            child: data.urlPhoto!.isNotEmpty
+                                                ? Image.network(
+                                                    data.urlPhoto!,
+                                                    width: 60,
+                                                    height: 60,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    color: Colors.grey[300],
+                                                    child: const Icon(
+                                                      Icons.person,
+                                                      color: Colors.white,
+                                                      size: 24,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              data.namaPerusahaan!,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        Flexible(
+                                          flex: 2,
+                                          child: Text(
+                                            softWrap: true,
+                                            textAlign: TextAlign.center,
+                                            data.status!,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toList(),
+                        ),
+                      ),
+
+                      Center(
+                        child: Column(
+                          children: widget.dataTawaran!
+                              .where(
+                                (x) =>
+                                    x.status == "Review" ||
+                                    x.status == "Interview" ||
+                                    x.status == "Offering",
+                              )
+                              .map((entry) {
+                                //int idx = entry.key + 1;
+                                var data = entry;
+                                return InkWell(
+                                  //onTap: () => onEditPressed(data),
+                                  // onTap: () {},
+                                  child: Container(
+                                    margin: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.circular(
+                                              50,
+                                            ),
+                                          ),
+                                          child: ClipOval(
+                                            child: data.urlPhoto!.isNotEmpty
+                                                ? Image.network(
+                                                    data.urlPhoto!,
+                                                    width: 60,
+                                                    height: 60,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    color: Colors.grey[300],
+                                                    child: const Icon(
+                                                      Icons.person,
+                                                      color: Colors.white,
+                                                      size: 24,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              data.namaPerusahaan!,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        Flexible(
+                                          flex: 2,
+                                          child: Text(
+                                            softWrap: true,
+                                            textAlign: TextAlign.center,
+                                            data.status!,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toList(),
+                        ),
+                      ),
+
+                      Center(
+                        child: Column(
+                          children: widget.dataTawaran!
+                              .where((x) => x.status == "Close")
+                              .map((entry) {
+                                //int idx = entry.key + 1;
+                                var data = entry;
+                                return InkWell(
+                                  //onTap: () => onEditPressed(data),
+                                  // onTap: () {},
+                                  child: Container(
+                                    margin: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.circular(
+                                              50,
+                                            ),
+                                          ),
+                                          child: ClipOval(
+                                            child: data.urlPhoto!.isNotEmpty
+                                                ? Image.network(
+                                                    data.urlPhoto!,
+                                                    width: 60,
+                                                    height: 60,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    color: Colors.grey[300],
+                                                    child: const Icon(
+                                                      Icons.person,
+                                                      color: Colors.white,
+                                                      size: 24,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              data.namaPerusahaan!,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        Flexible(
+                                          flex: 2,
+                                          child: Text(
+                                            softWrap: true,
+                                            textAlign: TextAlign.center,
+                                            data.status!,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toList(),
+                        ),
+                      ),
+
+                      Center(
+                        child: Column(
+                          children: widget.dataTawaran!
+                              .where(
+                                (x) =>
+                                    x.status == "Reject HRD" ||
+                                    x.status == "User Menolak",
+                              )
+                              .map((entry) {
+                                //int idx = entry.key + 1;
+                                var data = entry;
+                                return InkWell(
+                                  //onTap: () => onEditPressed(data),
+                                  // onTap: () {},
+                                  child: Container(
+                                    margin: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.circular(
+                                              50,
+                                            ),
+                                          ),
+                                          child: ClipOval(
+                                            child: data.urlPhoto!.isNotEmpty
+                                                ? Image.network(
+                                                    data.urlPhoto!,
+                                                    width: 60,
+                                                    height: 60,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    color: Colors.grey[300],
+                                                    child: const Icon(
+                                                      Icons.person,
+                                                      color: Colors.white,
+                                                      size: 24,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              data.namaPerusahaan!,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        Flexible(
+                                          flex: 2,
+                                          child: Text(
+                                            softWrap: true,
+                                            textAlign: TextAlign.center,
+                                            data.status!,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toList(),
+                        ),
+                      ),
                     ],
                   ),
                 ),

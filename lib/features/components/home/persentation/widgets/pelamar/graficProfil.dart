@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
 class Graficprofil extends StatefulWidget {
-  // final CandidateItems item;
-  Graficprofil({super.key});
+  final double? profileComplete;
+  final String? username;
+  final String? photoURL;
+  const Graficprofil({
+    super.key,
+    this.profileComplete,
+    this.username,
+    this.photoURL,
+  });
 
   @override
   State<Graficprofil> createState() => _Graficprofil();
 }
 
 class _Graficprofil extends State<Graficprofil> {
-  // final CandidateItems item;
-  // _Listjobreceive(this.item);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,16 +44,24 @@ class _Graficprofil extends State<Graficprofil> {
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      CircleAvatar(
-                        radius: 64,
-                        backgroundColor: Colors.white,
-                        child: const CircleAvatar(
-                          radius: 60,
-                          backgroundImage: AssetImage(
-                            "assets/images/BG_Pelamar.png",
-                          ),
-                          backgroundColor: Colors.blueGrey,
-                        ),
+                      ClipOval(
+                        child: widget.photoURL!.isNotEmpty
+                            ? Image.network(
+                                widget.photoURL!,
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                width: 60,
+                                height: 60,
+                                color: Colors.grey[300],
+                                child: const Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
                       ),
                     ],
                   ),
@@ -60,7 +72,7 @@ class _Graficprofil extends State<Graficprofil> {
                   margin: EdgeInsets.all(10),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "David Dimas Patty, ayo lengkapi profile anda untuk 3.7x dilihat oleh recruiter!",
+                    "${widget.username}, ayo lengkapi profile anda untuk 3.7x dilihat oleh recruiter!",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -82,17 +94,22 @@ class _Graficprofil extends State<Graficprofil> {
               children: [
                 Center(
                   child: Text(
-                    "Kelengkapan Profile : 85%",
+                    "Kelengkapan Profile : ${widget.profileComplete}%",
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
+
                 SizedBox(height: 8),
+
                 Center(
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.65,
+                    width:
+                        MediaQuery.of(context).size.width *
+                        (widget.profileComplete!) /
+                        100,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(

@@ -119,6 +119,7 @@ class _LoginFormState extends State<LoginForm> {
               await prefs.setBool("isDarkMode", data.user!.isDarkMode!);
               await prefs.setString("language", data.user!.language!);
               if (data.hrCompanies != null) {
+                await prefs.setBool("isHRD", true);
                 await prefs.setString(
                   "hrCompanyName",
                   data.hrCompanies!.company.nama!,
