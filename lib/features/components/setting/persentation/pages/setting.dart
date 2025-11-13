@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/network/websocket_client.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
 import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
@@ -32,6 +33,7 @@ class _Setting extends State<Setting> {
   AuthRepositoryImpl? _repoSetting;
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
+  final WebSocketClientImpl _webSocketClient = WebSocketClientImpl();
   late SharedPreferences prefs;
   Future<String?> showConfirmStatus(
     BuildContext context,
@@ -139,6 +141,7 @@ class _Setting extends State<Setting> {
         setState(() {
           isLoading = false;
         });
+        _webSocketClient.disconnect();
         prefs.clear();
         context.go("/");
       } else {

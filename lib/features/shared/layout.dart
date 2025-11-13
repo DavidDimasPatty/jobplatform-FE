@@ -27,6 +27,7 @@ class _LayoutState extends State<Layout> {
   bool _showNotification = false;
   List<Notificationitem>? dataNotif;
   List<NotificationModel>? notification;
+  Timer? _refreshTimer;
   String? loginAs;
   String? idUser;
   String? namaUser;
@@ -168,7 +169,9 @@ class _LayoutState extends State<Layout> {
   }
 
   void _startPeriodicRefresh() {
-    Timer.periodic(Duration(minutes: 1), (timer) {
+    _refreshTimer?.cancel();
+
+    _refreshTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       print("Refreshing notification data...");
       _refreshNotificationData();
     });
@@ -185,6 +188,13 @@ class _LayoutState extends State<Layout> {
     _initialize();
   }
 
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
