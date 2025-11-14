@@ -12,7 +12,7 @@ import 'package:job_platform/features/components/home/persentation/widgets/pelam
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Homepagebody extends StatefulWidget {
-  bool? isAdmin;
+  bool? isHRD;
   List<Benchmarkitem>? items;
   String? photoURL;
   double? profileComplete;
@@ -23,7 +23,7 @@ class Homepagebody extends StatefulWidget {
   Homepagebody({
     super.key,
     this.items,
-    this.isAdmin,
+    this.isHRD,
     this.dataKunjunganProfile,
     this.username,
     this.dataVacancies,
@@ -66,7 +66,8 @@ class _Homepagebody extends State<Homepagebody> {
                   Listjobreceive(dataTawaran: widget.dataTawaranPekerjaan),
                   SizedBox(height: 20),
                   Benchmarkapplicant(items: widget.items),
-                  if (widget.isAdmin!)
+                  SizedBox(height: 20),
+                  if (widget.isHRD!)
                     OpenVacancyView(items: widget.dataVacancies),
                 ],
               ),

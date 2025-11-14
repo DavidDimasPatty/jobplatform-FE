@@ -72,7 +72,7 @@ class _Graficprofil extends State<Graficprofil> {
                   margin: EdgeInsets.all(10),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${widget.username}, ayo lengkapi profile anda untuk 3.7x dilihat oleh recruiter!",
+                    "${widget.username}, ayo lengkapi profile untuk 3.7x dilihat oleh recruiter!",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -94,7 +94,7 @@ class _Graficprofil extends State<Graficprofil> {
               children: [
                 Center(
                   child: Text(
-                    "Kelengkapan Profile : ${widget.profileComplete}%",
+                    "Kelengkapan Profile : ${widget.profileComplete ?? 0}%",
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -108,7 +108,7 @@ class _Graficprofil extends State<Graficprofil> {
                   child: Container(
                     width:
                         MediaQuery.of(context).size.width *
-                        (widget.profileComplete!) /
+                        (widget.profileComplete ?? 1) /
                         100,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),

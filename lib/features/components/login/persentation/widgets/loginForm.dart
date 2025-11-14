@@ -44,6 +44,7 @@ class _LoginFormState extends State<LoginForm> {
 
     if (kIsWeb) {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
+      authProvider.setCustomParameters({'prompt': 'select_account'});
       try {
         final UserCredential userCredential = await _auth.signInWithPopup(
           authProvider,
@@ -93,8 +94,8 @@ class _LoginFormState extends State<LoginForm> {
               await prefs.setString("email", data.user!.email!);
               await prefs.setString("noTelp", data.user!.noTelp!);
               await prefs.setString("urlAva", data.user?.photoURL ?? '');
-              await prefs.setBool("isPremium", data.user!.isPremium!);
-              await prefs.setBool("is2FA", data.user!.is2FA!);
+              await prefs.setBool("isPremium", data.user!.isPremium ?? false);
+              await prefs.setBool("is2FA", data.user!.is2FA ?? false);
 
               if (data.user!.fontSize == null) {
                 await prefs.setInt("fontSizeHead", 18);
@@ -110,14 +111,14 @@ class _LoginFormState extends State<LoginForm> {
               }
               await prefs.setBool(
                 "isNotifInternal",
-                data.user!.isNotifInternal!,
+                data.user!.isNotifInternal ?? false,
               );
               await prefs.setBool(
                 "isNotifExternal",
-                data.user!.isNotifExternal!,
+                data.user!.isNotifExternal ?? false,
               );
-              await prefs.setBool("isDarkMode", data.user!.isDarkMode!);
-              await prefs.setString("language", data.user!.language!);
+              await prefs.setBool("isDarkMode", data.user!.isDarkMode ?? false);
+              await prefs.setString("language", data.user!.language ?? "IDN");
               if (data.hrCompanies != null) {
                 await prefs.setBool("isHRD", true);
                 await prefs.setString(
@@ -137,13 +138,16 @@ class _LoginFormState extends State<LoginForm> {
             } else if (data.collection == "companies") {
               if (data.progress == null) {
                 await prefs.setString("loginAs", "company");
-                await prefs.setString("idCompany", data.company!.id!);
+                await prefs.setString("idUser", data.company!.id!);
                 await prefs.setString("nama", data.company!.nama!);
                 await prefs.setString("domain", data.company!.email!);
                 await prefs.setString("noTelp", data.company!.noTelp!);
                 await prefs.setString("urlAva", data.company!.logo!);
-                await prefs.setBool("isPremium", data.company!.isPremium!);
-                await prefs.setBool("is2FA", data.company!.is2FA!);
+                await prefs.setBool(
+                  "isPremium",
+                  data.company!.isPremium ?? false,
+                );
+                await prefs.setBool("is2FA", data.company!.is2FA ?? false);
 
                 if (data.company!.fontSize == null) {
                   await prefs.setInt("fontSizeHead", 18);
@@ -159,14 +163,20 @@ class _LoginFormState extends State<LoginForm> {
                 }
                 await prefs.setBool(
                   "isNotifInternal",
-                  data.company!.isNotifInternal!,
+                  data.company!.isNotifInternal ?? false,
                 );
                 await prefs.setBool(
                   "isNotifExternal",
-                  data.company!.isNotifExternal!,
+                  data.company!.isNotifExternal ?? false,
                 );
-                await prefs.setBool("isDarkMode", data.company!.isDarkMode!);
-                await prefs.setString("language", data.company!.language!);
+                await prefs.setBool(
+                  "isDarkMode",
+                  data.company!.isDarkMode ?? false,
+                );
+                await prefs.setString(
+                  "language",
+                  data.company!.language ?? "IDN",
+                );
                 // WebSocket Connection
                 await _webSocketClient.connect(
                   '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.company!.id!}',

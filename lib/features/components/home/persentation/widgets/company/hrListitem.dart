@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class hrListitem extends StatelessWidget {
   final String? url;
-  final String title;
+  final String? title;
   final String? subtitle;
-  hrListitem({this.url, required this.title, this.subtitle});
+  hrListitem({this.url, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class hrListitem extends StatelessWidget {
                     ),
             ),
           ),
-          title: Text(title),
+          title: Text(title!),
           subtitle: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

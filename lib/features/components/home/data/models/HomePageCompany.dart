@@ -23,9 +23,9 @@ class HomePageCompany {
       dataProsesPelamaran: json["dataProsesPelamaran"] != null
           ? ProsesPelamaran.fromJson(json["dataProsesPelamaran"])
           : null,
-      dataVacancy: json["dataHRD"] != null
+      dataVacancy: json["dataVacancy"] != null
           ? List<OpenVacancy>.from(
-              json["dataHRD"].map((x) => OpenVacancy.fromJson(x)),
+              json["dataVacancy"].map((x) => OpenVacancy.fromJson(x)),
             )
           : null,
       dataHRD: json["dataHRD"] != null

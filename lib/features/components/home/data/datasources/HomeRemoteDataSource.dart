@@ -10,7 +10,7 @@ class HomeRemoteDataSource {
     try {
       final url = Uri.parse(
         '${dotenv.env['BACKEND_URL_DEV']}/api/v1/homepage/getHomePagePelamar',
-      ).replace(queryParameters: {'idUser': id});
+      ).replace(queryParameters: {'userId': id, "loginAs": "user"});
       HomePageUser? data;
       final response = await http.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -36,9 +36,10 @@ class HomeRemoteDataSource {
     try {
       final url = Uri.parse(
         '${dotenv.env['BACKEND_URL_DEV']}/api/v1/homepage/getHomePageHR',
-      ).replace(queryParameters: {'idUser': id});
+      ).replace(queryParameters: {'userId': id, "loginAs": "HR"});
       HomePageHR? data;
       final response = await http.get(url);
+      print(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
         if (jsonData["responseCode"].toString().contains("200")) {
@@ -62,7 +63,7 @@ class HomeRemoteDataSource {
     try {
       final url = Uri.parse(
         '${dotenv.env['BACKEND_URL_DEV']}/api/v1/homepage/getHomePageCompany',
-      ).replace(queryParameters: {'idUser': id});
+      ).replace(queryParameters: {'userId': id, "loginAs": "company"});
       HomePageCompany? data;
       final response = await http.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {

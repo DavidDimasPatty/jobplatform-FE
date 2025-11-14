@@ -26,8 +26,8 @@ class HomePageUser {
               json["dataTawaran"].map((x) => TawaranPekerjaan.fromJson(x)),
             )
           : null,
-      dataProfileComplete: json["umur"] != null
-          ? double.parse(json["umur"].toString())
+      dataProfileComplete: json["dataProfileComplete"] != null
+          ? double.parse(json["dataProfileComplete"].toString())
           : null,
       dataProfileSerupa: json["dataProfileSerupa"] != null
           ? List<ProfileSerupa>.from(

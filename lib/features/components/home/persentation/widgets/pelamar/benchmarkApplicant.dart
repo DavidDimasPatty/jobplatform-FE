@@ -46,7 +46,7 @@ class _Benchmarkapplicant extends State<Benchmarkapplicant> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
             ),
-            child: (widget.items != null
+            child: (widget.items!.isNotEmpty
                 ? ListView.separated(
                     separatorBuilder: (context, index) {
                       return Divider();

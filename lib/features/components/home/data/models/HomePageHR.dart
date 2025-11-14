@@ -28,8 +28,8 @@ class HomePageHR {
               json["dataTawaran"].map((x) => TawaranPekerjaan.fromJson(x)),
             )
           : null,
-      dataProfileComplete: json["umur"] != null
-          ? double.parse(json["umur"].toString())
+      dataProfileComplete: json["dataProfileComplete"] != null
+          ? double.parse(json["dataProfileComplete"].toString())
           : null,
       dataProfileSerupa: json["dataProfileSerupa"] != null
           ? List<ProfileSerupa>.from(
@@ -39,9 +39,9 @@ class HomePageHR {
       dataKunjunganProfile: json["dataKunjunganProfile"] != null
           ? KunjunganProfile.fromJson(json["dataKunjunganProfile"])
           : null,
-      dataVacancy: json["dataVacancy"] != null
+      dataVacancy: json["dataVacancyCompany"] != null
           ? List<OpenVacancy>.from(
-              json["dataVacancy"].map((x) => OpenVacancy.fromJson(x)),
+              json["dataVacancyCompany"].map((x) => OpenVacancy.fromJson(x)),
             )
           : null,
     );

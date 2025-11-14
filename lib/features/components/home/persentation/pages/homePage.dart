@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/home/data/models/KunjunganProfile.dart';
+import 'package:job_platform/features/components/home/data/models/OpenVacancy.dart';
+import 'package:job_platform/features/components/home/data/models/ProfileSerupa.dart';
+import 'package:job_platform/features/components/home/data/models/TawaranPekerjaan.dart';
+import 'package:job_platform/features/components/home/domain/entities/HomePageHRVM.dart';
+import 'package:job_platform/features/components/home/domain/entities/HomePageUserVM.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/homePageBody.dart';
+import 'package:job_platform/features/components/home/persentation/widgets/pelamar/openVacancyItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/usecases/homePageUseCase.dart';
 import '../../data/datasources/HomeRemoteDataSource.dart';
@@ -20,15 +27,15 @@ class _HomePageState extends State<HomePage> {
   String? namaUser;
   String? emailUser;
   String? noTelpUser;
-
-  String? idCompany;
-  String? namaCompany;
-  String? domainCompany;
-  String? noTelpCompany;
+  String? photoURL;
   bool? isHRD = false;
   bool isLoading = true;
 
   List<Benchmarkitem> dataBenchmark = [];
+  List<TawaranPekerjaan> dataTawaranPekerjaan = [];
+  KunjunganProfile? kunjunganProfile = KunjunganProfile();
+  List<OpenVacancyItem> dataOpenVacancy = [];
+  double? profileComplete = 0;
 
   void getDataPref() async {
     final prefs = await SharedPreferences.getInstance();
@@ -40,30 +47,8 @@ class _HomePageState extends State<HomePage> {
         emailUser = prefs.getString('email');
         noTelpUser = prefs.getString('noTelp');
         isHRD = prefs.getBool("isHRD");
-      } else if (loginAs == "company") {
-        idCompany = prefs.getString('idCompany');
-        namaCompany = prefs.getString('nama');
-        domainCompany = prefs.getString('domain');
-        noTelpCompany = prefs.getString('noTelp');
+        photoURL = prefs.getString("urlAva");
       }
-      isLoading = false;
-      dataBenchmark = [
-        Benchmarkitem(
-          title: "Nando Witin (25)",
-          subtitle: "Back End Developer",
-          skill: ["Dart", "C#", "React"],
-        ),
-        Benchmarkitem(
-          title: "Nando Sitorus (25)",
-          subtitle: "Front End Developer",
-          skill: ["Dart", "C#", "Java"],
-        ),
-        Benchmarkitem(
-          title: "Nando Baltwin (25)",
-          subtitle: "Backend Developer",
-          skill: ["Dart", "C#", "Python"],
-        ),
-      ];
     });
   }
 
@@ -77,70 +62,114 @@ class _HomePageState extends State<HomePage> {
     fetchData();
   }
 
-  void fetchData() async {
+  Future<void> fetchData() async {
     try {
       setState(() {
         isLoading = true;
-        //errorMessage = null;
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString('idUser');
 
       if (userId != null) {
         var result;
-        if (isHRD == false) {
+        if (isHRD == false || isHRD == null) {
           result = await homePageUseCases!.getHomePageUser(userId);
         } else {
           result = await homePageUseCases!.getHomePageHR(userId);
         }
-        // List<StatusAllVM>? statusData = result != null
-        //     ? List<StatusAllVM>.from(result)
-        //     : null;
+
         if (result != null) {
           setState(() {
-            // statusData.forEach((x) {
-            //   dataSub.add(
-            //     statusjobitems(
-            //       namaPerusahaan: x.namaPerusahaan ?? "",
-            //       jabatan: x.jabatan ?? "",
-            //       onTap: () => TapItems(x.idUserVacancy ?? ""),
-            //       posisi: x.namaPosisi ?? "",
-            //       status:
-            //           x.isAcceptUser == false &&
-            //               x.status == null &&
-            //               x.alasanRejectUser == null
-            //           ? "Menunggu Konfirmasi"
-            //           : x.status == 0 &&
-            //                 x.isAcceptUser == true &&
-            //                 x.isRejectHRD == false
-            //           ? "Review"
-            //           : x.status == 1 &&
-            //                 x.isAcceptUser == true &&
-            //                 x.isRejectHRD == false
-            //           ? "Interview"
-            //           : x.status == 2 &&
-            //                 x.isAcceptUser == true &&
-            //                 x.isRejectHRD == false
-            //           ? "Offering"
-            //           : x.status == 3 &&
-            //                 x.isAcceptUser == true &&
-            //                 x.isRejectHRD == false
-            //           ? "Close"
-            //           : x.isAcceptUser == false &&
-            //                 x.status == null &&
-            //                 x.alasanRejectUser != null
-            //           ? "Reject Vacancy"
-            //           : x.isAcceptUser == false
-            //           ? "Reject Offering"
-            //           : "Reject HRD",
-            //       tipeKerja: x.tipeKerja ?? "",
-            //       url: x.logoPerusahaan ?? "",
-            //     ),
-            //   );
-            // });
-            // dumpSub = dataSub;
+            if (isHRD == false) {
+              HomePageUserVM? resultUser;
+              if (result is HomePageUserVM) {
+                resultUser = result;
+              } else {
+                isLoading = false;
+                return;
+              }
+              kunjunganProfile = resultUser.dataKunjunganProfile;
+              profileComplete = resultUser.dataProfileComplete;
+              dataBenchmark =
+                  (resultUser.dataProfileSerupa as List<ProfileSerupa>)
+                      .map(
+                        (e) => Benchmarkitem(
+                          title: "${e!.nama!} (${e.umur})",
+                          subtitle: e.posisi,
+                          url: e.urlPhoto,
+                        ),
+                      )
+                      .toList();
 
-            // errorMessage = null;
+              dataTawaranPekerjaan =
+                  (resultUser.dataTawaran as List<TawaranPekerjaan>)
+                      .map(
+                        (e) => TawaranPekerjaan(
+                          id: e.id,
+                          jabatan: e.jabatan,
+                          namaPerusahaan: e.namaPerusahaan,
+                          namaPosisi: e.namaPosisi,
+                          status: e.status,
+                          tipeKerja: e.tipeKerja,
+                          urlPhoto: e.urlPhoto,
+                        ),
+                      )
+                      .toList();
+            } else {
+              HomePageHRVM? resultHR;
+              if (result is HomePageHRVM) {
+                resultHR = result;
+              } else {
+                isLoading = false;
+                return;
+              }
+              kunjunganProfile = resultHR.dataKunjunganProfile;
+              profileComplete = resultHR.dataProfileComplete;
+              if (resultHR.dataProfileSerupa != null) {
+                dataBenchmark =
+                    (resultHR.dataProfileSerupa as List<ProfileSerupa>)
+                        .map(
+                          (e) => Benchmarkitem(
+                            title: "${e!.nama!} (${e.umur})",
+                            subtitle: e.posisi,
+                            url: e.urlPhoto,
+                          ),
+                        )
+                        .toList();
+              }
+
+              if (resultHR.dataTawaran != null) {
+                dataTawaranPekerjaan =
+                    (resultHR.dataTawaran as List<TawaranPekerjaan>)
+                        .map(
+                          (e) => TawaranPekerjaan(
+                            id: e.id,
+                            jabatan: e.jabatan,
+                            namaPerusahaan: e.namaPerusahaan,
+                            namaPosisi: e.namaPosisi,
+                            status: e.status,
+                            tipeKerja: e.tipeKerja,
+                            urlPhoto: e.urlPhoto,
+                          ),
+                        )
+                        .toList();
+              }
+
+              if (resultHR.dataVacancy != null) {
+                dataOpenVacancy = (resultHR.dataVacancy as List<OpenVacancy>)
+                    .asMap()
+                    .entries
+                    .map(
+                      (entry) => OpenVacancyItem(
+                        title: entry.value.namaPosisi ?? '',
+                        idx: entry.key.toString(),
+                        subtitle:
+                            "${entry.value.jabatan} - ${entry.value.tipeKerja}",
+                      ),
+                    )
+                    .toList();
+              }
+            }
             isLoading = false;
           });
         }
@@ -167,7 +196,16 @@ class _HomePageState extends State<HomePage> {
     return Center(
       child: isLoading
           ? CircularProgressIndicator(color: Colors.blue)
-          : Homepagebody(items: dataBenchmark),
+          : Homepagebody(
+              items: dataBenchmark,
+              dataTawaranPekerjaan: dataTawaranPekerjaan,
+              dataKunjunganProfile: kunjunganProfile,
+              dataVacancies: dataOpenVacancy,
+              isHRD: isHRD ?? false,
+              photoURL: photoURL,
+              profileComplete: profileComplete,
+              username: namaUser,
+            ),
     );
   }
 }

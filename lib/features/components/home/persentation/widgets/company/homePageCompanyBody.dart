@@ -14,7 +14,13 @@ class HomepageCompanybody extends StatefulWidget {
   List<hrListitem>? itemsHr;
   ProsesPerekrutan? dataPerekrutan;
   ProsesPelamaran? dataPelamaran;
-  HomepageCompanybody({super.key, this.items, this.itemsHr});
+  HomepageCompanybody({
+    super.key,
+    this.items,
+    this.itemsHr,
+    this.dataPelamaran,
+    this.dataPerekrutan,
+  });
 
   @override
   State<HomepageCompanybody> createState() => _HomepageCompanybody();

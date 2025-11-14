@@ -20,9 +20,9 @@ class Vacancytableitem extends StatelessWidget {
   Widget build(BuildContext context) {
     //final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
-      onTap: () {
-        context.go("/progress");
-      },
+      // onTap: () {
+      //   context.go("/progress");
+      // },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(
@@ -37,7 +37,7 @@ class Vacancytableitem extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  index.toString(),
+                  (int.parse(index!) + 1).toString(),
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),

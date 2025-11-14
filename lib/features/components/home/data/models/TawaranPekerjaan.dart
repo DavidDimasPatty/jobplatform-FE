@@ -18,7 +18,7 @@ class TawaranPekerjaan {
 
   factory TawaranPekerjaan.fromJson(Map<String, dynamic> json) {
     return TawaranPekerjaan(
-      tipeKerja: json["nama"] ?? "",
+      tipeKerja: json["tipeKerja"] ?? "",
       namaPosisi: json["namaPosisi"] ?? "",
       jabatan: json["jabatan"] ?? "",
       namaPerusahaan: json["namaPerusahaan"] ?? "",

@@ -26,32 +26,41 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
   }
 
   List<PieChartSectionData> _showingSections() {
+    double totalData =
+        widget.item!.rekrutBerhasil!.toDouble() +
+        widget.item!.rekrutDiterima!.toDouble() +
+        widget.item!.rekrutDitolak!.toDouble() +
+        widget.item!.rekrutPending!.toDouble();
     return [
       PieChartSectionData(
         color: Colors.blue,
-        value: widget!.item!.rekrutDiterima!.toDouble(),
-        title: "${widget!.item!.rekrutDiterima!}%",
+        value: (widget!.item!.rekrutDiterima!.toDouble() / totalData) * 100,
+        title:
+            "${((widget!.item!.rekrutDiterima!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
         titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.red,
-        value: widget!.item!.rekrutDitolak!.toDouble(),
-        title: "${widget!.item!.rekrutDitolak!}%",
+        value: (widget!.item!.rekrutDitolak!.toDouble() / totalData) * 100,
+        title:
+            "${((widget!.item!.rekrutDitolak!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
         titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.green,
-        value: widget!.item!.rekrutBerhasil!.toDouble(),
-        title: "${widget!.item!.rekrutBerhasil!}%",
+        value: (widget!.item!.rekrutBerhasil!.toDouble() / totalData) * 100,
+        title:
+            "${((widget!.item!.rekrutBerhasil!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
         titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.orange,
-        value: widget!.item!.rekrutPending!.toDouble(),
-        title: "${widget!.item!.rekrutPending!}%",
+        value: (widget!.item!.rekrutPending!.toDouble() / totalData) * 100,
+        title:
+            "${((widget!.item!.rekrutPending!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
         titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
@@ -125,9 +134,13 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(width: 8),
-                        Text(
-                          "Proses Rekrut diterima",
-                          style: const TextStyle(fontSize: 14),
+                        Expanded(
+                          child: Text(
+                            "Proses Rekrut diterima",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
@@ -144,9 +157,13 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(width: 8),
-                        Text(
-                          "Proses Rekrut ditolak",
-                          style: const TextStyle(fontSize: 14),
+                        Expanded(
+                          child: Text(
+                            "Proses rekrut ditolak",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
@@ -163,9 +180,13 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(width: 8),
-                        Text(
-                          "Proses Rekrut Berhasil",
-                          style: const TextStyle(fontSize: 14),
+                        Expanded(
+                          child: Text(
+                            "Proses rekrut berhasil",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
@@ -182,9 +203,13 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(width: 8),
-                        Text(
-                          "Proses Rekrut Pending",
-                          style: const TextStyle(fontSize: 14),
+                        Expanded(
+                          child: Text(
+                            "Proses rekrut pending",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(fontSize: 14),
+                          ),
                         ),
                       ],
                     ),

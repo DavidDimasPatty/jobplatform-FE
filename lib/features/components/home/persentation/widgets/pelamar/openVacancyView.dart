@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/openVacancyItem.dart';
 
 class OpenVacancyView extends StatefulWidget {
@@ -36,7 +35,7 @@ class _OpenVacancyView extends State<OpenVacancyView> {
             width: double.infinity,
             child: Center(
               child: Text(
-                "Benchmark Profile Serupa",
+                "Vacancy Perusahaan Anda",
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
@@ -47,7 +46,7 @@ class _OpenVacancyView extends State<OpenVacancyView> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
             ),
-            child: (widget.items != null
+            child: (widget.items!.isNotEmpty
                 ? ListView.separated(
                     separatorBuilder: (context, index) {
                       return Divider();
@@ -65,7 +64,7 @@ class _OpenVacancyView extends State<OpenVacancyView> {
                     height: MediaQuery.of(context).size.height * 0.2,
                     alignment: Alignment.center,
                     child: Text(
-                      "Data Tidak Ditemukan..",
+                      "Data Vacancy Tidak Ditemukan",
                       style: TextStyle(fontSize: 20),
                     ),
                   )),
