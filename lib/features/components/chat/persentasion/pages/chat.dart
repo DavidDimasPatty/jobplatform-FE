@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:job_platform/features/components/chat/domain/usecases/chat_usecase.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:job_platform/features/components/chat/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/chat/data/datasources/aut_remote_datasource.dart';
 
 class Chat extends StatefulWidget {
   Chat({super.key});
@@ -12,71 +16,65 @@ class Chat extends StatefulWidget {
 
 class _Chat extends State<Chat> {
   List<Chatitems> dataChat = [];
+
   // Loading state
   bool isLoading = true;
   String? errorMessage;
-  Future<void> _loadProfileData() async {
-    try {
-      // setState(() {
-      //   isLoading = true;
-      //   errorMessage = null;
-      // });
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? userId = prefs.getString('idUser');
 
-      // if (userId != null) {
-      //   var profile = await _profileUseCase.getProfile(userId);
-      //   if (profile != null) {
-      //     setState(() {
-      //       dataUser = profile.user;
-      //       dataEdu = profile.educations ?? [];
-      //       dataOrg = profile.organizations ?? [];
-      //       dataWork = profile.experiences ?? [];
-      //       dataCertificate = profile.certificates ?? [];
-      //       dataSkill = profile.skills ?? [];
-      //       dataPreference = profile.preferences ?? [];
-      //       isLoading = false;
-      //     });
-      //   }
-      // } else {
-      //   print("User ID not found in SharedPreferences");
-      // }
-      setState(() {
-        isLoading = false;
-        errorMessage = null;
-        dataChat = [
-          Chatitems(
-            photoUrl: "assets/images/BG_HRD.png",
-            name: "HRD Indomaret",
-            lastChat: "Halo David, Bagaimana Penawaran Terakhir?",
-          ),
-          Chatitems(
-            photoUrl: "assets/images/BG_HRD.png",
-            name: "HRD Alfamart",
-            lastChat: "Jadi proses selanjutnya bagaimana?",
-          ),
-          Chatitems(
-            photoUrl: "assets/images/BG_HRD.png",
-            name: "HRD Alfamart",
-            lastChat: "Saya mau menanyakan sesuatu terkait profile anda",
-          ),
-        ];
-      });
-    } catch (e) {
-      print("Error loading profile data: $e");
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-          errorMessage = "Error loading profile: $e";
-        });
-      }
-    }
-  }
+  // Usecase
+  late ChatUseCase _chatUseCase;
 
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
+    AuthRemoteDataSource _dataSourceChat = AuthRemoteDataSource();
+    AuthRepositoryImpl _repoChat = AuthRepositoryImpl(_dataSourceChat);
+    _chatUseCase = ChatUseCase(_repoChat);
+    _loadChatList();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _loadChatList() async {
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString('idUser');
+
+      if (userId != null) {
+        var chatList = await _chatUseCase.getChatList(userId);
+        if (chatList != null) {
+          setState(() {
+            isLoading = false;
+            errorMessage = null;
+            dataChat = chatList
+                .map<Chatitems>(
+                  (item) => Chatitems(
+                    partner: item,
+                  ),
+                )
+                .toList();
+          });
+        }
+      } else {
+        print("User ID not found in SharedPreferences");
+      }
+    } catch (e) {
+      print("Error loading chat list data: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = "Error loading chat list: $e";
+        });
+      }
+    }
   }
 
   @override
@@ -88,7 +86,7 @@ class _Chat extends State<Chat> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Setting data...'),
+            Text('Loading Chat List...'),
           ],
         ),
       );

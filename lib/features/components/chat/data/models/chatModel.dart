@@ -23,7 +23,7 @@ class ChatModel {
     return ChatModel(
       id: json['_id'],
       idUser: json['idUser'],
-      message: json['message'],
+      message: json['messages'],
       addId: json['addId'],
       addTime: DateTime.parse(json['addTime']),
       isRead: json['isRead'] != null ? DateTime.parse(json['isRead']) : null,

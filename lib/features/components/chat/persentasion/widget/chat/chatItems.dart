@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/chat/data/models/partnerModel.dart';
 
-class Chatitems extends StatefulWidget {
-  final String photoUrl;
-  final String name;
-  final String? lastChat;
+class Chatitems extends StatelessWidget {
+  final PartnerModel partner;
+
   Chatitems({
     super.key,
-    required this.photoUrl,
-    required this.name,
-    this.lastChat,
+    required this.partner,
   });
 
-  @override
-  State<Chatitems> createState() => _Chatitems();
-}
-
-class _Chatitems extends State<Chatitems> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go("/chatDetail");
+        context.go("/chatDetail", extra: partner);
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
@@ -32,25 +25,22 @@ class _Chatitems extends State<Chatitems> {
             backgroundColor: Colors.white,
             child: CircleAvatar(
               radius: 20,
-              backgroundImage: NetworkImage(widget.photoUrl),
+              backgroundImage: NetworkImage(partner.partnerPhotoUrl),
               backgroundColor: Colors.blueGrey,
             ),
           ),
 
           title: Text(
-            widget.name,
+            partner.partnerName,
             style: TextStyle(fontWeight: FontWeight.normal),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          subtitle: (widget.lastChat != null)
-              ? Text(
-                  widget.lastChat!,
-                  //style: subtitleStyle ?? Theme.of(context).textTheme.bodyMedium!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                )
-              : null,
+          subtitle: Text(
+            partner.lastMessage,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           trailing: Icon(Icons.navigate_next),
         ),
       ),

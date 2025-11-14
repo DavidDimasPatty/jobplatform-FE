@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidateDetail.dart';
 import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
+import 'package:job_platform/features/components/chat/data/models/partnerModel.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chat.dart';
 import 'package:job_platform/features/components/chat/persentasion/pages/chatDetail.dart';
 import 'package:job_platform/features/components/error/persentation/error.dart';
@@ -230,7 +231,13 @@ final List<GoRoute> _layoutRoutes = [
   ),
   GoRoute(path: '/cart', builder: (context, state) => Cart()),
   GoRoute(path: '/chat', builder: (context, state) => Chat()),
-  GoRoute(path: '/chatDetail', builder: (context, state) => ChatDetail()),
+  GoRoute(
+    path: '/chatDetail',
+    builder: (context, state) {
+      final data = state.extra as PartnerModel;
+      return ChatDetail(partner: data);
+    },
+  ),
   GoRoute(path: '/progress', builder: (context, state) => Progress()),
   GoRoute(
     path: '/editVacancyCandidate',
