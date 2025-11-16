@@ -196,7 +196,7 @@ class _Appearance extends State<Appearance> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -522,8 +522,12 @@ class _Appearance extends State<Appearance> {
                                 iconAlignment: IconAlignment.end,
                                 label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
                       ],
@@ -612,8 +616,12 @@ class _Appearance extends State<Appearance> {
                                 iconAlignment: IconAlignment.end,
                                 label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
                       ],

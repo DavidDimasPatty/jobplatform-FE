@@ -295,9 +295,9 @@ class _Profile extends State<Profile> {
                       top: 0,
                       child: Container(
                         child: IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.edit,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.primary,
                             size: 20,
                           ),
                           onPressed: () =>
@@ -325,7 +325,9 @@ class _Profile extends State<Profile> {
                                             : AssetImage(
                                                 'assets/images/female-avatar.png',
                                               )),
-                                  backgroundColor: Colors.blueGrey,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
 
@@ -340,9 +342,11 @@ class _Profile extends State<Profile> {
                                     color: Colors.grey,
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.camera_alt,
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       size: 20,
                                     ),
                                     padding: EdgeInsets.zero,
@@ -361,7 +365,7 @@ class _Profile extends State<Profile> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.secondary,
                                 letterSpacing: 1,
                                 fontSize: 30,
                               ),
@@ -375,7 +379,7 @@ class _Profile extends State<Profile> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.secondary,
                                 //letterSpacing: 2,
                                 fontSize: 20,
                               ),

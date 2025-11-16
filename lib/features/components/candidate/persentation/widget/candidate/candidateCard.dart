@@ -23,7 +23,7 @@ class _Candidatecard extends State<Candidatecard> {
         constraints: BoxConstraints(minHeight: 200),
         //height: 200,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
         ),
@@ -56,7 +56,7 @@ class _Candidatecard extends State<Candidatecard> {
                         maxHeight: MediaQuery.of(context).size.height * 0.3,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.secondary,
                         boxShadow: [
                           BoxShadow(color: Colors.black12, blurRadius: 5),
                         ],
@@ -174,7 +174,7 @@ class _Candidatecard extends State<Candidatecard> {
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),

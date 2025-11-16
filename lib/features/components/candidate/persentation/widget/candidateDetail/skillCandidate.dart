@@ -54,8 +54,8 @@ class _SkillStateCandidate extends State<SkillCandidate> {
               //     shape: RoundedRectangleBorder(
               //       borderRadius: BorderRadius.circular(8),
               //     ),
-              //     backgroundColor: Colors.blue, // Button color
-              //     foregroundColor: Colors.white, // Icon/text color
+              //     backgroundColor:Theme.of(context).colorScheme.secondary, // Button color
+              //      foregroundColor: Theme.of(context).colorScheme.primary, // Icon/text color
               //   ),
               //   icon: Icon(Icons.add),
               //   label: Text("Add"),

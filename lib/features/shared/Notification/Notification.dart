@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/shared/Notification/NotificationItem.dart';
@@ -56,11 +57,11 @@ class _Notificationbody extends State<Notificationbody>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Notifikasi",
+                        "Notification".tr(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                       IconButton(
@@ -94,7 +95,7 @@ class _Notificationbody extends State<Notificationbody>
                         height: 50,
                         decoration: BoxDecoration(color: Colors.black38),
                         child: Text(
-                          "See More Notifications",
+                          "See More Notifications".tr(),
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,

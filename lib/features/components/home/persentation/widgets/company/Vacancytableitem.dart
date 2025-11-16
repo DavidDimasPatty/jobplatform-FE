@@ -33,7 +33,10 @@ class Vacancytableitem extends StatelessWidget {
               child: Center(
                 child: Text(
                   (int.parse(index!) + 1).toString(),
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 20,
+                  ),
                 ),
               ),
             ),

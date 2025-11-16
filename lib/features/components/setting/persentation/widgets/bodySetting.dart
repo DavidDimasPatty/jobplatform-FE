@@ -2,8 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/providers/ThemeProvider.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
+import 'package:provider/provider.dart';
 
 class bodySetting extends StatefulWidget {
   final Future<void> Function()? deleteAccount;
@@ -38,6 +40,7 @@ class _bodySetting extends State<bodySetting> {
   }
 
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Column(
       children: [
         SettingsGroup(
@@ -61,6 +64,7 @@ class _bodySetting extends State<bodySetting> {
                 onChanged: (value) async {
                   setState(() {
                     isDarkMode = value;
+                    themeProvider.toggleTheme();
                   });
                   await widget!.changeThemeMode!(value);
                 },

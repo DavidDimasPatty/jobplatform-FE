@@ -171,7 +171,9 @@ class _SignUp extends State<SignUp> {
                         child: ElevatedButton(
                           onPressed: _handleSignUpPelamar,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.secondary,
                             elevation: 0,
                             shape: StadiumBorder(),
                             shadowColor: Colors.transparent,
@@ -184,7 +186,9 @@ class _SignUp extends State<SignUp> {
                               Container(
                                 padding: EdgeInsets.only(bottom: 40),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                                 child: Image.asset(
@@ -200,7 +204,9 @@ class _SignUp extends State<SignUp> {
                                   'Signup Pelamar',
                                   style: GoogleFonts.figtree(
                                     textStyle: TextStyle(
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                       letterSpacing: 2,
                                       fontSize: 20,
                                     ),
@@ -226,7 +232,9 @@ class _SignUp extends State<SignUp> {
                         child: ElevatedButton(
                           onPressed: _handleSignUpPerusahaan,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.secondary,
                             elevation: 0,
                             shape: StadiumBorder(),
                             shadowColor: Colors.transparent,
@@ -239,7 +247,9 @@ class _SignUp extends State<SignUp> {
                               Container(
                                 padding: EdgeInsets.only(bottom: 40),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                                 child: Image.asset(
@@ -255,7 +265,9 @@ class _SignUp extends State<SignUp> {
                                   'Signup Perusahaan',
                                   style: GoogleFonts.figtree(
                                     textStyle: TextStyle(
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                       letterSpacing: 2,
                                       fontSize: 20,
                                     ),

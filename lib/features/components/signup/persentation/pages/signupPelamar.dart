@@ -557,14 +557,18 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                                       ? Colors.green
                                                       : Colors.blue,
                                                 ),
-                                                icon: const Icon(
+                                                icon: Icon(
                                                   Icons.boy,
-                                                  color: Colors.white,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
                                                 ),
-                                                label: const Text(
+                                                label: Text(
                                                   'Laki Laki',
                                                   style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).colorScheme.primary,
                                                   ),
                                                 ),
                                               ),
@@ -579,14 +583,18 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                                       ? Colors.pink
                                                       : Colors.blue,
                                                 ),
-                                                icon: const Icon(
+                                                icon: Icon(
                                                   Icons.girl,
-                                                  color: Colors.white,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
                                                 ),
-                                                label: const Text(
+                                                label: Text(
                                                   'Perempuan',
                                                   style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).colorScheme.primary,
                                                   ),
                                                 ),
                                               ),
@@ -622,14 +630,18 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                                     ? Colors.green
                                                     : Colors.blue,
                                               ),
-                                              icon: const Icon(
+                                              icon: Icon(
                                                 Icons.boy,
-                                                color: Colors.white,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
                                               ),
-                                              label: const Text(
+                                              label: Text(
                                                 'Laki Laki',
                                                 style: TextStyle(
-                                                  color: Colors.white,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
                                                 ),
                                               ),
                                             ),
@@ -642,14 +654,18 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                                     ? Colors.pink
                                                     : Colors.blue,
                                               ),
-                                              icon: const Icon(
+                                              icon: Icon(
                                                 Icons.girl,
-                                                color: Colors.white,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
                                               ),
-                                              label: const Text(
+                                              label: Text(
                                                 'Perempuan',
                                                 style: TextStyle(
-                                                  color: Colors.white,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
                                                 ),
                                               ),
                                             ),
@@ -708,12 +724,18 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                                     startRangeSelectionColor: Colors.blue,
                                     selectionColor: Colors.white,
                                     todayHighlightColor: Colors.transparent,
-                                    backgroundColor: Colors.blue.shade50,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                     headerStyle: DateRangePickerHeaderStyle(
                                       textAlign: TextAlign.center,
-                                      backgroundColor: Colors.blue.shade50,
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                       textStyle: TextStyle(
-                                        backgroundColor: Colors.blue.shade50,
+                                        backgroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary,
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black,
@@ -1007,12 +1029,14 @@ class _SignUpPelamar extends State<SignUpPelamar> {
                               textDirection: TextDirection.rtl,
                               child: ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                                 onPressed: _handleSignUp,
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.check,
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                                 label: const Text(
                                   'Submit',

@@ -152,7 +152,7 @@ class _Settingnotification extends State<Settingnotification> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -210,7 +210,9 @@ class _Settingnotification extends State<Settingnotification> {
                                     padding: EdgeInsets.all(5),
                                     child: Icon(
                                       Icons.notifications_active_sharp,
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                     ),
                                   ),
                                   title: Text(
@@ -260,7 +262,9 @@ class _Settingnotification extends State<Settingnotification> {
                                     padding: EdgeInsets.all(5),
                                     child: Icon(
                                       Icons.notifications_active_sharp,
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                     ),
                                   ),
                                   title: Text(

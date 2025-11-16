@@ -307,8 +307,12 @@ class _PreferenceAddState extends State<PreferenceAdd> {
                               iconAlignment: IconAlignment.end,
                               label: Text('Submit'),
                               style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue,
+                                foregroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.secondary,
                               ),
                             ),
                     ],

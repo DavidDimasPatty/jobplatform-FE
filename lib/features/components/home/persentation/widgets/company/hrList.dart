@@ -15,7 +15,7 @@ class _hrList extends State<hrList> {
     return Container(
       constraints: BoxConstraints(minHeight: 200),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
       ),
@@ -44,7 +44,7 @@ class _hrList extends State<hrList> {
 
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(15),
             ),
             child: (widget.items != null

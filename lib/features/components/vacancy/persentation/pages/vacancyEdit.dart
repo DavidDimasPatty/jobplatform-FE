@@ -147,7 +147,7 @@ class _Vacancyedit extends State<Vacancyedit> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -303,8 +303,12 @@ class _Vacancyedit extends State<Vacancyedit> {
                                 iconAlignment: IconAlignment.end,
                                 label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
                       ],

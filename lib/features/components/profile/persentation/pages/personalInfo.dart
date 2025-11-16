@@ -472,7 +472,9 @@ class _Personalinfo extends State<Personalinfo> {
                                                         'assets/images/female-avatar.png',
                                                       )))
                                         : MemoryImage(avatarBytes!),
-                                    backgroundColor: Colors.blueGrey,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                 ),
 
@@ -487,9 +489,11 @@ class _Personalinfo extends State<Personalinfo> {
                                       color: Colors.grey,
                                     ),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.camera_alt,
-                                        color: Colors.white,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
                                         size: 20,
                                       ),
                                       padding: EdgeInsets.zero,
@@ -1072,12 +1076,16 @@ class _Personalinfo extends State<Personalinfo> {
                                 textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                   onPressed: _handleEditProfile,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.check,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                   label: const Text(
                                     'Submit',

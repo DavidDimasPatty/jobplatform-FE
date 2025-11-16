@@ -128,7 +128,7 @@ Our mission is to create tools that help businesses grow faster, smarter, and mo
                 child: Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,

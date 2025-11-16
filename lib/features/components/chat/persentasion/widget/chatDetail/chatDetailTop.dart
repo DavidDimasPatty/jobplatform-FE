@@ -28,7 +28,7 @@ class _Chatdetailtop extends State<Chatdetailtop> {
             CircleAvatar(
               radius: 24, // ✅ lebih kecil & proporsional
               backgroundImage: const AssetImage("assets/images/BG_HRD.png"),
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
             ),
             SizedBox(width: 12),
 
@@ -39,8 +39,8 @@ class _Chatdetailtop extends State<Chatdetailtop> {
                 children: [
                   Text(
                     widget.dataChat.nama ?? "Unknown",
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),

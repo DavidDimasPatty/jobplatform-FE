@@ -124,7 +124,7 @@ class _FAQPageState extends State<FAQ> {
                 child: Container(
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,

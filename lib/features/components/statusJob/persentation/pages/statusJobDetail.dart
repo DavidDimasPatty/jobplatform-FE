@@ -95,8 +95,8 @@ class _Statusjobdetail extends State<Statusjobdetail> {
             actions: [
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  foregroundColor: Theme.of(context).colorScheme.primary,
                 ),
                 onPressed: () => Navigator.of(context).pop(null),
                 child: Text('Batal'.tr()),
@@ -104,7 +104,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
               TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
+                  foregroundColor: Theme.of(context).colorScheme.primary,
                 ),
                 onPressed: () => Navigator.of(context).pop("CONFIRM"),
                 child: Text('Konfirmasi'.tr()),
@@ -135,8 +135,8 @@ class _Statusjobdetail extends State<Statusjobdetail> {
               TextButton(
                 onPressed: () => Navigator.of(context).pop(null),
                 style: TextButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  foregroundColor: Theme.of(context).colorScheme.primary,
                 ),
                 child: Text(
                   'Batal'.tr(),
@@ -146,7 +146,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
               TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+                  foregroundColor: Theme.of(context).colorScheme.primary,
                 ),
                 onPressed: () {
                   if (alasanController.text.trim().isEmpty) {
@@ -272,7 +272,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -332,7 +332,9 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                           color: Colors.grey[300],
                                           child: Icon(
                                             Icons.person,
-                                            color: Colors.white,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.secondary,
                                             size: 24,
                                           ),
                                         ),
@@ -347,7 +349,9 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   letterSpacing: 1,
                                   fontSize: 30,
                                 ),
@@ -361,7 +365,9 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   //letterSpacing: 2,
                                   fontSize: 20,
                                 ),
@@ -375,7 +381,9 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   //letterSpacing: 2,
                                   fontSize: 20,
                                 ),
@@ -631,7 +639,9 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     backgroundColor: Colors.green,
-                                    foregroundColor: Colors.white,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     minimumSize: Size(
                                       MediaQuery.of(context).size.width * 0.4,
                                       60,
@@ -650,7 +660,9 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     minimumSize: Size(
                                       MediaQuery.of(context).size.width * 0.4,
                                       60,
@@ -670,8 +682,12 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     minimumSize: Size(
                                       MediaQuery.of(context).size.width * 0.4,
                                       60,

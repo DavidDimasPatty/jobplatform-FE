@@ -7,7 +7,12 @@ class CareerPreference extends StatelessWidget {
   final VoidCallback onAddPressed;
   final ValueChanged<PreferenceMV> onEditPressed;
 
-  CareerPreference({super.key, required this.dataPreferences, required this.onAddPressed, required this.onEditPressed});
+  CareerPreference({
+    super.key,
+    required this.dataPreferences,
+    required this.onAddPressed,
+    required this.onEditPressed,
+  });
 
   // Sample data for career preferences
   Map<String, String> get careerDescriptions => {
@@ -39,7 +44,7 @@ class CareerPreference extends StatelessWidget {
     "Salary Expectation": Icons.attach_money,
     "Position": Icons.business,
     "Job Type": Icons.co_present,
-    "Work System" : Icons.access_time,
+    "Work System": Icons.access_time,
     "Location": Icons.location_on,
     "Career Level": Icons.trending_up,
     "Availability": Icons.event_available,
@@ -76,8 +81,12 @@ class CareerPreference extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    backgroundColor: Colors.blue, // Button color
-                    foregroundColor: Colors.white, // Icon/text color
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.secondary, // Button color
+                    foregroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary, // Icon/text color
                   ),
                 )
               else
@@ -89,8 +98,12 @@ class CareerPreference extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    backgroundColor: Colors.blue, // Button color
-                    foregroundColor: Colors.white, // Icon/text color
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.secondary, // Button color
+                    foregroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary, // Icon/text color
                   ),
                 ),
             ],

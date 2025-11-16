@@ -27,7 +27,7 @@ class _Vacancybody extends State<Vacancybody> {
       ),
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -84,8 +84,8 @@ class _Vacancybody extends State<Vacancybody> {
                   ),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

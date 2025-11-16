@@ -194,7 +194,7 @@ class _LayoutState extends State<Layout> {
     _refreshTimer = null;
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -206,7 +206,7 @@ class _LayoutState extends State<Layout> {
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.grey.shade200,
+            //backgroundColor: Colors.grey.shade200,
             appBar: TopApplayout(
               onToggleNotification: toggleNotification,
               currentIndex: selectedIndex,

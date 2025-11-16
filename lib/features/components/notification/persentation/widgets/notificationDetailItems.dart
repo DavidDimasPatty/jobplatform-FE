@@ -78,7 +78,9 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -90,7 +92,9 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red,
-                                  foregroundColor: Colors.white,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -109,7 +113,7 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
               : Container(
                   child: Text(
                     widget.subtitle,
-                    // style: TextStyle(color: Colors.white, fontSize: 12),
+                    // style: TextStyle(color:Theme.of(context).colorScheme.secondary, fontSize: 12),
                   ),
                 )),
         ),

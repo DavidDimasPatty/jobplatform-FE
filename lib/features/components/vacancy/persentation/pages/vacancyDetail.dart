@@ -16,7 +16,7 @@ class VacancyDetail extends StatelessWidget {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -184,8 +184,12 @@ class VacancyDetail extends StatelessWidget {
                         iconAlignment: IconAlignment.start,
                         label: Text('Back'.tr()),
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.secondary,
                         ),
                       ),
                     ],

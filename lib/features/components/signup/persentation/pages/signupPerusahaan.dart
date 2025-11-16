@@ -657,7 +657,9 @@ class __FormContentState extends State<_FormContent> {
         Directionality(
           textDirection: TextDirection.rtl,
           child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+            ),
             onPressed: _handleSignUp,
             icon: const Icon(Icons.check, color: Colors.white),
             label: const Text('Sign Up', style: TextStyle(color: Colors.white)),

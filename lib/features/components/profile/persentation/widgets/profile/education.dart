@@ -45,8 +45,8 @@ class Education extends StatelessWidget {
                 icon: Icon(Icons.add, size: 20),
                 label: Text("Add"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  foregroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -113,7 +113,7 @@ class Education extends StatelessWidget {
                           textAlign: TextAlign.center,
                           (data.endDate == null)
                               ? "${DateFormat('MMM yyyy').format(data.startDate!)} - Present"
-                              : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}"
+                              : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}",
                         ),
                       ),
                     ],

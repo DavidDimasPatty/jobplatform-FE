@@ -135,7 +135,7 @@ class _Candidatedetail extends State<Candidatedetail> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -158,9 +158,6 @@ class _Candidatedetail extends State<Candidatedetail> {
               rowMainAxisAlignment: MainAxisAlignment.center,
               columnMainAxisAlignment: MainAxisAlignment.center,
               rowCrossAxisAlignment: CrossAxisAlignment.center,
-              // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-              //     ? ResponsiveRowColumnType.COLUMN
-              //     : ResponsiveRowColumnType.ROW,
               layout: ResponsiveRowColumnType.COLUMN,
               rowSpacing: 100,
               columnSpacing: 20,
@@ -174,30 +171,11 @@ class _Candidatedetail extends State<Candidatedetail> {
                         height: 250,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          // image: DecorationImage(
-                          //   image: AssetImage("assets/images/BG_Login.png"),
-                          //   fit: BoxFit.cover,
-                          // ),
                           borderRadius: BorderRadius.circular(20),
-                          color: Colors.blueAccent,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
-                      Positioned(
-                        right: 10,
-                        top: 0,
-                        child: Container(
-                          // child: IconButton(
-                          //   icon: const Icon(
-                          //     Icons.edit,
-                          //     color: Colors.white,
-                          //     size: 20,
-                          //   ),
-                          //   onPressed: () {
-                          //     // onTabSelected(3);
-                          //   },
-                          // ),
-                        ),
-                      ),
+                      Positioned(right: 10, top: 0, child: Container()),
                       Column(
                         children: [
                           Center(
@@ -207,37 +185,14 @@ class _Candidatedetail extends State<Candidatedetail> {
                                 CircleAvatar(
                                   radius: 50,
                                   backgroundColor: Colors.white,
-                                  child: const CircleAvatar(
+                                  child: CircleAvatar(
                                     radius: 46,
                                     //backgroundImage: AssetImage("assets/profile.jpg"),
-                                    backgroundColor: Colors.blueGrey,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                 ),
-
-                                // Positioned(
-                                //   right: 0,
-                                //   bottom: 0,
-                                //   child: Container(
-                                //     height: 30,
-                                //     width: 30,
-                                //     decoration: const BoxDecoration(
-                                //       shape: BoxShape.circle,
-                                //       color: Colors.grey,
-                                //     ),
-                                //     // child: IconButton(
-                                //     //   icon: const Icon(
-                                //     //     Icons.camera_alt,
-                                //     //     color: Colors.white,
-                                //     //     size: 20,
-                                //     //   ),
-                                //     //   padding: EdgeInsets.zero,
-                                //     //   constraints: const BoxConstraints(),
-                                //     //   onPressed: () {
-                                //     //     print("Ganti foto profil diklik");
-                                //     //   },
-                                //     // ),
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
@@ -248,7 +203,9 @@ class _Candidatedetail extends State<Candidatedetail> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   letterSpacing: 1,
                                   fontSize: 30,
                                 ),
@@ -263,7 +220,9 @@ class _Candidatedetail extends State<Candidatedetail> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   //letterSpacing: 2,
                                   fontSize: 20,
                                 ),
@@ -323,8 +282,12 @@ class _Candidatedetail extends State<Candidatedetail> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   minimumSize: Size(
                                     MediaQuery.of(context).size.width * 0.4,
                                     60,
@@ -346,8 +309,12 @@ class _Candidatedetail extends State<Candidatedetail> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   minimumSize: Size(
                                     MediaQuery.of(context).size.width * 0.4,
                                     60,
@@ -423,7 +390,9 @@ class _Candidatedetail extends State<Candidatedetail> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  backgroundColor: Colors.blue,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   foregroundColor: Colors.white,
                                   minimumSize: Size(
                                     MediaQuery.of(context).size.width * 0.4,

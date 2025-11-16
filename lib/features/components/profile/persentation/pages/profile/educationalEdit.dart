@@ -578,12 +578,16 @@ class _EducationalEdit extends State<EducationalEdit> {
                                 textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                   onPressed: _handleEditEducation,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.check,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                   label: const Text(
                                     'Submit',
@@ -710,7 +714,7 @@ class _EducationalEdit extends State<EducationalEdit> {
               label: Text('Delete'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

@@ -50,7 +50,7 @@ class Vacancyitems extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(7),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -76,7 +76,10 @@ class Vacancyitems extends StatelessWidget {
                 child: Center(
                   child: Text(
                     index.toString(),
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ),
@@ -132,8 +135,12 @@ class Vacancyitems extends StatelessWidget {
                                 children: [
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
-                                      foregroundColor: Colors.white,
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      foregroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -151,7 +158,9 @@ class Vacancyitems extends StatelessWidget {
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -168,8 +177,12 @@ class Vacancyitems extends StatelessWidget {
                                 children: [
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
-                                      foregroundColor: Colors.white,
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      foregroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -186,7 +199,9 @@ class Vacancyitems extends StatelessWidget {
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),

@@ -19,7 +19,7 @@ class _Cartbody extends State<Cartbody> {
         minHeight: MediaQuery.of(context).size.height * 0.8,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,

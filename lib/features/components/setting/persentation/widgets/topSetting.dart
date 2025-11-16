@@ -105,9 +105,11 @@ class topSetting extends StatelessWidget {
                                         width: 60,
                                         height: 60,
                                         color: Colors.grey[300],
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.person,
-                                          color: Colors.white,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
                                           size: 24,
                                         ),
                                       ),
@@ -126,7 +128,7 @@ class topSetting extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: mediaQueryHeight / 30,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -143,7 +145,9 @@ class topSetting extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: mediaQueryHeight / 60,
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
                             ),
@@ -173,12 +177,16 @@ class topSetting extends StatelessWidget {
                               ? Icon(
                                   Icons.priority_high_rounded,
                                   size: 20,
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 )
                               : Icon(
                                   Icons.check,
                                   size: 20,
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                         ),
 
@@ -186,7 +194,7 @@ class topSetting extends StatelessWidget {
                           "${profileComplete == 100 ? "Profile Complete".tr() : "${profileComplete}%"}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                           maxLines: 3,
                           //overflow: titleMaxLine != null ? overflow : null,
@@ -226,7 +234,9 @@ class topSetting extends StatelessWidget {
                               : Icon(
                                   Icons.upgrade,
                                   size: 20,
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                         ),
 
@@ -234,7 +244,7 @@ class topSetting extends StatelessWidget {
                           "${!isPremium ? "Upgrade Account".tr() : "Premium Account".tr()}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                           maxLines: 3,
                           //overflow: titleMaxLine != null ? overflow : null,

@@ -27,9 +27,9 @@ class hrListitem extends StatelessWidget {
                       width: 60,
                       height: 60,
                       color: Colors.grey[300],
-                      child: const Icon(
+                      child: Icon(
                         Icons.person,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.primary,
                         size: 24,
                       ),
                     ),

@@ -22,7 +22,7 @@ class _Chatdetailbody extends State<Chatdetailbottom> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,

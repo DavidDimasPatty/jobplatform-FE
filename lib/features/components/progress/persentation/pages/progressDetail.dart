@@ -259,7 +259,7 @@ class _Progressdetail extends State<Progressdetail> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -320,7 +320,9 @@ class _Progressdetail extends State<Progressdetail> {
                                           color: Colors.grey[300],
                                           child: Icon(
                                             Icons.person,
-                                            color: Colors.white,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.secondary,
                                             size: 24,
                                           ),
                                         ),
@@ -335,7 +337,9 @@ class _Progressdetail extends State<Progressdetail> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   letterSpacing: 1,
                                   fontSize: 30,
                                 ),
@@ -349,7 +353,9 @@ class _Progressdetail extends State<Progressdetail> {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.ptSerif(
                                 textStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   //letterSpacing: 2,
                                   fontSize: 20,
                                 ),
@@ -668,7 +674,9 @@ class _Progressdetail extends State<Progressdetail> {
                                                   BorderRadius.circular(8),
                                             ),
                                             backgroundColor: Colors.green,
-                                            foregroundColor: Colors.white,
+                                            foregroundColor: Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                             minimumSize: Size(
                                               MediaQuery.of(
                                                     context,
@@ -692,7 +700,9 @@ class _Progressdetail extends State<Progressdetail> {
                                                   BorderRadius.circular(8),
                                             ),
                                             backgroundColor: Colors.red,
-                                            foregroundColor: Colors.white,
+                                            foregroundColor: Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                             minimumSize: Size(
                                               MediaQuery.of(
                                                     context,
@@ -716,8 +726,12 @@ class _Progressdetail extends State<Progressdetail> {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                             ),
-                                            backgroundColor: Colors.blue,
-                                            foregroundColor: Colors.white,
+                                            backgroundColor: Theme.of(
+                                              context,
+                                            ).colorScheme.secondary,
+                                            foregroundColor: Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                             minimumSize: Size(
                                               MediaQuery.of(
                                                     context,

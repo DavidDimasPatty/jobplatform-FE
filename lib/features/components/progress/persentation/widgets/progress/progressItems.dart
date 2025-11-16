@@ -30,7 +30,7 @@ class Progressitems extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(7),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -64,9 +64,9 @@ class Progressitems extends StatelessWidget {
                         width: 40,
                         height: 40,
                         color: Colors.grey[300],
-                        child: const Icon(
+                        child: Icon(
                           Icons.person,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 24,
                         ),
                       ),
@@ -136,8 +136,12 @@ class Progressitems extends StatelessWidget {
                                 !status!.contains("Reject".tr()))
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -153,8 +157,12 @@ class Progressitems extends StatelessWidget {
                           children: [
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.secondary,
+                                foregroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),

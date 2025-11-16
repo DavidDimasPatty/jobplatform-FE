@@ -17,7 +17,7 @@ class _Listjobreceive extends State<Listjobreceive> {
     return Container(
       constraints: BoxConstraints(minHeight: 200),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
       ),
@@ -67,21 +67,6 @@ class _Listjobreceive extends State<Listjobreceive> {
                     ),
                   ),
                 ),
-                // Flexible(
-                //   flex: 4,
-                //   child: ElevatedButton.icon(
-                //     onPressed: () {},
-                //     icon: Icon(Icons.sort, size: 20),
-                //     label: Text("Urutkan : Tanggal"),
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: Colors.blue,
-                //       foregroundColor: Colors.white,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(8),
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -94,7 +79,7 @@ class _Listjobreceive extends State<Listjobreceive> {
                 Container(
                   //padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    //color:Theme.of(context).colorScheme.secondary,
                     // border: Border.all(color: Colors.black),
                   ),
                   child: TabBar(
@@ -147,7 +132,7 @@ class _Listjobreceive extends State<Listjobreceive> {
                                 margin: EdgeInsets.all(5),
                                 padding: EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
+                                  color: Theme.of(context).colorScheme.primary,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
@@ -173,9 +158,11 @@ class _Listjobreceive extends State<Listjobreceive> {
                                                 width: 60,
                                                 height: 60,
                                                 color: Colors.grey[300],
-                                                child: const Icon(
+                                                child: Icon(
                                                   Icons.person,
-                                                  color: Colors.white,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
                                                   size: 24,
                                                 ),
                                               ),
@@ -230,7 +217,9 @@ class _Listjobreceive extends State<Listjobreceive> {
                                     margin: EdgeInsets.all(5),
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
@@ -258,9 +247,11 @@ class _Listjobreceive extends State<Listjobreceive> {
                                                     width: 60,
                                                     height: 60,
                                                     color: Colors.grey[300],
-                                                    child: const Icon(
+                                                    child: Icon(
                                                       Icons.person,
-                                                      color: Colors.white,
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
                                                       size: 24,
                                                     ),
                                                   ),
@@ -321,7 +312,9 @@ class _Listjobreceive extends State<Listjobreceive> {
                                     margin: EdgeInsets.all(5),
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
@@ -349,9 +342,11 @@ class _Listjobreceive extends State<Listjobreceive> {
                                                     width: 60,
                                                     height: 60,
                                                     color: Colors.grey[300],
-                                                    child: const Icon(
+                                                    child: Icon(
                                                       Icons.person,
-                                                      color: Colors.white,
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
                                                       size: 24,
                                                     ),
                                                   ),
@@ -407,7 +402,9 @@ class _Listjobreceive extends State<Listjobreceive> {
                                     margin: EdgeInsets.all(5),
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
@@ -435,9 +432,11 @@ class _Listjobreceive extends State<Listjobreceive> {
                                                     width: 60,
                                                     height: 60,
                                                     color: Colors.grey[300],
-                                                    child: const Icon(
+                                                    child: Icon(
                                                       Icons.person,
-                                                      color: Colors.white,
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
                                                       size: 24,
                                                     ),
                                                   ),
@@ -497,7 +496,9 @@ class _Listjobreceive extends State<Listjobreceive> {
                                     margin: EdgeInsets.all(5),
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
@@ -525,9 +526,11 @@ class _Listjobreceive extends State<Listjobreceive> {
                                                     width: 60,
                                                     height: 60,
                                                     color: Colors.grey[300],
-                                                    child: const Icon(
+                                                    child: Icon(
                                                       Icons.person,
-                                                      color: Colors.white,
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
                                                       size: 24,
                                                     ),
                                                   ),

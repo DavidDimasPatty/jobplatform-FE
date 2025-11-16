@@ -7,7 +7,12 @@ class Certificate extends StatelessWidget {
   final VoidCallback onAddPressed;
   final ValueChanged<CertificateMV> onEditPressed;
 
-  Certificate({super.key, required this.dataCertificates, required this.onAddPressed, required this.onEditPressed});
+  Certificate({
+    super.key,
+    required this.dataCertificates,
+    required this.onAddPressed,
+    required this.onEditPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +44,12 @@ class Certificate extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  backgroundColor: Colors.blue, // Button color
-                  foregroundColor: Colors.white, // Icon/text color
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.secondary, // Button color
+                  foregroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primary, // Icon/text color
                 ),
                 icon: Icon(Icons.add),
                 label: Text("Add"),

@@ -222,7 +222,7 @@ class _Settingemail extends State<Settingemail> {
           child: Container(
             constraints: BoxConstraints(minHeight: 400),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.secondary,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black12,
@@ -280,12 +280,14 @@ class _Settingemail extends State<Settingemail> {
                           icon: Icon(Icons.input_sharp, color: Colors.white),
                           onPressed: _handleValidateEmail,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.secondary,
                           ),
                           label: Text(
                             'Validate change email'.tr(),
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

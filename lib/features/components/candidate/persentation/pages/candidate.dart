@@ -259,7 +259,7 @@ class _Candidate extends State<Candidate> {
 
   void _openFilterPopup() async {
     final result = await showModalBottomSheet<String?>(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       context: context,
       builder: (context) {
         String? tempSelectedRole = selectedRole;
@@ -495,8 +495,8 @@ class _Candidate extends State<Candidate> {
                   SizedBox(height: 10),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -571,7 +571,7 @@ class _Candidate extends State<Candidate> {
             minHeight: MediaQuery.of(context).size.height * 0.8,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,

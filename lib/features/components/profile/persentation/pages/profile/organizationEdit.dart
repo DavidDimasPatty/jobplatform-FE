@@ -494,12 +494,16 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                 textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                   onPressed: _handleEditOrganization,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.check,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                   label: const Text(
                                     'Submit',
@@ -624,7 +628,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
               label: Text('Delete'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

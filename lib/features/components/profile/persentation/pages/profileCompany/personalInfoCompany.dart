@@ -417,7 +417,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                   ),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,
@@ -1130,12 +1130,16 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     textDirection: TextDirection.rtl,
                                     child: ElevatedButton.icon(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
+                                        backgroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary,
                                       ),
                                       onPressed: _handleEditProfile,
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.check,
-                                        color: Colors.white,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
                                       ),
                                       label: const Text(
                                         'Submit',

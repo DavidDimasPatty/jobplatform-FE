@@ -98,7 +98,7 @@ class _Tos extends State<Tos> {
                 child: Container(
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,

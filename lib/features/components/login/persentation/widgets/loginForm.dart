@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/network/websocket_client.dart';
+import 'package:job_platform/core/utils/providers/ThemeProvider.dart';
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/login/persentation/pages/companyWaiting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/datasources/aut_remote_datasource.dart';
@@ -85,7 +87,10 @@ class _LoginFormState extends State<LoginForm> {
         final repository = AuthRepositoryImpl(dataSource);
         final usecase = LoginUseCase(repository);
         loginModel? data = await usecase.execute(user!.email!);
-
+        final themeProvider = Provider.of<ThemeProvider>(
+          context,
+          listen: false,
+        );
         if (data!.exists != null) {
           if (data.exists != false) {
             if (data.collection == "users") {
@@ -119,6 +124,9 @@ class _LoginFormState extends State<LoginForm> {
                 data.user!.isNotifExternal ?? false,
               );
               await prefs.setBool("isDarkMode", data.user!.isDarkMode ?? false);
+              if (data.user!.isDarkMode == true) {
+                themeProvider.toggleTheme();
+              }
               await prefs.setString("language", data.user!.language ?? "IND");
               if (data.user!.language == "IND") {
                 context.setLocale(const Locale('id'));
@@ -348,12 +356,14 @@ class _LoginFormState extends State<LoginForm> {
                       icon: Icon(Icons.input_sharp, color: Colors.white),
                       onPressed: _handleLogin,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.secondary,
                       ),
                       label: Text(
                         'Login With Google',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

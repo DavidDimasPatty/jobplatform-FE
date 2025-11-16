@@ -297,7 +297,7 @@ class _CertificateEditState extends State<CertificateEdit> {
         ),
       );
     }
-    
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(20.0),
       child: Center(
@@ -476,8 +476,12 @@ class _CertificateEditState extends State<CertificateEdit> {
                                   iconAlignment: IconAlignment.end,
                                   label: Text('Submit'),
                                   style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                 ),
                               ],
@@ -679,7 +683,7 @@ class _CertificateEditState extends State<CertificateEdit> {
               label: Text('Delete'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

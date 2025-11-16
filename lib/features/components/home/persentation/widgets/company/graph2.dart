@@ -82,7 +82,7 @@ class _Graph2 extends State<Graph2> with SingleTickerProviderStateMixin {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
       ),

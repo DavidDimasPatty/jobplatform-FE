@@ -19,7 +19,7 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       title: const Text(
         "Skillen",
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -54,8 +54,8 @@ class TopApplayout extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       child: Text(
                         notificationCount > 99 ? '99+' : '$notificationCount',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),

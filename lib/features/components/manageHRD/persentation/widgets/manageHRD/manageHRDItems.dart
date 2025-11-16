@@ -25,7 +25,7 @@ class Managehrditems extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -55,9 +55,9 @@ class Managehrditems extends StatelessWidget {
                         width: 60,
                         height: 60,
                         color: Colors.grey[300],
-                        child: const Icon(
+                        child: Icon(
                           Icons.person,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 24,
                         ),
                       ),
@@ -130,7 +130,9 @@ class Managehrditems extends StatelessWidget {
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -184,7 +186,9 @@ class Managehrditems extends StatelessWidget {
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),

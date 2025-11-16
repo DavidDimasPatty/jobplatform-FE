@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:job_platform/core/utils/providers/ThemeProvider.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
 import 'package:job_platform/routes/router.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,10 @@ Future<void> main() async {
   usePathUrlStrategy();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => SettingProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => SettingProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
       child: EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('id')],
         path: 'assets/lang',
@@ -42,10 +46,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp.router(
+      title: 'Skillen',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
+        colorScheme: ColorScheme.light(
+          primary: Colors.white,
+          secondary: Colors.blue,
+        ),
+        scaffoldBackgroundColor: Colors.grey.shade100,
+        cardColor: Colors.white,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.dark(
+          primary: Colors.grey.shade300,
+          secondary: Colors.blue,
+        ),
+        scaffoldBackgroundColor: Colors.grey.shade900,
+        cardColor: Colors.grey.shade800,
+      ),
+      themeMode: themeProvider.currentTheme,
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,

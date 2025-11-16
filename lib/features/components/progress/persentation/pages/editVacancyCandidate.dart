@@ -194,7 +194,7 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -330,8 +330,12 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
                                 iconAlignment: IconAlignment.end,
                                 label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
                       ],

@@ -51,8 +51,8 @@ class _Setting extends State<Setting> {
           actions: [
             TextButton(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () => Navigator.of(context).pop(null),
               child: Text('Batal'),
@@ -60,7 +60,7 @@ class _Setting extends State<Setting> {
             TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () => Navigator.of(context).pop("CONFIRM"),
               child: Text('Konfirmasi'),

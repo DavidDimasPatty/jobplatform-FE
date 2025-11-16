@@ -45,8 +45,12 @@ class _SkillState extends State<Skill> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  backgroundColor: Colors.blue, // Button color
-                  foregroundColor: Colors.white, // Icon/text color
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.secondary, // Button color
+                  foregroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primary, // Icon/text color
                 ),
                 icon: Icon(Icons.edit),
                 label: Text("Edit"),
@@ -81,7 +85,10 @@ class SkillChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: source.contains('user') ? source.substring(4) : "General",
-      textStyle: const TextStyle(color: Colors.white, fontSize: 12),
+      textStyle: TextStyle(
+        color: Theme.of(context).colorScheme.primary,
+        fontSize: 12,
+      ),
       decoration: BoxDecoration(
         color: Colors.black87,
         borderRadius: BorderRadius.circular(8),

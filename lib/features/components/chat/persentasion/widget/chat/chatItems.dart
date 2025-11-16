@@ -5,10 +5,7 @@ import 'package:job_platform/features/components/chat/data/models/partnerModel.d
 class Chatitems extends StatelessWidget {
   final PartnerModel partner;
 
-  Chatitems({
-    super.key,
-    required this.partner,
-  });
+  Chatitems({super.key, required this.partner});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +23,7 @@ class Chatitems extends StatelessWidget {
             child: CircleAvatar(
               radius: 20,
               backgroundImage: NetworkImage(partner.partnerPhotoUrl),
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
             ),
           ),
 

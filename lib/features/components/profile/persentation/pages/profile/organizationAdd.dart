@@ -555,12 +555,16 @@ class _OrganizationAdd extends State<OrganizationAdd> {
                                 textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                   onPressed: _handleAddOrganization,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.check,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                   label: const Text(
                                     'Submit',

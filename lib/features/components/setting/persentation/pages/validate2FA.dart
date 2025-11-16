@@ -31,7 +31,7 @@ class _Validate2fa extends State<Validate2fa> {
       child: Center(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -140,7 +140,9 @@ class _Validate2fa extends State<Validate2fa> {
                                                 ),
                                             label: Text("Submit"),
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.blue,
+                                              backgroundColor: Theme.of(
+                                                context,
+                                              ).colorScheme.secondary,
                                             ),
                                           ),
                                   ],

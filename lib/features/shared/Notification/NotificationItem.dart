@@ -53,7 +53,10 @@ class _Notificationitem extends State<Notificationitem> {
           subtitle: Container(
             child: Text(
               widget.subtitle,
-              style: TextStyle(color: Colors.white, fontSize: 12),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 12,
+              ),
             ),
           ),
           trailing: Icon(Icons.navigate_next),

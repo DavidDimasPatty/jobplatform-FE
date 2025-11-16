@@ -42,8 +42,8 @@ class _Upgradeaccount extends State<Upgradeaccount> {
           actions: [
             TextButton(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () => Navigator.of(context).pop(null),
               child: Text('Batal'),
@@ -51,7 +51,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
             TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () => Navigator.of(context).pop("CONFIRM"),
               child: Text('Konfirmasi'.tr()),
@@ -118,7 +118,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                           "Anda Sudah Premium!".tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
@@ -133,8 +133,12 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                         const SizedBox(height: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.secondary,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -153,9 +157,9 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                   Positioned(
                     top: 0,
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.primary,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black26,
@@ -167,10 +171,12 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                       padding: const EdgeInsets.all(8),
                       child: CircleAvatar(
                         radius: 30,
-                        backgroundColor: Colors.blue.shade300,
-                        child: const Icon(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.secondary,
+                        child: Icon(
                           Icons.star_rounded,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 35,
                         ),
                       ),
@@ -267,7 +273,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
         child: Container(
           constraints: BoxConstraints(minHeight: 400),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,

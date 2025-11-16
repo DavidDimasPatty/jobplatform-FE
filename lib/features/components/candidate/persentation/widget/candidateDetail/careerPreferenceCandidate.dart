@@ -82,8 +82,8 @@ class CareerPreferenceCandidate extends StatelessWidget {
               //       shape: RoundedRectangleBorder(
               //         borderRadius: BorderRadius.circular(8),
               //       ),
-              //       backgroundColor: Colors.blue, // Button color
-              //       foregroundColor: Colors.white, // Icon/text color
+              //       backgroundColor:Theme.of(context).colorScheme.secondary, // Button color
+              //        foregroundColor: Theme.of(context).colorScheme.primary, // Icon/text color
               //     ),
               //   )
               // else
@@ -96,8 +96,8 @@ class CareerPreferenceCandidate extends StatelessWidget {
               //       shape: RoundedRectangleBorder(
               //         borderRadius: BorderRadius.circular(8),
               //       ),
-              //       backgroundColor: Colors.blue, // Button color
-              //       foregroundColor: Colors.white, // Icon/text color
+              //       backgroundColor:Theme.of(context).colorScheme.secondary, // Button color
+              //        foregroundColor: Theme.of(context).colorScheme.primary, // Icon/text color
               //     ),
               //   ),
             ],

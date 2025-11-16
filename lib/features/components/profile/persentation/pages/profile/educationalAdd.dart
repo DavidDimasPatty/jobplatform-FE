@@ -612,12 +612,16 @@ class _EducationalAdd extends State<EducationalAdd> {
                                 textDirection: ui.TextDirection.rtl,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                   onPressed: _handleAddEducation,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.check,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                                   label: const Text(
                                     'Submit',

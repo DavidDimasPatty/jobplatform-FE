@@ -55,11 +55,7 @@ class _Chat extends State<Chat> {
             isLoading = false;
             errorMessage = null;
             dataChat = chatList
-                .map<Chatitems>(
-                  (item) => Chatitems(
-                    partner: item,
-                  ),
-                )
+                .map<Chatitems>((item) => Chatitems(partner: item))
                 .toList();
           });
         }
@@ -120,7 +116,7 @@ class _Chat extends State<Chat> {
             minHeight: MediaQuery.of(context).size.height * 0.8,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.secondary,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,

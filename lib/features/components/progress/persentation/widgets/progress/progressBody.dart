@@ -26,7 +26,7 @@ class _Progressbody extends State<Progressbody> {
       ),
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,

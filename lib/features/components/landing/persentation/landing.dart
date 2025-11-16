@@ -86,7 +86,7 @@ class _Landing extends State<Landing> {
                     textStyle: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -127,8 +127,8 @@ class _Landing extends State<Landing> {
                       context.go('/signUp');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade700,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     child: const Text('Get Started'),
                   ),
@@ -200,8 +200,8 @@ class _Landing extends State<Landing> {
                     context.go('/signUp');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
-                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   child: const Text('Get Started'),
                 ),
@@ -295,8 +295,12 @@ class _Landing extends State<Landing> {
                                 vertical: 20,
                               ),
                               textStyle: const TextStyle(fontSize: 16),
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.blue,
+                              foregroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.secondary,
                             ),
                           ),
                         ],
@@ -319,7 +323,7 @@ class _Landing extends State<Landing> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -435,10 +439,10 @@ class _Landing extends State<Landing> {
         children: [
           Text(
             number,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(height: 8),
@@ -515,7 +519,7 @@ class _Landing extends State<Landing> {
       width: 280,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -608,10 +612,10 @@ class _Landing extends State<Landing> {
             child: Center(
               child: Text(
                 number,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -644,12 +648,12 @@ class _Landing extends State<Landing> {
       padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 20),
       child: Column(
         children: [
-          const Text(
+          Text(
             'Ready to Start Your Journey?',
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.primary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -727,8 +731,8 @@ class _Landing extends State<Landing> {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),

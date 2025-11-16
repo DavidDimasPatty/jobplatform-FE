@@ -22,7 +22,7 @@ class _Graficprofil extends State<Graficprofil> {
     return Container(
       constraints: BoxConstraints(minHeight: 200),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey, width: 1),
       ),
@@ -57,9 +57,9 @@ class _Graficprofil extends State<Graficprofil> {
                                 width: 60,
                                 height: 60,
                                 color: Colors.grey[300],
-                                child: const Icon(
+                                child: Icon(
                                   Icons.person,
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.primary,
                                   size: 24,
                                 ),
                               ),

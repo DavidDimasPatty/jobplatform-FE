@@ -76,7 +76,9 @@ class _SkillEditState extends State<SkillEdit> {
         ];
 
         // Find matching items by comparing a unique property
-        var filteredSkill = listSkill.where((skill) => skill.idSource == null).toList();
+        var filteredSkill = listSkill
+            .where((skill) => skill.idSource == null)
+            .toList();
         var initSelectedItems = filteredSkill.map((userSkill) {
           return skillItem.firstWhere(
             (skillItem) => skillItem.value.idSkill == userSkill.skill.idSkill,
@@ -140,9 +142,9 @@ class _SkillEditState extends State<SkillEdit> {
 
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Skill edited successfully!')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Skill edited successfully!')));
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -236,8 +238,12 @@ class _SkillEditState extends State<SkillEdit> {
                                   iconAlignment: IconAlignment.end,
                                   label: Text('Submit'),
                                   style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                   ),
                                 ),
                               ],

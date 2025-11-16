@@ -272,9 +272,9 @@ class _ProfileCompany extends State<ProfileCompany> {
                       top: 0,
                       child: Container(
                         child: IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.edit,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.primary,
                             size: 20,
                           ),
                           onPressed: () {
@@ -299,7 +299,9 @@ class _ProfileCompany extends State<ProfileCompany> {
                                       : AssetImage(
                                           'assets/images/female-avatar.png',
                                         ),
-                                  backgroundColor: Colors.blueGrey,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                 ),
                               ),
 
@@ -314,9 +316,11 @@ class _ProfileCompany extends State<ProfileCompany> {
                                     color: Colors.grey,
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.camera_alt,
-                                      color: Colors.white,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                       size: 20,
                                     ),
                                     padding: EdgeInsets.zero,
@@ -335,7 +339,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.secondary,
                                 letterSpacing: 1,
                                 fontSize: 30,
                               ),
@@ -349,7 +353,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.secondary,
                                 //letterSpacing: 2,
                                 fontSize: 20,
                               ),
@@ -363,7 +367,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.ptSerif(
                               textStyle: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.secondary,
                                 //letterSpacing: 2,
                                 fontSize: 20,
                               ),
@@ -383,7 +387,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                     minWidth: double.infinity,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.white60, width: 1),
                     boxShadow: [
@@ -441,7 +445,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                     minWidth: double.infinity,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.white60, width: 1),
                     boxShadow: [
@@ -506,7 +510,9 @@ class _ProfileCompany extends State<ProfileCompany> {
                                         (index + 1).toString(),
                                         style: TextStyle(
                                           fontSize: 20,
-                                          color: Colors.white,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
                                         ),
                                       ),
                                     ),
@@ -553,7 +559,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                     minWidth: double.infinity,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.white60, width: 1),
                     boxShadow: [

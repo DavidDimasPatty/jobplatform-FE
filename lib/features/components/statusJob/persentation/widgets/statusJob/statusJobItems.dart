@@ -27,7 +27,7 @@ class statusjobitems extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -56,9 +56,9 @@ class statusjobitems extends StatelessWidget {
                         width: 40,
                         height: 40,
                         color: Colors.grey[300],
-                        child: const Icon(
+                        child: Icon(
                           Icons.person,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 24,
                         ),
                       ),

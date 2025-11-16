@@ -287,7 +287,7 @@ class _ChatDetailState extends State<ChatDetail> {
                   ),
                 ],
               ),
-              backgroundColor: Colors.blue,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
             ),
             body: Column(
               children: [
@@ -334,9 +334,7 @@ class _ChatDetailState extends State<ChatDetail> {
     return Material(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
+        decoration: BoxDecoration(color: Colors.white),
         child: Row(
           children: [
             Expanded(
