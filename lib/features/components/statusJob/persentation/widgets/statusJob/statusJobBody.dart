@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/statusJob/persentation/widgets/statusJob/statusJobItems.dart';
 
@@ -43,7 +44,7 @@ class _Statusjobbody extends State<Statusjobbody> {
           Container(
             margin: EdgeInsets.only(left: 20, top: 20),
             child: Text(
-              "Status Pekerjaan",
+              "Status Pekerjaan".tr(),
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
@@ -54,8 +55,8 @@ class _Statusjobbody extends State<Statusjobbody> {
             child: TextFormField(
               controller: widget.searchController,
               decoration: InputDecoration(
-                labelText: 'Cari Pekerjaan',
-                hintText: 'Masukan Nama Pekerjaan',
+                labelText: 'Cari Pekerjaan'.tr(),
+                hintText: 'Masukan Nama Pekerjaan'.tr(),
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),

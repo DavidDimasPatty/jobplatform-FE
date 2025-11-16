@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/home/data/models/TawaranPekerjaan.dart';
 
@@ -38,7 +39,7 @@ class _Listjobreceive extends State<Listjobreceive> {
             width: double.infinity,
             child: Center(
               child: Text(
-                "Daftar Tawaran Pekerjaan",
+                "Daftar Tawaran Pekerjaan".tr(),
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
@@ -54,7 +55,7 @@ class _Listjobreceive extends State<Listjobreceive> {
                     controller: _searchController,
                     //onChanged: onSearchChanged,
                     decoration: InputDecoration(
-                      hintText: "Search Penawaran...",
+                      hintText: "Cari Penawaran...".tr(),
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -66,21 +67,21 @@ class _Listjobreceive extends State<Listjobreceive> {
                     ),
                   ),
                 ),
-                Flexible(
-                  flex: 4,
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.sort, size: 20),
-                    label: Text("Urutkan : Tanggal"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
+                // Flexible(
+                //   flex: 4,
+                //   child: ElevatedButton.icon(
+                //     onPressed: () {},
+                //     icon: Icon(Icons.sort, size: 20),
+                //     label: Text("Urutkan : Tanggal"),
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Colors.blue,
+                //       foregroundColor: Colors.white,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(8),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

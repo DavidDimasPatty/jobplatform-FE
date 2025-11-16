@@ -37,45 +37,12 @@ class Benchmarkitem extends StatelessWidget {
                     ),
             ),
           ),
-          title: Text(
-            title ?? "Unknown",
-            // style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-            // maxLines: titleMaxLine,
-            // overflow: titleMaxLine != null ? overflow : null,
-          ),
+          title: Text(title ?? "Unknown"),
           subtitle: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                subtitle ?? "Unknown",
-                // style:
-                //     subtitleStyle ??
-                //     Theme.of(context).textTheme.bodyMedium!,
-                // maxLines: subtitleMaxLine,
-                // overflow: subtitleMaxLine != null
-                //     ? TextOverflow.ellipsis
-                //     : null,
-              ),
-              // Row(
-              //   children: skill!.asMap().entries.map((entry) {
-              //     return Container(
-              //       padding: EdgeInsets.all(5),
-              //       margin: EdgeInsets.all(5),
-              //       decoration: BoxDecoration(
-              //         color: Colors.blue,
-              //         borderRadius: BorderRadius.all(Radius.circular(10)),
-              //       ),
-              //       child: Text(
-              //         entry.value,
-              //         style: TextStyle(color: Colors.white),
-              //       ),
-              //     );
-              //   }).toList(),
-              // ),
-            ],
+            children: [Text(subtitle ?? "Unknown")],
           ),
-          //trailing: (trailing != null) ? trailing : Icon(Icons.navigate_next),
         ),
       ),
     );

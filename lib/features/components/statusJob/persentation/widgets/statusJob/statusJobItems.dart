@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class statusjobitems extends StatelessWidget {
@@ -97,15 +98,15 @@ class statusjobitems extends StatelessWidget {
             trailing: Text(
               status ?? "",
               style: TextStyle(
-                color: status == "Review"
+                color: status == "Review".tr()
                     ? Colors.orange
-                    : status == "Interview"
+                    : status == "Interview".tr()
                     ? Colors.blue
-                    : status == "Offering"
+                    : status == "Offering".tr()
                     ? Colors.pink
-                    : status == "Menunggu Konfirmasi"
+                    : status == "Menunggu Konfirmasi".tr()
                     ? Colors.indigo
-                    : status == "Close"
+                    : status == "Close".tr()
                     ? Colors.green
                     : Colors.red,
                 fontSize: 17,

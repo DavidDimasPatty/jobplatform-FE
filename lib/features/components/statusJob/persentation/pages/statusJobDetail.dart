@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,12 @@ class _Statusjobdetail extends State<Statusjobdetail> {
   AuthRemoteDataSource? _dataSourceStatus;
   StatusUseCase? _statusUseCase;
   int stepsImpl = 0;
-  List<String> steps = ["Review", "Interview", "Offering", "Close"];
+  List<String> steps = [
+    "Review".tr(),
+    "Interview".tr(),
+    "Offering".tr(),
+    "Close".tr(),
+  ];
 
   @override
   void initState() {
@@ -84,8 +90,8 @@ class _Statusjobdetail extends State<Statusjobdetail> {
         if (status) {
           return AlertDialog(
             backgroundColor: Colors.white,
-            title: Text('Konfirmasi Lowongan'),
-            content: Text('Apakah Anda yakin ingin menerima tawaran ini?'),
+            title: Text('Konfirmasi Lowongan'.tr()),
+            content: Text('Apakah Anda yakin ingin menerima tawaran ini?'.tr()),
             actions: [
               TextButton(
                 style: TextButton.styleFrom(
@@ -93,7 +99,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () => Navigator.of(context).pop(null),
-                child: Text('Batal'),
+                child: Text('Batal'.tr()),
               ),
               TextButton(
                 style: TextButton.styleFrom(
@@ -101,25 +107,25 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () => Navigator.of(context).pop("CONFIRM"),
-                child: Text('Konfirmasi'),
+                child: Text('Konfirmasi'.tr()),
               ),
             ],
           );
         } else {
           return AlertDialog(
             backgroundColor: Colors.white,
-            title: Text('Tolak Lowongan'),
+            title: Text('Tolak Lowongan'.tr()),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Silakan masukkan alasan penolakan:'),
+                Text('Silakan masukkan alasan penolakan:').tr(),
                 SizedBox(height: 10),
                 TextField(
                   controller: alasanController,
                   maxLines: 3,
                   decoration: InputDecoration(
-                    hintText: 'Tulis alasan...',
+                    hintText: 'Tulis alasan...'.tr(),
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -132,7 +138,10 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                 ),
-                child: Text('Batal', style: TextStyle(color: Colors.white)),
+                child: Text(
+                  'Batal'.tr(),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               TextButton(
                 style: TextButton.styleFrom(
@@ -143,7 +152,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                   if (alasanController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Alasan tidak boleh kosong'),
+                        content: Text('Alasan tidak boleh kosong'.tr()),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -151,7 +160,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                   }
                   Navigator.of(context).pop(alasanController.text.trim());
                 },
-                child: Text('Tolak'),
+                child: Text('Tolak'.tr()),
               ),
             ],
           );
@@ -184,7 +193,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
       });
 
       if (status == false && alasanReject!.isEmpty)
-        throw Exception("Alasan Reject tidak boleh kosong jika penolakan");
+        throw Exception("Alasan Reject tidak boleh kosong jika penolakan".tr());
 
       String? response = await _statusUseCase!.validateVacancy(
         idUserVacancy,
@@ -193,9 +202,9 @@ class _Statusjobdetail extends State<Statusjobdetail> {
         id,
       );
       if (response == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Confirm Vacancy Success!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Confirm Vacancy Success!'.tr())),
+        );
         setState(() {
           isLoading = false;
           _loadDetailStatus();
@@ -216,7 +225,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Internal Error"),
+            content: Text("Internal Error").tr(),
             backgroundColor: Colors.red,
           ),
         );
@@ -233,7 +242,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Job Data...'),
+            Text('Loading Job Data...'.tr()),
           ],
         ),
       );
@@ -402,7 +411,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                       Container(
                                         padding: EdgeInsets.all(20),
                                         child: Text(
-                                          "Proses Rekrutment",
+                                          "Proses Rekrutment".tr(),
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.davidLibre(
                                             textStyle: TextStyle(
@@ -512,7 +521,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                     Container(
                                       padding: EdgeInsets.all(20),
                                       child: Text(
-                                        "Proses Rekrutment",
+                                        "Proses Rekrutment".tr(),
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.davidLibre(
                                           textStyle: TextStyle(
@@ -629,7 +638,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                     ),
                                   ),
                                   icon: Icon(Icons.check),
-                                  label: Text("Accept"),
+                                  label: Text("Accept".tr()),
                                 ),
                               ),
                               Flexible(
@@ -648,7 +657,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                     ),
                                   ),
                                   icon: Icon(Icons.close),
-                                  label: Text("Reject"),
+                                  label: Text("Reject".tr()),
                                 ),
                               ),
                               Flexible(
@@ -669,7 +678,7 @@ class _Statusjobdetail extends State<Statusjobdetail> {
                                     ),
                                   ),
                                   icon: Icon(Icons.chat),
-                                  label: Text("Chat"),
+                                  label: Text("Chat".tr()),
                                 ),
                               ),
                             ],

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
@@ -184,7 +185,7 @@ class _Settingnotification extends State<Settingnotification> {
                       children: [
                         SizedBox(
                           child: Text(
-                            'Notification',
+                            'Notification'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -213,13 +214,13 @@ class _Settingnotification extends State<Settingnotification> {
                                     ),
                                   ),
                                   title: Text(
-                                    "Notifikasi Internal",
+                                    "Notifikasi Internal".tr(),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   subtitle: Text(
-                                    "Notifikasi pelamaran kerja dan chat",
+                                    "Notifikasi pelamaran kerja dan chat".tr(),
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyMedium!,
@@ -263,7 +264,7 @@ class _Settingnotification extends State<Settingnotification> {
                                     ),
                                   ),
                                   title: Text(
-                                    "Notifikasi External",
+                                    "Notifikasi External".tr(),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -273,7 +274,7 @@ class _Settingnotification extends State<Settingnotification> {
                                     //     : null,
                                   ),
                                   subtitle: Text(
-                                    "Notifikasi suggestion dari Skillen",
+                                    "Notifikasi tawaran dari Skillen".tr(),
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyMedium!,

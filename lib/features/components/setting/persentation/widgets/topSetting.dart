@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -138,7 +139,7 @@ class topSetting extends StatelessWidget {
                               onPressed: () {},
                               icon: Icon(Icons.star, color: Colors.white),
                               label: Text(
-                                "${loginAs == "user" ? "Job Seeker" : "Company"} | ${isPremium ? "Premium Account" : "Regular Account"}",
+                                "${loginAs == "user" ? "Job Seeker".tr() : "Company".tr()} | ${isPremium ? "Premium Account".tr() : "Regular Account".tr()}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: mediaQueryHeight / 60,
@@ -182,7 +183,7 @@ class topSetting extends StatelessWidget {
                         ),
 
                         title: Text(
-                          "${profileComplete == 100 ? "Profile Complete" : "${profileComplete}%"}",
+                          "${profileComplete == 100 ? "Profile Complete".tr() : "${profileComplete}%"}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -191,7 +192,7 @@ class topSetting extends StatelessWidget {
                           //overflow: titleMaxLine != null ? overflow : null,
                         ),
                         subtitle: Text(
-                          "${profileComplete == 100 ? "Profile Anda Sudah Lengkap!" : "Lengkapi Profile Anda"}",
+                          "${profileComplete == 100 ? "Profile Anda Sudah Lengkap!".tr() : "Lengkapi Profile Anda".tr()}",
                           style: TextStyle(color: Colors.white),
                           maxLines: 3,
                           // overflow:
@@ -230,7 +231,7 @@ class topSetting extends StatelessWidget {
                         ),
 
                         title: Text(
-                          "${!isPremium ? "Upgrade Account" : "Premium Account"}",
+                          "${!isPremium ? "Upgrade Account".tr() : "Premium Account".tr()}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

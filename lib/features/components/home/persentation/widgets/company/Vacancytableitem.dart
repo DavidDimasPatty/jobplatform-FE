@@ -18,15 +18,10 @@ class Vacancytableitem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
-      // onTap: () {
-      //   context.go("/progress");
-      // },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(
-          //onTap: onTap,
           leading: SizedBox(
             width: 40,
             height: 40,
@@ -43,12 +38,7 @@ class Vacancytableitem extends StatelessWidget {
               ),
             ),
           ),
-          title: Text(
-            title,
-            // style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
-            // maxLines: titleMaxLine,
-            // overflow: titleMaxLine != null ? overflow : null,
-          ),
+          title: Text(title),
           subtitle: (subtitle != null
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,14 +57,6 @@ class Vacancytableitem extends StatelessWidget {
                               color: Colors.black87,
                             ),
                           ),
-                          // const Text(
-                          //   "Full Time",
-                          //   style: TextStyle(
-                          //     fontSize: 12,
-                          //     fontWeight: FontWeight.normal,
-                          //     color: Colors.black54,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),

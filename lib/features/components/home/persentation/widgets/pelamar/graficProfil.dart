@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class Graficprofil extends StatefulWidget {
@@ -72,7 +73,7 @@ class _Graficprofil extends State<Graficprofil> {
                   margin: EdgeInsets.all(10),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${widget.username}, ayo lengkapi profile untuk 3.7x dilihat oleh recruiter!",
+                    "${widget.username}, ${"textProfileComplete".tr()}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -94,7 +95,7 @@ class _Graficprofil extends State<Graficprofil> {
               children: [
                 Center(
                   child: Text(
-                    "Kelengkapan Profile : ${widget.profileComplete ?? 0}%",
+                    "${"Kelengkapan Profile".tr()} : ${widget.profileComplete ?? 0}%",
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

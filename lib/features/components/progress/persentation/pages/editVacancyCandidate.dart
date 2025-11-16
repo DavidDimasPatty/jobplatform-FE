@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/progress/data/datasources/aut_remote_datasource.dart';
@@ -54,8 +55,8 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
 
   Future<void> _loadData() async {
     setState(() {
-      jobType = ["Tetap", "Kontrak", "Magang"];
-      workSystem = ["WFO", "WFH", "Hybrid"];
+      jobType = ["Tetap".tr(), "Kontrak".tr(), "Magang".tr()];
+      workSystem = ["WFO".tr(), "WFH".tr(), "Hybrid".tr()];
       _salaryMinController.text =
           (widget.dataUserVacancy?.gajiMin != null
               ? widget.dataUserVacancy?.gajiMin!.toString()
@@ -100,19 +101,20 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text('Konfirmasi Tahapan'),
+          title: Text('Konfirmasi Tahapan'.tr()),
           content: Text(
-            'Apakah Anda yakin ingin mengubah detail vacancy untuk user ini?',
+            'Apakah Anda yakin ingin mengubah detail vacancy untuk user ini?'
+                .tr(),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(null),
-              child: Text('Batal', style: TextStyle(color: Colors.blue)),
+              child: Text('Batal'.tr(), style: TextStyle(color: Colors.blue)),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop("CONFIRM"),
               style: TextButton.styleFrom(foregroundColor: Colors.green),
-              child: Text('Konfirmasi'),
+              child: Text('Konfirmasi'.tr()),
             ),
           ],
         );
@@ -133,11 +135,11 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
         if (idUser == null) throw Exception("User ID not found in preferences");
 
         if (double.tryParse(_salaryMinController.text) == null) {
-          throw Exception("Invalid Salary Min Format");
+          throw Exception("Invalid Salary Min Format".tr());
         }
 
         if (double.tryParse(_salaryMaxController.text) == null) {
-          throw Exception("Invalid Salary Max Format");
+          throw Exception("Invalid Salary Max Format".tr());
         }
 
         final result = await konfirmasiEdit(context);
@@ -157,7 +159,7 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
         // On success, clear the form or navigate away
         if (response == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Vacancy edited successfully!')),
+            SnackBar(content: Text('Vacancy edited successfully!'.tr())),
           );
           context.go(
             '/progressDetail',
@@ -166,7 +168,7 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit vacancy. Please try again.'),
+              content: Text('Failed to edit vacancy. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -226,7 +228,7 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
                       children: [
                         SizedBox(
                           child: Text(
-                            'Negotiation Vacancy',
+                            'Negotiation Vacancy'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -240,18 +242,18 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
                           children: [
                             Expanded(
                               child: buildTextField(
-                                'Min Salary Expectation',
+                                'Min Salary Expectation'.tr(),
                                 _salaryMinController,
                                 Icons.attach_money,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter minimum salary';
+                                    return 'Please enter minimum salary'.tr();
                                   } else if (int.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
+                                    return 'Please enter a valid number'.tr();
                                   }
                                   minSalary = int.parse(value);
                                   if (minSalary < 0) {
-                                    return 'Salary cannot be negative';
+                                    return 'Salary cannot be negative'.tr();
                                   }
                                   return null;
                                 },
@@ -262,20 +264,21 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
                             SizedBox(width: 10),
                             Expanded(
                               child: buildTextField(
-                                'Max Salary Expectation',
+                                'Max Salary Expectation'.tr(),
                                 _salaryMaxController,
                                 Icons.attach_money,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter maximum salary';
+                                    return 'Please enter maximum salary'.tr();
                                   } else if (int.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
+                                    return 'Please enter a valid number'.tr();
                                   }
                                   maxSalary = int.parse(value);
                                   if (maxSalary < 0) {
-                                    return 'Salary cannot be negative';
+                                    return 'Salary cannot be negative'.tr();
                                   } else if (maxSalary < minSalary) {
-                                    return 'Max salary must be greater than min salary';
+                                    return 'Max salary must be greater than min salary'
+                                        .tr();
                                   }
                                   return null;
                                 },
@@ -289,13 +292,13 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
                                 color: Colors.blue.shade400,
                               )
                             : buildDropdownField(
-                                'Job Type',
+                                'Job Type'.tr(),
                                 _jobTypeController,
                                 jobType,
                                 (value) => _jobTypeController = value,
                                 (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter job type';
+                                    return 'Please enter job type'.tr();
                                   }
                                   return null;
                                 },
@@ -306,13 +309,13 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
                                 color: Colors.blue.shade400,
                               )
                             : buildDropdownField(
-                                'Work System',
+                                'Work System'.tr(),
                                 _workSystemController,
                                 workSystem,
                                 (value) => _workSystemController = value,
                                 (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter work system';
+                                    return 'Please enter work system'.tr();
                                   }
                                   return null;
                                 },
@@ -325,7 +328,7 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
                                 onPressed: _submitForm,
                                 icon: Icon(Icons.check),
                                 iconAlignment: IconAlignment.end,
-                                label: Text('Submit'),
+                                label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   backgroundColor: Colors.blue,

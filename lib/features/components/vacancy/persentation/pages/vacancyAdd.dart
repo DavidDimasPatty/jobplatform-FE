@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
@@ -90,13 +91,13 @@ class _Vacancyadd extends State<Vacancyadd> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Vacancy added successfully!')),
+            SnackBar(content: Text('Vacancy added successfully!'.tr())),
           );
           context.go('/vacancy');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to add vacancy. Please try again.'),
+              content: Text('Failed to add vacancy. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -106,7 +107,7 @@ class _Vacancyadd extends State<Vacancyadd> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add vacancy. Please try again.'),
+            content: Text('Failed to add vacancy. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -159,7 +160,7 @@ class _Vacancyadd extends State<Vacancyadd> {
                       children: [
                         SizedBox(
                           child: Text(
-                            'Add Vacancy',
+                            'Add Vacancy'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -173,18 +174,18 @@ class _Vacancyadd extends State<Vacancyadd> {
                           children: [
                             Expanded(
                               child: buildTextField(
-                                'Min Salary Expectation',
+                                'Min Salary Expectation'.tr(),
                                 _salaryMinController,
                                 Icons.attach_money,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter minimum salary';
+                                    return 'Please enter minimum salary'.tr();
                                   } else if (int.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
+                                    return 'Please enter a valid number'.tr();
                                   }
                                   minSalary = int.parse(value);
                                   if (minSalary < 0) {
-                                    return 'Salary cannot be negative';
+                                    return 'Salary cannot be negative'.tr();
                                   }
                                   return null;
                                 },
@@ -195,20 +196,21 @@ class _Vacancyadd extends State<Vacancyadd> {
                             SizedBox(width: 10),
                             Expanded(
                               child: buildTextField(
-                                'Max Salary Expectation',
+                                'Max Salary Expectation'.tr(),
                                 _salaryMaxController,
                                 Icons.attach_money,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter maximum salary';
+                                    return 'Please enter maximum salary'.tr();
                                   } else if (int.tryParse(value) == null) {
-                                    return 'Please enter a valid number';
+                                    return 'Please enter a valid number'.tr();
                                   }
                                   maxSalary = int.parse(value);
                                   if (maxSalary < 0) {
-                                    return 'Salary cannot be negative';
+                                    return 'Salary cannot be negative'.tr();
                                   } else if (maxSalary < minSalary) {
-                                    return 'Max salary must be greater than min salary';
+                                    return 'Max salary must be greater than min salary'
+                                        .tr();
                                   }
                                   return null;
                                 },
@@ -217,56 +219,56 @@ class _Vacancyadd extends State<Vacancyadd> {
                           ],
                         ),
                         buildTextField(
-                          'Position',
+                          'Position'.tr(),
                           _positionController,
                           Icons.business,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter position';
+                              return 'Please enter position'.tr();
                             }
                             return null;
                           },
                         ),
                         buildTextField(
-                          'Job Type',
+                          'Job Type'.tr(),
                           _jobTypeController,
                           Icons.co_present,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter job type';
+                              return 'Please enter job type'.tr();
                             }
                             return null;
                           },
                         ),
                         buildTextField(
-                          'Work System',
+                          'Work System'.tr(),
                           _workSystemController,
                           Icons.access_time,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter work system';
+                              return 'Please enter work system'.tr();
                             }
                             return null;
                           },
                         ),
                         buildTextField(
-                          'Location',
+                          'Location'.tr(),
                           _locationController,
                           Icons.location_on,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter location';
+                              return 'Please enter location'.tr();
                             }
                             return null;
                           },
                         ),
                         buildTextField(
-                          'Career Level',
+                          'Career Level'.tr(),
                           _careerLevelController,
                           Icons.trending_up,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter career level';
+                              return 'Please enter career level'.tr();
                             }
                             return null;
                           },
@@ -278,7 +280,7 @@ class _Vacancyadd extends State<Vacancyadd> {
                                 onPressed: _submitForm,
                                 icon: Icon(Icons.check),
                                 iconAlignment: IconAlignment.end,
-                                label: Text('Submit'),
+                                label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   backgroundColor: Colors.blue,

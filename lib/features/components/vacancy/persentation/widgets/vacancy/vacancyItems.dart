@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
@@ -44,10 +45,7 @@ class Vacancyitems extends StatelessWidget {
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return InkWell(
       onTap: () {
-        context.go(
-          "/vacancyDetail",
-          extra: vacancy,
-        );
+        context.go("/vacancyDetail", extra: vacancy);
       },
       child: Container(
         margin: EdgeInsets.all(7),
@@ -108,7 +106,7 @@ class Vacancyitems extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              vacancy.tipeKerja ?? "Full Time",
+                              vacancy.tipeKerja ?? "Full Time".tr(),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.normal,
@@ -116,7 +114,7 @@ class Vacancyitems extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              vacancy.sistemKerja ?? "WFO",
+                              vacancy.sistemKerja ?? "WFO".tr(),
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -146,7 +144,7 @@ class Vacancyitems extends StatelessWidget {
                                         extra: vacancy,
                                       );
                                     },
-                                    label: const Text("Edit"),
+                                    label: Text("Edit".tr()),
                                     icon: const Icon(Icons.edit),
                                   ),
                                   const SizedBox(height: 8),
@@ -159,8 +157,8 @@ class Vacancyitems extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: onDelete,
-                                    label: const Text("Delete"),
-                                    icon: const Icon(Icons.delete),
+                                    label: Text("Delete".tr()),
+                                    icon: Icon(Icons.delete),
                                   ),
                                 ],
                               )

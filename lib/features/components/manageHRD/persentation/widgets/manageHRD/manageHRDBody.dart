@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDItems.dart';
 
@@ -45,7 +46,7 @@ class _Managehrdbody extends State<Managehrdbody> {
           Container(
             margin: EdgeInsets.only(left: 20, top: 20),
             child: Text(
-              "Manage HRD",
+              "Manage HRD".tr(),
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
@@ -63,8 +64,8 @@ class _Managehrdbody extends State<Managehrdbody> {
                     },
                     controller: widget.searchController,
                     decoration: InputDecoration(
-                      labelText: 'Cari HRD',
-                      hintText: 'Masukan Nama HRD',
+                      labelText: 'Cari HRD'.tr(),
+                      hintText: 'Masukan Nama HRD'.tr(),
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
@@ -76,8 +77,9 @@ class _Managehrdbody extends State<Managehrdbody> {
                       ),
                     ),
                     // initialValue: email,
-                    validator: (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Wajib diisi'.tr()
+                        : null,
                   ),
                 ),
                 ElevatedButton.icon(
@@ -89,16 +91,13 @@ class _Managehrdbody extends State<Managehrdbody> {
                     ),
                   ),
                   onPressed: widget.popup,
-                  label: const Text("Add"),
-                  icon: const Icon(Icons.add),
+                  label: Text("Add".tr()),
+                  icon: Icon(Icons.add),
                 ),
               ],
             ),
           ),
           ListView.builder(
-            // separatorBuilder: (context, index) {
-            //   return Divider();
-            // },
             itemCount: widget.items.length,
             itemBuilder: (BuildContext context, int index) {
               return widget.items[index];

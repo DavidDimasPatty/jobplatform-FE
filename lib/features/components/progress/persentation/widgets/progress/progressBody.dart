@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/progress/persentation/widgets/progress/progressItems.dart';
 
@@ -73,7 +74,7 @@ class _Progressbody extends State<Progressbody> {
                 ),
                 // initialValue: email,
                 validator: (value) =>
-                    value == null || value.isEmpty ? 'Wajib diisi' : null,
+                    value == null || value.isEmpty ? 'Wajib diisi'.tr() : null,
               ),
             ),
             ListView.builder(

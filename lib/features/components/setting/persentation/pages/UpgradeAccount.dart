@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
@@ -53,7 +54,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                 foregroundColor: Colors.white,
               ),
               onPressed: () => Navigator.of(context).pop("CONFIRM"),
-              child: Text('Konfirmasi'),
+              child: Text('Konfirmasi'.tr()),
             ),
           ],
         );
@@ -69,8 +70,8 @@ class _Upgradeaccount extends State<Upgradeaccount> {
 
       final result = await showConfirmStatus(
         context,
-        "Yakin ingin upgrade plan?",
-        "Upgrade Plan Rp. 250.000 /bulan",
+        "Yakin ingin upgrade plan?".tr(),
+        "Upgrade Plan Rp. 250.000 /bulan".tr(),
       );
       if (result == null) return;
 
@@ -83,7 +84,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
         prefs.setBool("isPremium", value);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Success Upgrade Plan!'),
+            content: Text('Success Upgrade Plan!'.tr()),
             backgroundColor: Colors.green,
           ),
         );
@@ -114,7 +115,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "Anda Sudah Premium!",
+                          "Anda Sudah Premium!".tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -123,8 +124,9 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const Text(
-                          "Terima kasih telah berpartisipasi untuk menjadi premium.",
+                        Text(
+                          "Terima kasih telah berpartisipasi untuk menjadi premium."
+                              .tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
@@ -148,7 +150,6 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                     ),
                   ),
 
-                  // --- Bintang di atas popup ---
                   Positioned(
                     top: 0,
                     child: Container(
@@ -300,7 +301,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                       children: [
                         SizedBox(
                           child: Text(
-                            'Upgrade Premium',
+                            'Upgrade Premium'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -324,12 +325,12 @@ class _Upgradeaccount extends State<Upgradeaccount> {
                                       .read<SettingProvider>();
                                   await provider.changePremium(true);
                                 },
-                                label: Text("Upgrade Now"),
+                                label: Text("Upgrade Now".tr()),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.amber,
                                 ),
                               )
-                            : Text('Akun anda Sudah Premium!'),
+                            : Text('Akun anda Sudah Premium!').tr(),
                       ],
                     ),
                   ),

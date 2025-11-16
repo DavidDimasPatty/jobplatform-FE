@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(
     options: FirebaseOptions(
@@ -25,7 +27,12 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => SettingProvider())],
-      child: const MyApp(),
+      child: EasyLocalization(
+        supportedLocales: const [Locale('en'), Locale('id')],
+        path: 'assets/lang',
+        fallbackLocale: const Locale('id'),
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -39,6 +46,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
       ),
+      locale: context.locale,
+      supportedLocales: context.supportedLocales,
+      localizationsDelegates: context.localizationDelegates,
       builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
         breakpoints: [

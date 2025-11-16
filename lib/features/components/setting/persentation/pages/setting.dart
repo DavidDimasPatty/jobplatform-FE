@@ -307,7 +307,7 @@ class _Setting extends State<Setting> {
       _initializeUseCase();
       final provider = context.read<SettingProvider>();
       await provider.loadSetting();
-
+      print(Localizations.localeOf(context));
       setState(() {
         nama = provider.nama;
         loginAs = provider.loginAs;

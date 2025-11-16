@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -118,7 +119,12 @@ class _LoginFormState extends State<LoginForm> {
                 data.user!.isNotifExternal ?? false,
               );
               await prefs.setBool("isDarkMode", data.user!.isDarkMode ?? false);
-              await prefs.setString("language", data.user!.language ?? "IDN");
+              await prefs.setString("language", data.user!.language ?? "IND");
+              if (data.user!.language == "IND") {
+                context.setLocale(const Locale('id'));
+              } else {
+                context.setLocale(const Locale('en'));
+              }
               if (data.hrCompanies != null) {
                 await prefs.setBool("isHRD", true);
                 await prefs.setString(
@@ -175,8 +181,13 @@ class _LoginFormState extends State<LoginForm> {
                 );
                 await prefs.setString(
                   "language",
-                  data.company!.language ?? "IDN",
+                  data.company!.language ?? "IND",
                 );
+                if (data.company!.language == "IND") {
+                  context.setLocale(const Locale('id'));
+                } else {
+                  context.setLocale(const Locale('en'));
+                }
                 // WebSocket Connection
                 await _webSocketClient.connect(
                   '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.company!.id!}',

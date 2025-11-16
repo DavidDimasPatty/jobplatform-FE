@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -40,24 +41,25 @@ class Managehrditems extends StatelessWidget {
           child: ListTile(
             onTap: () {},
             leading: Container(
-              decoration: BoxDecoration(
-                // color: (colorBGIcon != null ? colorBGIcon : Colors.lightBlueAccent),
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               // padding: EdgeInsets.all(5),
               child: ClipOval(
                 child: url!.isNotEmpty
                     ? Image.network(
                         url!,
-                        width: 40,
-                        height: 40,
+                        width: 60,
+                        height: 60,
                         fit: BoxFit.cover,
                       )
-                    : Image.asset(
-                        "assets/images/BG_HRD.png",
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
+                    : Container(
+                        width: 60,
+                        height: 60,
+                        color: Colors.grey[300],
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                       ),
               ),
             ),
@@ -93,18 +95,18 @@ class Managehrditems extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       FaIcon(
-                                        status == "Active"
+                                        status == "Active".tr()
                                             ? FontAwesomeIcons.peopleGroup
-                                            : status == "Inactive"
+                                            : status == "Inactive".tr()
                                             ? FontAwesomeIcons.timeline
-                                            : status == "Reject"
+                                            : status == "Reject".tr()
                                             ? FontAwesomeIcons.x
                                             : FontAwesomeIcons.circleQuestion,
-                                        color: status == "Active"
+                                        color: status == "Active".tr()
                                             ? Colors.blue
-                                            : status == "Inactive"
+                                            : status == "Inactive".tr()
                                             ? Colors.orange
-                                            : status == "Reject"
+                                            : status == "Reject".tr()
                                             ? Colors.red
                                             : Colors.grey,
                                       ),
@@ -113,11 +115,11 @@ class Managehrditems extends StatelessWidget {
                                         status,
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: status == "Active"
+                                          color: status == "Active".tr()
                                               ? Colors.blue
-                                              : status == "Inactive"
+                                              : status == "Inactive".tr()
                                               ? Colors.orange
-                                              : status == "Reject"
+                                              : status == "Reject".tr()
                                               ? Colors.red
                                               : Colors.grey,
                                         ),
@@ -134,7 +136,7 @@ class Managehrditems extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: onDelete,
-                                    label: const Text("Delete"),
+                                    label: Text("Delete".tr()),
                                     icon: const Icon(Icons.delete),
                                   ),
                                 ],
@@ -147,18 +149,18 @@ class Managehrditems extends StatelessWidget {
                                   Row(
                                     children: [
                                       FaIcon(
-                                        status == "Active"
+                                        status == "Active".tr()
                                             ? FontAwesomeIcons.peopleGroup
-                                            : status == "Inactive"
+                                            : status == "Inactive".tr()
                                             ? FontAwesomeIcons.timeline
-                                            : status == "Reject"
+                                            : status == "Reject".tr()
                                             ? FontAwesomeIcons.x
                                             : FontAwesomeIcons.circleQuestion,
-                                        color: status == "Active"
+                                        color: status == "Active".tr()
                                             ? Colors.blue
-                                            : status == "Inactive"
+                                            : status == "Inactive".tr()
                                             ? Colors.orange
-                                            : status == "Reject"
+                                            : status == "Reject".tr()
                                             ? Colors.red
                                             : Colors.grey,
                                       ),
@@ -167,11 +169,11 @@ class Managehrditems extends StatelessWidget {
                                         status,
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: status == "Active"
+                                          color: status == "Active".tr()
                                               ? Colors.blue
-                                              : status == "Inactive"
+                                              : status == "Inactive".tr()
                                               ? Colors.orange
-                                              : status == "Reject"
+                                              : status == "Reject".tr()
                                               ? Colors.red
                                               : Colors.grey,
                                         ),
@@ -188,7 +190,7 @@ class Managehrditems extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: onDelete,
-                                    label: const Text("Delete"),
+                                    label: Text("Delete".tr()),
                                     icon: const Icon(Icons.delete),
                                   ),
                                 ],

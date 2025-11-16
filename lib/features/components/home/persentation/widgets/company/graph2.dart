@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:job_platform/features/components/home/data/models/ProsesPelamaran.dart';
@@ -100,7 +101,7 @@ class _Graph2 extends State<Graph2> with SingleTickerProviderStateMixin {
             width: double.infinity,
             child: Center(
               child: Text(
-                "Banyaknya Proses Pelamaran",
+                "Banyaknya Proses Pelamaran".tr(),
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
@@ -111,10 +112,10 @@ class _Graph2 extends State<Graph2> with SingleTickerProviderStateMixin {
             labelColor: Colors.blue,
             unselectedLabelColor: Colors.grey,
             indicatorColor: Colors.blue,
-            tabs: const [
-              Tab(text: "Harian"),
-              Tab(text: "Mingguan"),
-              Tab(text: "Bulanan"),
+            tabs: [
+              Tab(text: "Harian".tr()),
+              Tab(text: "Mingguan".tr()),
+              Tab(text: "Bulanan".tr()),
             ],
           ),
           SizedBox(
@@ -129,13 +130,13 @@ class _Graph2 extends State<Graph2> with SingleTickerProviderStateMixin {
                   FlSpot(4, widget.item!.harian![3].toDouble()),
                   FlSpot(5, widget.item!.harian![4].toDouble()),
                   FlSpot(6, widget.item!.harian![5].toDouble()),
-                ], "Harian"),
+                ], "Harian".tr()),
                 _buildLineChart([
                   FlSpot(1, widget.item!.mingguan![0].toDouble()),
                   FlSpot(2, widget.item!.mingguan![1].toDouble()),
                   FlSpot(3, widget.item!.mingguan![2].toDouble()),
                   FlSpot(4, widget.item!.mingguan![3].toDouble()),
-                ], "Mingguan"),
+                ], "Mingguan".tr()),
                 _buildLineChart([
                   FlSpot(1, widget.item!.bulanan![0].toDouble()),
                   FlSpot(2, widget.item!.bulanan![1].toDouble()),
@@ -149,7 +150,7 @@ class _Graph2 extends State<Graph2> with SingleTickerProviderStateMixin {
                   FlSpot(10, widget.item!.bulanan![9].toDouble()),
                   FlSpot(11, widget.item!.bulanan![10].toDouble()),
                   FlSpot(12, widget.item!.bulanan![11].toDouble()),
-                ], "Bulanan"),
+                ], "Bulanan".tr()),
               ],
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -40,19 +41,19 @@ class _bodySetting extends State<bodySetting> {
     return Column(
       children: [
         SettingsGroup(
-          settingsGroupTitle: "App Configuration",
+          settingsGroupTitle: "App Configuration".tr(),
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
               onTap: () => context.go("/appearance"),
               icons: CupertinoIcons.pencil_outline,
-              title: 'Appearance',
+              title: 'Appearance'.tr(),
               colorBGIcon: Colors.orangeAccent,
             ),
             SettingsItem(
               icons: Icons.dark_mode_rounded,
-              title: 'Dark mode',
-              subtitle: "Change theme color application",
+              title: 'Dark mode'.tr(),
+              subtitle: "Change theme color application".tr(),
               colorBGIcon: Colors.black,
               trailing: Switch.adaptive(
                 activeColor: Colors.blue,
@@ -69,7 +70,7 @@ class _bodySetting extends State<bodySetting> {
               onTap: () => context.go("/setNotification"),
               icons: Icons.notifications_active_sharp,
               colorBGIcon: Colors.green,
-              title: 'Setting Notification',
+              title: 'Setting Notification'.tr(),
             ),
           ],
         ),
@@ -82,43 +83,43 @@ class _bodySetting extends State<bodySetting> {
               onTap: () => context.go("/upgradeAccount"),
               icons: Icons.star,
               colorBGIcon: Colors.yellow.shade700,
-              title: 'Upgrade Account',
-              subtitle: "Upgrade to premium",
+              title: 'Upgrade Account'.tr(),
+              subtitle: "Upgrade to premium".tr(),
             ),
             SettingsItem(
               onTap: () => context.go("/settingEmail"),
               icons: Icons.attach_email,
-              title: 'Setting Email',
+              title: 'Setting Email'.tr(),
               colorBGIcon: Colors.red,
-              subtitle: "Change account email",
+              subtitle: "Change account email".tr(),
             ),
           ],
         ),
 
         SettingsGroup(
-          settingsGroupTitle: "Information Center",
+          settingsGroupTitle: "Information Center".tr(),
           backgroundColor: Colors.grey.shade100,
           items: [
             SettingsItem(
               onTap: () => context.go("/aboutUs"),
               icons: Icons.info_rounded,
               colorBGIcon: Colors.blue.shade400,
-              title: 'About',
-              subtitle: "Learn more about Skillen",
+              title: 'About'.tr(),
+              subtitle: "Learn more about Skillen".tr(),
             ),
             SettingsItem(
               onTap: () => context.go("/faq"),
               icons: Icons.question_answer,
               colorBGIcon: Colors.blue.shade400,
-              title: 'FAQ',
-              subtitle: "Frequent Asked Questions",
+              title: 'FAQ'.tr(),
+              subtitle: "Frequent Asked Questions".tr(),
             ),
             SettingsItem(
               onTap: () => context.go("/tos"),
               icons: Icons.design_services_rounded,
               colorBGIcon: Colors.blue.shade400,
-              title: 'Terms Of Service',
-              subtitle: "See our guidelines",
+              title: 'Terms Of Service'.tr(),
+              subtitle: "See our guidelines".tr(),
             ),
           ],
         ),
@@ -129,16 +130,16 @@ class _bodySetting extends State<bodySetting> {
             SettingsItem(
               onTap: widget.openPlayStore!,
               icons: Icons.insert_chart,
-              title: 'Send Feedback',
+              title: 'Send Feedback'.tr(),
               colorBGIcon: Colors.orange,
-              subtitle: "Help us improve Skillen",
+              subtitle: "Help us improve Skillen".tr(),
             ),
             SettingsItem(
               onTap: widget.openPlayStore!,
               icons: Icons.favorite_outlined,
               colorIcon: Colors.red,
               colorBGIcon: Colors.white,
-              title: 'Rate Us',
+              title: 'Rate Us'.tr(),
             ),
           ],
         ),
@@ -149,12 +150,12 @@ class _bodySetting extends State<bodySetting> {
               onTap: widget.logOut,
               icons: Icons.exit_to_app_rounded,
               colorBGIcon: Colors.redAccent,
-              title: "Sign Out",
+              title: "Sign Out".tr(),
             ),
             SettingsItem(
               onTap: widget.deleteAccount,
               icons: CupertinoIcons.delete_solid,
-              title: "Delete account",
+              title: "Delete account".tr(),
               colorBGIcon: Colors.red,
               titleStyle: TextStyle(
                 color: Colors.red,

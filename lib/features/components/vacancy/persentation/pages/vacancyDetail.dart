@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
@@ -48,7 +49,7 @@ class VacancyDetail extends StatelessWidget {
                     children: [
                       SizedBox(
                         child: Text(
-                          'Detail Vacancy',
+                          'Detail Vacancy'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,
@@ -181,7 +182,7 @@ class VacancyDetail extends StatelessWidget {
                         },
                         icon: Icon(Icons.arrow_back),
                         iconAlignment: IconAlignment.start,
-                        label: Text('Back'),
+                        label: Text('Back'.tr()),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,

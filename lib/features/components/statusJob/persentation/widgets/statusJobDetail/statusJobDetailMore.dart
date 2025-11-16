@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusDetailVM.dart';
@@ -8,36 +9,37 @@ class statusJobDetailMore extends StatelessWidget {
 
   statusJobDetailMore({super.key, this.data, this.status});
   Map<String, String> get careerDescriptions => {
-    "Salary Expectation": data != null
+    "Salary Expectation".tr(): data != null
         ? data?.gajiMaxNego != null && data?.gajiMin != null
               ? "${NumberFormat('#,###').format(data?.gajiMinNego)} - ${NumberFormat('#,###').format(data?.gajiMaxNego)}"
               : "${NumberFormat('#,###').format(data?.gajiMin)} - ${NumberFormat('#,###').format(data?.gajiMax)}"
-        : "Not specified",
-    "Position": data != null
-        ? data?.namaPosisi ?? "Not specified"
-        : "Not specified",
-    "Job Type": data != null
+        : "Not specified".tr(),
+    "Position".tr(): data != null
+        ? data?.namaPosisi ?? "Not specified".tr()
+        : "Not specified".tr(),
+    "Job Type".tr(): data != null
         ? data?.tipePekerjaanNego != null
               ? data!.tipePekerjaanNego!
-              : data?.tipePekerjaan ?? "Not specified"
-        : "Not specified",
-    "Work System": data != null
+              : data?.tipePekerjaan ?? "Not specified".tr()
+        : "Not specified".tr(),
+    "Work System".tr(): data != null
         ? data?.sistemKerjaNego != null
               ? data!.sistemKerjaNego!
-              : data?.sistemKerja ?? "Not specified"
-        : "Not specified",
-    "Location": data != null
-        ? data?.lokasiKerja ?? "Not specified"
-        : "Not specified",
-    "Career Level": data != null
-        ? data?.jabatan ?? "Not specified"
-        : "Not specified",
-    "Min. Exprience": data != null
-        ? "${data?.minExperience.toString()} Tahun" ?? "Not specified"
-        : "Not specified",
+              : data?.sistemKerja ?? "Not specified".tr()
+        : "Not specified".tr(),
+    "Location".tr(): data != null
+        ? data?.lokasiKerja ?? "Not specified".tr()
+        : "Not specified".tr(),
+    "Career Level".tr(): data != null
+        ? data?.jabatan ?? "Not specified".tr()
+        : "Not specified".tr(),
+    "Min. Exprience".tr(): data != null
+        ? "${data?.minExperience.toString()} ${"Tahun".tr()}" ??
+              "Not specified".tr()
+        : "Not specified".tr(),
     "Skill Required": data != null && data?.skill != null
         ? data!.skill!.map((x) => x.nama).join(", ")
-        : "Not specified",
+        : "Not specified".tr(),
   };
 
   final Map<String, IconData> careerIcons = {
@@ -67,7 +69,7 @@ class statusJobDetailMore extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Offering Details",
+                "Offering Details".tr(),
                 style: TextStyle(
                   fontSize: 15,
                   letterSpacing: 1,

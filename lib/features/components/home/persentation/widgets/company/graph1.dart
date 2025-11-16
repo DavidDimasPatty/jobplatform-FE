@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:job_platform/features/components/home/data/models/ProsesPerekrutan.dart';
@@ -91,7 +92,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
             width: double.infinity,
             child: Center(
               child: Text(
-                "Grafik Proses Perekrutan",
+                "Grafik Proses Perekrutan".tr(),
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
@@ -136,7 +137,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            "Proses Rekrut diterima",
+                            "Proses Rekrut diterima".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
                             style: const TextStyle(fontSize: 14),
@@ -159,7 +160,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            "Proses rekrut ditolak",
+                            "Proses rekrut ditolak".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
                             style: const TextStyle(fontSize: 14),
@@ -182,7 +183,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            "Proses rekrut berhasil",
+                            "Proses rekrut berhasil".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
                             style: const TextStyle(fontSize: 14),
@@ -205,7 +206,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            "Proses rekrut pending",
+                            "Proses rekrut pending".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
                             style: const TextStyle(fontSize: 14),

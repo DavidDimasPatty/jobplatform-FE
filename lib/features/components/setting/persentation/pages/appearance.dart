@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
@@ -29,7 +30,7 @@ class _Appearance extends State<Appearance> {
   String? _fontSizeBodyController;
   String? _fontSizeIconontroller;
   String? _languageController;
-  List<String> fontType = ["big", "medium", "small"];
+  List<String> fontType = ["big".tr(), "medium".tr(), "small".tr()];
   List<String> language = ["🇺🇸-ENG", "🇮🇩-IND"];
   bool _isLoading = false;
 
@@ -46,25 +47,25 @@ class _Appearance extends State<Appearance> {
 
       setState(() {
         _fontSizeHeadController = setting.fontSizeHead == 22
-            ? "big"
+            ? "big".tr()
             : setting.fontSizeHead == 18
-            ? "medium"
-            : "small";
+            ? "medium".tr()
+            : "small".tr();
         _fontSizeSubHeadController = setting.fontSizeSubHead == 20
-            ? "big"
+            ? "big".tr()
             : setting.fontSizeSubHead == 16
-            ? "medium"
-            : "small";
+            ? "medium".tr()
+            : "small".tr();
         _fontSizeBodyController = setting.fontSizeBody == 18
-            ? "big"
+            ? "big".tr()
             : setting.fontSizeBody == 14
-            ? "medium"
-            : "small";
+            ? "medium".tr()
+            : "small".tr();
         _fontSizeIconontroller = setting.fontSizeIcon == 16
-            ? "big"
+            ? "big".tr()
             : setting.fontSizeIcon == 12
-            ? "medium"
-            : "small";
+            ? "medium".tr()
+            : "small".tr();
         _languageController = setting.language;
         _isLoading = true;
       });
@@ -88,6 +89,11 @@ class _Appearance extends State<Appearance> {
       );
       if (response == 'Sukses') {
         prefs.setString("language", language);
+        if (language == "IND") {
+          context.setLocale(const Locale('id'));
+        } else {
+          context.setLocale(const Locale('en'));
+        }
       } else {}
     } catch (e) {
       debugPrint('Error during change language: $e');
@@ -115,57 +121,57 @@ class _Appearance extends State<Appearance> {
       String? response = await _settingUseCase!.changeFontSize(
         id,
         loginAs!,
-        fontSizeHead == "big"
+        fontSizeHead == "big".tr()
             ? 22
-            : fontSizeHead == "medium"
+            : fontSizeHead == "medium".tr()
             ? 18
             : 14,
-        fontSizeSubHead == "big"
+        fontSizeSubHead == "big".tr()
             ? 20
-            : fontSizeSubHead == "medium"
+            : fontSizeSubHead == "medium".tr()
             ? 16
             : 12,
-        fontSizeBody == "big"
+        fontSizeBody == "big".tr()
             ? 18
-            : fontSizeBody == "medium"
+            : fontSizeBody == "medium".tr()
             ? 14
             : 10,
-        fontSizeIcon == "big"
+        fontSizeIcon == "big".tr()
             ? 16
-            : fontSizeIcon == "medium"
+            : fontSizeIcon == "medium".tr()
             ? 12
             : 8,
       );
       if (response == 'Sukses') {
         prefs.setInt(
           "fontSizeHead",
-          fontSizeHead == "big"
+          fontSizeHead == "big".tr()
               ? 22
-              : fontSizeHead == "medium"
+              : fontSizeHead == "medium".tr()
               ? 18
               : 14,
         );
         prefs.setInt(
           "fontSizeSubHead",
-          fontSizeSubHead == "big"
+          fontSizeSubHead == "big".tr()
               ? 20
-              : fontSizeSubHead == "medium"
+              : fontSizeSubHead == "medium".tr()
               ? 16
               : 12,
         );
         prefs.setInt(
           "fontSizeBody",
-          fontSizeBody == "big"
+          fontSizeBody == "big".tr()
               ? 18
-              : fontSizeBody == "medium"
+              : fontSizeBody == "medium".tr()
               ? 14
               : 10,
         );
         prefs.setInt(
           "fontSizeIcon",
-          fontSizeIcon == "big"
+          fontSizeIcon == "big".tr()
               ? 16
-              : fontSizeIcon == "medium"
+              : fontSizeIcon == "medium".tr()
               ? 12
               : 8,
         );
@@ -230,7 +236,7 @@ class _Appearance extends State<Appearance> {
                       children: [
                         SizedBox(
                           child: Text(
-                            'Font Size',
+                            'Font Size'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -254,21 +260,22 @@ class _Appearance extends State<Appearance> {
                                       style: TextStyle(fontSize: 14),
                                       children: [
                                         TextSpan(
-                                          text: "Example Size Head: ",
+                                          text: "Example Size Head: ".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "Halo User Skillen!",
+                                          text: "Halo User Skillen!".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize:
-                                                _fontSizeHeadController == "big"
+                                                _fontSizeHeadController ==
+                                                    "big".tr()
                                                 ? 22
                                                 : _fontSizeHeadController ==
-                                                      "medium"
+                                                      "medium".tr()
                                                 ? 18
                                                 : 14,
                                             fontWeight: FontWeight.normal,
@@ -279,7 +286,7 @@ class _Appearance extends State<Appearance> {
                                   ),
                                   SizedBox(height: 10),
                                   buildDropdownField(
-                                    'Font Size Head',
+                                    'Font Size Head'.tr(),
                                     _fontSizeHeadController != null
                                         ? fontType!.contains(
                                                 _fontSizeHeadController,
@@ -314,22 +321,22 @@ class _Appearance extends State<Appearance> {
                                       style: TextStyle(fontSize: 14),
                                       children: [
                                         TextSpan(
-                                          text: "Example Size Sub Head: ",
+                                          text: "Example Size Sub Head: ".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "Halo User Skillen!",
+                                          text: "Halo User Skillen!".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize:
                                                 _fontSizeSubHeadController ==
-                                                    "big"
+                                                    "big".tr()
                                                 ? 20
                                                 : _fontSizeSubHeadController ==
-                                                      "medium"
+                                                      "medium".tr()
                                                 ? 16
                                                 : 12,
                                             fontWeight: FontWeight.normal,
@@ -340,7 +347,7 @@ class _Appearance extends State<Appearance> {
                                   ),
                                   SizedBox(height: 10),
                                   buildDropdownField(
-                                    'Font Size Sub Head',
+                                    'Font Size Sub Head'.tr(),
                                     _fontSizeSubHeadController != null
                                         ? fontType!.contains(
                                                 _fontSizeSubHeadController,
@@ -375,21 +382,22 @@ class _Appearance extends State<Appearance> {
                                       style: TextStyle(fontSize: 14),
                                       children: [
                                         TextSpan(
-                                          text: "Example Size Body: ",
+                                          text: "Example Size Body: ".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "Halo User Skillen!",
+                                          text: "Halo User Skillen!".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize:
-                                                _fontSizeBodyController == "big"
+                                                _fontSizeBodyController ==
+                                                    "big".tr()
                                                 ? 18
                                                 : _fontSizeBodyController ==
-                                                      "medium"
+                                                      "medium".tr()
                                                 ? 14
                                                 : 10,
                                             fontWeight: FontWeight.normal,
@@ -400,7 +408,7 @@ class _Appearance extends State<Appearance> {
                                   ),
                                   SizedBox(height: 10),
                                   buildDropdownField(
-                                    'Font Size Body',
+                                    'Font Size Body'.tr(),
                                     _fontSizeBodyController != null
                                         ? fontType!.contains(
                                                 _fontSizeBodyController,
@@ -435,21 +443,22 @@ class _Appearance extends State<Appearance> {
                                       style: TextStyle(fontSize: 14),
                                       children: [
                                         TextSpan(
-                                          text: "Example Size Font Size: ",
+                                          text: "Example Size Font Icon: ".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "Halo User Skillen!",
+                                          text: "Halo User Skillen!".tr(),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize:
-                                                _fontSizeIconontroller == "big"
+                                                _fontSizeIconontroller ==
+                                                    "big".tr()
                                                 ? 16
                                                 : _fontSizeIconontroller ==
-                                                      "medium"
+                                                      "medium".tr()
                                                 ? 12
                                                 : 8,
                                             fontWeight: FontWeight.normal,
@@ -460,7 +469,7 @@ class _Appearance extends State<Appearance> {
                                   ),
                                   SizedBox(height: 10),
                                   buildDropdownField(
-                                    'Font Size Icon',
+                                    'Font Size Icon'.tr(),
                                     _fontSizeIconontroller != null
                                         ? fontType!.contains(
                                                 _fontSizeIconontroller,
@@ -504,14 +513,14 @@ class _Appearance extends State<Appearance> {
                                     SnackBar(
                                       backgroundColor: Colors.green,
                                       content: Text(
-                                        'Success Change Font Size!',
+                                        'Success Change Font Size!'.tr(),
                                       ),
                                     ),
                                   );
                                 },
                                 icon: Icon(Icons.check),
                                 iconAlignment: IconAlignment.end,
-                                label: Text('Submit'),
+                                label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   backgroundColor: Colors.blue,
@@ -539,7 +548,7 @@ class _Appearance extends State<Appearance> {
                       children: [
                         SizedBox(
                           child: Text(
-                            'Pengaturan Bahasa',
+                            'Pengaturan Bahasa'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -554,7 +563,7 @@ class _Appearance extends State<Appearance> {
                                 color: Colors.blue.shade400,
                               )
                             : buildDropdownField(
-                                'Language',
+                                'Language'.tr(),
                                 _languageController != null
                                     ? language!.any(
                                             (x) => x.contains(
@@ -593,13 +602,15 @@ class _Appearance extends State<Appearance> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.green,
-                                      content: Text('Success Change Language!'),
+                                      content: Text(
+                                        'Success Change Language!'.tr(),
+                                      ),
                                     ),
                                   );
                                 },
                                 icon: Icon(Icons.check),
                                 iconAlignment: IconAlignment.end,
-                                label: Text('Submit'),
+                                label: Text('Submit'.tr()),
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   backgroundColor: Colors.blue,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class Progressitems extends StatelessWidget {
@@ -95,7 +96,7 @@ class Progressitems extends StatelessWidget {
                           style: TextStyle(fontSize: 14),
                           children: [
                             TextSpan(
-                              text: "Status : ",
+                              text: "Status : ".tr(),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -104,15 +105,15 @@ class Progressitems extends StatelessWidget {
                             TextSpan(
                               text: status ?? "",
                               style: TextStyle(
-                                color: status == "Review"
+                                color: status == "Review".tr()
                                     ? Colors.orange
-                                    : status == "Interview"
+                                    : status == "Interview".tr()
                                     ? Colors.blue
-                                    : status == "Offering"
+                                    : status == "Offering".tr()
                                     ? Colors.pink
-                                    : status == "Menunggu Konfirmasi"
+                                    : status == "Menunggu Konfirmasi".tr()
                                     ? Colors.indigo
-                                    : status == "Close"
+                                    : status == "Close".tr()
                                     ? Colors.green
                                     : Colors.red,
                                 fontWeight: FontWeight.normal,
@@ -131,8 +132,8 @@ class Progressitems extends StatelessWidget {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            if (status != "Close" &&
-                                !status!.contains("Reject"))
+                            if (status != "Close".tr() &&
+                                !status!.contains("Reject".tr()))
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue,
@@ -142,7 +143,7 @@ class Progressitems extends StatelessWidget {
                                   ),
                                 ),
                                 onPressed: onTap,
-                                label: Text("Validasi"),
+                                label: Text("Validasi".tr()),
                                 icon: Icon(Icons.skip_next),
                               ),
                           ],
@@ -159,7 +160,7 @@ class Progressitems extends StatelessWidget {
                                 ),
                               ),
                               onPressed: onTap,
-                              label: Text("Validasi"),
+                              label: Text("Validasi".tr()),
                               icon: Icon(Icons.skip_next),
                             ),
                           ],

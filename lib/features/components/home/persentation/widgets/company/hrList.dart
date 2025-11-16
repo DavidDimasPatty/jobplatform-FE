@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/hrListitem.dart';
 
@@ -35,7 +36,7 @@ class _hrList extends State<hrList> {
             width: double.infinity,
             child: Center(
               child: Text(
-                "HRD Terdaftar",
+                "HRD Terdaftar".tr(),
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
@@ -64,7 +65,7 @@ class _hrList extends State<hrList> {
                     height: MediaQuery.of(context).size.height * 0.2,
                     alignment: Alignment.center,
                     child: Text(
-                      "Data Tidak Ditemukan..",
+                      "Data Tidak Ditemukan..".tr(),
                       style: TextStyle(fontSize: 20),
                     ),
                   )),

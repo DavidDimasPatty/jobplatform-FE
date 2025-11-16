@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/vacancy/data/models/vacancyResponse.dart';
@@ -90,14 +91,14 @@ class _Vacancy extends State<Vacancy> {
           });
         }
       } else {
-        print("Company ID not found in SharedPreferences");
+        print("Company ID not found in SharedPreferences".tr());
       }
     } catch (e) {
-      print("Error loading vacancy data: $e");
+      print("${"Error loading vacancy data:".tr()} $e");
       if (mounted) {
         setState(() {
           isLoading = false;
-          errorMessage = "Error loading vacancy: $e";
+          errorMessage = "${"Error loading vacancy:".tr()} $e";
         });
       }
     }
@@ -109,14 +110,14 @@ class _Vacancy extends State<Vacancy> {
       String? idCompany = prefs.getString('idCompany');
 
       if (idCompany == null)
-        throw Exception("Company ID not found in preferences");
+        throw Exception("Company ID not found in preferences".tr());
 
       VacancyResponse response = await _vacancyUseCase.vacancyDelete(id);
 
       if (response.responseMessage == 'Sukses') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Vacancy Delete successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Vacancy Delete successfully!'.tr())),
+        );
         setState(() {
           _loadVacancyData();
         });
@@ -129,11 +130,11 @@ class _Vacancy extends State<Vacancy> {
         );
       }
     } catch (e) {
-      debugPrint('Error during delete vacancy: $e');
+      debugPrint('${"Error during delete vacancy:".tr()} $e');
       if (mounted) {
         setState(() {
           isLoading = false;
-          errorMessage = "Error delete vacancy: $e";
+          errorMessage = "${"Error delete vacancy:".tr()} $e";
         });
       }
     }
@@ -162,19 +163,18 @@ class _Vacancy extends State<Vacancy> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading vacancy data...'),
+            Text('Loading vacancy data...'.tr()),
           ],
         ),
       );
     }
 
-    // Show error message if there's an error
     if (errorMessage != null) {
       return Center(
         child: Column(
@@ -188,7 +188,6 @@ class _Vacancy extends State<Vacancy> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            // ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
           ],
         ),
       );
@@ -207,9 +206,6 @@ class _Vacancy extends State<Vacancy> {
             rowMainAxisAlignment: MainAxisAlignment.center,
             columnMainAxisAlignment: MainAxisAlignment.center,
             rowCrossAxisAlignment: CrossAxisAlignment.center,
-            // layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-            //     ? ResponsiveRowColumnType.COLUMN
-            //     : ResponsiveRowColumnType.ROW,
             layout: ResponsiveRowColumnType.COLUMN,
             rowSpacing: 100,
             columnSpacing: 20,
@@ -222,7 +218,6 @@ class _Vacancy extends State<Vacancy> {
                   searchController: _searchController,
                 ),
               ),
-              // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
           ),
         ),

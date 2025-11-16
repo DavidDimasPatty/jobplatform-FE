@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/statusJob/data/datasources/aut_remote_datasource.dart';
@@ -52,30 +53,30 @@ class _statusJob extends State<statusJob> {
                       x.isAcceptUser == false &&
                           x.status == null &&
                           x.alasanRejectUser == null
-                      ? "Menunggu Konfirmasi"
+                      ? "Menunggu Konfirmasi".tr()
                       : x.status == 0 &&
                             x.isAcceptUser == true &&
                             x.isRejectHRD == false
-                      ? "Review"
+                      ? "Review".tr()
                       : x.status == 1 &&
                             x.isAcceptUser == true &&
                             x.isRejectHRD == false
-                      ? "Interview"
+                      ? "Interview".tr()
                       : x.status == 2 &&
                             x.isAcceptUser == true &&
                             x.isRejectHRD == false
-                      ? "Offering"
+                      ? "Offering".tr()
                       : x.status == 3 &&
                             x.isAcceptUser == true &&
                             x.isRejectHRD == false
-                      ? "Close"
+                      ? "Close".tr()
                       : x.isAcceptUser == false &&
                             x.status == null &&
                             x.alasanRejectUser != null
-                      ? "Reject Vacancy"
+                      ? "Reject Vacancy".tr()
                       : x.isAcceptUser == false
-                      ? "Reject Offering"
-                      : "Reject HRD",
+                      ? "Reject Offering".tr()
+                      : "Reject HRD".tr(),
                   tipeKerja: x.tipeKerja ?? "",
                   url: x.logoPerusahaan ?? "",
                 ),
@@ -145,13 +146,13 @@ class _statusJob extends State<statusJob> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading data status...'),
+            Text('Loading data status...'.tr()),
           ],
         ),
       );

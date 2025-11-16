@@ -41,7 +41,6 @@ class hrListitem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [Text(subtitle!)],
           ),
-          // trailing: (trailing != null) ? trailing : Icon(Icons.navigate_next),
         ),
       ),
     );

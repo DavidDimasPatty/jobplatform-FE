@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -29,7 +30,7 @@ class _Settingemail extends State<Settingemail> {
   User? newUser;
   String? token;
   bool _isWaiting = false;
-  String _statusMessage = "Verifikasi akun lama...";
+  String _statusMessage = "Verifikasi akun lama...".tr();
   AuthRepositoryImpl? _repoSetting;
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
@@ -40,7 +41,7 @@ class _Settingemail extends State<Settingemail> {
     await Firebase.initializeApp();
     setState(() {
       _isWaiting = true;
-      _statusMessage = "Verifikasi akun lama (mohon masukan email exist)";
+      _statusMessage = "Verifikasi akun lama (mohon masukan email exist)".tr();
     });
 
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -140,11 +141,12 @@ class _Settingemail extends State<Settingemail> {
       if (res == "Sukses") {
         setState(() {
           _statusMessage =
-              "Email Berhasil Diganti! \n Anda Akan Diarahkan ke Halaman Login";
+              "Email Berhasil Diganti! \n Anda Akan Diarahkan ke Halaman Login"
+                  .tr();
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Success ganti email"),
+            content: Text("Success ganti email".tr()),
             backgroundColor: Colors.green,
           ),
         );
@@ -263,7 +265,7 @@ class _Settingemail extends State<Settingemail> {
                       ResponsiveRowColumnItem(
                         child: Container(
                           child: Text(
-                            'Change New Email',
+                            'Change New Email'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -281,7 +283,7 @@ class _Settingemail extends State<Settingemail> {
                             backgroundColor: Colors.blue,
                           ),
                           label: Text(
-                            'Validate change email',
+                            'Validate change email'.tr(),
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
