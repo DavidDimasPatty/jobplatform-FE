@@ -40,7 +40,6 @@ class _LoginFormState extends State<LoginForm> {
   String? imageUrl;
   String? token;
   bool isLoading = false;
-  final WebSocketClientImpl _webSocketClient = WebSocketClientImpl();
 
   Future _handleLogin() async {
     AuthProvider authProviderLogIn = Provider.of<AuthProvider>(
@@ -215,17 +214,14 @@ class _LoginFormState extends State<LoginForm> {
 
               try {
                 // WebSocket Connection
-                // await _webSocketClient.connect(
-                //   '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
-                await _webSocketClient
-                    .connect(
-                      '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
-                    )
-                    .onError((_, __) => null);
-                _webSocketClient.stream.handleError((error) {
-                  print("STREAM ERROR: $error");
-                });
-              } catch (_) {}
+                final _webSocketClient = WebSocketClientImpl(
+                  userId: data.user!.id!,
+                  url: '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}',
+                );
+                _webSocketClient.connect();
+              } catch (e) {
+                print("WebSocket connection error (DIABAIKAN): $e");
+              }
 
               String? result2FA;
 
@@ -381,18 +377,15 @@ class _LoginFormState extends State<LoginForm> {
                 }
 
                 try {
-                  // WebSocket Connection
-                  // await _webSocketClient.connect(
-                  //   '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
-                  await _webSocketClient
-                      .connect(
-                        '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.company!.id!}',
-                      )
-                      .onError((_, __) => null);
-                  _webSocketClient.stream.handleError((error) {
-                    print("STREAM ERROR: $error");
-                  });
-                } catch (_) {}
+                // WebSocket Connection
+                final _webSocketClient = WebSocketClientImpl(
+                  userId: data.company!.id!,
+                  url: '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}',
+                );
+                _webSocketClient.connect();
+              } catch (e) {
+                print("WebSocket connection error (DIABAIKAN): $e");
+              }
 
                 // LOGIN PROVIDER
                 String? result2FA;

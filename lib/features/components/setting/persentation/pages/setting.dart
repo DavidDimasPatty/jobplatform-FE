@@ -35,7 +35,7 @@ class _Setting extends State<Setting> {
   AuthRepositoryImpl? _repoSetting;
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
-  final WebSocketClientImpl _webSocketClient = WebSocketClientImpl();
+  final _webSocketClient = WebSocketClientImpl.instance;
   late AuthProvider authProvider;
   late SharedPreferences prefs;
   late FlutterSecureStorage storage;
@@ -94,7 +94,7 @@ class _Setting extends State<Setting> {
 
       String? response = await _settingUseCase!.deleteAccount(id, loginAs!);
       if (response == 'Sukses') {
-        _webSocketClient.disconnect();
+        await _webSocketClient?.disconnect();
         await storage.deleteAll();
         authProvider.logout();
         setState(() {
@@ -147,9 +147,10 @@ class _Setting extends State<Setting> {
         setState(() {
           isLoading = false;
         });
-        _webSocketClient.disconnect();
+        await _webSocketClient?.disconnect();
         await storage.deleteAll();
         authProvider.logout();
+        prefs.clear();
         context.go("/");
       } else {
         setState(() {

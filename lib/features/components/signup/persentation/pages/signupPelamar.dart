@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/core/network/websocket_client.dart';
 import 'package:job_platform/features/components/home/persentation/pages/homePage.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
@@ -103,6 +105,12 @@ class _SignUpPelamar extends State<SignUpPelamar> {
         await storageFlutter.write(key: "nama", value: dataRes.user!.nama);
         await storageFlutter.write(key: "email", value: dataRes.user!.email);
         await storageFlutter.write(key: "noTelp", value: dataRes.user!.noTelp);
+        // WebSocket Connection
+        final _webSocketClient = WebSocketClientImpl(
+          userId: dataRes.user!.id,
+          url: '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}',
+        );
+        _webSocketClient.connect();
         return context.go("/home");
       } else {
         return ScaffoldMessenger.of(context).showSnackBar(
