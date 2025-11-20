@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/home/persentation/pages/homePage.dart';
@@ -96,12 +97,12 @@ class _SignUpPelamar extends State<SignUpPelamar> {
       //   );
       // }
       if (dataRes.responseMessages == "Sukses") {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString("loginAs", "user");
-        await prefs.setString("idUser", dataRes.user!.id);
-        await prefs.setString("nama", dataRes.user!.nama);
-        await prefs.setString("email", dataRes.user!.email);
-        await prefs.setString("noTelp", dataRes.user!.noTelp);
+        final storageFlutter = FlutterSecureStorage();
+        await storageFlutter.write(key: "loginAs", value: "user");
+        await storageFlutter.write(key: "idUser", value: dataRes.user!.id);
+        await storageFlutter.write(key: "nama", value: dataRes.user!.nama);
+        await storageFlutter.write(key: "email", value: dataRes.user!.email);
+        await storageFlutter.write(key: "noTelp", value: dataRes.user!.noTelp);
         return context.go("/home");
       } else {
         return ScaffoldMessenger.of(context).showSnackBar(

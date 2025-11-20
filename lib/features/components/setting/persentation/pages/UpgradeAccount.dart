@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
 import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
@@ -24,7 +25,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
   AuthRepositoryImpl? _repoSetting;
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
-  late SharedPreferences prefs;
+  late FlutterSecureStorage storage;
   bool isLoading = true;
   Future<String?> showConfirmStatus(
     BuildContext context,
@@ -64,8 +65,8 @@ class _Upgradeaccount extends State<Upgradeaccount> {
 
   Future upgradePlan(bool value) async {
     try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
+      String? id = await storage.read(key: 'idUser');
+      String? loginAs = await storage.read(key: 'loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
       final result = await showConfirmStatus(
@@ -81,7 +82,8 @@ class _Upgradeaccount extends State<Upgradeaccount> {
 
       String? response = await _settingUseCase!.upgradePlan(id, loginAs!);
       if (response == 'Sukses') {
-        prefs.setBool("isPremium", value);
+        // prefs.setBool("isPremium", value);
+        await storage.write(key: "isPremium", value: value.toString());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Success Upgrade Plan!'.tr()),
@@ -223,7 +225,7 @@ class _Upgradeaccount extends State<Upgradeaccount> {
       _dataSourceSetting = AuthRemoteDataSource();
       _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
       _settingUseCase = SettingUseCase(_repoSetting!);
-      prefs = await SharedPreferences.getInstance();
+      storage = FlutterSecureStorage();
       final setting = context.read<SettingProvider>();
       await setting.loadSetting();
 

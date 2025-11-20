@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/AuthProvider.dart';
 import 'package:job_platform/core/utils/providers/ThemeProvider.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';
@@ -15,6 +16,7 @@ class bodySetting extends StatefulWidget {
   final Future<void> Function(String oldEmail, String newEmail)?
   changeEmailAccount;
   final bool? isDarkMode;
+
   const bodySetting({
     super.key,
     this.deleteAccount,
@@ -31,7 +33,6 @@ class bodySetting extends StatefulWidget {
 
 class _bodySetting extends State<bodySetting> {
   late bool? isDarkMode;
-
   void initState() {
     super.initState();
     setState(() {

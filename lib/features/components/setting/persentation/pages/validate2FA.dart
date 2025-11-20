@@ -1,34 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart';
+import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
+import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Validate2fa extends StatefulWidget {
-  final Future<void> Function(String OTP)? validate2FA;
-  final bool? isActive;
-  const Validate2fa({super.key, this.isActive, this.validate2FA});
+  final String? email;
+  final String? userId;
+  final String? loginAs;
+  const Validate2fa({super.key, this.email, this.userId, this.loginAs});
 
   @override
   State<Validate2fa> createState() => _Validate2fa();
 }
 
 class _Validate2fa extends State<Validate2fa> {
-  bool _isLoading = false;
+  late bool _isLoading;
   TextEditingController kode1 = TextEditingController();
   TextEditingController kode2 = TextEditingController();
   TextEditingController kode3 = TextEditingController();
   TextEditingController kode4 = TextEditingController();
-  void initState() {
-    super.initState();
-    setState(() {
-      _isLoading = false;
-      _isLoading = true;
-    });
+  AuthRepositoryImpl? _repoSetting;
+  AuthRemoteDataSource? _dataSourceSetting;
+  SettingUseCase? _settingUseCase;
+
+  void _initializeUseCase() async {
+    _dataSourceSetting = AuthRemoteDataSource();
+    _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
+    _settingUseCase = SettingUseCase(_repoSetting!);
   }
 
+  Future validate2FA(String OTP) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      String? response = await _settingUseCase!.validate2FA(
+        widget.userId!,
+        widget.loginAs!,
+        widget.email!,
+        OTP,
+        "login",
+      );
+      if (response == 'Sukses') {
+        setState(() {
+          _isLoading = false;
+          if (widget.loginAs == "user") {
+            context.go("/home");
+          } else {
+            context.go("/homeCompany");
+          }
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response!), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      debugPrint('Error during delete account: $e');
+      if (mounted) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Internal Error"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void initState() {
+    super.initState();
+    _isLoading = true;
+    _initializeUseCase();
+    _isLoading = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(20.0),
-      child: Center(
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator(color: Colors.blue));
+    }
+
+    return Scaffold(
+      body: Center(
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondary,
@@ -77,67 +141,54 @@ class _Validate2fa extends State<Validate2fa> {
 
                         SizedBox(height: 20),
 
-                        !_isLoading
+                        _isLoading
                             ? CircularProgressIndicator(
                                 color: Colors.blue.shade400,
                               )
                             : Form(
                                 child: Column(
                                   children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 20),
+                                      child: Text(
+                                        "Masukan Kode 2 FA",
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      spacing: 20,
                                       children: [
-                                        TextFormField(
-                                          controller: kode1,
-                                          keyboardType: TextInputType.number,
-                                          maxLength: 1,
-                                          decoration: const InputDecoration(
-                                            hintText: "*",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                        TextFormField(
-                                          controller: kode2,
-                                          keyboardType: TextInputType.number,
-                                          maxLength: 1,
-                                          decoration: const InputDecoration(
-                                            hintText: "*",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                        TextFormField(
-                                          controller: kode3,
-                                          keyboardType: TextInputType.number,
-                                          maxLength: 1,
-                                          decoration: const InputDecoration(
-                                            hintText: "*",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                        TextFormField(
-                                          controller: kode4,
-                                          keyboardType: TextInputType.number,
-                                          maxLength: 1,
-                                          decoration: const InputDecoration(
-                                            hintText: "*",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
+                                        otpBox(kode1),
+                                        otpBox(kode2),
+                                        otpBox(kode3),
+                                        otpBox(kode4),
                                       ],
                                     ),
                                     SizedBox(height: 20),
 
-                                    !_isLoading
+                                    _isLoading
                                         ? CircularProgressIndicator(
                                             color: Colors.blue.shade400,
                                           )
                                         : ElevatedButton.icon(
-                                            onPressed: () =>
-                                                widget.validate2FA!(
-                                                  kode1.text +
-                                                      kode2.text +
-                                                      kode3.text +
-                                                      kode4.text,
-                                                ),
+                                            onPressed: () async {
+                                              await validate2FA(
+                                                kode1.text +
+                                                    kode2.text +
+                                                    kode3.text +
+                                                    kode4.text,
+                                              );
+                                            },
                                             label: Text("Submit"),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Theme.of(
@@ -159,4 +210,20 @@ class _Validate2fa extends State<Validate2fa> {
       ),
     );
   }
+}
+
+Widget otpBox(TextEditingController c) {
+  return SizedBox(
+    width: 60,
+    child: TextFormField(
+      controller: c,
+      keyboardType: TextInputType.number,
+      maxLength: 1,
+      textAlign: TextAlign.center,
+      decoration: const InputDecoration(
+        counterText: "",
+        border: OutlineInputBorder(),
+      ),
+    ),
+  );
 }

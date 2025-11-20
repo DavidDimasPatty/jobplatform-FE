@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
@@ -155,8 +156,8 @@ class _Progressdetail extends State<Progressdetail> {
 
   Future konfirmasiTahapan(bool status) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? id = prefs.getString('idUser');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? id = await storage.read(key: 'idUser');
       String? idUserVacancy = data?.dataUserVacancy?.id;
       String? alasanReject;
       if (id == null) throw Exception("User ID not found in preferences");

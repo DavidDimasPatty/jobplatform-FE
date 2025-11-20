@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/statusJob/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/statusJob/data/repositories/auth_repository_impl.dart';
@@ -32,8 +33,8 @@ class _statusJob extends State<statusJob> {
         isLoading = true;
         errorMessage = null;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
+      final FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? userId = await storage.read(key: 'idUser');
 
       if (userId != null) {
         final result = await _statusUseCase!.getAllStatus(userId);
@@ -94,6 +95,10 @@ class _statusJob extends State<statusJob> {
         });
         print("User ID not found in SharedPreferences");
       }
+      setState(() {
+        isLoading = false;
+        errorMessage = null;
+      });
     } catch (e) {
       print("Error loading status data: $e");
       if (mounted) {

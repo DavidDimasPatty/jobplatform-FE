@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/vacancy/data/models/vacancyResponse.dart';
 import 'package:job_platform/features/components/vacancy/data/repositories/auth_repository_impl.dart';
@@ -55,8 +56,8 @@ class _Vacancy extends State<Vacancy> {
         isLoading = true;
         errorMessage = null;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? companyId = prefs.getString('idCompany');
+      final FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? companyId = await storage.read(key: 'idCompany');
 
       if (companyId != null) {
         var vacancy = await _vacancyUseCase.getListVacancy(companyId);
@@ -106,8 +107,8 @@ class _Vacancy extends State<Vacancy> {
 
   Future<void> _deleteVacancy(String id) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? idCompany = prefs.getString('idCompany');
+      final FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? idCompany = await storage.read(key: 'idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences".tr());

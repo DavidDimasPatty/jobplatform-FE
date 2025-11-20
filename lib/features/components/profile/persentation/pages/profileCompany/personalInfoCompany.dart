@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,8 +78,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
         isLoading = true;
         errorMessage = null;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? idCompany = prefs.getString('idCompany');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? idCompany = await storage.read(key: 'idCompany');
 
       if (idCompany != null) {
         var profile = await profileUsecase.getProfileCompany(idCompany);
@@ -108,8 +109,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? idCompany = prefs.getString('idCompany');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? idCompany = await storage.read(key: 'idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/features/components/chat/domain/usecases/chat_usecase.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
@@ -44,9 +45,8 @@ class _Chat extends State<Chat> {
         isLoading = true;
         errorMessage = null;
       });
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? userId = await storage.read(key: 'idUser');
 
       if (userId != null) {
         var chatList = await _chatUseCase.getChatList(userId);

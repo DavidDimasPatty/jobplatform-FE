@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/features/components/home/data/models/KunjunganProfile.dart';
 import 'package:job_platform/features/components/home/data/models/OpenVacancy.dart';
 import 'package:job_platform/features/components/home/data/models/ProfileSerupa.dart';
@@ -37,29 +38,32 @@ class _HomePageState extends State<HomePage> {
   List<OpenVacancyItem> dataOpenVacancy = [];
   double? profileComplete = 0;
 
-  void getDataPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    loginAs = prefs.getString('loginAs');
-    setState(() {
-      if (loginAs == "user") {
-        idUser = prefs.getString('idUser');
-        namaUser = prefs.getString('nama');
-        emailUser = prefs.getString('email');
-        noTelpUser = prefs.getString('noTelp');
-        isHRD = prefs.getBool("isHRD");
-        photoURL = prefs.getString("urlAva");
-      }
-    });
+  Future getDataPref() async {
+    final FlutterSecureStorage storage = const FlutterSecureStorage();
+    loginAs = await storage.read(key: 'loginAs');
+    if (loginAs == "user") {
+      idUser = await storage.read(key: 'idUser');
+      namaUser = await storage.read(key: 'nama');
+      emailUser = await storage.read(key: 'email');
+      noTelpUser = await storage.read(key: 'noTelp');
+      isHRD = (await storage.read(key: 'isHRD')) == "true";
+      photoURL = await storage.read(key: "urlAva");
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    getDataPref();
+    init();
     final remoteDataSource = HomeRemoteDataSource();
     final repository = homeRepositoryImpl(remoteDataSource);
     homePageUseCases = homePageUseCase(repository);
-    fetchData();
+    //fetchData();
+  }
+
+  Future<void> init() async {
+    await getDataPref();
+    await fetchData();
   }
 
   Future<void> fetchData() async {
@@ -67,8 +71,8 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         isLoading = true;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
+      final FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? userId = await storage.read(key: 'idUser');
 
       if (userId != null) {
         var result;

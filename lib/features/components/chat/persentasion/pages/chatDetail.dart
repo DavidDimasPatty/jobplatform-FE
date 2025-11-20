@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/chat/data/models/partnerModel.dart';
 import 'package:job_platform/features/components/chat/domain/entities/ChatDetailItems.dart';
@@ -118,8 +119,8 @@ class _ChatDetailState extends State<ChatDetail> {
         errorMessage = null;
       });
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      _userId = prefs.getString('idUser');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      _userId = await storage.read(key: 'idUser');
 
       if (_userId != null) {
         var chatHistory = await _chatUseCase.getConversation(

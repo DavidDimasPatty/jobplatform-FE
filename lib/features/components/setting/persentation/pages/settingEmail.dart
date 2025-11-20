@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -36,7 +37,7 @@ class _Settingemail extends State<Settingemail> {
   SettingUseCase? _settingUseCase;
   late SharedPreferences prefs;
   bool isLoading = true;
-
+  late FlutterSecureStorage storage;
   Future _handleValidateEmail() async {
     await Firebase.initializeApp();
     setState(() {
@@ -179,9 +180,9 @@ class _Settingemail extends State<Settingemail> {
 
   Future<String> changeEmailAccount(String oldEmail, String newEmail) async {
     try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
-      String? oldEmail = prefs.getString('email');
+      String? id = await storage.read(key: 'idUser');
+      String? loginAs = await storage.read(key: 'loginAs');
+      String? oldEmail = await storage.read(key: 'email');
       if (id == null) throw Exception("User ID not found in preferences");
 
       String? response = await _settingUseCase!.changeEmailAccount(
@@ -204,10 +205,10 @@ class _Settingemail extends State<Settingemail> {
   void initState() {
     super.initState();
     Future.microtask(() async {
+      storage = FlutterSecureStorage();
       _dataSourceSetting = AuthRemoteDataSource();
       _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
       _settingUseCase = SettingUseCase(_repoSetting!);
-      prefs = await SharedPreferences.getInstance();
       setState(() {
         isLoading = false;
       });

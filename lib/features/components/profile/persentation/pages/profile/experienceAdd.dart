@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
 import 'package:job_platform/features/components/profile/data/models/workExperienceModel.dart';
@@ -100,8 +101,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
       });
 
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? idUser = prefs.getString('idUser');
+        FlutterSecureStorage storage = const FlutterSecureStorage();
+        String? idUser = await storage.read(key: 'idUser');
 
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");

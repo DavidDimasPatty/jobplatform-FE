@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
@@ -71,8 +72,8 @@ class _Profile extends State<Profile> {
         isLoading = true;
         errorMessage = null;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? userId = await storage.read(key: 'idUser');
 
       if (userId != null) {
         var profile = await _profileUseCase.getProfile(userId);
@@ -124,8 +125,8 @@ class _Profile extends State<Profile> {
           bytes = await File(file.path!).readAsBytes();
         }
 
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? idUser = prefs.getString('idUser');
+        FlutterSecureStorage storage = const FlutterSecureStorage();
+        String? idUser = await storage.read(key: 'idUser');
 
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
@@ -176,8 +177,8 @@ class _Profile extends State<Profile> {
     });
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? idUser = prefs.getString('idUser');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? idUser = await storage.read(key: 'idUser');
 
       // Ensure idUser is not null
       if (idUser == null) throw Exception("User ID not found in preferences");

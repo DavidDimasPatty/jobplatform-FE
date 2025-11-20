@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/progress/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/progress/data/repositories/auth_repository_impl.dart';
@@ -129,8 +130,8 @@ class _editVacancyCandidate extends State<editVacancyCandidate> {
       });
 
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? idUser = prefs.getString('idUser');
+        final FlutterSecureStorage storage = const FlutterSecureStorage();
+        String? idUser = await storage.read(key: 'idUser');
 
         if (idUser == null) throw Exception("User ID not found in preferences");
 

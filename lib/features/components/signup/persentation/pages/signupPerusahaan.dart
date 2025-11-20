@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/login/persentation/pages/login.dart';
 import 'package:job_platform/features/components/signup/data/datasources/aut_remote_datasource.dart';
@@ -331,12 +332,22 @@ class __FormContentState extends State<_FormContent> {
       SignupResponseModel response = await _signupUseCase.SignUpAction(data);
 
       if (response.responseMessages == "Sukses") {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString("loginAs", "company");
-        await prefs.setString("idCompany", response.company!.id);
-        await prefs.setString("nama", response.company!.nama);
-        await prefs.setString("email", response.company!.email);
-        await prefs.setString("noTelp", response.company!.noTelp);
+        final FlutterSecureStorage storageFlutter =
+            const FlutterSecureStorage();
+        await storageFlutter.write(key: "loginAs", value: "company");
+        await storageFlutter.write(
+          key: "idCompany",
+          value: response.company!.id,
+        );
+        await storageFlutter.write(key: "nama", value: response.company!.nama);
+        await storageFlutter.write(
+          key: "email",
+          value: response.company!.email,
+        );
+        await storageFlutter.write(
+          key: "noTelp",
+          value: response.company!.noTelp,
+        );
 
         Navigator.pushReplacement(
           context,

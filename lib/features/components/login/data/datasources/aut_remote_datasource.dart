@@ -33,4 +33,47 @@ class AuthRemoteDataSource {
       return null;
     }
   }
+
+  Future<String?> login2FA(
+    String userId,
+    String email,
+    String loginAs,
+    String desc,
+  ) async {
+    try {
+      // Dummy API simulation
+      await dotenv.load(fileName: '.env');
+      final url = Uri.parse(
+        '${dotenv.env['BACKEND_URL_DEV']}/api/v1/account/check2FA',
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "userId": userId,
+          "loginAs": loginAs,
+          "email": email,
+          "desc": desc,
+        }),
+      );
+      print(response.body.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //print(response.body);
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+        //print('Berhasil: $jsonData');
+
+        String data = jsonData["responseMessage"];
+        //print(dataRes.id);
+        return data;
+      } else {
+        final dataFailed = jsonDecode(response.body);
+        print('Gagal: ${response.statusCode} $dataFailed');
+        return null;
+      }
+    } catch (e) {
+      print('Error during login: $e');
+      return null;
+    }
+  }
 }

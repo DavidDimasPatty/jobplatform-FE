@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:job_platform/core/utils/AuthProvider.dart';
 import 'package:job_platform/core/utils/providers/ThemeProvider.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
 import 'package:job_platform/routes/router.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => SettingProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('id')],
@@ -47,9 +49,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final settingProvider = Provider.of<SettingProvider>(context);
     return MaterialApp.router(
       title: 'Skillen',
       theme: ThemeData(
+        textTheme: TextTheme(
+          titleLarge: TextStyle(
+            fontSize: settingProvider.fontSizeHead?.toDouble(),
+          ),
+          headlineMedium: TextStyle(
+            fontSize: settingProvider.fontSizeSubHead?.toDouble(),
+          ),
+          bodyMedium: TextStyle(
+            fontSize: settingProvider.fontSizeBody?.toDouble(),
+          ),
+          labelMedium: TextStyle(
+            fontSize: settingProvider.fontSizeIcon?.toDouble(),
+          ),
+        ),
         colorScheme: ColorScheme.light(
           primary: Colors.white,
           secondary: Colors.blue,

@@ -14,4 +14,20 @@ class AuthRepositoryImpl implements AuthRepository {
     //print(userModel);
     return userModel;
   }
+
+  @override
+  Future<String?> login2FA(
+    String userId,
+    String email,
+    String loginAs,
+    String desc,
+  ) async {
+    final result = await remoteDataSource.login2FA(
+      userId,
+      email,
+      loginAs,
+      desc,
+    );
+    return result;
+  }
 }

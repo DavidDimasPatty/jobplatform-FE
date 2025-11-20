@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
 import 'package:job_platform/features/components/manageHRD/data/datasources/aut_remote_datasource.dart'
@@ -41,8 +42,8 @@ class _Managehrd extends State<Managehrd> {
         isLoading = true;
         errorMessage = null;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? idCompany = prefs.getString('idCompany');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? idCompany = await storage.read(key: 'idCompany');
 
       if (idCompany != null) {
         List<HRDDataVM?>? profile = await _hrdUseCase!.getAllHRD(idCompany);
@@ -68,6 +69,10 @@ class _Managehrd extends State<Managehrd> {
       } else {
         print("Company ID not found");
       }
+      setState(() {
+        isLoading = false;
+        errorMessage = null;
+      });
     } catch (e) {
       print("Error loading Load HRD data: $e");
       if (mounted) {
@@ -195,8 +200,8 @@ class _Managehrd extends State<Managehrd> {
         barrierDismissible: false,
         builder: (_) => const Center(child: CircularProgressIndicator()),
       );
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? idCompany = prefs.getString('idCompany');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? idCompany = await storage.read(key: 'idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");
@@ -234,8 +239,8 @@ class _Managehrd extends State<Managehrd> {
 
   Future AddHRD(String email) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? idCompany = prefs.getString('idCompany');
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? idCompany = await storage.read(key: 'idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");

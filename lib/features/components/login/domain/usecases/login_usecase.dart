@@ -10,4 +10,13 @@ class LoginUseCase {
   Future<loginModel?> execute(String email) {
     return repository.login(email);
   }
+
+  Future<String?> login2FA(
+    String userId,
+    String email,
+    String loginAs,
+    String desc,
+  ) {
+    return repository.login2FA(userId, email, loginAs, desc);
+  }
 }

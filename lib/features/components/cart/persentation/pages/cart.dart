@@ -21,8 +21,8 @@ class _Cart extends State<Cart> {
       //   isLoading = true;
       //   errorMessage = null;
       // });
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? userId = prefs.getString('idUser');
+      //   FlutterSecureStorage storage = const FlutterSecureStorage();
+      // String? userId =  storage.read(key: 'idUser');
 
       // if (userId != null) {
       //   var profile = await _profileUseCase.getProfile(userId);

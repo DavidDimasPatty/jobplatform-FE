@@ -1,7 +1,7 @@
 import 'dart:async';
-
+import 'package:job_platform/core/utils/AuthProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,7 @@ import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/usecases/login_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -38,13 +39,15 @@ class _LoginFormState extends State<LoginForm> {
   String? userEmail;
   String? imageUrl;
   String? token;
-
+  bool isLoading = false;
   final WebSocketClientImpl _webSocketClient = WebSocketClientImpl();
 
-  // Fungsi ini dipanggil saat tombol ditekan
   Future _handleLogin() async {
+    AuthProvider authProviderLogIn = Provider.of<AuthProvider>(
+      context,
+      listen: false,
+    );
     await Firebase.initializeApp();
-
     if (kIsWeb) {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
       authProvider.setCustomParameters({'prompt': 'select_account'});
@@ -81,8 +84,11 @@ class _LoginFormState extends State<LoginForm> {
     }
 
     if (user != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        isLoading = true;
+      });
       try {
+        final storageFlutter = FlutterSecureStorage();
         final dataSource = AuthRemoteDataSource();
         final repository = AuthRepositoryImpl(dataSource);
         final usecase = LoginUseCase(repository);
@@ -94,116 +100,352 @@ class _LoginFormState extends State<LoginForm> {
         if (data!.exists != null) {
           if (data.exists != false) {
             if (data.collection == "users") {
-              await prefs.setString("loginAs", "user");
-              await prefs.setString("idUser", data.user!.id!);
-              await prefs.setString("nama", data.user!.nama!);
-              await prefs.setString("email", data.user!.email!);
-              await prefs.setString("noTelp", data.user!.noTelp!);
-              await prefs.setString("urlAva", data.user?.photoURL ?? '');
-              await prefs.setBool("isPremium", data.user!.isPremium ?? false);
-              await prefs.setBool("is2FA", data.user!.is2FA ?? false);
+              setState(() {
+                isLoading = true;
+              });
+              try {
+                // TOKEN + LOGIN TYPE
+                authProviderLogIn.login(user!.refreshToken!);
+                await storageFlutter.write(key: "loginAs", value: "user");
+                await storageFlutter.write(
+                  key: "idUser",
+                  value: data.user!.id!,
+                );
+                await storageFlutter.write(
+                  key: "nama",
+                  value: data.user!.nama!,
+                );
+                await storageFlutter.write(
+                  key: "email",
+                  value: data.user!.email!,
+                );
+                await storageFlutter.write(
+                  key: "noTelp",
+                  value: data.user!.noTelp!,
+                );
+                await storageFlutter.write(
+                  key: "urlAva",
+                  value: data.user?.photoURL ?? '',
+                );
+                await storageFlutter.write(
+                  key: "isPremium",
+                  value: (data.user!.isPremium ?? false).toString(),
+                );
+                await storageFlutter.write(
+                  key: "is2FA",
+                  value: (data.user!.is2FA ?? false).toString(),
+                );
 
-              if (data.user!.fontSize == null) {
-                await prefs.setInt("fontSizeHead", 18);
-                await prefs.setInt("fontSizeSubHead", 16);
-                await prefs.setInt("fontSizeBody", 14);
-                await prefs.setInt("fontSizeIcon", 12);
-              } else {
-                List<String> arrFont = data.user!.fontSize!.split(',');
-                await prefs.setInt("fontSizeHead", int.parse(arrFont[0]));
-                await prefs.setInt("fontSizeSubHead", int.parse(arrFont[1]));
-                await prefs.setInt("fontSizeBody", int.parse(arrFont[2]));
-                await prefs.setInt("fontSizeIcon", int.parse(arrFont[3]));
-              }
-              await prefs.setBool(
-                "isNotifInternal",
-                data.user!.isNotifInternal ?? false,
-              );
-              await prefs.setBool(
-                "isNotifExternal",
-                data.user!.isNotifExternal ?? false,
-              );
-              await prefs.setBool("isDarkMode", data.user!.isDarkMode ?? false);
-              if (data.user!.isDarkMode == true) {
-                themeProvider.toggleTheme();
-              }
-              await prefs.setString("language", data.user!.language ?? "IND");
-              if (data.user!.language == "IND") {
-                context.setLocale(const Locale('id'));
-              } else {
-                context.setLocale(const Locale('en'));
-              }
-              if (data.hrCompanies != null) {
-                await prefs.setBool("isHRD", true);
-                await prefs.setString(
-                  "hrCompanyName",
-                  data.hrCompanies!.company.nama!,
-                );
-                await prefs.setString(
-                  "hrCompanyId",
-                  data.hrCompanies!.company.id!,
-                );
-              }
-              // WebSocket Connection
-              await _webSocketClient.connect(
-                '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
-              );
-              return context.go("/home");
-            } else if (data.collection == "companies") {
-              if (data.progress == null) {
-                await prefs.setString("loginAs", "company");
-                await prefs.setString("idUser", data.company!.id!);
-                await prefs.setString("nama", data.company!.nama!);
-                await prefs.setString("domain", data.company!.email!);
-                await prefs.setString("noTelp", data.company!.noTelp!);
-                await prefs.setString("urlAva", data.company!.logo!);
-                await prefs.setBool(
-                  "isPremium",
-                  data.company!.isPremium ?? false,
-                );
-                await prefs.setBool("is2FA", data.company!.is2FA ?? false);
+                // FONT SIZE
+                if (data.user!.fontSize == null) {
+                  await storageFlutter.write(key: "fontSizeHead", value: "18");
+                  await storageFlutter.write(
+                    key: "fontSizeSubHead",
+                    value: "16",
+                  );
+                  await storageFlutter.write(key: "fontSizeBody", value: "14");
+                  await storageFlutter.write(key: "fontSizeIcon", value: "12");
+                } else {
+                  List<String> arrFont = data.user!.fontSize!.split(',');
+                  await storageFlutter.write(
+                    key: "fontSizeHead",
+                    value: arrFont[0],
+                  );
+                  await storageFlutter.write(
+                    key: "fontSizeSubHead",
+                    value: arrFont[1],
+                  );
+                  await storageFlutter.write(
+                    key: "fontSizeBody",
+                    value: arrFont[2],
+                  );
+                  await storageFlutter.write(
+                    key: "fontSizeIcon",
+                    value: arrFont[3],
+                  );
+                }
 
-                if (data.company!.fontSize == null) {
-                  await prefs.setInt("fontSizeHead", 18);
-                  await prefs.setInt("fontSizeSubHead", 16);
-                  await prefs.setInt("fontSizeBody", 14);
-                  await prefs.setInt("fontSizeIcon", 12);
-                } else {
-                  List<String> arrFont = data.company!.fontSize!.split(',');
-                  await prefs.setInt("fontSizeHead", int.parse(arrFont[0]));
-                  await prefs.setInt("fontSizeSubHead", int.parse(arrFont[1]));
-                  await prefs.setInt("fontSizeBody", int.parse(arrFont[2]));
-                  await prefs.setInt("fontSizeIcon", int.parse(arrFont[3]));
+                // NOTIF SETTINGS
+                await storageFlutter.write(
+                  key: "isNotifInternal",
+                  value: (data.user!.isNotifInternal ?? false).toString(),
+                );
+                await storageFlutter.write(
+                  key: "isNotifExternal",
+                  value: (data.user!.isNotifExternal ?? false).toString(),
+                );
+
+                // THEME
+                await storageFlutter.write(
+                  key: "isDarkMode",
+                  value: (data.user!.isDarkMode ?? false).toString(),
+                );
+
+                // if (data.user!.isDarkMode == true) {
+                //   themeProvider.toggleTheme();
+                // }
+
+                // LANGUAGE
+                await storageFlutter.write(
+                  key: "language",
+                  value: data.user!.language ?? "IND",
+                );
+
+                // if (data.user!.language == "IND") {
+                //   context.setLocale(const Locale('id'));
+                // } else {
+                //   context.setLocale(const Locale('en'));
+                // }
+
+                // HR COMPANY DATA
+                if (data.hrCompanies != null) {
+                  await storageFlutter.write(key: "isHRD", value: "true");
+                  await storageFlutter.write(
+                    key: "hrCompanyName",
+                    value: data.hrCompanies!.company.nama!,
+                  );
+                  await storageFlutter.write(
+                    key: "hrCompanyId",
+                    value: data.hrCompanies!.company.id!,
+                  );
                 }
-                await prefs.setBool(
-                  "isNotifInternal",
-                  data.company!.isNotifInternal ?? false,
-                );
-                await prefs.setBool(
-                  "isNotifExternal",
-                  data.company!.isNotifExternal ?? false,
-                );
-                await prefs.setBool(
-                  "isDarkMode",
-                  data.company!.isDarkMode ?? false,
-                );
-                await prefs.setString(
-                  "language",
-                  data.company!.language ?? "IND",
-                );
-                if (data.company!.language == "IND") {
-                  context.setLocale(const Locale('id'));
-                } else {
-                  context.setLocale(const Locale('en'));
-                }
+              } catch (e, st) {
+                print("SecureStorage error (DIABAIKAN): $e");
+              }
+
+              try {
                 // WebSocket Connection
-                await _webSocketClient.connect(
-                  '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.company!.id!}',
+                // await _webSocketClient.connect(
+                //   '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
+                await _webSocketClient
+                    .connect(
+                      '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
+                    )
+                    .onError((_, __) => null);
+                _webSocketClient.stream.handleError((error) {
+                  print("STREAM ERROR: $error");
+                });
+              } catch (_) {}
+
+              String? result2FA;
+
+              try {
+                setState(() {
+                  isLoading = true;
+                });
+                String? idUser2FA = data.user!.id!;
+                String? email = data.user!.email!;
+                result2FA = await usecase.login2FA(
+                  idUser2FA!,
+                  email!,
+                  "user",
+                  "login",
                 );
-                return context.go("/homeCompany");
+                if (result2FA == "Sukses") {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (data.user!.isDarkMode == true) {
+                      themeProvider.toggleTheme();
+                    }
+
+                    if (data.user!.language == "IND") {
+                      context.setLocale(const Locale('id'));
+                    } else {
+                      context.setLocale(const Locale('en'));
+                    }
+
+                    if (result2FA == "Sukses") {
+                      context.go(
+                        "/Validate2fa",
+                        extra: {
+                          "email": email,
+                          "userId": idUser2FA,
+                          "loginAs": "user",
+                        },
+                      );
+                    }
+                  });
+                }
+              } catch (Ex) {
+                setState(() {
+                  isLoading = false;
+                });
+                throw Exception(Ex);
+              }
+
+              // return context.go("/home");
+            } else if (data.collection == "companies") {
+              setState(() {
+                isLoading = true;
+              });
+              if (data.progress == null) {
+                try {
+                  // TIPE LOGIN
+                  authProviderLogIn.login(user!.refreshToken!);
+                  await storageFlutter.write(key: "loginAs", value: "company");
+
+                  // DATA COMPANY
+                  await storageFlutter.write(
+                    key: "idUser",
+                    value: data.company!.id!,
+                  );
+                  await storageFlutter.write(
+                    key: "nama",
+                    value: data.company!.nama!,
+                  );
+                  await storageFlutter.write(
+                    key: "domain",
+                    value: data.company!.email!,
+                  );
+                  await storageFlutter.write(
+                    key: "noTelp",
+                    value: data.company!.noTelp!,
+                  );
+                  await storageFlutter.write(
+                    key: "urlAva",
+                    value: data.company!.logo!,
+                  );
+
+                  // BOOLEAN SETTINGS
+                  await storageFlutter.write(
+                    key: "isPremium",
+                    value: (data.company!.isPremium ?? false).toString(),
+                  );
+
+                  await storageFlutter.write(
+                    key: "is2FA",
+                    value: (data.company!.is2FA ?? false).toString(),
+                  );
+
+                  // FONT SIZE (int → string)
+                  if (data.company!.fontSize == null) {
+                    await storageFlutter.write(
+                      key: "fontSizeHead",
+                      value: "18",
+                    );
+                    await storageFlutter.write(
+                      key: "fontSizeSubHead",
+                      value: "16",
+                    );
+                    await storageFlutter.write(
+                      key: "fontSizeBody",
+                      value: "14",
+                    );
+                    await storageFlutter.write(
+                      key: "fontSizeIcon",
+                      value: "12",
+                    );
+                  } else {
+                    List<String> arrFont = data.company!.fontSize!.split(',');
+                    await storageFlutter.write(
+                      key: "fontSizeHead",
+                      value: arrFont[0],
+                    );
+                    await storageFlutter.write(
+                      key: "fontSizeSubHead",
+                      value: arrFont[1],
+                    );
+                    await storageFlutter.write(
+                      key: "fontSizeBody",
+                      value: arrFont[2],
+                    );
+                    await storageFlutter.write(
+                      key: "fontSizeIcon",
+                      value: arrFont[3],
+                    );
+                  }
+
+                  // NOTIF
+                  await storageFlutter.write(
+                    key: "isNotifInternal",
+                    value: (data.company!.isNotifInternal ?? false).toString(),
+                  );
+
+                  await storageFlutter.write(
+                    key: "isNotifExternal",
+                    value: (data.company!.isNotifExternal ?? false).toString(),
+                  );
+
+                  // DARK MODE
+                  await storageFlutter.write(
+                    key: "isDarkMode",
+                    value: (data.company!.isDarkMode ?? false).toString(),
+                  );
+
+                  // LANGUAGE
+                  await storageFlutter.write(
+                    key: "language",
+                    value: data.company!.language ?? "IND",
+                  );
+                } catch (e, st) {
+                  print("SecureStorage error (DIABAIKAN): $e");
+                }
+
+                try {
+                  // WebSocket Connection
+                  // await _webSocketClient.connect(
+                  //   '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.user!.id!}',
+                  await _webSocketClient
+                      .connect(
+                        '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}/ws?userId=${data.company!.id!}',
+                      )
+                      .onError((_, __) => null);
+                  _webSocketClient.stream.handleError((error) {
+                    print("STREAM ERROR: $error");
+                  });
+                } catch (_) {}
+
+                // LOGIN PROVIDER
+                String? result2FA;
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  String? idUser2FA = data.company!.id!;
+                  String? email = data.company!.email!;
+                  result2FA = await usecase.login2FA(
+                    idUser2FA!,
+                    email!,
+                    "company",
+                    "login",
+                  );
+                  if (result2FA == "Sukses") {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (data.company!.isDarkMode == true) {
+                        themeProvider.toggleTheme();
+                      }
+
+                      if (data.company!.language == "IND") {
+                        context.setLocale(const Locale('id'));
+                      } else {
+                        context.setLocale(const Locale('en'));
+                      }
+
+                      if (result2FA == "Sukses") {
+                        context.go(
+                          "/Validate2fa",
+                          extra: {
+                            "email": email,
+                            "userId": idUser2FA,
+                            "loginAs": "company",
+                          },
+                        );
+                      }
+                    });
+                  }
+                } catch (Ex) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  throw Exception(Ex);
+                }
+
+                //return context.go("/homeCompany");
               } else if (data.progress!.lastAdmin!.status ==
                   "Reject oleh Admin") {
                 String? alasan = data.progress!.lastAdmin!.alasanReject;
+                setState(() {
+                  isLoading = false;
+                });
                 return ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -214,6 +456,9 @@ class _LoginFormState extends State<LoginForm> {
                 );
               } else if (data.progress!.stage! == "Reject oleh Surveyer") {
                 String? alasan = data.progress!.lastSurvey!.alasanReject;
+                setState(() {
+                  isLoading = false;
+                });
                 return ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -235,6 +480,9 @@ class _LoginFormState extends State<LoginForm> {
                 );
               }
             } else {
+              setState(() {
+                isLoading = false;
+              });
               return ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Login failed. Admin Restrictions.'),
@@ -289,6 +537,12 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/features/components/home/data/models/HRDList.dart';
 import 'package:job_platform/features/components/home/data/models/OpenVacancy.dart';
 import 'package:job_platform/features/components/home/data/models/ProsesPelamaran.dart';
@@ -38,33 +39,37 @@ class _HomePageCompany extends State<HomePageCompany> {
   ProsesPelamaran? dataProsesPelamaran;
   ProsesPerekrutan? dataProsesPerekrutan;
 
-  void getDataPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    loginAs = prefs.getString('loginAs');
-    setState(() {
-      if (loginAs == "user") {
-        idUser = prefs.getString('idUser');
-        namaUser = prefs.getString('nama');
-        emailUser = prefs.getString('email');
-        noTelpUser = prefs.getString('noTelp');
-      } else if (loginAs == "company") {
-        idCompany = prefs.getString('idCompany');
-        namaCompany = prefs.getString('nama');
-        domainCompany = prefs.getString('domain');
-        noTelpCompany = prefs.getString('noTelp');
-      }
-      isLoading = false;
-    });
+  Future<void> getDataPref() async {
+    final FlutterSecureStorage storage = const FlutterSecureStorage();
+    loginAs = await storage.read(key: 'loginAs');
+
+    if (loginAs == "user") {
+      idUser = await storage.read(key: 'idUser');
+      namaUser = await storage.read(key: 'nama');
+      emailUser = await storage.read(key: 'email');
+      noTelpUser = await storage.read(key: 'noTelp');
+    } else if (loginAs == "company") {
+      idCompany = await storage.read(key: 'idCompany');
+      namaCompany = await storage.read(key: 'nama');
+      domainCompany = await storage.read(key: 'domain');
+      noTelpCompany = await storage.read(key: 'noTelp');
+    }
+    isLoading = false;
   }
 
   @override
   void initState() {
     super.initState();
-    getDataPref();
+    init();
     final remoteDataSource = HomeRemoteDataSource();
     final repository = homeRepositoryImpl(remoteDataSource);
     homePageUseCases = homePageUseCase(repository);
-    fetchData();
+    //fetchData();
+  }
+
+  Future<void> init() async {
+    await getDataPref();
+    await fetchData();
   }
 
   Future<void> fetchData() async {
@@ -72,8 +77,8 @@ class _HomePageCompany extends State<HomePageCompany> {
       setState(() {
         isLoading = true;
       });
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('idUser');
+      final FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? userId = await storage.read(key: 'idUser');
 
       if (userId != null) {
         HomePageCompanyVM? result = await homePageUseCases!.getHomePageCompany(
@@ -111,7 +116,6 @@ class _HomePageCompany extends State<HomePageCompany> {
       } else {
         setState(() {
           isLoading = false;
-          //  errorMessage = null;
         });
         print("User ID not found in SharedPreferences");
       }
@@ -120,7 +124,6 @@ class _HomePageCompany extends State<HomePageCompany> {
       if (mounted) {
         setState(() {
           isLoading = false;
-          //errorMessage = "Error loading status: $e";
         });
       }
     }

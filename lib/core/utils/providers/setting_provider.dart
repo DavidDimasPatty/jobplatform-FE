@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingProvider extends ChangeNotifier {
+  FlutterSecureStorage storage = const FlutterSecureStorage();
   bool isLoading = true;
   String? errorMessage;
   String? nama;
@@ -21,53 +23,64 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> loadSetting() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      nama = prefs.getString('nama');
-      loginAs = prefs.getString('loginAs');
-      url = prefs.getString('urlAva');
-      profileComplete = prefs.getInt("profileComplete");
-      isPremium = prefs.getBool("isPremium");
-      is2FA = prefs.getBool("is2FA");
-      isNotifInternal = prefs.getBool("isNotifInternal");
-      isNotifExternal = prefs.getBool("isNotifExternal");
-      isDarkMode = prefs.getBool("isDarkMode");
-      language = prefs.getString("language");
-      fontSizeHead = prefs.getInt("fontSizeHead");
-      fontSizeSubHead = prefs.getInt("fontSizeSubHead");
-      fontSizeBody = prefs.getInt("fontSizeBody");
-      fontSizeIcon = prefs.getInt("fontSizeIcon");
+      nama = await storage.read(key: 'nama');
+      loginAs = await storage.read(key: 'loginAs');
+      url = await storage.read(key: 'urlAva');
 
+      final profileStr = await storage.read(key: 'profileComplete');
+      profileComplete = profileStr != null ? int.parse(profileStr) : null;
+
+      isPremium = (await storage.read(key: "isPremium")) == "true";
+      is2FA = (await storage.read(key: "is2FA")) == "true";
+      isNotifInternal = (await storage.read(key: "isNotifInternal")) == "true";
+      isNotifExternal = (await storage.read(key: "isNotifExternal")) == "true";
+      isDarkMode = (await storage.read(key: "isDarkMode")) == "true";
+
+      language = await storage.read(key: "language");
+
+      fontSizeHead = int.tryParse(
+        await storage.read(key: "fontSizeHead") ?? "",
+      );
+      fontSizeSubHead = int.tryParse(
+        await storage.read(key: "fontSizeSubHead") ?? "",
+      );
+      fontSizeBody = int.tryParse(
+        await storage.read(key: "fontSizeBody") ?? "",
+      );
+      fontSizeIcon = int.tryParse(
+        await storage.read(key: "fontSizeIcon") ?? "",
+      );
+
+      isLoading = false;
       notifyListeners();
     } catch (e) {
+      errorMessage = e.toString();
+      isLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> changeLanguage(String lang) async {
-    final prefs = await SharedPreferences.getInstance();
     language = lang;
-    await prefs.setString("language", lang);
+    await storage.write(key: "language", value: lang);
     notifyListeners();
   }
 
   Future<void> changePremium(bool isPremiumInput) async {
-    final prefs = await SharedPreferences.getInstance();
     isPremium = isPremiumInput;
-    await prefs.setBool("isPremium", isPremiumInput);
+    await storage.write(key: "isPremium", value: isPremiumInput.toString());
     notifyListeners();
   }
 
   Future<void> changeNotifApp(bool notifApp) async {
-    final prefs = await SharedPreferences.getInstance();
     isNotifInternal = notifApp;
-    await prefs.setBool("isNotifInternal", notifApp);
+    await storage.write(key: "isNotifInternal", value: notifApp.toString());
     notifyListeners();
   }
 
   Future<void> changeNotifExternalApp(bool notifExApp) async {
-    final prefs = await SharedPreferences.getInstance();
     isNotifExternal = notifExApp;
-    await prefs.setBool("isNotifExternal", notifExApp);
+    await storage.write(key: "isNotifExternal", value: notifExApp.toString());
     notifyListeners();
   }
 
@@ -77,7 +90,6 @@ class SettingProvider extends ChangeNotifier {
     String fontSizeBody,
     String fontSizeIcon,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
     this.fontSizeHead = fontSizeHead == "big"
         ? 22
         : fontSizeHead == "medium"
@@ -99,10 +111,22 @@ class SettingProvider extends ChangeNotifier {
         ? 12
         : 8;
 
-    await prefs.setInt("fontSizeHead", this.fontSizeHead!);
-    await prefs.setInt("fontSizeSubHead", this.fontSizeSubHead!);
-    await prefs.setInt("fontSizeBody", this.fontSizeBody!);
-    await prefs.setInt("fontSizeIcon", this.fontSizeIcon!);
+    await storage.write(
+      key: "fontSizeHead",
+      value: this.fontSizeHead.toString(),
+    );
+    await storage.write(
+      key: "fontSizeSubHead",
+      value: this.fontSizeSubHead.toString(),
+    );
+    await storage.write(
+      key: "fontSizeBody",
+      value: this.fontSizeBody.toString(),
+    );
+    await storage.write(
+      key: "fontSizeIcon",
+      value: this.fontSizeIcon.toString(),
+    );
 
     notifyListeners();
   }

@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
 import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
 import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart'
     show AuthRemoteDataSource;
 
@@ -33,7 +33,7 @@ class _Appearance extends State<Appearance> {
   List<String> fontType = ["big".tr(), "medium".tr(), "small".tr()];
   List<String> language = ["🇺🇸-ENG", "🇮🇩-IND"];
   bool _isLoading = false;
-
+  late FlutterSecureStorage storage;
   @override
   void initState() {
     super.initState();
@@ -41,7 +41,7 @@ class _Appearance extends State<Appearance> {
       _dataSourceSetting = AuthRemoteDataSource();
       _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
       _settingUseCase = SettingUseCase(_repoSetting!);
-      prefs = await SharedPreferences.getInstance();
+      storage = const FlutterSecureStorage();
       final setting = context.read<SettingProvider>();
       await setting.loadSetting();
 
@@ -74,8 +74,8 @@ class _Appearance extends State<Appearance> {
 
   Future changeLanguage(String language) async {
     try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
+      String? id = await storage.read(key: 'idUser');
+      String? loginAs = await storage.read(key: 'loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
       // setState(() {
@@ -88,7 +88,7 @@ class _Appearance extends State<Appearance> {
         language,
       );
       if (response == 'Sukses') {
-        prefs.setString("language", language);
+        await storage.write(key: "language", value: language);
         if (language == "IND") {
           context.setLocale(const Locale('id'));
         } else {
@@ -115,8 +115,8 @@ class _Appearance extends State<Appearance> {
     String fontSizeIcon,
   ) async {
     try {
-      String? id = prefs.getString('idUser');
-      String? loginAs = prefs.getString('loginAs');
+      String? id = await storage.read(key: 'idUser');
+      String? loginAs = await storage.read(key: 'loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
       String? response = await _settingUseCase!.changeFontSize(
         id,
@@ -593,16 +593,16 @@ class _Appearance extends State<Appearance> {
                             ? CircularProgressIndicator()
                             : ElevatedButton.icon(
                                 onPressed: () async {
-                                  await changeLanguage(
-                                    _languageController!.split('-')[1]!,
-                                  );
+                                  String languelected =
+                                      _languageController!.contains("-")
+                                      ? _languageController!.split('-')[1]
+                                      : _languageController!;
+                                  await changeLanguage(languelected);
 
                                   final provider = context
                                       .read<SettingProvider>();
 
-                                  provider.changeLanguage(
-                                    _languageController!.split('-')[1]!,
-                                  );
+                                  provider.changeLanguage(languelected);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.green,

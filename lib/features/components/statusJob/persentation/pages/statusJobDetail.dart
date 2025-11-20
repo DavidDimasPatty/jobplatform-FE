@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/statusJob/data/datasources/aut_remote_datasource.dart';
@@ -171,8 +172,8 @@ class _Statusjobdetail extends State<Statusjobdetail> {
 
   Future konfirmasiTahapan(bool status) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? id = prefs.getString('idUser');
+      final FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? id = await storage.read(key: 'idUser');
       String? idUserVacancy = data?.userVacancy?.id;
       String? alasanReject;
       if (id == null) throw Exception("User ID not found in preferences");

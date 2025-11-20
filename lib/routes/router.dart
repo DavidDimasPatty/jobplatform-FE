@@ -1,4 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/AuthProvider.dart';
+import 'package:job_platform/core/utils/guard/sessionGuard.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidateDetail.dart';
 import 'package:job_platform/features/components/cart/persentation/pages/cart.dart';
@@ -47,6 +49,7 @@ import 'package:job_platform/features/components/setting/persentation/pages/sett
 import 'package:job_platform/features/components/setting/persentation/pages/settingEmail.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/settingNotification.dart';
 import 'package:job_platform/features/components/setting/persentation/pages/tos.dart';
+import 'package:job_platform/features/components/setting/persentation/pages/validate2FA.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPelamar.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signupPerusahaan.dart';
@@ -61,6 +64,7 @@ import 'package:job_platform/features/components/vacancy/persentation/pages/vaca
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyEdit.dart';
 import 'package:job_platform/features/shared/layout.dart';
 
+final sg = SessionGuard();
 final List<GoRoute> _layoutRoutes = [
   GoRoute(path: '/home', builder: (context, state) => HomePage()),
   GoRoute(path: '/homeCompany', builder: (context, state) => HomePageCompany()),
@@ -92,60 +96,20 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: "/appearance",
     builder: (context, state) {
-      //final extraData = state.extra as Map<String, dynamic>?;
-      // Future<void> Function(String language)? changeLanguage =
-      //     extraData?['changeLanguage'];
-      // Future<void> Function(
-      //   String fontSizeHead,
-      //   String fontSizeSubHead,
-      //   String fontSizeBody,
-      //   String fontSizeIcon,
-      // )?
-      // changeFontSize = extraData?['changeFontSize'];
-      // final fontSizeBody = extraData?['fontSizeBody'] as int?;
-      // final fontSizeHead = extraData?['fontSizeHead'] as int?;
-      // final fontSizeIcon = extraData?['fontSizeIcon'] as int?;
-      // final fontSizeSubHead = extraData?['fontSizeSubHead'] as int?;
-      // final language = extraData?['language'] as String?;
-      return Appearance(
-        // changeFontSize: changeFontSize,
-        // changeLanguage: changeLanguage,
-        // fontSizeBody: fontSizeBody,
-        // fontSizeHead: fontSizeHead,
-        // fontSizeIcon: fontSizeIcon,
-        // fontSizeSubHead: fontSizeSubHead,
-        // language: language,
-      );
+      return Appearance();
     },
   ),
 
   GoRoute(
     path: "/setNotification",
     builder: (context, state) {
-      //final extraData = state.extra as Map<String, dynamic>?;
-      // Future<void> Function(bool value) changeExternalNotifApp =
-      //     extraData?['changeExternalNotifApp'];
-      // Future<void> Function(bool value) changeNotifApp =
-      //     extraData?['changeNotifApp'];
-      // final isNotifExternal = extraData?['isNotifExternal'] as bool?;
-      // final isNotifInternal = extraData?['isNotifInternal'] as bool?;
-      // final Future<void> Function() reload = extraData?['reload'];
-      return Settingnotification(
-        // changeExternalNotifApp: changeExternalNotifApp,
-        // changeNotifApp: changeNotifApp,
-        // isNotifExternal: isNotifExternal,
-        // isNotifInternal: isNotifInternal,
-        // reload: reload,
-      );
+      return Settingnotification();
     },
   ),
 
   GoRoute(
     path: "/upgradeAccount",
     builder: (context, state) {
-      //final extraData = state.extra as Map<String, dynamic>?;
-      //Future<void> Function(bool value) upgradePlan = extraData?['upgradePlan'];
-      //final isPremium = extraData?['isPremium'] as bool?;
       return Upgradeaccount();
     },
   ),
@@ -153,9 +117,6 @@ final List<GoRoute> _layoutRoutes = [
   GoRoute(
     path: "/settingEmail",
     builder: (context, state) {
-      // final extraData = state.extra as Map<String, dynamic>?;
-      // Future<String> Function(String oldEmail, String newEmail)?
-      // changeEmailAccount = extraData?['changeEmailAccount'];
       return Settingemail();
     },
   ),
@@ -299,6 +260,7 @@ final List<GoRoute> _layoutRoutes = [
   ),
 ];
 
+AuthProvider authProvider = AuthProvider();
 final router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -323,6 +285,17 @@ final router = GoRouter(
       },
     ),
     GoRoute(
+      path: '/Validate2fa',
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>?;
+        final email = data?['email'];
+        final userId = data?['userId'];
+        final loginAs = data?["loginAs"];
+        return Validate2fa(userId: userId, loginAs: loginAs, email: email);
+      },
+    ),
+
+    GoRoute(
       path: '/signUpPelamar',
       builder: (context, state) {
         final data = state.extra as Map<String, dynamic>?;
@@ -340,6 +313,27 @@ final router = GoRouter(
       routes: _layoutRoutes,
     ),
   ],
+  redirect: (context, state) async {
+    final hasSession = await sg.CheckSession();
+
+    final loggingIn =
+        state.uri.toString() == '/' ||
+        state.uri.toString() == '/login' ||
+        state.uri.toString() == '/signUp' ||
+        state.uri.toString() == '/signUpPelamar' ||
+        state.uri.toString() == '/signUpPerusahaan' ||
+        state.uri.toString() == '/Validate2fa';
+
+    if (!hasSession && !loggingIn) {
+      return '/';
+    }
+
+    if (hasSession && loggingIn && !(state.uri.toString() == '/Validate2fa')) {
+      return '/home';
+    }
+
+    return null;
+  },
   errorBuilder: (context, state) {
     return ErrorPage();
   },

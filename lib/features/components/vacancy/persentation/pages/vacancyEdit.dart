@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/vacancy/data/models/vacancyRequest.dart';
@@ -86,8 +87,8 @@ class _Vacancyedit extends State<Vacancyedit> {
       });
 
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? idCompany = prefs.getString('idCompany');
+        final FlutterSecureStorage storage = const FlutterSecureStorage();
+        String? idCompany = await storage.read(key: 'idCompany');
 
         // Ensure idCompany is not null
         if (idCompany == null)

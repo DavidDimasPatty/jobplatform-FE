@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/notification/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/notification/data/models/notificationModel.dart';
@@ -85,21 +86,21 @@ class _LayoutState extends State<Layout> {
   }
 
   Future<void> getDataPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      loginAs = prefs.getString('loginAs');
-    });
+    final FlutterSecureStorage storage = const FlutterSecureStorage();
+
+    loginAs = await storage.read(key: 'loginAs');
+
     if (loginAs == "user") {
-      idUser = prefs.getString('idUser');
-      namaUser = prefs.getString('nama');
-      emailUser = prefs.getString('email');
-      noTelpUser = prefs.getString('noTelp');
-      hrCompanyId = prefs.getString("hrCompanyId");
+      idUser = await storage.read(key: 'idUser');
+      namaUser = await storage.read(key: 'nama');
+      emailUser = await storage.read(key: 'email');
+      noTelpUser = await storage.read(key: 'noTelp');
+      hrCompanyId = await storage.read(key: "hrCompanyId");
     } else if (loginAs == "company") {
-      idCompany = prefs.getString('idCompany');
-      namaCompany = prefs.getString('nama');
-      domainCompany = prefs.getString('domain');
-      noTelpCompany = prefs.getString('noTelp');
+      idCompany = await storage.read(key: 'idCompany');
+      namaCompany = await storage.read(key: 'nama');
+      domainCompany = await storage.read(key: 'domain');
+      noTelpCompany = await storage.read(key: 'noTelp');
     }
   }
 
@@ -139,9 +140,8 @@ class _LayoutState extends State<Layout> {
 
   Future<void> _readNotification(NotificationRequest notificationId) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? accountId =
-          prefs.getString('idUser') ?? prefs.getString('idCompany');
+      final FlutterSecureStorage storage = const FlutterSecureStorage();
+      String? accountId = await storage.read(key: 'idCompany');
 
       if (accountId != null) {
         NotificationResponse response = await _notificationUseCase
