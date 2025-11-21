@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/notification/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/notification/data/models/notificationModel.dart';
 import 'package:job_platform/features/components/notification/data/models/notificationRequest.dart';
@@ -86,21 +87,21 @@ class _LayoutState extends State<Layout> {
   }
 
   Future<void> getDataPref() async {
-    final FlutterSecureStorage storage = const FlutterSecureStorage();
+    final storage = StorageService();
 
-    loginAs = await storage.read(key: 'loginAs');
+    loginAs = await storage.get('loginAs');
 
     if (loginAs == "user") {
-      idUser = await storage.read(key: 'idUser');
-      namaUser = await storage.read(key: 'nama');
-      emailUser = await storage.read(key: 'email');
-      noTelpUser = await storage.read(key: 'noTelp');
-      hrCompanyId = await storage.read(key: "hrCompanyId");
+      idUser = await storage.get('idUser');
+      namaUser = await storage.get('nama');
+      emailUser = await storage.get('email');
+      noTelpUser = await storage.get('noTelp');
+      hrCompanyId = await storage.get("hrCompanyId");
     } else if (loginAs == "company") {
-      idCompany = await storage.read(key: 'idCompany');
-      namaCompany = await storage.read(key: 'nama');
-      domainCompany = await storage.read(key: 'domain');
-      noTelpCompany = await storage.read(key: 'noTelp');
+      idCompany = await storage.get('idCompany');
+      namaCompany = await storage.get('nama');
+      domainCompany = await storage.get('domain');
+      noTelpCompany = await storage.get('noTelp');
     }
   }
 
@@ -140,8 +141,8 @@ class _LayoutState extends State<Layout> {
 
   Future<void> _readNotification(NotificationRequest notificationId) async {
     try {
-      final FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? accountId = await storage.read(key: 'idCompany');
+      final storage = StorageService();
+      String? accountId = await storage.get('idCompany');
 
       if (accountId != null) {
         NotificationResponse response = await _notificationUseCase

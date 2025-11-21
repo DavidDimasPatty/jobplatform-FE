@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:job_platform/core/utils/AuthProvider.dart';
+import 'package:job_platform/core/utils/providers/AuthProvider.dart';
 import 'package:job_platform/core/utils/guard/sessionGuard.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/pages/candidateDetail.dart';
@@ -64,7 +64,6 @@ import 'package:job_platform/features/components/vacancy/persentation/pages/vaca
 import 'package:job_platform/features/components/vacancy/persentation/pages/vacancyEdit.dart';
 import 'package:job_platform/features/shared/layout.dart';
 
-final sg = SessionGuard();
 final List<GoRoute> _layoutRoutes = [
   GoRoute(path: '/home', builder: (context, state) => HomePage()),
   GoRoute(path: '/homeCompany', builder: (context, state) => HomePageCompany()),
@@ -314,7 +313,7 @@ final router = GoRouter(
     ),
   ],
   redirect: (context, state) async {
-    final hasSession = await sg.CheckSession();
+    var hasSession = await SessionGuard().CheckSession();
 
     final loggingIn =
         state.uri.toString() == '/' ||

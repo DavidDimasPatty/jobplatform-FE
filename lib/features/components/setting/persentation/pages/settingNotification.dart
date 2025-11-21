@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -28,7 +29,7 @@ class _Settingnotification extends State<Settingnotification> {
   late SharedPreferences prefs;
   bool isLoading = true;
   String? errorMessage;
-  late FlutterSecureStorage storage;
+  final storage = StorageService();
 
   @override
   void initState() {
@@ -37,7 +38,6 @@ class _Settingnotification extends State<Settingnotification> {
       _dataSourceSetting = AuthRemoteDataSource();
       _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
       _settingUseCase = SettingUseCase(_repoSetting!);
-      storage = const FlutterSecureStorage();
       final setting = context.read<SettingProvider>();
       await setting.loadSetting();
 
@@ -52,8 +52,8 @@ class _Settingnotification extends State<Settingnotification> {
 
   Future changeNotifApp(bool value) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
       String? response = await _settingUseCase!.changeNotifApp(id, loginAs!);
       if (response == 'Sukses') {
@@ -84,8 +84,8 @@ class _Settingnotification extends State<Settingnotification> {
 
   Future changeExternalNotifApp(bool value) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
       String? response = await _settingUseCase!.changeExternalNotifApp(
         id,

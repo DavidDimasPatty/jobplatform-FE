@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/notification/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/notification/data/models/notificationRequest.dart';
 import 'package:job_platform/features/components/notification/data/models/notificationResponse.dart';
@@ -59,10 +60,9 @@ class _NotificationDetail extends State<NotificationDetail> {
         errorMessage = null;
       });
 
-      FlutterSecureStorage storage = const FlutterSecureStorage();
+      var storage = StorageService();
       String? accountId =
-          await storage.read(key: 'idUser') ??
-          await storage.read(key: 'idCompany');
+          await storage.get('idUser') ?? await storage.get('idCompany');
 
       if (accountId != null) {
         var notification = await _notificationUseCase.getNotification(
@@ -114,10 +114,9 @@ class _NotificationDetail extends State<NotificationDetail> {
 
   Future<void> _readNotification(NotificationRequest notificationId) async {
     try {
-      FlutterSecureStorage storage = const FlutterSecureStorage();
+      var storage = StorageService();
       String? accountId =
-          await storage.read(key: 'idUser') ??
-          await storage.read(key: 'idCompany');
+          await storage.get('idUser') ?? await storage.get('idCompany');
 
       if (accountId != null) {
         NotificationResponse response = await _notificationUseCase

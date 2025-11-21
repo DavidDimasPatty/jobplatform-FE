@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileData.dart';
@@ -147,8 +148,8 @@ class _Personalinfo extends State<Personalinfo> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     try {
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idUser = await storage.read(key: 'idUser');
+      var storage = StorageService();
+      String? idUser = await storage.get('idUser');
 
       // Ensure idUser is not null
       if (idUser == null) throw Exception("User ID not found in preferences");

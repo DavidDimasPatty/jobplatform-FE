@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/statusJob/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/statusJob/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusAllVM.dart';
@@ -33,8 +34,8 @@ class _statusJob extends State<statusJob> {
         isLoading = true;
         errorMessage = null;
       });
-      final FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? userId = await storage.read(key: 'idUser');
+      final storage = StorageService();
+      String? userId = await storage.get('idUser');
 
       if (userId != null) {
         final result = await _statusUseCase!.getAllStatus(userId);

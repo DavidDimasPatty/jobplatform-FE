@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:job_platform/core/utils/AuthProvider.dart';
+import 'package:job_platform/core/utils/providers/AuthProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/network/websocket_client.dart';
 import 'package:job_platform/core/utils/providers/ThemeProvider.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/login/data/models/loginModel.dart';
 import 'package:job_platform/features/components/login/persentation/pages/companyWaiting.dart';
 import 'package:job_platform/features/components/signup/persentation/pages/signup.dart';
@@ -40,6 +41,7 @@ class _LoginFormState extends State<LoginForm> {
   String? imageUrl;
   String? token;
   bool isLoading = false;
+  final storage = StorageService();
 
   Future _handleLogin() async {
     AuthProvider authProviderLogIn = Provider.of<AuthProvider>(
@@ -87,7 +89,6 @@ class _LoginFormState extends State<LoginForm> {
         isLoading = true;
       });
       try {
-        final storageFlutter = FlutterSecureStorage();
         final dataSource = AuthRemoteDataSource();
         final repository = AuthRepositoryImpl(dataSource);
         final usecase = LoginUseCase(repository);
@@ -103,109 +104,69 @@ class _LoginFormState extends State<LoginForm> {
                 isLoading = true;
               });
               try {
+                await authProviderLogIn.login(user!.refreshToken!);
                 // TOKEN + LOGIN TYPE
-                authProviderLogIn.login(user!.refreshToken!);
-                await storageFlutter.write(key: "loginAs", value: "user");
-                await storageFlutter.write(
-                  key: "idUser",
-                  value: data.user!.id!,
+                await storage.save("loginAs", "user");
+                await storage.save("idUser", data.user!.id!);
+                await storage.save("nama", data.user!.nama!);
+                await storage.save("email", data.user!.email!);
+                await storage.save("noTelp", data.user!.noTelp!);
+                await storage.save("urlAva", data.user?.photoURL ?? '');
+
+                await storage.save(
+                  "isPremium",
+                  (data.user!.isPremium ?? false).toString(),
                 );
-                await storageFlutter.write(
-                  key: "nama",
-                  value: data.user!.nama!,
-                );
-                await storageFlutter.write(
-                  key: "email",
-                  value: data.user!.email!,
-                );
-                await storageFlutter.write(
-                  key: "noTelp",
-                  value: data.user!.noTelp!,
-                );
-                await storageFlutter.write(
-                  key: "urlAva",
-                  value: data.user?.photoURL ?? '',
-                );
-                await storageFlutter.write(
-                  key: "isPremium",
-                  value: (data.user!.isPremium ?? false).toString(),
-                );
-                await storageFlutter.write(
-                  key: "is2FA",
-                  value: (data.user!.is2FA ?? false).toString(),
+
+                await storage.save(
+                  "is2FA",
+                  (data.user!.is2FA ?? false).toString(),
                 );
 
                 // FONT SIZE
                 if (data.user!.fontSize == null) {
-                  await storageFlutter.write(key: "fontSizeHead", value: "18");
-                  await storageFlutter.write(
-                    key: "fontSizeSubHead",
-                    value: "16",
-                  );
-                  await storageFlutter.write(key: "fontSizeBody", value: "14");
-                  await storageFlutter.write(key: "fontSizeIcon", value: "12");
+                  await storage.save("fontSizeHead", "18");
+                  await storage.save("fontSizeSubHead", "16");
+                  await storage.save("fontSizeBody", "14");
+                  await storage.save("fontSizeIcon", "12");
                 } else {
-                  List<String> arrFont = data.user!.fontSize!.split(',');
-                  await storageFlutter.write(
-                    key: "fontSizeHead",
-                    value: arrFont[0],
-                  );
-                  await storageFlutter.write(
-                    key: "fontSizeSubHead",
-                    value: arrFont[1],
-                  );
-                  await storageFlutter.write(
-                    key: "fontSizeBody",
-                    value: arrFont[2],
-                  );
-                  await storageFlutter.write(
-                    key: "fontSizeIcon",
-                    value: arrFont[3],
-                  );
+                  final arrFont = data.user!.fontSize!.split(',');
+                  await storage.save("fontSizeHead", arrFont[0]);
+                  await storage.save("fontSizeSubHead", arrFont[1]);
+                  await storage.save("fontSizeBody", arrFont[2]);
+                  await storage.save("fontSizeIcon", arrFont[3]);
                 }
 
                 // NOTIF SETTINGS
-                await storageFlutter.write(
-                  key: "isNotifInternal",
-                  value: (data.user!.isNotifInternal ?? false).toString(),
+                await storage.save(
+                  "isNotifInternal",
+                  (data.user!.isNotifInternal ?? false).toString(),
                 );
-                await storageFlutter.write(
-                  key: "isNotifExternal",
-                  value: (data.user!.isNotifExternal ?? false).toString(),
+
+                await storage.save(
+                  "isNotifExternal",
+                  (data.user!.isNotifExternal ?? false).toString(),
                 );
 
                 // THEME
-                await storageFlutter.write(
-                  key: "isDarkMode",
-                  value: (data.user!.isDarkMode ?? false).toString(),
+                await storage.save(
+                  "isDarkMode",
+                  (data.user!.isDarkMode ?? false).toString(),
                 );
-
-                // if (data.user!.isDarkMode == true) {
-                //   themeProvider.toggleTheme();
-                // }
 
                 // LANGUAGE
-                await storageFlutter.write(
-                  key: "language",
-                  value: data.user!.language ?? "IND",
-                );
-
-                // if (data.user!.language == "IND") {
-                //   context.setLocale(const Locale('id'));
-                // } else {
-                //   context.setLocale(const Locale('en'));
-                // }
+                await storage.save("language", data.user!.language ?? "IND");
 
                 // HR COMPANY DATA
                 if (data.hrCompanies != null) {
-                  await storageFlutter.write(key: "isHRD", value: "true");
-                  await storageFlutter.write(
-                    key: "hrCompanyName",
-                    value: data.hrCompanies!.company.nama!,
+                  await storage.save("isHRD", "true");
+                  await storage.save(
+                    "hrCompanyName",
+                    data.hrCompanies!.company.nama!,
                   );
-                  await storageFlutter.write(
-                    key: "hrCompanyId",
-                    value: data.hrCompanies!.company.id!,
+                  await storage.save(
+                    "hrCompanyId",
+                    data.hrCompanies!.company.id!,
                   );
                 }
               } catch (e, st) {
@@ -226,9 +187,6 @@ class _LoginFormState extends State<LoginForm> {
               String? result2FA;
 
               try {
-                setState(() {
-                  isLoading = true;
-                });
                 String? idUser2FA = data.user!.id!;
                 String? email = data.user!.email!;
                 result2FA = await usecase.login2FA(
@@ -248,17 +206,14 @@ class _LoginFormState extends State<LoginForm> {
                     } else {
                       context.setLocale(const Locale('en'));
                     }
-
-                    if (result2FA == "Sukses") {
-                      context.go(
-                        "/Validate2fa",
-                        extra: {
-                          "email": email,
-                          "userId": idUser2FA,
-                          "loginAs": "user",
-                        },
-                      );
-                    }
+                    context.go(
+                      "/Validate2fa",
+                      extra: {
+                        "email": email,
+                        "userId": idUser2FA,
+                        "loginAs": "user",
+                      },
+                    );
                   });
                 }
               } catch (Ex) {
@@ -270,6 +225,7 @@ class _LoginFormState extends State<LoginForm> {
 
               // return context.go("/home");
             } else if (data.collection == "companies") {
+              await authProviderLogIn.login(user!.refreshToken!);
               setState(() {
                 isLoading = true;
               });
@@ -277,115 +233,76 @@ class _LoginFormState extends State<LoginForm> {
                 try {
                   // TIPE LOGIN
                   authProviderLogIn.login(user!.refreshToken!);
-                  await storageFlutter.write(key: "loginAs", value: "company");
+                  await storage.save("loginAs", "company");
 
                   // DATA COMPANY
-                  await storageFlutter.write(
-                    key: "idUser",
-                    value: data.company!.id!,
-                  );
-                  await storageFlutter.write(
-                    key: "nama",
-                    value: data.company!.nama!,
-                  );
-                  await storageFlutter.write(
-                    key: "domain",
-                    value: data.company!.email!,
-                  );
-                  await storageFlutter.write(
-                    key: "noTelp",
-                    value: data.company!.noTelp!,
-                  );
-                  await storageFlutter.write(
-                    key: "urlAva",
-                    value: data.company!.logo!,
-                  );
+                  await storage.save("idUser", data.company!.id!);
+                  await storage.save("nama", data.company!.nama!);
+                  await storage.save("domain", data.company!.email!);
+                  await storage.save("noTelp", data.company!.noTelp!);
+                  await storage.save("urlAva", data.company!.logo!);
 
                   // BOOLEAN SETTINGS
-                  await storageFlutter.write(
-                    key: "isPremium",
-                    value: (data.company!.isPremium ?? false).toString(),
+                  await storage.save(
+                    "isPremium",
+                    (data.company!.isPremium ?? false).toString(),
                   );
 
-                  await storageFlutter.write(
-                    key: "is2FA",
-                    value: (data.company!.is2FA ?? false).toString(),
+                  await storage.save(
+                    "is2FA",
+                    (data.company!.is2FA ?? false).toString(),
                   );
 
                   // FONT SIZE (int → string)
                   if (data.company!.fontSize == null) {
-                    await storageFlutter.write(
-                      key: "fontSizeHead",
-                      value: "18",
-                    );
-                    await storageFlutter.write(
-                      key: "fontSizeSubHead",
-                      value: "16",
-                    );
-                    await storageFlutter.write(
-                      key: "fontSizeBody",
-                      value: "14",
-                    );
-                    await storageFlutter.write(
-                      key: "fontSizeIcon",
-                      value: "12",
-                    );
+                    await storage.save("fontSizeHead", "18");
+                    await storage.save("fontSizeSubHead", "16");
+                    await storage.save("fontSizeBody", "14");
+                    await storage.save("fontSizeIcon", "12");
                   } else {
                     List<String> arrFont = data.company!.fontSize!.split(',');
-                    await storageFlutter.write(
-                      key: "fontSizeHead",
-                      value: arrFont[0],
-                    );
-                    await storageFlutter.write(
-                      key: "fontSizeSubHead",
-                      value: arrFont[1],
-                    );
-                    await storageFlutter.write(
-                      key: "fontSizeBody",
-                      value: arrFont[2],
-                    );
-                    await storageFlutter.write(
-                      key: "fontSizeIcon",
-                      value: arrFont[3],
-                    );
+                    await storage.save("fontSizeHead", arrFont[0]);
+                    await storage.save("fontSizeSubHead", arrFont[1]);
+                    await storage.save("fontSizeBody", arrFont[2]);
+                    await storage.save("fontSizeIcon", arrFont[3]);
                   }
 
                   // NOTIF
-                  await storageFlutter.write(
-                    key: "isNotifInternal",
-                    value: (data.company!.isNotifInternal ?? false).toString(),
+                  await storage.save(
+                    "isNotifInternal",
+                    (data.company!.isNotifInternal ?? false).toString(),
                   );
 
-                  await storageFlutter.write(
-                    key: "isNotifExternal",
-                    value: (data.company!.isNotifExternal ?? false).toString(),
+                  await storage.save(
+                    "isNotifExternal",
+                    (data.company!.isNotifExternal ?? false).toString(),
                   );
 
                   // DARK MODE
-                  await storageFlutter.write(
-                    key: "isDarkMode",
-                    value: (data.company!.isDarkMode ?? false).toString(),
+                  await storage.save(
+                    "isDarkMode",
+                    (data.company!.isDarkMode ?? false).toString(),
                   );
 
                   // LANGUAGE
-                  await storageFlutter.write(
-                    key: "language",
-                    value: data.company!.language ?? "IND",
+                  await storage.save(
+                    "language",
+                    data.company!.language ?? "IND",
                   );
                 } catch (e, st) {
                   print("SecureStorage error (DIABAIKAN): $e");
                 }
 
                 try {
-                // WebSocket Connection
-                final _webSocketClient = WebSocketClientImpl(
-                  userId: data.company!.id!,
-                  url: '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}',
-                );
-                _webSocketClient.connect();
-              } catch (e) {
-                print("WebSocket connection error (DIABAIKAN): $e");
-              }
+                  // WebSocket Connection
+                  final _webSocketClient = WebSocketClientImpl(
+                    userId: data.company!.id!,
+                    url: '${dotenv.env['WEBSOCKET_URL_DEV_CHAT']}',
+                  );
+                  _webSocketClient.connect();
+                } catch (e) {
+                  print("WebSocket connection error (DIABAIKAN): $e");
+                }
 
                 // LOGIN PROVIDER
                 String? result2FA;
@@ -408,21 +325,19 @@ class _LoginFormState extends State<LoginForm> {
                       }
 
                       if (data.company!.language == "IND") {
-                        context.setLocale(const Locale('id'));
+                        context.setLocale(Locale('id'));
                       } else {
-                        context.setLocale(const Locale('en'));
+                        context.setLocale(Locale('en'));
                       }
 
-                      if (result2FA == "Sukses") {
-                        context.go(
-                          "/Validate2fa",
-                          extra: {
-                            "email": email,
-                            "userId": idUser2FA,
-                            "loginAs": "company",
-                          },
-                        );
-                      }
+                      context.go(
+                        "/Validate2fa",
+                        extra: {
+                          "email": email,
+                          "userId": idUser2FA,
+                          "loginAs": "company",
+                        },
+                      );
                     });
                   }
                 } catch (Ex) {

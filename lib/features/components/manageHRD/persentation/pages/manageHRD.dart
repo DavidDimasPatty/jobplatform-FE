@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
 import 'package:job_platform/features/components/manageHRD/data/datasources/aut_remote_datasource.dart'
     show AuthRemoteDataSource;
@@ -42,8 +43,8 @@ class _Managehrd extends State<Managehrd> {
         isLoading = true;
         errorMessage = null;
       });
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idCompany = await storage.read(key: 'idCompany');
+      var storage = StorageService();
+      String? idCompany = await storage.get('idCompany');
 
       if (idCompany != null) {
         List<HRDDataVM?>? profile = await _hrdUseCase!.getAllHRD(idCompany);
@@ -200,8 +201,8 @@ class _Managehrd extends State<Managehrd> {
         barrierDismissible: false,
         builder: (_) => const Center(child: CircularProgressIndicator()),
       );
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idCompany = await storage.read(key: 'idCompany');
+      var storage = StorageService();
+      String? idCompany = await storage.get('idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");
@@ -239,8 +240,8 @@ class _Managehrd extends State<Managehrd> {
 
   Future AddHRD(String email) async {
     try {
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idCompany = await storage.read(key: 'idCompany');
+      var storage = StorageService();
+      String? idCompany = await storage.get('idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");

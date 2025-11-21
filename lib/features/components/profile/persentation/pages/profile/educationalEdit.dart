@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/educationResponse.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
@@ -179,8 +180,8 @@ class _EducationalEdit extends State<EducationalEdit> {
       });
 
       try {
-        FlutterSecureStorage storage = const FlutterSecureStorage();
-        String? idUser = await storage.read(key: 'idUser');
+        var storage = StorageService();
+        String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");

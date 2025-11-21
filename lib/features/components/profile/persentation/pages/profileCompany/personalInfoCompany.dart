@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/models/profileCompanyRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
 import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
@@ -78,8 +79,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
         isLoading = true;
         errorMessage = null;
       });
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idCompany = await storage.read(key: 'idCompany');
+      var storage = StorageService();
+      String? idCompany = await storage.get('idCompany');
 
       if (idCompany != null) {
         var profile = await profileUsecase.getProfileCompany(idCompany);
@@ -109,8 +110,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     try {
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idCompany = await storage.read(key: 'idCompany');
+      var storage = StorageService();
+      String? idCompany = await storage.get('idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences");

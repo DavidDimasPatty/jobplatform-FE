@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/statusJob/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/statusJob/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusDetailVM.dart';
@@ -172,8 +173,8 @@ class _Statusjobdetail extends State<Statusjobdetail> {
 
   Future konfirmasiTahapan(bool status) async {
     try {
-      final FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? id = await storage.read(key: 'idUser');
+      final storage = StorageService();
+      String? id = await storage.get('idUser');
       String? idUserVacancy = data?.userVacancy?.id;
       String? alasanReject;
       if (id == null) throw Exception("User ID not found in preferences");

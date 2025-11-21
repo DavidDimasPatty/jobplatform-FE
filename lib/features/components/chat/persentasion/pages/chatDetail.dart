@@ -6,6 +6,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/network/websocket_client.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/chat/data/models/chatRequest.dart';
 import 'package:job_platform/features/components/chat/data/models/partnerModel.dart';
 import 'package:job_platform/features/components/chat/domain/usecases/chat_usecase.dart';
@@ -80,8 +81,8 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   Future<void> _loadSharedpreferences() async {
-    FlutterSecureStorage storage = const FlutterSecureStorage();
-    String? userId = await storage.read(key: 'idUser');
+    var storage = StorageService();
+    String? userId = await storage.get('idUser');
 
     setState(() {
       _userId = userId;
@@ -623,7 +624,7 @@ class _ChatDetailState extends State<ChatDetail> {
                           bottomPadding: 80,
                           onStartReached: () async {
                             await _markAsRead();
-                          }
+                          },
                         );
                       },
                       scrollToBottomBuilder: (context, animation, onPressed) {

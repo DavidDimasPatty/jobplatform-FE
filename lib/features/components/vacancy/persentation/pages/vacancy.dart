@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/vacancy/data/models/vacancyResponse.dart';
 import 'package:job_platform/features/components/vacancy/data/repositories/auth_repository_impl.dart';
@@ -56,8 +57,8 @@ class _Vacancy extends State<Vacancy> {
         isLoading = true;
         errorMessage = null;
       });
-      final FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? companyId = await storage.read(key: 'idCompany');
+      final storage = StorageService();
+      String? companyId = await storage.get('idCompany');
 
       if (companyId != null) {
         var vacancy = await _vacancyUseCase.getListVacancy(companyId);
@@ -107,8 +108,8 @@ class _Vacancy extends State<Vacancy> {
 
   Future<void> _deleteVacancy(String id) async {
     try {
-      final FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idCompany = await storage.read(key: 'idCompany');
+      final storage = StorageService();
+      String? idCompany = await storage.get('idCompany');
 
       if (idCompany == null)
         throw Exception("Company ID not found in preferences".tr());

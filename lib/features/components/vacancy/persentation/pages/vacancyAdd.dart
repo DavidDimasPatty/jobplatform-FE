@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/vacancy/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/vacancy/domain/usecases/vacancy_usecase.dart';
@@ -69,8 +70,8 @@ class _Vacancyadd extends State<Vacancyadd> {
       });
 
       try {
-        final FlutterSecureStorage storage = const FlutterSecureStorage();
-        String? idCompany = await storage.read(key: 'idCompany');
+        final storage = StorageService();
+        String? idCompany = await storage.get('idCompany');
 
         // Ensure idCompany is not null
         if (idCompany == null)

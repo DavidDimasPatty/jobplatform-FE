@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/network/websocket_client.dart';
-import 'package:job_platform/core/utils/AuthProvider.dart';
+import 'package:job_platform/core/utils/providers/AuthProvider.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/setting/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
@@ -37,8 +38,7 @@ class _Setting extends State<Setting> {
   SettingUseCase? _settingUseCase;
   final _webSocketClient = WebSocketClientImpl.instance;
   late AuthProvider authProvider;
-  late SharedPreferences prefs;
-  late FlutterSecureStorage storage;
+  final storage = StorageService();
   Future<String?> showConfirmStatus(
     BuildContext context,
     String title,
@@ -77,8 +77,8 @@ class _Setting extends State<Setting> {
 
   Future deleteAccount() async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
       final result = await showConfirmStatus(
@@ -94,13 +94,15 @@ class _Setting extends State<Setting> {
 
       String? response = await _settingUseCase!.deleteAccount(id, loginAs!);
       if (response == 'Sukses') {
-        await _webSocketClient?.disconnect();
-        await storage.deleteAll();
+        await storage.clear();
         authProvider.logout();
         setState(() {
           isLoading = false;
           context.go("/");
         });
+        try {
+          await _webSocketClient?.disconnect();
+        } catch (_) {}
       } else {
         setState(() {
           isLoading = false;
@@ -127,8 +129,8 @@ class _Setting extends State<Setting> {
 
   Future logOut() async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
       final result = await showConfirmStatus(
@@ -144,14 +146,15 @@ class _Setting extends State<Setting> {
 
       String? response = await _settingUseCase!.logOut(id, loginAs!);
       if (response == 'Sukses') {
+        await storage.clear();
+        authProvider.logout();
         setState(() {
           isLoading = false;
+          context.go("/");
         });
-        await _webSocketClient?.disconnect();
-        await storage.deleteAll();
-        authProvider.logout();
-        prefs.clear();
-        context.go("/");
+        try {
+          await _webSocketClient?.disconnect();
+        } catch (_) {}
       } else {
         setState(() {
           isLoading = false;
@@ -161,6 +164,7 @@ class _Setting extends State<Setting> {
         );
       }
     } catch (e) {
+      context.go("/");
       setState(() {
         isLoading = false;
       });
@@ -178,8 +182,8 @@ class _Setting extends State<Setting> {
 
   Future changeThemeMode(bool value) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
       String? response = await _settingUseCase!.changeThemeMode(id, loginAs!);
@@ -190,9 +194,6 @@ class _Setting extends State<Setting> {
             backgroundColor: Colors.green,
           ),
         );
-        setState(() {
-          prefs.setBool("isDarkMode", value);
-        });
       } else {
         setState(() {
           isLoading = false;
@@ -236,9 +237,9 @@ class _Setting extends State<Setting> {
 
   Future<String> changeEmailAccount(String oldEmail, String newEmail) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
-      String? oldEmail = await storage.read(key: 'email');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
+      String? oldEmail = await storage.get('email');
       if (id == null) throw Exception("User ID not found in preferences");
 
       String? response = await _settingUseCase!.changeEmailAccount(
@@ -248,7 +249,6 @@ class _Setting extends State<Setting> {
         newEmail,
       );
       if (response == 'Sukses') {
-        prefs.clear();
         return "Sukses";
       } else {
         return response!;
@@ -260,9 +260,9 @@ class _Setting extends State<Setting> {
 
   Future change2FA(bool isActive) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
-      String? email = await storage.read(key: 'email');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
+      String? email = await storage.get('email');
       if (id == null) throw Exception("User ID not found in preferences");
 
       final result = await showConfirmStatus(context, "Ganti 2FA", "Yakin?");
@@ -317,7 +317,6 @@ class _Setting extends State<Setting> {
       authProvider = Provider.of<AuthProvider>(context, listen: false);
       await provider.loadSetting();
       print(Localizations.localeOf(context));
-      storage = FlutterSecureStorage();
       setState(() {
         nama = provider.nama;
         loginAs = provider.loginAs;

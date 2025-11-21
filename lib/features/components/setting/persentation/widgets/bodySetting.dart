@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:job_platform/core/utils/AuthProvider.dart';
+import 'package:job_platform/core/utils/providers/AuthProvider.dart';
 import 'package:job_platform/core/utils/providers/ThemeProvider.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingGroup.dart';
 import 'package:job_platform/features/components/setting/persentation/widgets/settingItem.dart';

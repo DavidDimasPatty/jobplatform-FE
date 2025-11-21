@@ -42,7 +42,7 @@ class _Candidate extends State<Candidate> {
       //   isLoading = true;
       //   errorMessage = null;
       // });
-      //   FlutterSecureStorage storage = const FlutterSecureStorage();
+      //   var storage =  StorageService();
       // String? userId =  storage.read(key: 'idUser');
 
       // if (userId != null) {

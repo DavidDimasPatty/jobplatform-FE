@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/models/profileRequest.dart';
 import 'package:job_platform/features/components/profile/data/models/profileResponse.dart';
@@ -72,8 +73,8 @@ class _Profile extends State<Profile> {
         isLoading = true;
         errorMessage = null;
       });
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? userId = await storage.read(key: 'idUser');
+      var storage = StorageService();
+      String? userId = await storage.get('idUser');
 
       if (userId != null) {
         var profile = await _profileUseCase.getProfile(userId);
@@ -125,8 +126,8 @@ class _Profile extends State<Profile> {
           bytes = await File(file.path!).readAsBytes();
         }
 
-        FlutterSecureStorage storage = const FlutterSecureStorage();
-        String? idUser = await storage.read(key: 'idUser');
+        var storage = StorageService();
+        String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
         if (idUser == null) throw Exception("User ID not found in preferences");
@@ -177,8 +178,8 @@ class _Profile extends State<Profile> {
     });
 
     try {
-      FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? idUser = await storage.read(key: 'idUser');
+      var storage = StorageService();
+      String? idUser = await storage.get('idUser');
 
       // Ensure idUser is not null
       if (idUser == null) throw Exception("User ID not found in preferences");

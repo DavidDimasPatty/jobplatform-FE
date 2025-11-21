@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingProvider extends ChangeNotifier {
-  FlutterSecureStorage storage = const FlutterSecureStorage();
+  var storage = StorageService();
   bool isLoading = true;
   String? errorMessage;
   String? nama;
@@ -23,33 +24,27 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> loadSetting() async {
     try {
-      nama = await storage.read(key: 'nama');
-      loginAs = await storage.read(key: 'loginAs');
-      url = await storage.read(key: 'urlAva');
+      nama = await storage.get('nama');
+      loginAs = await storage.get('loginAs');
+      url = await storage.get('urlAva');
 
-      final profileStr = await storage.read(key: 'profileComplete');
+      final profileStr = await storage.get('profileComplete');
       profileComplete = profileStr != null ? int.parse(profileStr) : null;
 
-      isPremium = (await storage.read(key: "isPremium")) == "true";
-      is2FA = (await storage.read(key: "is2FA")) == "true";
-      isNotifInternal = (await storage.read(key: "isNotifInternal")) == "true";
-      isNotifExternal = (await storage.read(key: "isNotifExternal")) == "true";
-      isDarkMode = (await storage.read(key: "isDarkMode")) == "true";
+      isPremium = (await storage.get("isPremium")) == "true";
+      is2FA = (await storage.get("is2FA")) == "true";
+      isNotifInternal = (await storage.get("isNotifInternal")) == "true";
+      isNotifExternal = (await storage.get("isNotifExternal")) == "true";
+      isDarkMode = (await storage.get("isDarkMode")) == "true";
 
-      language = await storage.read(key: "language");
+      language = await storage.get("language");
 
-      fontSizeHead = int.tryParse(
-        await storage.read(key: "fontSizeHead") ?? "",
-      );
+      fontSizeHead = int.tryParse(await storage.get("fontSizeHead") ?? "");
       fontSizeSubHead = int.tryParse(
-        await storage.read(key: "fontSizeSubHead") ?? "",
+        await storage.get("fontSizeSubHead") ?? "",
       );
-      fontSizeBody = int.tryParse(
-        await storage.read(key: "fontSizeBody") ?? "",
-      );
-      fontSizeIcon = int.tryParse(
-        await storage.read(key: "fontSizeIcon") ?? "",
-      );
+      fontSizeBody = int.tryParse(await storage.get("fontSizeBody") ?? "");
+      fontSizeIcon = int.tryParse(await storage.get("fontSizeIcon") ?? "");
 
       isLoading = false;
       notifyListeners();
@@ -62,25 +57,25 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> changeLanguage(String lang) async {
     language = lang;
-    await storage.write(key: "language", value: lang);
+    await storage.save("language", lang);
     notifyListeners();
   }
 
   Future<void> changePremium(bool isPremiumInput) async {
     isPremium = isPremiumInput;
-    await storage.write(key: "isPremium", value: isPremiumInput.toString());
+    await storage.save("isPremium", isPremiumInput.toString());
     notifyListeners();
   }
 
   Future<void> changeNotifApp(bool notifApp) async {
     isNotifInternal = notifApp;
-    await storage.write(key: "isNotifInternal", value: notifApp.toString());
+    await storage.save("isNotifInternal", notifApp.toString());
     notifyListeners();
   }
 
   Future<void> changeNotifExternalApp(bool notifExApp) async {
     isNotifExternal = notifExApp;
-    await storage.write(key: "isNotifExternal", value: notifExApp.toString());
+    await storage.save("isNotifExternal", notifExApp.toString());
     notifyListeners();
   }
 
@@ -111,22 +106,10 @@ class SettingProvider extends ChangeNotifier {
         ? 12
         : 8;
 
-    await storage.write(
-      key: "fontSizeHead",
-      value: this.fontSizeHead.toString(),
-    );
-    await storage.write(
-      key: "fontSizeSubHead",
-      value: this.fontSizeSubHead.toString(),
-    );
-    await storage.write(
-      key: "fontSizeBody",
-      value: this.fontSizeBody.toString(),
-    );
-    await storage.write(
-      key: "fontSizeIcon",
-      value: this.fontSizeIcon.toString(),
-    );
+    await storage.save("fontSizeHead", this.fontSizeHead.toString());
+    await storage.save("fontSizeSubHead", this.fontSizeSubHead.toString());
+    await storage.save("fontSizeBody", this.fontSizeBody.toString());
+    await storage.save("fontSizeIcon", this.fontSizeIcon.toString());
 
     notifyListeners();
   }

@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
@@ -35,9 +36,8 @@ class _Settingemail extends State<Settingemail> {
   AuthRepositoryImpl? _repoSetting;
   AuthRemoteDataSource? _dataSourceSetting;
   SettingUseCase? _settingUseCase;
-  late SharedPreferences prefs;
+  final storage = StorageService();
   bool isLoading = true;
-  late FlutterSecureStorage storage;
   Future _handleValidateEmail() async {
     await Firebase.initializeApp();
     setState(() {
@@ -180,9 +180,9 @@ class _Settingemail extends State<Settingemail> {
 
   Future<String> changeEmailAccount(String oldEmail, String newEmail) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
-      String? oldEmail = await storage.read(key: 'email');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
+      String? oldEmail = await storage.get('email');
       if (id == null) throw Exception("User ID not found in preferences");
 
       String? response = await _settingUseCase!.changeEmailAccount(
@@ -192,7 +192,6 @@ class _Settingemail extends State<Settingemail> {
         newEmail,
       );
       if (response == 'Sukses') {
-        prefs.clear();
         return "Sukses";
       } else {
         return response!;
@@ -205,7 +204,6 @@ class _Settingemail extends State<Settingemail> {
   void initState() {
     super.initState();
     Future.microtask(() async {
-      storage = FlutterSecureStorage();
       _dataSourceSetting = AuthRemoteDataSource();
       _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
       _settingUseCase = SettingUseCase(_repoSetting!);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/core/utils/providers/setting_provider.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/setting/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/setting/domain/usecases/setting_usecase.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class _Appearance extends State<Appearance> {
   List<String> fontType = ["big".tr(), "medium".tr(), "small".tr()];
   List<String> language = ["🇺🇸-ENG", "🇮🇩-IND"];
   bool _isLoading = false;
-  late FlutterSecureStorage storage;
+  final storage = StorageService();
   @override
   void initState() {
     super.initState();
@@ -41,7 +42,6 @@ class _Appearance extends State<Appearance> {
       _dataSourceSetting = AuthRemoteDataSource();
       _repoSetting = AuthRepositoryImpl(_dataSourceSetting!);
       _settingUseCase = SettingUseCase(_repoSetting!);
-      storage = const FlutterSecureStorage();
       final setting = context.read<SettingProvider>();
       await setting.loadSetting();
 
@@ -74,8 +74,8 @@ class _Appearance extends State<Appearance> {
 
   Future changeLanguage(String language) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
 
       // setState(() {
@@ -88,7 +88,7 @@ class _Appearance extends State<Appearance> {
         language,
       );
       if (response == 'Sukses') {
-        await storage.write(key: "language", value: language);
+        await storage.save("language", language);
         if (language == "IND") {
           context.setLocale(const Locale('id'));
         } else {
@@ -115,8 +115,8 @@ class _Appearance extends State<Appearance> {
     String fontSizeIcon,
   ) async {
     try {
-      String? id = await storage.read(key: 'idUser');
-      String? loginAs = await storage.read(key: 'loginAs');
+      String? id = await storage.get('idUser');
+      String? loginAs = await storage.get('loginAs');
       if (id == null) throw Exception("User ID not found in preferences");
       String? response = await _settingUseCase!.changeFontSize(
         id,

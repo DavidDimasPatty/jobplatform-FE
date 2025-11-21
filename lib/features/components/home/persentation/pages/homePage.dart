@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/data/models/KunjunganProfile.dart';
 import 'package:job_platform/features/components/home/data/models/OpenVacancy.dart';
 import 'package:job_platform/features/components/home/data/models/ProfileSerupa.dart';
@@ -39,15 +40,15 @@ class _HomePageState extends State<HomePage> {
   double? profileComplete = 0;
 
   Future getDataPref() async {
-    final FlutterSecureStorage storage = const FlutterSecureStorage();
-    loginAs = await storage.read(key: 'loginAs');
+    final storage = StorageService();
+    loginAs = await storage.get('loginAs');
     if (loginAs == "user") {
-      idUser = await storage.read(key: 'idUser');
-      namaUser = await storage.read(key: 'nama');
-      emailUser = await storage.read(key: 'email');
-      noTelpUser = await storage.read(key: 'noTelp');
-      isHRD = (await storage.read(key: 'isHRD')) == "true";
-      photoURL = await storage.read(key: "urlAva");
+      idUser = await storage.get('idUser');
+      namaUser = await storage.get('nama');
+      emailUser = await storage.get('email');
+      noTelpUser = await storage.get('noTelp');
+      isHRD = (await storage.get('isHRD')) == "true";
+      photoURL = await storage.get("urlAva");
     }
   }
 
@@ -71,8 +72,8 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         isLoading = true;
       });
-      final FlutterSecureStorage storage = const FlutterSecureStorage();
-      String? userId = await storage.read(key: 'idUser');
+      final storage = StorageService();
+      String? userId = await storage.get('idUser');
 
       if (userId != null) {
         var result;
