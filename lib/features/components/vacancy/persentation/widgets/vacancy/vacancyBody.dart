@@ -5,9 +5,9 @@ import 'package:job_platform/features/components/vacancy/persentation/widgets/va
 class Vacancybody extends StatefulWidget {
   final List<Vacancyitems> items;
   final VoidCallback onSearchChanged;
-  TextEditingController searchController;
+  final TextEditingController searchController;
 
-  Vacancybody({
+  const Vacancybody({
     super.key,
     required this.items,
     required this.onSearchChanged,

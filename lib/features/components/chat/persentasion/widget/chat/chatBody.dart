@@ -3,24 +3,39 @@ import 'package:job_platform/features/components/chat/persentasion/widget/chat/c
 
 class Chatbody extends StatefulWidget {
   final List<Chatitems> items;
-  Chatbody({super.key, required this.items});
+  final VoidCallback onSearchChanged;
+  final TextEditingController searchController;
+
+  const Chatbody({
+    super.key,
+    required this.items,
+    required this.onSearchChanged,
+    required this.searchController,
+  });
 
   @override
-  State<Chatbody> createState() => _Chatbody(this.items);
+  State<Chatbody> createState() => _Chatbody();
 }
 
 class _Chatbody extends State<Chatbody> {
-  final List<Chatitems> items;
-  _Chatbody(this.items);
-
-  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.8,
+      ),
       margin: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(15),
+        color: Theme.of(context).colorScheme.secondary,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: Offset(3, 3),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -38,7 +53,8 @@ class _Chatbody extends State<Chatbody> {
             // height: 90,
             margin: EdgeInsets.all(20),
             child: TextFormField(
-              controller: _searchController,
+              onChanged: (value) => widget.onSearchChanged(),
+              controller: widget.searchController,
               decoration: InputDecoration(
                 labelText: 'Cari Chat',
                 hintText: 'Masukan Chat',
@@ -61,9 +77,9 @@ class _Chatbody extends State<Chatbody> {
             separatorBuilder: (context, index) {
               return Divider();
             },
-            itemCount: items.length,
+            itemCount: widget.items.length,
             itemBuilder: (BuildContext context, int index) {
-              return items[index];
+              return widget.items[index];
             },
             shrinkWrap: true,
             padding: EdgeInsets.zero,

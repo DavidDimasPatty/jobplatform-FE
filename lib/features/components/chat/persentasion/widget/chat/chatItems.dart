@@ -16,7 +16,6 @@ class Chatitems extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: ListTile(
-          //onTap: onTap,
           leading: CircleAvatar(
             radius: 24,
             backgroundColor: Colors.white,
@@ -38,7 +37,28 @@ class Chatitems extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          trailing: Icon(Icons.navigate_next),
+          trailing: Row(
+            children: [
+              if (partner.unreadCount > 0)
+                Container(
+                  margin: EdgeInsets.only(left: 4),
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    partner.unreadCount.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              Icon(Icons.navigate_next),
+            ],
+          ),
         ),
       ),
     );

@@ -10,7 +10,6 @@ import 'package:job_platform/features/components/chat/data/models/chatRequest.da
 import 'package:job_platform/features/components/chat/data/models/partnerModel.dart';
 import 'package:job_platform/features/components/chat/domain/usecases/chat_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:job_platform/features/components/chat/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/chat/data/datasources/aut_remote_datasource.dart';
 import 'package:select2dot1/select2dot1.dart';
@@ -622,6 +621,9 @@ class _ChatDetailState extends State<ChatDetail> {
                         return ChatAnimatedList(
                           itemBuilder: itemBuilder,
                           bottomPadding: 80,
+                          onStartReached: () async {
+                            await _markAsRead();
+                          }
                         );
                       },
                       scrollToBottomBuilder: (context, animation, onPressed) {
@@ -654,10 +656,10 @@ class _ChatDetailState extends State<ChatDetail> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondary,
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
+            color: Theme.of(context).colorScheme.shadow,
             blurRadius: 4,
             offset: Offset(0, -2),
           ),

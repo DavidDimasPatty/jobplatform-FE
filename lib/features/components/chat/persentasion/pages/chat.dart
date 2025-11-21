@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/features/components/chat/domain/usecases/chat_usecase.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:job_platform/features/components/chat/data/repositories/auth_repository_impl.dart';
 import 'package:job_platform/features/components/chat/data/datasources/aut_remote_datasource.dart';
 
@@ -16,7 +17,11 @@ class Chat extends StatefulWidget {
 }
 
 class _Chat extends State<Chat> {
+  final _searchController = TextEditingController();
+
   List<Chatitems> dataChat = [];
+  List<Chatitems> tempChat = [];
+  Timer? _debounce;
 
   // Loading state
   bool isLoading = true;
@@ -36,6 +41,8 @@ class _Chat extends State<Chat> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -57,6 +64,8 @@ class _Chat extends State<Chat> {
             dataChat = chatList
                 .map<Chatitems>((item) => Chatitems(partner: item))
                 .toList();
+
+            tempChat = dataChat;
           });
         }
       } else {
@@ -71,6 +80,28 @@ class _Chat extends State<Chat> {
         });
       }
     }
+  }
+
+  void _onSearchChanged() {
+    _debounce?.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      final query = _searchController.text.trim().toLowerCase();
+
+      setState(() {
+        tempChat = query.isEmpty
+            ? dataChat
+            : dataChat
+                  .where(
+                    (data) =>
+                        data.partner.partnerName.toLowerCase().contains(
+                          query,
+                        ) ||
+                        data.partner.lastMessage.toLowerCase().contains(query),
+                  )
+                  .toList();
+      });
+    });
   }
 
   @override
@@ -145,7 +176,11 @@ class _Chat extends State<Chat> {
             children: [
               ResponsiveRowColumnItem(
                 rowFlex: 2,
-                child: Chatbody(items: dataChat),
+                child: Chatbody(
+                  items: tempChat,
+                  onSearchChanged: _onSearchChanged,
+                  searchController: _searchController,
+                ),
               ),
               // ResponsiveRowColumnItem(rowFlex: 2, child: bodySetting()),
             ],
