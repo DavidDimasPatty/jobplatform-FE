@@ -363,5 +363,16 @@
     "Failed to edit profile privacy. Please try again.": "Failed to edit profile privacy. Please try again.",
     "Private Profile": "Private Profile",
     "Konfigurasi Account": "Account Configuration",
-    "Available": "Available"
+    "Available": "Available",
+
+    "Chats": "Chats",
+    "Loading Chat List...": "Loading Chat List...",
+    "Cari Chat": "Search Chat",
+    "Masukan Chat": "Enter Chat",
+    "Loading chat history...": "Loading chat history...",
+    "Failed to get messages data. Please try again.": "Failed to get messages data. Please try again.",
+    "[This message has been deleted]": "[This message has been deleted]",
+    "Delete Message": "Delete Message",
+    "Are you sure you want to delete this message?": "Are you sure you want to delete this message?",
+    "Select a message...": "Select a message..."
 }
