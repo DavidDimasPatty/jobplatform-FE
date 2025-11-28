@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/EducationMV.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +32,7 @@ class Education extends StatelessWidget {
             children: [
               Container(
                 child: Text(
-                  "Educational",
+                  "Educational".tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
@@ -43,7 +44,7 @@ class Education extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onAddPressed,
                 icon: Icon(Icons.add, size: 20),
-                label: Text("Add"),
+                label: Text("Add".tr()),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
                   foregroundColor: Theme.of(context).colorScheme.primary,
@@ -112,7 +113,7 @@ class Education extends StatelessWidget {
                           softWrap: true,
                           textAlign: TextAlign.center,
                           (data.endDate == null)
-                              ? "${DateFormat('MMM yyyy').format(data.startDate!)} - Present"
+                              ? "${DateFormat('MMM yyyy').format(data.startDate!)} - ${"Present".tr()}"
                               : "${DateFormat('MMM yyyy').format(data.startDate!)} - ${DateFormat('MMM yyyy').format(data.endDate!)}",
                         ),
                       ),

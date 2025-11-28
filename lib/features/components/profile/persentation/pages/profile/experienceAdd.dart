@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
@@ -12,7 +12,6 @@ import 'package:job_platform/features/components/profile/data/datasources/aut_re
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class ExperienceAdd extends StatefulWidget {
@@ -106,7 +105,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null)
+          throw Exception("User ID not found in preferences".tr());
 
         late WorkExperienceModel experience;
         if (_showAddNewForm) {
@@ -156,13 +156,15 @@ class _ExperienceAdd extends State<ExperienceAdd> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Work Experience added successfully!')),
+            SnackBar(content: Text('Work Experience added successfully!'.tr())),
           );
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to add work experience. Please try again.'),
+              content: Text(
+                'Failed to add work experience. Please try again.'.tr(),
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -172,7 +174,9 @@ class _ExperienceAdd extends State<ExperienceAdd> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add work experience. Please try again.'),
+            content: Text(
+              'Failed to add work experience. Please try again.'.tr(),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -208,7 +212,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
         // Always add "Add new experience" option
         experienceItems.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new experience",
+            nameSingleItem: "+ Add new experience".tr(),
             value: "add_new_experience", // Special identifier
           ),
         );
@@ -225,7 +229,9 @@ class _ExperienceAdd extends State<ExperienceAdd> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get experience data. Please try again.'),
+          content: Text(
+            'Failed to get experience data. Please try again.'.tr(),
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -260,7 +266,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
         // Always add "Add new skill" option
         skillItem.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new skill",
+            nameSingleItem: "+ Add new skill".tr(),
             value: "add_new_skill", // Special identifier
           ),
         );
@@ -277,7 +283,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -317,13 +323,13 @@ class _ExperienceAdd extends State<ExperienceAdd> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading experience...'),
+            Text('Loading experience...'.tr()),
           ],
         ),
       );
@@ -360,7 +366,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                         children: [
                           SizedBox(
                             child: Text(
-                              "Add Experience",
+                              "Add Experience".tr(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.blue,
@@ -375,8 +381,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Select2dot1(
                               key: ValueKey('experience_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Experience',
+                              pillboxTitleSettings: PillboxTitleSettings(
+                                title: 'Company'.tr(),
                               ),
                               selectDataController: _selectExperienceController,
                               onChanged: (selectedValue) {
@@ -392,8 +398,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               child: TextFormField(
                                 controller: _namaController,
                                 decoration: InputDecoration(
-                                  labelText: 'Nama Perusahaan',
-                                  hintText: 'Masukan Nama',
+                                  labelText: 'Nama Perusahaan'.tr(),
+                                  hintText: 'Masukan Nama'.tr(),
                                   prefixIcon: Icon(Icons.text_fields),
                                   border: OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(
@@ -404,7 +410,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                 // initialValue: email,
                                 validator: (value) =>
                                     value == null || value.isEmpty
-                                    ? 'Wajib diisi'
+                                    ? 'Wajib diisi'.tr()
                                     : null,
                               ),
                             ),
@@ -415,8 +421,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               child: TextFormField(
                                 controller: _industriController,
                                 decoration: InputDecoration(
-                                  labelText: 'Tipe Industri Perusahaan',
-                                  hintText: 'Masukan Industri',
+                                  labelText: 'Tipe Industri Perusahaan'.tr(),
+                                  hintText: 'Masukan Industri'.tr(),
                                   prefixIcon: Icon(Icons.text_fields),
                                   border: OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(
@@ -427,7 +433,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                 // initialValue: email,
                                 validator: (value) =>
                                     value == null || value.isEmpty
-                                    ? 'Wajib diisi'
+                                    ? 'Wajib diisi'.tr()
                                     : null,
                               ),
                             ),
@@ -438,8 +444,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               child: TextFormField(
                                 controller: _lokasiController,
                                 decoration: InputDecoration(
-                                  labelText: 'Lokasi Perusahaan',
-                                  hintText: 'Masukan Lokasi',
+                                  labelText: 'Lokasi Perusahaan'.tr(),
+                                  hintText: 'Masukan Lokasi'.tr(),
                                   prefixIcon: Icon(Icons.location_on),
                                   border: OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(
@@ -450,7 +456,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                 // initialValue: email,
                                 validator: (value) =>
                                     value == null || value.isEmpty
-                                    ? 'Wajib diisi'
+                                    ? 'Wajib diisi'.tr()
                                     : null,
                               ),
                             ),
@@ -462,8 +468,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             child: TextFormField(
                               controller: _jabatanController,
                               decoration: InputDecoration(
-                                labelText: 'Jabatan',
-                                hintText: 'Masukan Jabatan',
+                                labelText: 'Jabatan'.tr(),
+                                hintText: 'Masukan Jabatan'.tr(),
                                 prefixIcon: Icon(Icons.info),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -474,7 +480,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -485,8 +491,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             child: TextFormField(
                               controller: _divisiController,
                               decoration: InputDecoration(
-                                labelText: 'Divisi',
-                                hintText: 'Masukan Divisi',
+                                labelText: 'Divisi'.tr(),
+                                hintText: 'Masukan Divisi'.tr(),
                                 prefixIcon: Icon(Icons.info),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -497,7 +503,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -515,8 +521,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                   child: TextFormField(
                                     controller: _tipeKaryawanController,
                                     decoration: InputDecoration(
-                                      labelText: 'Tipe Karyawan',
-                                      hintText: 'Masukan Tipe Karyawan',
+                                      labelText: 'Tipe Karyawan'.tr(),
+                                      hintText: 'Masukan Tipe Karyawan'.tr(),
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.account_circle),
                                       contentPadding: EdgeInsets.symmetric(
@@ -527,7 +533,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                     // initialValue: name,
                                     validator: (value) =>
                                         value == null || value.isEmpty
-                                        ? 'Wajib diisi'
+                                        ? 'Wajib diisi'.tr()
                                         : null,
                                   ),
                                 ),
@@ -548,8 +554,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                   child: TextFormField(
                                     controller: _sistemKerjaController,
                                     decoration: InputDecoration(
-                                      labelText: 'Sistem Kerja',
-                                      hintText: 'Masukan Sistem Kerja',
+                                      labelText: 'Sistem Kerja'.tr(),
+                                      hintText: 'Masukan Sistem Kerja'.tr(),
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.account_circle),
                                       contentPadding: EdgeInsets.symmetric(
@@ -560,7 +566,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                     // initialValue: name,
                                     validator: (value) =>
                                         value == null || value.isEmpty
-                                        ? 'Wajib diisi'
+                                        ? 'Wajib diisi'.tr()
                                         : null,
                                   ),
                                 ),
@@ -574,8 +580,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             child: TextFormField(
                               controller: _deskripsiController,
                               decoration: InputDecoration(
-                                labelText: 'Deskripsi Pekerjaan',
-                                hintText: 'Masukan Deskripsi Pekerjaan',
+                                labelText: 'Deskripsi Pekerjaan'.tr(),
+                                hintText: 'Masukan Deskripsi Pekerjaan'.tr(),
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
@@ -588,7 +594,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               maxLines: 5,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -598,8 +604,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Select2dot1(
                               key: ValueKey('skill_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Skill',
+                              pillboxTitleSettings: PillboxTitleSettings(
+                                title: 'Skill'.tr(),
                               ),
                               selectDataController: _selectSkillController,
                             ),
@@ -610,7 +616,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                             child: InputDecorator(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.calendar_today),
-                                labelText: "Start Date",
+                                labelText: "Start Date".tr(),
                                 border: OutlineInputBorder(),
                               ),
                               child: Text(
@@ -618,7 +624,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                     ? DateFormat(
                                         'dd MMMM yyyy',
                                       ).format(startDate!)
-                                    : "Pilih tanggal",
+                                    : "Pilih tanggal".tr(),
                               ),
                             ),
                           ),
@@ -635,7 +641,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                   });
                                 },
                               ),
-                              Text('Still Active?'),
+                              Text('Still Active?'.tr()),
                             ],
                           ),
                           if (!_stillActive)
@@ -646,7 +652,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.calendar_today),
-                                  labelText: "End Date",
+                                  labelText: "End Date".tr(),
                                   border: OutlineInputBorder(),
                                 ),
                                 child: Text(
@@ -654,7 +660,7 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                       ? DateFormat(
                                           'dd MMMM yyyy',
                                         ).format(endDate!)
-                                      : "Pilih tanggal",
+                                      : "Pilih tanggal".tr(),
                                 ),
                               ),
                             ),
@@ -684,8 +690,8 @@ class _ExperienceAdd extends State<ExperienceAdd> {
                                       context,
                                     ).colorScheme.primary,
                                   ),
-                                  label: const Text(
-                                    'Submit',
+                                  label: Text(
+                                    'Submit'.tr(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),

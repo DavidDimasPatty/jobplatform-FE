@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/models/educationRequest.dart';
@@ -12,7 +12,6 @@ import 'package:job_platform/features/components/profile/data/datasources/aut_re
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class EducationalEdit extends StatefulWidget {
@@ -131,7 +130,7 @@ class _EducationalEdit extends State<EducationalEdit> {
         // Always add "Add new skill" option
         skillItem.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new skill",
+            nameSingleItem: "+ Add new skill".tr(),
             value: "add_new_skill", // Special identifier
           ),
         );
@@ -162,7 +161,7 @@ class _EducationalEdit extends State<EducationalEdit> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -184,7 +183,7 @@ class _EducationalEdit extends State<EducationalEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         // Map selected skills to SkillModel list
         late List<SkillModel> skill;
@@ -219,13 +218,13 @@ class _EducationalEdit extends State<EducationalEdit> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Education edited successfully!')),
+            SnackBar(content: Text('Education edited successfully!'.tr())),
           );
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit education. Please try again.'),
+              content: Text('Failed to edit education. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -235,7 +234,7 @@ class _EducationalEdit extends State<EducationalEdit> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit education. Please try again.'),
+            content: Text('Failed to edit education. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -259,13 +258,13 @@ class _EducationalEdit extends State<EducationalEdit> {
 
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Education deleted successfully!')),
+          SnackBar(content: Text('Education deleted successfully!'.tr())),
         );
         context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete education. Please try again.'),
+            content: Text('Failed to delete education. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -273,7 +272,7 @@ class _EducationalEdit extends State<EducationalEdit> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to delete education. Please try again.'),
+          content: Text('Failed to delete education. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -287,13 +286,13 @@ class _EducationalEdit extends State<EducationalEdit> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading education...'),
+            Text('Loading education...'.tr()),
           ],
         ),
       );
@@ -330,7 +329,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                         children: [
                           SizedBox(
                             child: Text(
-                              "Edit Education",
+                              "Edit Education".tr(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.blue,
@@ -347,8 +346,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                               readOnly: true,
                               controller: _namaController,
                               decoration: InputDecoration(
-                                labelText: 'Nama Sekolah',
-                                hintText: 'Masukan Nama Sekolah',
+                                labelText: 'Nama Sekolah'.tr(),
+                                hintText: 'Masukan Nama Sekolah'.tr(),
                                 prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -359,7 +358,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -371,8 +370,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                               readOnly: true,
                               controller: _lokasiController,
                               decoration: InputDecoration(
-                                labelText: 'Lokasi Sekolah',
-                                hintText: 'Masukan Lokasi Sekolah',
+                                labelText: 'Lokasi Sekolah'.tr(),
+                                hintText: 'Masukan Lokasi Sekolah'.tr(),
                                 prefixIcon: Icon(Icons.location_pin),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -383,7 +382,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -394,8 +393,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                             child: TextFormField(
                               controller: _tingkatController,
                               decoration: InputDecoration(
-                                labelText: 'Tingkatan',
-                                hintText: 'Masukan Tingkatan',
+                                labelText: 'Tingkatan'.tr(),
+                                hintText: 'Masukan Tingkatan'.tr(),
                                 prefixIcon: Icon(Icons.school),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -406,7 +405,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -417,8 +416,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                             child: TextFormField(
                               controller: _penjurusanController,
                               decoration: InputDecoration(
-                                labelText: 'Penjurusan',
-                                hintText: 'Masukan Penjurusan',
+                                labelText: 'Penjurusan'.tr(),
+                                hintText: 'Masukan Penjurusan'.tr(),
                                 prefixIcon: Icon(Icons.local_library),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -429,7 +428,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -447,8 +446,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                                   child: TextFormField(
                                     controller: _gpaController,
                                     decoration: InputDecoration(
-                                      labelText: 'GPA',
-                                      hintText: 'Masukan GPA',
+                                      labelText: 'GPA'.tr(),
+                                      hintText: 'Masukan GPA'.tr(),
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.bar_chart),
                                       contentPadding: EdgeInsets.symmetric(
@@ -459,7 +458,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                                     // initialValue: name,
                                     validator: (value) =>
                                         value == null || value.isEmpty
-                                        ? 'Wajib diisi'
+                                        ? 'Wajib diisi'.tr()
                                         : null,
                                   ),
                                 ),
@@ -473,8 +472,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                             child: TextFormField(
                               controller: _deskripsiController,
                               decoration: InputDecoration(
-                                labelText: 'Deskripsi Pekerjaan',
-                                hintText: 'Masukan Deskripsi Pekerjaan',
+                                labelText: 'Deskripsi Pekerjaan'.tr(),
+                                hintText: 'Masukan Deskripsi Pekerjaan'.tr(),
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
@@ -487,7 +486,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               maxLines: 5,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -497,8 +496,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Select2dot1(
                               key: ValueKey('skill_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Skill',
+                              pillboxTitleSettings: PillboxTitleSettings(
+                                title: 'Skill'.tr(),
                               ),
                               selectDataController: _selectSkillController,
                             ),
@@ -509,7 +508,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                             child: InputDecorator(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.calendar_today),
-                                labelText: "Start Date",
+                                labelText: "Start Date".tr(),
                                 border: OutlineInputBorder(),
                               ),
                               child: Text(
@@ -517,7 +516,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                                     ? DateFormat(
                                         'dd MMMM yyyy',
                                       ).format(startDate!)
-                                    : "Pilih tanggal",
+                                    : "Pilih tanggal".tr(),
                               ),
                             ),
                           ),
@@ -534,7 +533,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                                   });
                                 },
                               ),
-                              Text('Still Active?'),
+                              Text('Still Active?'.tr()),
                             ],
                           ),
                           if (!_stillActive)
@@ -545,7 +544,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.calendar_today),
-                                  labelText: "End Date",
+                                  labelText: "End Date".tr(),
                                   border: OutlineInputBorder(),
                                 ),
                                 child: Text(
@@ -553,7 +552,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                                       ? DateFormat(
                                           'dd MMMM yyyy',
                                         ).format(endDate!)
-                                      : "Pilih tanggal",
+                                      : "Pilih tanggal".tr(),
                                 ),
                               ),
                             ),
@@ -565,7 +564,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                               TextButton.icon(
                                 onPressed: _showSimpleDeleteConfirmation,
                                 label: Text(
-                                  'Delete',
+                                  'Delete'.tr(),
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 style: TextButton.styleFrom(
@@ -591,8 +590,8 @@ class _EducationalEdit extends State<EducationalEdit> {
                                       context,
                                     ).colorScheme.primary,
                                   ),
-                                  label: const Text(
-                                    'Submit',
+                                  label: Text(
+                                    'Submit'.tr(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -619,7 +618,7 @@ class _EducationalEdit extends State<EducationalEdit> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Delete Education',
+            'Delete Education'.tr(),
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
           content: Container(
@@ -642,7 +641,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Are you sure you want to delete this Education?',
+                  'Are you sure you want to delete this Education?'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
@@ -684,7 +683,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  '⚠️ This action is permanent and cannot be undone.',
+                  '⚠️ This action is permanent and cannot be undone.'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.red,
@@ -704,7 +703,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                 Navigator.of(context).pop();
               },
               icon: Icon(Icons.close, size: 16),
-              label: Text('Cancel'),
+              label: Text('Cancel'.tr()),
               style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
             ),
             ElevatedButton.icon(
@@ -713,7 +712,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                 _handleDeleteEducaiton();
               },
               icon: Icon(Icons.delete, size: 16),
-              label: Text('Delete'),
+              label: Text('Delete'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Theme.of(context).colorScheme.primary,

@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/models/skillModel.dart';
@@ -12,7 +12,6 @@ import 'package:job_platform/features/components/profile/data/datasources/aut_re
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class ExperienceEdit extends StatefulWidget {
@@ -135,7 +134,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         // Always add "Add new skill" option
         skillItem.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new skill",
+            nameSingleItem: "+ Add new skill".tr(),
             value: "add_new_skill", // Special identifier
           ),
         );
@@ -166,7 +165,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -188,7 +187,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         // Map selected skills to SkillModel list
         late List<SkillModel> skill;
@@ -223,14 +222,14 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Work Experience edited successfully!')),
+            SnackBar(content: Text('Work Experience edited successfully!'.tr())),
           );
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Failed to edit work experience. Please try again.',
+                'Failed to edit work experience. Please try again.'.tr(),
               ),
               backgroundColor: Colors.red,
             ),
@@ -241,7 +240,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit work experience. Please try again.'),
+            content: Text('Failed to edit work experience. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -264,14 +263,14 @@ class _ExperienceEdit extends State<ExperienceEdit> {
 
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Work Experience deleted successfully!')),
+          SnackBar(content: Text('Work Experience deleted successfully!'.tr())),
         );
         context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Failed to delete work experience. Please try again.',
+              'Failed to delete work experience. Please try again.'.tr(),
             ),
             backgroundColor: Colors.red,
           ),
@@ -280,7 +279,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to delete work experience. Please try again.'),
+          content: Text('Failed to delete work experience. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -294,13 +293,13 @@ class _ExperienceEdit extends State<ExperienceEdit> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading experience...'),
+            Text('Loading experience...'.tr()),
           ],
         ),
       );
@@ -337,7 +336,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                         children: [
                           SizedBox(
                             child: Text(
-                              "Edit Experience",
+                              "Edit Experience".tr(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.blue,
@@ -354,8 +353,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               readOnly: true,
                               controller: _namaController,
                               decoration: InputDecoration(
-                                labelText: 'Nama Perusahaan',
-                                hintText: 'Masukan Nama',
+                                labelText: 'Nama Perusahaan'.tr(),
+                                hintText: 'Masukan Nama Perusahaan'.tr(),
                                 prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -366,7 +365,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -378,8 +377,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               readOnly: true,
                               controller: _industriController,
                               decoration: InputDecoration(
-                                labelText: 'Tipe Industri Perusahaan',
-                                hintText: 'Masukan Industri',
+                                labelText: 'Tipe Industri Perusahaan'.tr(),
+                                hintText: 'Masukan Industri'.tr(),
                                 prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -390,7 +389,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -402,8 +401,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               readOnly: true,
                               controller: _lokasiController,
                               decoration: InputDecoration(
-                                labelText: 'Lokasi Perusahaan',
-                                hintText: 'Masukan Lokasi',
+                                labelText: 'Lokasi Perusahaan'.tr(),
+                                hintText: 'Masukan Lokasi'.tr(),
                                 prefixIcon: Icon(Icons.location_on),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -414,7 +413,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -425,8 +424,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                             child: TextFormField(
                               controller: _jabatanController,
                               decoration: InputDecoration(
-                                labelText: 'Jabatan',
-                                hintText: 'Masukan Jabatan',
+                                labelText: 'Jabatan'.tr(),
+                                hintText: 'Masukan Jabatan'.tr(),
                                 prefixIcon: Icon(Icons.info),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -437,7 +436,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -448,8 +447,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                             child: TextFormField(
                               controller: _divisiController,
                               decoration: InputDecoration(
-                                labelText: 'Divisi',
-                                hintText: 'Masukan Divisi',
+                                labelText: 'Divisi'.tr(),
+                                hintText: 'Masukan Divisi'.tr(),
                                 prefixIcon: Icon(Icons.info),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -460,7 +459,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -478,8 +477,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                   child: TextFormField(
                                     controller: _tipeKaryawanController,
                                     decoration: InputDecoration(
-                                      labelText: 'Tipe Karyawan',
-                                      hintText: 'Masukan Tipe Karyawan',
+                                      labelText: 'Tipe Karyawan'.tr(),
+                                      hintText: 'Masukan Tipe Karyawan'.tr(),
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.account_circle),
                                       contentPadding: EdgeInsets.symmetric(
@@ -490,7 +489,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                     // initialValue: name,
                                     validator: (value) =>
                                         value == null || value.isEmpty
-                                        ? 'Wajib diisi'
+                                        ? 'Wajib diisi'.tr()
                                         : null,
                                   ),
                                 ),
@@ -511,8 +510,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                   child: TextFormField(
                                     controller: _sistemKerjaController,
                                     decoration: InputDecoration(
-                                      labelText: 'Sistem Kerja',
-                                      hintText: 'Masukan Sistem Kerja',
+                                      labelText: 'Sistem Kerja'.tr(),
+                                      hintText: 'Masukan Sistem Kerja'.tr(),
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.account_circle),
                                       contentPadding: EdgeInsets.symmetric(
@@ -523,7 +522,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                     // initialValue: name,
                                     validator: (value) =>
                                         value == null || value.isEmpty
-                                        ? 'Wajib diisi'
+                                        ? 'Wajib diisi'.tr()
                                         : null,
                                   ),
                                 ),
@@ -537,8 +536,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                             child: TextFormField(
                               controller: _deskripsiController,
                               decoration: InputDecoration(
-                                labelText: 'Deskripsi Pekerjaan',
-                                hintText: 'Masukan Deskripsi Pekerjaan',
+                                labelText: 'Deskripsi Pekerjaan'.tr(),
+                                hintText: 'Masukan Deskripsi Pekerjaan'.tr(),
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
@@ -551,7 +550,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               maxLines: 5,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -561,8 +560,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Select2dot1(
                               key: ValueKey('skill_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Skill',
+                              pillboxTitleSettings: PillboxTitleSettings(
+                                title: 'Skill'.tr(),
                               ),
                               selectDataController: _selectSkillController,
                             ),
@@ -573,7 +572,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                             child: InputDecorator(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.calendar_today),
-                                labelText: "Start Date",
+                                labelText: "Start Date".tr(),
                                 border: OutlineInputBorder(),
                               ),
                               child: Text(
@@ -581,7 +580,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                     ? DateFormat(
                                         'dd MMMM yyyy',
                                       ).format(startDate!)
-                                    : "Pilih tanggal",
+                                    : "Pilih tanggal".tr(),
                               ),
                             ),
                           ),
@@ -598,7 +597,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                   });
                                 },
                               ),
-                              Text('Still Active?'),
+                              Text('Still Active?'.tr()),
                             ],
                           ),
                           if (!_stillActive)
@@ -609,7 +608,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.calendar_today),
-                                  labelText: "End Date",
+                                  labelText: "End Date".tr(),
                                   border: OutlineInputBorder(),
                                 ),
                                 child: Text(
@@ -617,7 +616,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                       ? DateFormat(
                                           'dd MMMM yyyy',
                                         ).format(endDate!)
-                                      : "Pilih tanggal",
+                                      : "Pilih tanggal".tr(),
                                 ),
                               ),
                             ),
@@ -629,7 +628,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                               TextButton.icon(
                                 onPressed: _showSimpleDeleteConfirmation,
                                 label: Text(
-                                  'Delete',
+                                  'Delete'.tr(),
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 style: TextButton.styleFrom(
@@ -655,8 +654,8 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                                       context,
                                     ).colorScheme.primary,
                                   ),
-                                  label: const Text(
-                                    'Submit',
+                                  label: Text(
+                                    'Submit'.tr(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -683,7 +682,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Delete Work Experience',
+            'Delete Work Experience'.tr(),
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
           content: Container(
@@ -706,7 +705,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Are you sure you want to delete this work experience?',
+                  'Are you sure you want to delete this work experience?'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
@@ -746,7 +745,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  '⚠️ This action is permanent and cannot be undone.',
+                  '⚠️ This action is permanent and cannot be undone.'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.red,
@@ -766,7 +765,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                 Navigator.of(context).pop();
               },
               icon: Icon(Icons.close, size: 16),
-              label: Text('Cancel'),
+              label: Text('Cancel'.tr()),
               style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
             ),
             ElevatedButton.icon(
@@ -775,7 +774,7 @@ class _ExperienceEdit extends State<ExperienceEdit> {
                 _handleDeleteExperience();
               },
               icon: Icon(Icons.delete, size: 16),
-              label: Text('Delete'),
+              label: Text('Delete'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Theme.of(context).colorScheme.primary,

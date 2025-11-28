@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
@@ -11,7 +11,6 @@ import 'package:job_platform/features/components/profile/domain/entities/Certifi
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class CertificateEdit extends StatefulWidget {
@@ -120,7 +119,7 @@ class _CertificateEditState extends State<CertificateEdit> {
         // Always add "Add new skill" option
         skillItem.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new skill",
+            nameSingleItem: "+ Add new skill".tr(),
             value: "add_new_skill", // Special identifier
           ),
         );
@@ -151,7 +150,7 @@ class _CertificateEditState extends State<CertificateEdit> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -173,7 +172,7 @@ class _CertificateEditState extends State<CertificateEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         // Format dates to 'yyyy-MM-dd'
         final issueDate = DateFormat('yyyy-MM-dd').format(
@@ -220,13 +219,13 @@ class _CertificateEditState extends State<CertificateEdit> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Certificate edited successfully!')),
+            SnackBar(content: Text('Certificate edited successfully!'.tr())),
           );
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit certificate. Please try again.'),
+              content: Text('Failed to edit certificate. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -236,7 +235,7 @@ class _CertificateEditState extends State<CertificateEdit> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit certificate. Please try again.'),
+            content: Text('Failed to edit certificate. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -260,13 +259,13 @@ class _CertificateEditState extends State<CertificateEdit> {
 
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Certificate deleted successfully!')),
+          SnackBar(content: Text('Certificate deleted successfully!'.tr())),
         );
         context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete certificate. Please try again.'),
+            content: Text('Failed to delete certificate. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -274,7 +273,7 @@ class _CertificateEditState extends State<CertificateEdit> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to delete certificate. Please try again.'),
+          content: Text('Failed to delete certificate. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -288,13 +287,13 @@ class _CertificateEditState extends State<CertificateEdit> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading certificate...'),
+            Text('Loading certificate...'.tr()),
           ],
         ),
       );
@@ -325,7 +324,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                     children: [
                       SizedBox(
                         child: Text(
-                          'Edit Certificate',
+                          'Edit Certificate'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,
@@ -336,52 +335,52 @@ class _CertificateEditState extends State<CertificateEdit> {
                       ),
                       SizedBox(height: 20),
                       buildTextField(
-                        'Certificate Name',
+                        'Certificate Name'.tr(),
                         _certificateNameController,
                         Icons.school,
                         readOnly: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter certificate name';
+                            return 'Please enter certificate name'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Issued By',
+                        'Issued By'.tr(),
                         _issuedByController,
                         Icons.person,
                         readOnly: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter issuer';
+                            return 'Please enter issuer'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Description',
+                        'Description'.tr(),
                         _descriptionController,
                         Icons.description,
                         maxLines: 3,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter description';
+                            return 'Please enter description'.tr();
                           }
                           return null;
                         },
                       ),
                       buildDropdownField(
                         'skill-select',
-                        'Skill',
+                        'Skill'.tr(),
                         _selectSkillController,
                       ),
                       buildDateField(
-                        'Issue Date',
+                        'Issue Date'.tr(),
                         _issueDateController,
                         (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter issue date';
+                            return 'Please enter issue date'.tr();
                           }
                           return null;
                         },
@@ -417,12 +416,12 @@ class _CertificateEditState extends State<CertificateEdit> {
                               });
                             },
                           ),
-                          Text('Has Expiry Date'),
+                          Text('Has Expiry Date'.tr()),
                         ],
                       ),
                       if (_hasExpiredDate)
                         buildDateField(
-                          'Expiry Date',
+                          'Expiry Date'.tr(),
                           _expiryDateController,
                           (value) {
                             return null;
@@ -431,23 +430,23 @@ class _CertificateEditState extends State<CertificateEdit> {
                           firstDate: _selectedIssueDate,
                         ),
                       buildTextField(
-                        'Credential ID',
+                        'Credential ID'.tr(),
                         _credentialIdController,
                         Icons.vpn_key,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter credential ID';
+                            return 'Please enter credential ID'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Credential URL',
+                        'Credential URL'.tr(),
                         _credentialUrlController,
                         Icons.link,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter credential URL';
+                            return 'Please enter credential URL'.tr();
                           }
                           return null;
                         },
@@ -461,7 +460,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                                 TextButton.icon(
                                   onPressed: _showSimpleDeleteConfirmation,
                                   label: Text(
-                                    'Delete',
+                                    'Delete'.tr(),
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   style: TextButton.styleFrom(
@@ -476,7 +475,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                                   onPressed: _submitForm,
                                   icon: Icon(Icons.check),
                                   iconAlignment: IconAlignment.end,
-                                  label: Text('Submit'),
+                                  label: Text('Submit'.tr()),
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Theme.of(
                                       context,
@@ -588,7 +587,7 @@ class _CertificateEditState extends State<CertificateEdit> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Delete Certificate',
+            'Delete Certificate'.tr(),
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
           content: Container(
@@ -611,7 +610,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Are you sure you want to delete this certificate?',
+                  'Are you sure you want to delete this certificate?'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
@@ -653,7 +652,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  '⚠️ This action is permanent and cannot be undone.',
+                  '⚠️ This action is permanent and cannot be undone.'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.red,
@@ -673,7 +672,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                 Navigator.of(context).pop();
               },
               icon: Icon(Icons.close, size: 16),
-              label: Text('Cancel'),
+              label: Text('Cancel'.tr()),
               style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
             ),
             ElevatedButton.icon(
@@ -682,7 +681,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                 _deleteCertificate();
               },
               icon: Icon(Icons.delete, size: 16),
-              label: Text('Delete'),
+              label: Text('Delete'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Theme.of(context).colorScheme.primary,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
@@ -30,7 +31,7 @@ class _SkillState extends State<Skill> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Skills",
+                "Skills".tr(),
                 style: TextStyle(
                   fontSize: 15,
                   letterSpacing: 1,
@@ -53,7 +54,7 @@ class _SkillState extends State<Skill> {
                   ).colorScheme.primary, // Icon/text color
                 ),
                 icon: Icon(Icons.edit),
-                label: Text("Edit"),
+                label: Text("Edit".tr()),
               ),
             ],
           ),
@@ -84,7 +85,7 @@ class SkillChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: source.contains('user') ? source.substring(4) : "General",
+      message: source.contains('user') ? source.substring(4) : "General".tr(),
       textStyle: TextStyle(
         color: Theme.of(context).colorScheme.primary,
         fontSize: 12,

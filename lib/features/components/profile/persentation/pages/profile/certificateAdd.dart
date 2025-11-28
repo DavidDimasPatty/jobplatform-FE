@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
@@ -11,7 +11,6 @@ import 'package:job_platform/features/components/profile/data/repositories/auth_
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class CertificateAdd extends StatefulWidget {
@@ -92,7 +91,7 @@ class _CertificateAddState extends State<CertificateAdd> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         // Format dates to 'yyyy-MM-dd'
         final issueDate = DateFormat('yyyy-MM-dd').format(
@@ -155,13 +154,13 @@ class _CertificateAddState extends State<CertificateAdd> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Certificate added successfully!')),
+            SnackBar(content: Text('Certificate added successfully!'.tr())),
           );
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to add certificate. Please try again.'),
+              content: Text('Failed to add certificate. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -171,7 +170,7 @@ class _CertificateAddState extends State<CertificateAdd> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add certificate. Please try again.'),
+            content: Text('Failed to add certificate. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -207,7 +206,7 @@ class _CertificateAddState extends State<CertificateAdd> {
         // Always add "Add new certification" option
         certificationItems.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new certification",
+            nameSingleItem: "+ Add new certification".tr(),
             value: "add_new_certification", // Special identifier
           ),
         );
@@ -224,7 +223,7 @@ class _CertificateAddState extends State<CertificateAdd> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get certification data. Please try again.'),
+          content: Text('Failed to get certification data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -259,7 +258,7 @@ class _CertificateAddState extends State<CertificateAdd> {
         // Always add "Add new skill" option
         skillItem.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new skill",
+            nameSingleItem: "+ Add new skill".tr(),
             value: "add_new_skill", // Special identifier
           ),
         );
@@ -276,7 +275,7 @@ class _CertificateAddState extends State<CertificateAdd> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -316,13 +315,13 @@ class _CertificateAddState extends State<CertificateAdd> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading certificate...'),
+            Text('Loading certificate...'.tr()),
           ],
         ),
       );
@@ -353,7 +352,7 @@ class _CertificateAddState extends State<CertificateAdd> {
                     children: [
                       SizedBox(
                         child: Text(
-                          'Add Certificate',
+                          'Add Certificate'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,
@@ -365,58 +364,58 @@ class _CertificateAddState extends State<CertificateAdd> {
                       SizedBox(height: 20),
                       buildDropdownField(
                         'certificate-select',
-                        'Certificate',
+                        'Certificate'.tr(),
                         _selectCertificateController,
                         onChange: (selectedValue) =>
                             _onSelectionChanged(selectedValue),
                       ),
                       if (_showAddNewForm) ...[
                         buildTextField(
-                          'Certificate Name',
+                          'Certificate Name'.tr(),
                           _certificateNameController,
                           Icons.school,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter certificate name';
+                              return 'Please enter certificate name'.tr();
                             }
                             return null;
                           },
                         ),
                         buildTextField(
-                          'Issued By',
+                          'Issued By'.tr(),
                           _issuedByController,
                           Icons.person,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter issuer';
+                              return 'Please enter issuer'.tr();
                             }
                             return null;
                           },
                         ),
                       ],
                       buildTextField(
-                        'Description',
+                        'Description'.tr(),
                         _descriptionController,
                         Icons.description,
                         maxLines: 3,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter description';
+                            return 'Please enter description'.tr();
                           }
                           return null;
                         },
                       ),
                       buildDropdownField(
                         'skill-select',
-                        'Skill',
+                        'Skill'.tr(),
                         _selectSkillController,
                       ),
                       buildDateField(
-                        'Issue Date',
+                        'Issue Date'.tr(),
                         _issueDateController,
                         (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter issue date';
+                            return 'Please enter issue date'.tr();
                           }
                           return null;
                         },
@@ -452,12 +451,12 @@ class _CertificateAddState extends State<CertificateAdd> {
                               });
                             },
                           ),
-                          Text('Has Expiry Date'),
+                          Text('Has Expiry Date'.tr()),
                         ],
                       ),
                       if (_hasExpiredDate)
                         buildDateField(
-                          'Expiry Date',
+                          'Expiry Date'.tr(),
                           _expiryDateController,
                           (value) {
                             return null;
@@ -466,25 +465,25 @@ class _CertificateAddState extends State<CertificateAdd> {
                           firstDate: _selectedIssueDate,
                         ),
                       buildTextField(
-                        'Credential ID',
+                        'Credential ID'.tr(),
                         _credentialIdController,
                         Icons.vpn_key,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter credential ID';
+                            return 'Please enter credential ID'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Credential URL',
+                        'Credential URL'.tr(),
                         _credentialUrlController,
                         Icons.link,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter credential URL';
+                            return 'Please enter credential URL'.tr();
                           } else if (!Uri.parse(value).isAbsolute) {
-                            return 'Please enter a valid URL';
+                            return 'Please enter a valid URL'.tr();
                           }
                           return null;
                         },
@@ -496,7 +495,7 @@ class _CertificateAddState extends State<CertificateAdd> {
                               onPressed: _submitForm,
                               icon: Icon(Icons.check),
                               iconAlignment: IconAlignment.end,
-                              label: Text('Submit'),
+                              label: Text('Submit'.tr()),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Theme.of(
                                   context,

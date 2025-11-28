@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +15,6 @@ import 'package:job_platform/features/components/profile/data/repositories/auth_
 import 'package:job_platform/features/components/profile/domain/entities/ProfileCompanyData.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCompany extends StatefulWidget {
   const ProfileCompany({super.key});
@@ -109,7 +107,7 @@ class _ProfileCompany extends State<ProfileCompany> {
         String? idUser = await storage.get('idCompany');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         ProfileCompanyRequest profile = new ProfileCompanyRequest(
           idCompany: idUser,
@@ -122,14 +120,14 @@ class _ProfileCompany extends State<ProfileCompany> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Profile avatar updated successfully!')),
+            SnackBar(content: Text('Profile avatar updated successfully!'.tr())),
           );
           _loadProfileData();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Failed to update profile avatar. Please try again.',
+                'Failed to update profile avatar. Please try again.'.tr(),
               ),
               backgroundColor: Colors.red,
             ),
@@ -142,7 +140,7 @@ class _ProfileCompany extends State<ProfileCompany> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update profile avatar. Please try again.'),
+            content: Text('Failed to update profile avatar. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -160,7 +158,7 @@ class _ProfileCompany extends State<ProfileCompany> {
       String? idUser = await storage.get('idCompany');
 
       // Ensure idUser is not null
-      if (idUser == null) throw Exception("User ID not found in preferences");
+      if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
       ProfileRequest profile = new ProfileRequest(
         idUser: idUser,
@@ -174,12 +172,12 @@ class _ProfileCompany extends State<ProfileCompany> {
       // On success, clear the form or navigate away
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile privacy edited successfully!')),
+          SnackBar(content: Text('Profile privacy edited successfully!'.tr())),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile privacy. Please try again.'),
+            content: Text('Failed to edit profile privacy. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -190,7 +188,7 @@ class _ProfileCompany extends State<ProfileCompany> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile privacy. Please try again.'),
+            content: Text('Failed to edit profile privacy. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -201,13 +199,13 @@ class _ProfileCompany extends State<ProfileCompany> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading profile data...'),
+            Text('Loading profile data...'.tr()),
           ],
         ),
       );
@@ -226,7 +224,7 @@ class _ProfileCompany extends State<ProfileCompany> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
+            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry'.tr())),
           ],
         ),
       );
@@ -410,7 +408,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                       children: [
                         Container(
                           child: Text(
-                            "Deskripsi",
+                            "Deskripsi".tr(),
                             textAlign: TextAlign.start,
                             style: GoogleFonts.montserrat(
                               textStyle: TextStyle(
@@ -468,7 +466,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                       children: [
                         Container(
                           child: Text(
-                            "Benefit",
+                            "Benefit".tr(),
                             textAlign: TextAlign.start,
                             style: GoogleFonts.montserrat(
                               textStyle: TextStyle(
@@ -534,7 +532,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                                       ),
                                       SizedBox(height: 8),
                                       Text(
-                                        "Available",
+                                        "Available".tr(),
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey[600],
@@ -582,7 +580,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                       children: [
                         Container(
                           child: Text(
-                            "Company Info",
+                            "Company Info".tr(),
                             textAlign: TextAlign.start,
                             style: GoogleFonts.montserrat(
                               textStyle: TextStyle(

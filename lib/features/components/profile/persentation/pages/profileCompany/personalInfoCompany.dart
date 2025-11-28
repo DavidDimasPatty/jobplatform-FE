@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,8 +23,6 @@ import 'package:job_platform/features/components/signup/domain/entities/kota.dar
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:select2dot1/select2dot1.dart';
 
 class Personalinfocompany extends StatefulWidget {
@@ -114,7 +113,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
       String? idCompany = await storage.get('idCompany');
 
       if (idCompany == null)
-        throw Exception("Company ID not found in preferences");
+        throw Exception("Company ID not found in preferences".tr());
 
       ProfileCompanyRequest profile = new ProfileCompanyRequest(
         idCompany: idCompany,
@@ -139,12 +138,12 @@ class _Personalinfocompany extends State<Personalinfocompany> {
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Profile edited successfully!')));
+        ).showSnackBar(SnackBar(content: Text('Profile edited successfully!'.tr())));
         context.go('/profileCompany');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile. Please try again.'),
+            content: Text('Failed to edit profile. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -155,7 +154,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Edit profile failed. Please try again.'),
+            content: Text('Edit profile failed. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -364,13 +363,13 @@ class _Personalinfocompany extends State<Personalinfocompany> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading profile data...'),
+            Text('Loading profile data...'.tr()),
           ],
         ),
       );
@@ -389,7 +388,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
+            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry'.tr())),
           ],
         ),
       );
@@ -442,7 +441,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                             children: [
                               SizedBox(
                                 child: Text(
-                                  "Company Info",
+                                  "Company Info".tr(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.blue,
@@ -458,8 +457,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _namaController,
                                   decoration: InputDecoration(
-                                    labelText: 'Nama',
-                                    hintText: 'Masukan Nama',
+                                    labelText: 'Nama Perusahaan'.tr(),
+                                    hintText: 'Masukan Nama Perusahaan'.tr(),
                                     prefixIcon: Icon(Icons.info),
                                     border: OutlineInputBorder(),
                                     contentPadding: EdgeInsets.symmetric(
@@ -470,13 +469,13 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                   // initialValue: email,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return "Nama Tidak Boleh Kosong";
+                                      return "Nama Perusahaan Tidak Boleh Kosong".tr();
                                     }
                                     final regex = RegExp(
                                       r'^[a-zA-Z0-9\s\-\.,]+$',
                                     );
                                     if (!regex.hasMatch(value)) {
-                                      return "Format nama tidak valid";
+                                      return "Format nama tidak valid".tr();
                                     }
                                     return null;
                                   },
@@ -489,8 +488,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _deskripsiController,
                                   decoration: InputDecoration(
-                                    labelText: 'Deskripsi Profile',
-                                    hintText: 'Masukan Deskripsi Profile',
+                                    labelText: 'Deskripsi Profile'.tr(),
+                                    hintText: 'Masukan Deskripsi Profile'.tr(),
                                     border: OutlineInputBorder(),
                                     prefixIcon: Icon(Icons.location_pin),
                                     contentPadding: EdgeInsets.symmetric(
@@ -524,7 +523,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     : DropdownButtonFormField<String>(
                                         isExpanded: true,
                                         initialValue: selectedIndustries,
-                                        hint: Text("Pilih Industri"),
+                                        hint: Text("Pilih Industri".tr()),
                                         items: industries.map((ind) {
                                           return DropdownMenuItem<String>(
                                             value: ind,
@@ -555,7 +554,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       child: DropdownButtonFormField<Country>(
                                         initialValue: selectedCountry,
                                         isExpanded: true,
-                                        hint: Text("Pilih Negara"),
+                                        hint: Text("Pilih Negara".tr()),
                                         items: countries.map((country) {
                                           return DropdownMenuItem<Country>(
                                             value: country,
@@ -619,9 +618,9 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                         controller: _phoneController,
                                         keyboardType: TextInputType.phone,
                                         decoration: InputDecoration(
-                                          labelText: 'Nomor Telepon',
+                                          labelText: 'Nomor Telepon'.tr(),
                                           hintText:
-                                              'Masukkan nomor telepon Anda',
+                                              'Masukkan nomor telepon Anda'.tr(),
                                           border: const OutlineInputBorder(),
                                           prefixIcon: IntrinsicWidth(
                                             child: Container(
@@ -642,12 +641,12 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Nomor telepon tidak boleh kosong';
+                                            return 'Nomor telepon tidak boleh kosong'.tr();
                                           }
                                           if (!RegExp(
                                             r'^[0-9]{8,13}$',
                                           ).hasMatch(value)) {
-                                            return 'Masukkan nomor telepon yang valid';
+                                            return 'Masukkan nomor telepon yang valid'.tr();
                                           }
                                           return null;
                                         },
@@ -685,7 +684,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                         vertical: 10,
                                       ),
                                       child: Text(
-                                        "Lokasi",
+                                        "Lokasi Perusahaan".tr(),
                                         style: GoogleFonts.figtree(
                                           textStyle: TextStyle(
                                             color: Colors.black,
@@ -711,7 +710,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                                   isExpanded: true,
                                                   initialValue:
                                                       selectedProvinsi,
-                                                  hint: Text("Pilih Provinsi"),
+                                                  hint: Text("Pilih Provinsi".tr()),
                                                   items: provinsi.map((prov) {
                                                     return DropdownMenuItem<
                                                       ProvinsiModel
@@ -770,7 +769,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                                       )
                                                       ? selectedKota
                                                       : null,
-                                                  hint: Text("Pilih Kota"),
+                                                  hint: Text("Pilih Kota".tr()),
 
                                                   items: kota.map((kota) {
                                                     return DropdownMenuItem<
@@ -808,8 +807,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       child: TextFormField(
                                         controller: _alamatController,
                                         decoration: InputDecoration(
-                                          labelText: 'Alamat Lengkap',
-                                          hintText: 'Masukan Alamat Lengkap',
+                                          labelText: 'Alamat Lengkap'.tr(),
+                                          hintText: 'Masukan Alamat Lengkap'.tr(),
                                           border: OutlineInputBorder(),
                                           prefixIcon: Icon(Icons.location_pin),
                                           contentPadding: EdgeInsets.symmetric(
@@ -822,14 +821,14 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                         maxLines: 5,
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return "Alamat Tidak Boleh Kosong";
+                                            return "Alamat Tidak Boleh Kosong".tr();
                                           }
 
                                           final regex = RegExp(
                                             r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
                                           );
                                           if (!regex.hasMatch(value)) {
-                                            return "Format alamat tidak valid";
+                                            return "Format alamat tidak valid".tr();
                                           }
 
                                           return null;
@@ -853,7 +852,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                         children: [
                                           Center(
                                             child: Text(
-                                              "Benefit Perusahaan",
+                                              "Benefit Perusahaan".tr(),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 color: Colors.black,
@@ -889,7 +888,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                               Container(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "Company Info",
+                                  "Company Info".tr(),
                                   style: GoogleFonts.figtree(
                                     textStyle: TextStyle(
                                       color: Colors.black,
@@ -905,8 +904,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _domainController,
                                   decoration: InputDecoration(
-                                    labelText: 'Domain',
-                                    hintText: 'Masukan Domain Perusahaan',
+                                    labelText: 'Domain'.tr(),
+                                    hintText: 'Masukan Domain Perusahaan'.tr(),
                                     prefixIcon: Icon(Icons.domain),
                                     border: OutlineInputBorder(),
                                     contentPadding: EdgeInsets.symmetric(
@@ -925,7 +924,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     );
 
                                     if (!regex.hasMatch(value)) {
-                                      return 'Format domain tidak valid';
+                                      return 'Format domain tidak valid'.tr();
                                     }
 
                                     return null;
@@ -938,8 +937,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _linkedinController,
                                   decoration: InputDecoration(
-                                    labelText: 'Linkedin',
-                                    hintText: 'Masukan Nama Linkedin',
+                                    labelText: 'Linkedin'.tr(),
+                                    hintText: 'Masukan Nama Linkedin'.tr(),
                                     prefixIcon: Padding(
                                       padding: EdgeInsets.only(
                                         left: 15,
@@ -965,7 +964,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       r'^[a-zA-Z0-9\s\-\.,]+$',
                                     );
                                     if (!regex.hasMatch(value)) {
-                                      return "Format username LinkedIn tidak valid";
+                                      return "Format username LinkedIn tidak valid".tr();
                                     }
                                     return null;
                                   },
@@ -977,8 +976,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _facebookController,
                                   decoration: InputDecoration(
-                                    labelText: 'Facebook',
-                                    hintText: 'Masukan Nama Facebook',
+                                    labelText: 'Facebook'.tr(),
+                                    hintText: 'Masukan Nama Facebook'.tr(),
                                     prefixIcon: Padding(
                                       padding: EdgeInsets.only(
                                         left: 15,
@@ -1004,7 +1003,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       r'^[a-zA-Z0-9\s\-\.,]+$',
                                     );
                                     if (!regex.hasMatch(value)) {
-                                      return "Format username Facebook tidak valid";
+                                      return "Format username Facebook tidak valid".tr();
                                     }
                                     return null;
                                   },
@@ -1016,8 +1015,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _twitterController,
                                   decoration: InputDecoration(
-                                    labelText: 'Twitter',
-                                    hintText: 'Masukan Username',
+                                    labelText: 'Twitter'.tr(),
+                                    hintText: 'Masukan Username Twitter'.tr(),
                                     prefixIcon: Padding(
                                       padding: EdgeInsets.only(
                                         left: 15,
@@ -1040,7 +1039,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       r'^[a-zA-Z0-9\s\-\.,]+$',
                                     );
                                     if (!regex.hasMatch(value)) {
-                                      return "Format username Twitter tidak valid";
+                                      return "Format username Twitter tidak valid".tr();
                                     }
                                     return null;
                                   },
@@ -1052,8 +1051,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _instagramController,
                                   decoration: InputDecoration(
-                                    labelText: 'Instagram',
-                                    hintText: 'Masukan Username',
+                                    labelText: 'Instagram'.tr(),
+                                    hintText: 'Masukan Username Instagram'.tr(),
                                     prefixIcon: Padding(
                                       padding: EdgeInsets.only(
                                         left: 15,
@@ -1079,7 +1078,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       r'^[a-zA-Z0-9\s\-\.,]+$',
                                     );
                                     if (!regex.hasMatch(value)) {
-                                      return "Format username Instagram tidak valid";
+                                      return "Format username Instagram tidak valid".tr();
                                     }
                                     return null;
                                   },
@@ -1091,8 +1090,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 child: TextFormField(
                                   controller: _tiktokController,
                                   decoration: InputDecoration(
-                                    labelText: 'Tiktok',
-                                    hintText: 'Masukan Username',
+                                    labelText: 'Tiktok'.tr(),
+                                    hintText: 'Masukan Username Tiktok'.tr(),
                                     prefixIcon: Padding(
                                       padding: EdgeInsets.only(
                                         left: 15,
@@ -1118,7 +1117,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                       r'^[a-zA-Z0-9\s\-\.,]+$',
                                     );
                                     if (!regex.hasMatch(value)) {
-                                      return "Format username TikTok tidak valid";
+                                      return "Format username TikTok tidak valid".tr();
                                     }
                                     return null;
                                   },
@@ -1129,7 +1128,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Directionality(
-                                    textDirection: TextDirection.rtl,
+                                    textDirection: ui.TextDirection.rtl,
                                     child: ElevatedButton.icon(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Theme.of(
@@ -1143,8 +1142,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                           context,
                                         ).colorScheme.primary,
                                       ),
-                                      label: const Text(
-                                        'Submit',
+                                      label: Text(
+                                        'Submit'.tr(),
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),

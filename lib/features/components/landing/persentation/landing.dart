@@ -13,6 +13,9 @@ class Landing extends StatefulWidget {
 class _Landing extends State<Landing> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey _featuresKey = GlobalKey();
+  final GlobalKey _howItWorksKey = GlobalKey();
+  final GlobalKey _aboutKey = GlobalKey();
   bool _isScrolled = false;
 
   @override
@@ -33,6 +36,17 @@ class _Landing extends State<Landing> {
     super.dispose();
   }
 
+  void _scrollToSection(GlobalKey key) {
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +64,12 @@ class _Landing extends State<Landing> {
               children: [
                 _buildHeroSection(context),
                 _buildStatsSection(),
-                _buildFeaturesSection(),
-                _buildHowItWorksSection(),
-                _buildCTASection(),
+                Container(key: _featuresKey, child: _buildFeaturesSection()),
+                Container(
+                  key: _howItWorksKey,
+                  child: _buildHowItWorksSection(),
+                ),
+                Container(key: _aboutKey, child: _buildCTASection()),
                 _buildFooter(),
               ],
             ),
@@ -98,9 +115,27 @@ class _Landing extends State<Landing> {
               ],
             ),
           ),
-          ListTile(title: const Text('Features'), onTap: () {}),
-          ListTile(title: const Text('How it Works'), onTap: () {}),
-          ListTile(title: const Text('About'), onTap: () {}),
+          ListTile(
+            title: const Text('Features'),
+            onTap: () {
+              Navigator.of(context).pop();
+              _scrollToSection(_featuresKey);
+            },
+          ),
+          ListTile(
+            title: const Text('How it Works'),
+            onTap: () {
+              Navigator.of(context).pop();
+              _scrollToSection(_howItWorksKey);
+            },
+          ),
+          ListTile(
+            title: const Text('About'),
+            onTap: () {
+              Navigator.of(context).pop();
+              _scrollToSection(_aboutKey);
+            },
+          ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -169,17 +204,17 @@ class _Landing extends State<Landing> {
               const Spacer(),
               if (ResponsiveBreakpoints.of(context).largerThan(MOBILE)) ...[
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _scrollToSection(_featuresKey),
                   style: TextButton.styleFrom(foregroundColor: Colors.blue),
                   child: const Text('Features'),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _scrollToSection(_howItWorksKey),
                   style: TextButton.styleFrom(foregroundColor: Colors.blue),
                   child: const Text('How it Works'),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _scrollToSection(_aboutKey),
                   style: TextButton.styleFrom(foregroundColor: Colors.blue),
                   child: const Text('About'),
                 ),
@@ -323,11 +358,11 @@ class _Landing extends State<Landing> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 30,
             offset: const Offset(0, 10),
           ),
@@ -369,7 +404,7 @@ class _Landing extends State<Landing> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -519,11 +554,11 @@ class _Landing extends State<Landing> {
       width: 280,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),

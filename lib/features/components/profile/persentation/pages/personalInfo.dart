@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
@@ -24,7 +24,6 @@ import 'package:job_platform/features/components/signup/domain/entities/kota.dar
 import 'package:job_platform/features/components/signup/domain/entities/provinsi.dart';
 import 'package:job_platform/features/components/signup/domain/usecases/signup_usercase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class Personalinfo extends StatefulWidget {
@@ -152,7 +151,7 @@ class _Personalinfo extends State<Personalinfo> {
       String? idUser = await storage.get('idUser');
 
       // Ensure idUser is not null
-      if (idUser == null) throw Exception("User ID not found in preferences");
+      if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
       List<String> portofolioList = _linkPortofolioController.text.split(',');
 
@@ -200,12 +199,12 @@ class _Personalinfo extends State<Personalinfo> {
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Profile edited successfully!')));
+        ).showSnackBar(SnackBar(content: Text('Profile edited successfully!'.tr())));
         context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile. Please try again.'),
+            content: Text('Failed to edit profile. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -217,7 +216,7 @@ class _Personalinfo extends State<Personalinfo> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Edit profile failed. Please try again.'),
+            content: Text('Failed to edit profile. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -444,7 +443,7 @@ class _Personalinfo extends State<Personalinfo> {
                         children: [
                           SizedBox(
                             child: Text(
-                              "Personal Info",
+                              "Personal Info".tr(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.blue,
@@ -522,8 +521,8 @@ class _Personalinfo extends State<Personalinfo> {
                                     readOnly: true,
                                     controller: _namaController,
                                     decoration: InputDecoration(
-                                      labelText: 'Nama Lengkap',
-                                      hintText: 'Masukan Nama Lengkap',
+                                      labelText: 'Nama Lengkap'.tr(),
+                                      hintText: 'Masukan Nama Lengkap'.tr(),
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.account_circle),
                                       contentPadding: EdgeInsets.symmetric(
@@ -534,13 +533,13 @@ class _Personalinfo extends State<Personalinfo> {
                                     // initialValue: name,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "Nama Tidak Boleh Kosong";
+                                        return "Nama Tidak Boleh Kosong".tr();
                                       }
                                       final regex = RegExp(
                                         r'^[a-zA-Z0-9\s\-\.,]+$',
                                       );
                                       if (!regex.hasMatch(value)) {
-                                        return "Format nama tidak valid";
+                                        return "Format nama tidak valid".tr();
                                       }
                                       return null;
                                     },
@@ -556,8 +555,8 @@ class _Personalinfo extends State<Personalinfo> {
                             child: TextFormField(
                               controller: _headLineController,
                               decoration: InputDecoration(
-                                labelText: 'Headline',
-                                hintText: 'Masukan Headline',
+                                labelText: 'Headline'.tr(),
+                                hintText: 'Masukan Headline'.tr(),
                                 prefixIcon: Icon(Icons.info),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -574,7 +573,7 @@ class _Personalinfo extends State<Personalinfo> {
                                   r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
                                 );
                                 if (!regex.hasMatch(value)) {
-                                  return "Format Headline tidak valid";
+                                  return "Format Headline tidak valid".tr();
                                 }
                                 return null;
                               },
@@ -587,8 +586,8 @@ class _Personalinfo extends State<Personalinfo> {
                             child: TextFormField(
                               controller: _deskripsiController,
                               decoration: InputDecoration(
-                                labelText: 'Deskripsi Profile',
-                                hintText: 'Masukan Deskripsi Profile',
+                                labelText: 'Deskripsi Profile'.tr(),
+                                hintText: 'Masukan Deskripsi Profile'.tr(),
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
@@ -607,7 +606,7 @@ class _Personalinfo extends State<Personalinfo> {
                                   r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
                                 );
                                 if (!regex.hasMatch(value)) {
-                                  return "Format deskripsi tidak valid";
+                                  return "Format deskripsi tidak valid".tr();
                                 }
                                 return null;
                               },
@@ -620,8 +619,8 @@ class _Personalinfo extends State<Personalinfo> {
                             child: TextFormField(
                               controller: _linkPortofolioController,
                               decoration: InputDecoration(
-                                labelText: 'Link Portofolio',
-                                hintText: 'Masukan Link portofolio',
+                                labelText: 'Link Portofolio'.tr(),
+                                hintText: 'Masukan Link portofolio'.tr(),
                                 prefixIcon: Icon(Icons.link),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -640,7 +639,7 @@ class _Personalinfo extends State<Personalinfo> {
                                 );
 
                                 if (!regex.hasMatch(value)) {
-                                  return 'Format portofolio tidak valid';
+                                  return 'Format portofolio tidak valid'.tr();
                                 }
 
                                 return null;
@@ -655,7 +654,7 @@ class _Personalinfo extends State<Personalinfo> {
                               spacing: 8,
                               children: [
                                 Text(
-                                  "Jenis Kelamin",
+                                  "Jenis Kelamin".tr(),
                                   style: GoogleFonts.figtree(
                                     textStyle: TextStyle(
                                       color: Colors.black,
@@ -669,7 +668,7 @@ class _Personalinfo extends State<Personalinfo> {
                                   spacing: 10,
                                   children: [
                                     InputChip(
-                                      label: Text('Laki - Laki'),
+                                      label: Text('Laki - Laki'.tr()),
                                       selected: gender == 'L',
                                       onSelected: (selected) =>
                                           _changeGender('L'),
@@ -678,7 +677,7 @@ class _Personalinfo extends State<Personalinfo> {
                                       checkmarkColor: Colors.white,
                                     ),
                                     InputChip(
-                                      label: Text('Perempuan'),
+                                      label: Text('Perempuan'.tr()),
                                       selected: gender == 'P',
                                       onSelected: (selected) =>
                                           _changeGender('P'),
@@ -698,7 +697,7 @@ class _Personalinfo extends State<Personalinfo> {
                             child: InputDecorator(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.calendar_today),
-                                labelText: "Tanggal Lahir",
+                                labelText: "Tanggal Lahir".tr(),
                                 border: OutlineInputBorder(),
                               ),
                               child: Text(
@@ -706,7 +705,7 @@ class _Personalinfo extends State<Personalinfo> {
                                     ? DateFormat(
                                         'dd MMMM yyyy',
                                       ).format(birthDate!)
-                                    : "Pilih tanggal",
+                                    : "Pilih tanggal".tr(),
                               ),
                             ),
                           ),
@@ -723,7 +722,7 @@ class _Personalinfo extends State<Personalinfo> {
                                     vertical: 10,
                                   ),
                                   child: Text(
-                                    "Tempat Lahir",
+                                    "Tempat Lahir".tr(),
                                     style: GoogleFonts.figtree(
                                       textStyle: TextStyle(
                                         color: Colors.black,
@@ -749,7 +748,7 @@ class _Personalinfo extends State<Personalinfo> {
                                               isExpanded: true,
                                               initialValue:
                                                   selectedProvinsiLahir,
-                                              hint: Text("Pilih Provinsi"),
+                                              hint: Text("Pilih Provinsi".tr()),
                                               items: provinsiLahir.map((prov) {
                                                 return DropdownMenuItem<
                                                   ProvinsiModel
@@ -798,7 +797,7 @@ class _Personalinfo extends State<Personalinfo> {
                                           : DropdownButtonFormField<KotaModel>(
                                               isExpanded: true,
                                               initialValue: selectedKotaLahir,
-                                              hint: Text("Pilih Kota"),
+                                              hint: Text("Pilih Kota".tr()),
 
                                               items: kotaLahir.map((kota) {
                                                 return DropdownMenuItem<
@@ -844,7 +843,7 @@ class _Personalinfo extends State<Personalinfo> {
                                     vertical: 10,
                                   ),
                                   child: Text(
-                                    "Domisili Sekarang",
+                                    "Domisili Sekarang".tr(),
                                     style: GoogleFonts.figtree(
                                       textStyle: TextStyle(
                                         color: Colors.black,
@@ -869,7 +868,7 @@ class _Personalinfo extends State<Personalinfo> {
                                             >(
                                               isExpanded: true,
                                               initialValue: selectedProvinsi,
-                                              hint: Text("Pilih Provinsi"),
+                                              hint: Text("Pilih Provinsi".tr()),
                                               items: provinsi.map((prov) {
                                                 return DropdownMenuItem<
                                                   ProvinsiModel
@@ -921,7 +920,7 @@ class _Personalinfo extends State<Personalinfo> {
                                                   kota.contains(selectedKota)
                                                   ? selectedKota
                                                   : null,
-                                              hint: Text("Pilih Kota"),
+                                              hint: Text("Pilih Kota".tr()),
 
                                               items: kota.map((kota) {
                                                 return DropdownMenuItem<
@@ -960,8 +959,8 @@ class _Personalinfo extends State<Personalinfo> {
                             child: TextFormField(
                               controller: _alamatController,
                               decoration: InputDecoration(
-                                labelText: 'Alamat Lengkap',
-                                hintText: 'Masukan Alamat Lengkap',
+                                labelText: 'Alamat Lengkap'.tr(),
+                                hintText: 'Masukan Alamat Lengkap'.tr(),
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.location_pin),
                                 contentPadding: EdgeInsets.symmetric(
@@ -974,14 +973,14 @@ class _Personalinfo extends State<Personalinfo> {
                               maxLines: 5,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "Alamat Tidak Boleh Kosong";
+                                  return "Alamat Tidak Boleh Kosong".tr();
                                 }
 
                                 final regex = RegExp(
                                   r'^[a-zA-Z0-9\s\-\.,\/\\]+$',
                                 );
                                 if (!regex.hasMatch(value)) {
-                                  return "Format alamat domisili tidak valid";
+                                  return "Format alamat tidak valid".tr();
                                 }
 
                                 return null;
@@ -996,7 +995,7 @@ class _Personalinfo extends State<Personalinfo> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Upload CV",
+                                  "Upload CV".tr(),
                                   style: GoogleFonts.figtree(
                                     textStyle: TextStyle(
                                       color: Colors.black,
@@ -1022,7 +1021,7 @@ class _Personalinfo extends State<Personalinfo> {
                                         Expanded(
                                           child: Text(
                                             cvFileName ??
-                                                'Click to select file',
+                                                'Click to select file'.tr(),
                                             style: TextStyle(
                                               color: cvFileName != null
                                                   ? Colors.black
@@ -1067,7 +1066,7 @@ class _Personalinfo extends State<Personalinfo> {
                                   });
                                 },
                               ),
-                              Text('Visible from HR'),
+                              Text('Visible from HR'.tr()),
                             ],
                           ),
 
@@ -1089,8 +1088,8 @@ class _Personalinfo extends State<Personalinfo> {
                                       context,
                                     ).colorScheme.primary,
                                   ),
-                                  label: const Text(
-                                    'Submit',
+                                  label: Text(
+                                    'Submit'.tr(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),

@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
@@ -25,7 +25,6 @@ import 'package:job_platform/features/components/profile/persentation/widgets/pr
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/skill.dart';
 import 'package:job_platform/features/components/profile/persentation/widgets/profile/workExperience.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -130,7 +129,7 @@ class _Profile extends State<Profile> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         ProfileRequest profile = new ProfileRequest(
           idUser: idUser,
@@ -144,14 +143,14 @@ class _Profile extends State<Profile> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Profile avatar updated successfully!')),
+            SnackBar(content: Text('Profile avatar updated successfully!'.tr())),
           );
           _loadProfileData();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Failed to update profile avatar. Please try again.',
+                'Failed to update profile avatar. Please try again.'.tr(),
               ),
               backgroundColor: Colors.red,
             ),
@@ -164,7 +163,7 @@ class _Profile extends State<Profile> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update profile avatar. Please try again.'),
+            content: Text('Failed to update profile avatar. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -182,7 +181,7 @@ class _Profile extends State<Profile> {
       String? idUser = await storage.get('idUser');
 
       // Ensure idUser is not null
-      if (idUser == null) throw Exception("User ID not found in preferences");
+      if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
       ProfileRequest profile = new ProfileRequest(
         idUser: idUser,
@@ -196,12 +195,12 @@ class _Profile extends State<Profile> {
       // On success, clear the form or navigate away
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile privacy edited successfully!')),
+          SnackBar(content: Text('Profile privacy edited successfully!'.tr())),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile privacy. Please try again.'),
+            content: Text('Failed to edit profile privacy. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -212,7 +211,7 @@ class _Profile extends State<Profile> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile privacy. Please try again.'),
+            content: Text('Failed to edit profile privacy. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -223,13 +222,13 @@ class _Profile extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading profile data...'),
+            Text('Loading profile data...'.tr()),
           ],
         ),
       );
@@ -249,7 +248,7 @@ class _Profile extends State<Profile> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
+            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry'.tr())),
           ],
         ),
       );
@@ -447,7 +446,7 @@ class _Profile extends State<Profile> {
                       ListTile(
                         onTap: () {},
                         leading: Icon(Icons.lock),
-                        title: Text("Private Profile"),
+                        title: Text("Private Profile".tr()),
                         trailing: Switch(
                           trackColor: const WidgetStateProperty<Color?>.fromMap(
                             <WidgetState, Color>{
@@ -462,8 +461,8 @@ class _Profile extends State<Profile> {
                       ListTile(
                         onTap: () => context.go("/setting"),
                         leading: Icon(Icons.account_box),
-                        title: Text("Account Configuration"),
-                        subtitle: Text("Konfigurasi Account"),
+                        title: Text("Account Configuration".tr()),
+                        subtitle: Text("Konfigurasi Account".tr()),
                       ),
                       // Divider(height: 1, thickness: 1),
                       // ListTile(

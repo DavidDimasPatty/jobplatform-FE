@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
@@ -11,7 +11,6 @@ import 'package:job_platform/features/components/profile/domain/entities/SkillMV
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SkillEdit extends StatefulWidget {
   final List<SkillMV> skills;
@@ -102,7 +101,7 @@ class _SkillEditState extends State<SkillEdit> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -124,7 +123,7 @@ class _SkillEditState extends State<SkillEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         // Map selected skills to SkillModel list
         late List<SkillModel> skill;
@@ -146,12 +145,12 @@ class _SkillEditState extends State<SkillEdit> {
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('Skill edited successfully!')));
+          ).showSnackBar(SnackBar(content: Text('Skill edited successfully!'.tr())));
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit skill. Please try again.'),
+              content: Text('Failed to edit skill. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -161,7 +160,7 @@ class _SkillEditState extends State<SkillEdit> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit skill. Please try again.'),
+            content: Text('Failed to edit skill. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -176,13 +175,13 @@ class _SkillEditState extends State<SkillEdit> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading skills...'),
+            Text('Loading skills...'.tr()),
           ],
         ),
       );
@@ -213,7 +212,7 @@ class _SkillEditState extends State<SkillEdit> {
                     children: [
                       SizedBox(
                         child: Text(
-                          'Edit Skill',
+                          'Edit Skill'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,
@@ -225,7 +224,7 @@ class _SkillEditState extends State<SkillEdit> {
                       SizedBox(height: 20),
                       buildDropdownField(
                         'skill-select',
-                        'Skill',
+                        'Skill'.tr(),
                         _selectSkillController,
                       ),
                       SizedBox(height: 20),
@@ -238,7 +237,7 @@ class _SkillEditState extends State<SkillEdit> {
                                   onPressed: _submitForm,
                                   icon: Icon(Icons.check),
                                   iconAlignment: IconAlignment.end,
-                                  label: Text('Submit'),
+                                  label: Text('Submit'.tr()),
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Theme.of(
                                       context,

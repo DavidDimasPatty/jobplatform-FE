@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'dart:ui' as ui;
@@ -12,7 +12,6 @@ import 'package:job_platform/features/components/profile/data/datasources/aut_re
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class EducationalAdd extends StatefulWidget {
@@ -103,7 +102,7 @@ class _EducationalAdd extends State<EducationalAdd> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         late EducationModel education;
         if (_showAddNewForm) {
@@ -152,13 +151,13 @@ class _EducationalAdd extends State<EducationalAdd> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Education added successfully!')),
+            SnackBar(content: Text('Education added successfully!'.tr())),
           );
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to add education. Please try again.'),
+              content: Text('Failed to add education. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -168,7 +167,7 @@ class _EducationalAdd extends State<EducationalAdd> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add education. Please try again.'),
+            content: Text('Failed to add education. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -204,7 +203,7 @@ class _EducationalAdd extends State<EducationalAdd> {
         // Always add "Add new education" option
         educationItems.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new education",
+            nameSingleItem: "+ Add new education".tr(),
             value: "add_new_education", // Special identifier
           ),
         );
@@ -221,7 +220,7 @@ class _EducationalAdd extends State<EducationalAdd> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get education data. Please try again.'),
+          content: Text('Failed to get education data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -256,7 +255,7 @@ class _EducationalAdd extends State<EducationalAdd> {
         // Always add "Add new skill" option
         skillItem.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new skill",
+            nameSingleItem: "+ Add new skill".tr(),
             value: "add_new_skill", // Special identifier
           ),
         );
@@ -273,7 +272,7 @@ class _EducationalAdd extends State<EducationalAdd> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -313,13 +312,13 @@ class _EducationalAdd extends State<EducationalAdd> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading education...'),
+            Text('Loading education...'.tr()),
           ],
         ),
       );
@@ -356,7 +355,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                         children: [
                           SizedBox(
                             child: Text(
-                              "Add Education",
+                              "Add Education".tr(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.blue,
@@ -371,8 +370,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Select2dot1(
                               key: ValueKey('education_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Education',
+                              pillboxTitleSettings: PillboxTitleSettings(
+                                title: 'Education'.tr(),
                               ),
                               selectDataController: _selectEducationController,
                               onChanged: (selectedValue) {
@@ -388,8 +387,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                               child: TextFormField(
                                 controller: _namaController,
                                 decoration: InputDecoration(
-                                  labelText: 'Nama Sekolah',
-                                  hintText: 'Masukan Nama Sekolah',
+                                  labelText: 'Nama Sekolah'.tr(),
+                                  hintText: 'Masukan Nama Sekolah'.tr(),
                                   prefixIcon: Icon(Icons.text_fields),
                                   border: OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(
@@ -400,7 +399,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                 // initialValue: email,
                                 validator: (value) =>
                                     value == null || value.isEmpty
-                                    ? 'Wajib diisi'
+                                    ? 'Wajib diisi'.tr()
                                     : null,
                               ),
                             ),
@@ -411,8 +410,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                               child: TextFormField(
                                 controller: _lokasiController,
                                 decoration: InputDecoration(
-                                  labelText: 'Lokasi Sekolah',
-                                  hintText: 'Masukan Lokasi Sekolah',
+                                  labelText: 'Lokasi Sekolah'.tr(),
+                                  hintText: 'Masukan Lokasi Sekolah'.tr(),
                                   prefixIcon: Icon(Icons.location_pin),
                                   border: OutlineInputBorder(),
                                   contentPadding: EdgeInsets.symmetric(
@@ -423,7 +422,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                 // initialValue: email,
                                 validator: (value) =>
                                     value == null || value.isEmpty
-                                    ? 'Wajib diisi'
+                                    ? 'Wajib diisi'.tr()
                                     : null,
                               ),
                             ),
@@ -435,8 +434,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                             child: TextFormField(
                               controller: _tingkatController,
                               decoration: InputDecoration(
-                                labelText: 'Tingkatan',
-                                hintText: 'Masukan Tingkatan',
+                                labelText: 'Tingkatan'.tr(),
+                                hintText: 'Masukan Tingkatan'.tr(),
                                 prefixIcon: Icon(Icons.school),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -458,8 +457,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                             child: TextFormField(
                               controller: _penjurusanController,
                               decoration: InputDecoration(
-                                labelText: 'Penjurusan',
-                                hintText: 'Masukan Penjurusan',
+                                labelText: 'Penjurusan'.tr(),
+                                hintText: 'Masukan Penjurusan'.tr(),
                                 prefixIcon: Icon(Icons.local_library),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -470,7 +469,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -488,8 +487,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                                   child: TextFormField(
                                     controller: _gpaController,
                                     decoration: InputDecoration(
-                                      labelText: 'GPA',
-                                      hintText: 'Masukan GPA',
+                                      labelText: 'GPA'.tr(),
+                                      hintText: 'Masukan GPA'.tr(),
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.bar_chart),
                                       contentPadding: EdgeInsets.symmetric(
@@ -500,7 +499,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                     // initialValue: name,
                                     validator: (value) =>
                                         value == null || value.isEmpty
-                                        ? 'Wajib diisi'
+                                        ? 'Wajib diisi'.tr()
                                         : null,
                                   ),
                                 ),
@@ -514,8 +513,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                             child: TextFormField(
                               controller: _deskripsiController,
                               decoration: InputDecoration(
-                                labelText: 'Deskripsi Pekerjaan',
-                                hintText: 'Masukan Deskripsi Pekerjaan',
+                                labelText: 'Deskripsi Pekerjaan'.tr(),
+                                hintText: 'Masukan Deskripsi Pekerjaan'.tr(),
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
@@ -528,7 +527,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               maxLines: 5,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -538,8 +537,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Select2dot1(
                               key: ValueKey('skill_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Skill',
+                              pillboxTitleSettings: PillboxTitleSettings(
+                                title: 'Skill'.tr(),
                               ),
                               selectDataController: _selectSkillController,
                             ),
@@ -550,7 +549,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                             child: InputDecorator(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.calendar_today),
-                                labelText: "Start Date",
+                                labelText: "Start Date".tr(),
                                 border: OutlineInputBorder(),
                               ),
                               child: Text(
@@ -558,7 +557,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                     ? DateFormat(
                                         'dd MMMM yyyy',
                                       ).format(startDate!)
-                                    : "Pilih tanggal",
+                                    : "Pilih tanggal".tr(),
                               ),
                             ),
                           ),
@@ -575,7 +574,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                   });
                                 },
                               ),
-                              Text('Still Active?'),
+                              Text('Still Active?'.tr()),
                             ],
                           ),
                           if (!_stillActive)
@@ -586,7 +585,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.calendar_today),
-                                  labelText: "End Date",
+                                  labelText: "End Date".tr(),
                                   border: OutlineInputBorder(),
                                 ),
                                 child: Text(
@@ -594,7 +593,7 @@ class _EducationalAdd extends State<EducationalAdd> {
                                       ? DateFormat(
                                           'dd MMMM yyyy',
                                         ).format(endDate!)
-                                      : "Pilih tanggal",
+                                      : "Pilih tanggal".tr(),
                                 ),
                               ),
                             ),
@@ -625,8 +624,8 @@ class _EducationalAdd extends State<EducationalAdd> {
                                       context,
                                     ).colorScheme.primary,
                                   ),
-                                  label: const Text(
-                                    'Submit',
+                                  label: Text(
+                                    'Submit'.tr(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),

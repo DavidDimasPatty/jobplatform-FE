@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/models/organizationRequest.dart';
@@ -9,11 +9,9 @@ import 'package:job_platform/features/components/profile/data/models/skillModel.
 import 'package:job_platform/features/components/profile/domain/entities/OrganizationMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
-
 import 'package:job_platform/features/components/profile/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:select2dot1/select2dot1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class OrganizationEdit extends StatefulWidget {
@@ -35,7 +33,6 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   final _namaController = TextEditingController();
   final _jabatanController = TextEditingController();
   final _deskripsiController = TextEditingController();
-  final _emailController = TextEditingController();
   late SelectDataController _selectSkillController;
 
   // Global key
@@ -128,7 +125,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         // Always add "Add new skill" option
         skillItem.add(
           SingleItemCategoryModel(
-            nameSingleItem: "+ Add new skill",
+            nameSingleItem: "+ Add new skill".tr(),
             value: "add_new_skill", // Special identifier
           ),
         );
@@ -159,7 +156,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get skill data. Please try again.'),
+          content: Text('Failed to get skill data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -181,7 +178,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences");
+        if (idUser == null) throw Exception("User ID not found in preferences".tr());
 
         // Map selected skills to SkillModel list
         late List<SkillModel> skill;
@@ -214,13 +211,13 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Organization editted successfully!')),
+            SnackBar(content: Text('Organization editted successfully!'.tr())),
           );
           context.go('/profile');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit organization. Please try again.'),
+              content: Text('Failed to edit organization. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -231,7 +228,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit organization. Please try again.'),
+            content: Text('Failed to edit organization. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -255,13 +252,13 @@ class _OrganizationEdit extends State<OrganizationEdit> {
 
       if (response.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Organization deleted successfully!')),
+          SnackBar(content: Text('Organization deleted successfully!'.tr())),
         );
         context.go('/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete organization. Please try again.'),
+            content: Text('Failed to delete organization. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -269,7 +266,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to delete organization. Please try again.'),
+          content: Text('Failed to delete organization. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -283,13 +280,13 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading organization...'),
+            Text('Loading organization...'.tr()),
           ],
         ),
       );
@@ -326,7 +323,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                         children: [
                           SizedBox(
                             child: Text(
-                              "Edit Organization",
+                              "Edit Organization".tr(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.blue,
@@ -343,8 +340,8 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                               readOnly: true,
                               controller: _namaController,
                               decoration: InputDecoration(
-                                labelText: 'Nama Organisasi',
-                                hintText: 'Masukan Nama Organisasi',
+                                labelText: 'Nama Organisasi'.tr(),
+                                hintText: 'Masukan Nama Organisasi'.tr(),
                                 prefixIcon: Icon(Icons.text_fields),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -355,7 +352,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -366,8 +363,8 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                             child: TextFormField(
                               controller: _jabatanController,
                               decoration: InputDecoration(
-                                labelText: 'Jabatan',
-                                hintText: 'Masukan Jabatan',
+                                labelText: 'Jabatan'.tr(),
+                                hintText: 'Masukan Jabatan'.tr(),
                                 prefixIcon: Icon(Icons.info),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
@@ -378,7 +375,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                               // initialValue: email,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -389,8 +386,8 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                             child: TextFormField(
                               controller: _deskripsiController,
                               decoration: InputDecoration(
-                                labelText: 'Deskripsi Pekerjaan',
-                                hintText: 'Masukan Deskripsi Pekerjaan',
+                                labelText: 'Deskripsi Pekerjaan'.tr(),
+                                hintText: 'Masukan Deskripsi Pekerjaan'.tr(),
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.description),
                                 contentPadding: EdgeInsets.symmetric(
@@ -403,7 +400,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                               maxLines: 5,
                               validator: (value) =>
                                   value == null || value.isEmpty
-                                  ? 'Wajib diisi'
+                                  ? 'Wajib diisi'.tr()
                                   : null,
                             ),
                           ),
@@ -413,8 +410,8 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                             margin: EdgeInsets.symmetric(vertical: 20),
                             child: Select2dot1(
                               key: ValueKey('skill_select'),
-                              pillboxTitleSettings: const PillboxTitleSettings(
-                                title: 'Skill',
+                              pillboxTitleSettings: PillboxTitleSettings(
+                                title: 'Skill'.tr(),
                               ),
                               selectDataController: _selectSkillController,
                             ),
@@ -425,7 +422,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                             child: InputDecorator(
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.calendar_today),
-                                labelText: "Start Date",
+                                labelText: "Start Date".tr(),
                                 border: OutlineInputBorder(),
                               ),
                               child: Text(
@@ -433,7 +430,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                     ? DateFormat(
                                         'dd MMMM yyyy',
                                       ).format(startDate!)
-                                    : "Pilih tanggal",
+                                    : "Pilih tanggal".tr(),
                               ),
                             ),
                           ),
@@ -450,7 +447,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                   });
                                 },
                               ),
-                              Text('Still Active?'),
+                              Text('Still Active?'.tr()),
                             ],
                           ),
                           if (!_stillActive)
@@ -461,7 +458,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                               child: InputDecorator(
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.calendar_today),
-                                  labelText: "End Date",
+                                  labelText: "End Date".tr(),
                                   border: OutlineInputBorder(),
                                 ),
                                 child: Text(
@@ -469,7 +466,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                       ? DateFormat(
                                           'dd MMMM yyyy',
                                         ).format(endDate!)
-                                      : "Pilih tanggal",
+                                      : "Pilih tanggal".tr(),
                                 ),
                               ),
                             ),
@@ -481,7 +478,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                               TextButton.icon(
                                 onPressed: _showSimpleDeleteConfirmation,
                                 label: Text(
-                                  'Delete',
+                                  'Delete'.tr(),
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 style: TextButton.styleFrom(
@@ -507,8 +504,8 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                                       context,
                                     ).colorScheme.primary,
                                   ),
-                                  label: const Text(
-                                    'Submit',
+                                  label: Text(
+                                    'Submit'.tr(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -535,7 +532,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Delete Organization',
+            'Delete Organization'.tr(),
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
           content: Container(
@@ -558,7 +555,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Are you sure you want to delete this organization?',
+                  'Are you sure you want to delete this organization?'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
@@ -598,7 +595,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  '⚠️ This action is permanent and cannot be undone.',
+                  '⚠️ This action is permanent and cannot be undone.'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.red,
@@ -618,7 +615,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                 Navigator.of(context).pop();
               },
               icon: Icon(Icons.close, size: 16),
-              label: Text('Cancel'),
+              label: Text('Cancel'.tr()),
               style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
             ),
             ElevatedButton.icon(
@@ -627,7 +624,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                 _handleDeleteOrganization();
               },
               icon: Icon(Icons.delete, size: 16),
-              label: Text('Delete'),
+              label: Text('Delete'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Theme.of(context).colorScheme.primary,

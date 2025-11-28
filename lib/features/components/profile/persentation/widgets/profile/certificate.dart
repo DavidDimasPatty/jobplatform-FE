@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/CertificateMV.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +32,7 @@ class Certificate extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Certifications",
+                "Certifications".tr(),
                 style: TextStyle(
                   fontSize: 15,
                   letterSpacing: 1,
@@ -52,7 +53,7 @@ class Certificate extends StatelessWidget {
                   ).colorScheme.primary, // Icon/text color
                 ),
                 icon: Icon(Icons.add),
-                label: Text("Add"),
+                label: Text("Add".tr()),
               ),
             ],
           ),
@@ -63,7 +64,7 @@ class Certificate extends StatelessWidget {
               title: cert.certificate.nama,
               description: cert.certificate.publisher,
               dateRange: (cert.expiredDate == null)
-                  ? "${DateFormat('MMM yyyy').format(cert.publishDate)} - Present"
+                  ? "${DateFormat('MMM yyyy').format(cert.publishDate)} - ${"Present".tr()}"
                   : "${DateFormat('MMM yyyy').format(cert.publishDate)} - ${DateFormat('MMM yyyy').format(cert.expiredDate ?? DateTime.now())}",
               onPressed: () => onEditPressed(cert),
             ),
