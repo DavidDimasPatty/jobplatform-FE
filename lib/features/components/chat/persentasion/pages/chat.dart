@@ -1,7 +1,6 @@
 import 'dart:async';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/chat/domain/usecases/chat_usecase.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatBody.dart';
@@ -108,13 +107,13 @@ class _Chat extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Chat List...'),
+            Text('Loading Chat List...'.tr()),
           ],
         ),
       );

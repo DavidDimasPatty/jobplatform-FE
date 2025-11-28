@@ -1,9 +1,8 @@
 import 'dart:async';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/network/websocket_client.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
@@ -126,7 +125,7 @@ class _ChatDetailState extends State<ChatDetail> {
       // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to get messages data. Please try again.'),
+          content: Text('Failed to get messages data. Please try again.'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -288,7 +287,7 @@ class _ChatDetailState extends State<ChatDetail> {
         final updatedMessage = TextMessage(
           id: messageToDeleted.id,
           authorId: messageToDeleted.authorId,
-          text: "[This message has been deleted]",
+          text: "[This message has been deleted]".tr(),
           createdAt: messageToDeleted.createdAt,
           metadata: {
             'backendId': messageToDeleted.id,
@@ -328,7 +327,7 @@ class _ChatDetailState extends State<ChatDetail> {
             return TextMessage(
               id: item.id,
               authorId: item.addId,
-              text: "[This message has been deleted]",
+              text: "[This message has been deleted]".tr(),
               createdAt: item.addTime,
               metadata: {
                 'backendId': item.id,
@@ -470,16 +469,16 @@ class _ChatDetailState extends State<ChatDetail> {
     showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Message'),
-        content: const Text('Are you sure you want to delete this message?'),
+        title: Text('Delete Message'.tr()),
+        content: Text('Are you sure you want to delete this message?'.tr()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text('Delete'.tr(), style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -496,7 +495,7 @@ class _ChatDetailState extends State<ChatDetail> {
           final updatedMessage = TextMessage(
             id: message.id,
             authorId: message.authorId,
-            text: "[This message has been deleted]",
+            text: "[This message has been deleted]".tr(),
             createdAt: message.createdAt,
             metadata: {
               'backendId': message.metadata != null
@@ -514,7 +513,7 @@ class _ChatDetailState extends State<ChatDetail> {
           _chatController.updateMessage(message, updatedMessage);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to delete message')),
+            SnackBar(content: Text('Failed to delete message'.tr())),
           );
         }
       } catch (e) {
@@ -529,13 +528,13 @@ class _ChatDetailState extends State<ChatDetail> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading chat history...'),
+            Text('Loading chat history...'.tr()),
           ],
         ),
       );
@@ -694,7 +693,7 @@ class _ChatDetailState extends State<ChatDetail> {
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 selectEmptyInfoSettings: SelectEmptyInfoSettings(
-                  text: "Select a message...",
+                  text: "Select a message...".tr(),
                 ),
                 // dropdownOverlaySettings:
                 //     DropdownOverlaySettings(

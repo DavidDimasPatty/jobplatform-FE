@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/chat/persentasion/widget/chat/chatItems.dart';
 
@@ -44,7 +45,7 @@ class _Chatbody extends State<Chatbody> {
           Container(
             margin: EdgeInsets.only(left: 20, top: 20),
             child: Text(
-              "Chats",
+              "Chats".tr(),
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
@@ -56,8 +57,8 @@ class _Chatbody extends State<Chatbody> {
               onChanged: (value) => widget.onSearchChanged(),
               controller: widget.searchController,
               decoration: InputDecoration(
-                labelText: 'Cari Chat',
-                hintText: 'Masukan Chat',
+                labelText: 'Cari Chat'.tr(),
+                hintText: 'Masukan Chat'.tr(),
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),
@@ -70,7 +71,7 @@ class _Chatbody extends State<Chatbody> {
               ),
               // initialValue: email,
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  value == null || value.isEmpty ? 'Wajib diisi'.tr() : null,
             ),
           ),
           ListView.separated(

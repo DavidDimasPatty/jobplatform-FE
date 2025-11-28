@@ -363,6 +363,16 @@
     "Failed to edit profile privacy. Please try again.": "Gagal mengedit privasi profil. Silakan coba lagi.",
     "Private Profile": "Profil Pribadi",
     "Konfigurasi Account": "Konfigurasi Akun",
+    "Available": "Tersedia",
 
-    "Available": "Tersedia"
+    "Chats": "Chats",
+    "Loading Chat List...": "Memuat Daftar Obrolan...",
+    "Cari Chat": "Cari Chat",
+    "Masukan Chat": "Masukan Chat",
+    "Loading chat history...": "Memuat riwayat obrolan...",
+    "Failed to get messages data. Please try again.": "Gagal mendapatkan data pesan. Silakan coba lagi.",
+    "[This message has been deleted]": "[Pesan ini telah dihapus]",
+    "Delete Message": "Hapus Pesan",
+    "Are you sure you want to delete this message?": "Apakah Anda yakin ingin menghapus pesan ini?",
+    "Select a message...": "Pilih pesan..."
 }
