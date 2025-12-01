@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/careerPreferenceCandidate.dart';
@@ -124,7 +125,7 @@ class _Candidatedetail extends State<Candidatedetail> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry')),
+            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry'.tr())),
           ],
         ),
       );
@@ -298,7 +299,7 @@ class _Candidatedetail extends State<Candidatedetail> {
                                   // ),
                                 ),
                                 icon: Icon(Icons.shopping_cart),
-                                label: Text("Add To Cart"),
+                                label: Text("Add To Cart".tr()),
                               ),
                             ),
                             Flexible(
@@ -325,7 +326,7 @@ class _Candidatedetail extends State<Candidatedetail> {
                                   // ),
                                 ),
                                 icon: Icon(Icons.favorite),
-                                label: Text("Add To Favorites"),
+                                label: Text("Add To Favorites".tr()),
                               ),
                             ),
                           ],
@@ -342,7 +343,7 @@ class _Candidatedetail extends State<Candidatedetail> {
                               child: DropdownButtonFormField<String>(
                                 initialValue: lowonganSelected,
                                 isExpanded: true,
-                                hint: Text("Pilih Lowongan Anda"),
+                                hint: Text("Pilih Lowongan Anda".tr()),
                                 items: lowongan.map((item) {
                                   return DropdownMenuItem<String>(
                                     value: item,
@@ -404,7 +405,7 @@ class _Candidatedetail extends State<Candidatedetail> {
                                   // ),
                                 ),
                                 icon: Icon(Icons.check),
-                                label: Text("Submit"),
+                                label: Text("Submit".tr()),
                               ),
                             ),
                           ],

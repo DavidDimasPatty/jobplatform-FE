@@ -374,5 +374,17 @@
     "[This message has been deleted]": "[This message has been deleted]",
     "Delete Message": "Delete Message",
     "Are you sure you want to delete this message?": "Are you sure you want to delete this message?",
-    "Select a message...": "Select a message..."
+    "Select a message...": "Select a message...",
+
+    "Filter by Position": "Filter by Position",
+    "All": "All",
+    "Tipe Kerja": "Work Type",
+    "Range Gaji": "Salary Range",
+    "Apply": "Apply",
+    "Loading Candidate data...": "Loading Candicate data...",
+    "Add To Cart": "Add to Cart",
+    "Add To Favorites": "Add to Favorite",
+    "Pilih Lowongan Anda": "Select Your Vacancies",
+    "Unknown": "Unknown",
+    "Cari Candicate": "Search Candicate"
 }

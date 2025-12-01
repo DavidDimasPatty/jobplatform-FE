@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class Candidateheader extends StatefulWidget {
@@ -26,7 +27,7 @@ class _Candidateheader extends State<Candidateheader> {
           Container(
             margin: EdgeInsets.all(10),
             child: Text(
-              "Cari Candidate",
+              "Cari Candidate".tr(),
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
           ),
@@ -37,7 +38,7 @@ class _Candidateheader extends State<Candidateheader> {
                   controller: widget.searchController,
                   onChanged: widget.onSearchChanged,
                   decoration: InputDecoration(
-                    hintText: "Search candidates...",
+                    hintText: "Search candidates...".tr(),
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),

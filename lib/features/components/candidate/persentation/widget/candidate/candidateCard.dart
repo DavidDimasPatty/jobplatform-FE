@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
@@ -81,7 +82,7 @@ class _Candidatecard extends State<Candidatecard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    widget.item.role ?? "Unknown",
+                    widget.item.role ?? "Unknown".tr(),
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black,
@@ -110,7 +111,7 @@ class _Candidatecard extends State<Candidatecard> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    widget.item.domisili ?? "Unknown",
+                    widget.item.domisili ?? "Unknown".tr(),
                     style: TextStyle(fontSize: 14, color: Colors.black54),
                     textAlign: TextAlign.start,
                     maxLines: 2,

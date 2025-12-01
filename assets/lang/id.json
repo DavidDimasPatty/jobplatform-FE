@@ -374,5 +374,17 @@
     "[This message has been deleted]": "[Pesan ini telah dihapus]",
     "Delete Message": "Hapus Pesan",
     "Are you sure you want to delete this message?": "Apakah Anda yakin ingin menghapus pesan ini?",
-    "Select a message...": "Pilih pesan..."
+    "Select a message...": "Pilih pesan...",
+
+    "Filter by Position": "Filter berdasarkan Posisi",
+    "All": "Semua",
+    "Tipe Kerja": "Tipe Kerja",
+    "Range Gaji": "Range Gaji",
+    "Apply": "Terapkan",
+    "Loading Candidate data...": "Memuat data kandidat...",
+    "Add To Cart": "Tambah ke Keranjang",
+    "Add To Favorites": "Tambah ke Favorit",
+    "Pilih Lowongan Anda": "Pilih Lowongan Anda",
+    "Unknown": "Tidak Diketahui",
+    "Cari Candicate": "Cari Kandidat"
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:intl/intl.dart';
@@ -18,25 +19,25 @@ class CareerPreferenceCandidate extends StatelessWidget {
   Map<String, String> get careerDescriptions => {
     "Salary Expectation": dataPreferences.isNotEmpty
         ? "${NumberFormat('#,###').format(dataPreferences[0].gajiMin)} - ${NumberFormat('#,###').format(dataPreferences[0].gajiMax)}"
-        : "Not specified",
+        : "Not specified".tr(),
     "Position": dataPreferences.isNotEmpty
-        ? dataPreferences[0].posisi ?? "Not specified"
-        : "Not specified",
+        ? dataPreferences[0].posisi ?? "Not specified".tr()
+        : "Not specified".tr(),
     "Job Type": dataPreferences.isNotEmpty
-        ? dataPreferences[0].tipePekerjaan ?? "Not specified"
-        : "Not specified",
+        ? dataPreferences[0].tipePekerjaan ?? "Not specified".tr()
+        : "Not specified".tr(),
     "Work System": dataPreferences.isNotEmpty
-        ? dataPreferences[0].sistemKerja ?? "Not specified"
-        : "Not specified",
+        ? dataPreferences[0].sistemKerja ?? "Not specified".tr()
+        : "Not specified".tr(),
     "Location": dataPreferences.isNotEmpty
-        ? dataPreferences[0].lokasi ?? "Not specified"
-        : "Not specified",
+        ? dataPreferences[0].lokasi ?? "Not specified".tr()
+        : "Not specified".tr(),
     "Career Level": dataPreferences.isNotEmpty
-        ? dataPreferences[0].levelJabatan ?? "Not specified"
-        : "Not specified",
+        ? dataPreferences[0].levelJabatan ?? "Not specified".tr()
+        : "Not specified".tr(),
     "Availability": dataPreferences.isNotEmpty
         ? "${DateFormat('dd/MM/yyyy').format(dataPreferences[0].dateWork ?? DateTime.now())}"
-        : "Not specified",
+        : "Not specified".tr(),
   };
 
   // Map to store icon preferences for each career preference key
@@ -65,7 +66,7 @@ class CareerPreferenceCandidate extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Career Preferences",
+                "Career Preferences".tr(),
                 style: TextStyle(
                   fontSize: 15,
                   letterSpacing: 1,

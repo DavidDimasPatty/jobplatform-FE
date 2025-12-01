@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/profile/domain/entities/SkillMV.dart';
 
@@ -41,7 +42,7 @@ class _SkillStateCandidate extends State<SkillCandidate> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Skills",
+                "Skills".tr(),
                 style: TextStyle(
                   fontSize: 15,
                   letterSpacing: 1,
