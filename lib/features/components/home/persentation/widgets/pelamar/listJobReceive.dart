@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/data/models/TawaranPekerjaan.dart';
 
 class Listjobreceive extends StatefulWidget {
@@ -12,6 +13,23 @@ class Listjobreceive extends StatefulWidget {
 
 class _Listjobreceive extends State<Listjobreceive> {
   final _searchController = TextEditingController();
+
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,7 +58,7 @@ class _Listjobreceive extends State<Listjobreceive> {
             child: Center(
               child: Text(
                 "Daftar Tawaran Pekerjaan".tr(),
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: header, color: Colors.white),
               ),
             ),
           ),
@@ -173,14 +191,14 @@ class _Listjobreceive extends State<Listjobreceive> {
                                         Text(
                                           data.namaPerusahaan!,
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: subHeader,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
                                           "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: body,
                                             color: Colors.grey[600],
                                           ),
                                         ),
@@ -262,14 +280,14 @@ class _Listjobreceive extends State<Listjobreceive> {
                                             Text(
                                               data.namaPerusahaan!,
                                               style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: subHeader,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
                                               style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: body,
                                                 color: Colors.grey[600],
                                               ),
                                             ),
@@ -357,14 +375,14 @@ class _Listjobreceive extends State<Listjobreceive> {
                                             Text(
                                               data.namaPerusahaan!,
                                               style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: subHeader,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
                                               style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: body,
                                                 color: Colors.grey[600],
                                               ),
                                             ),
@@ -447,14 +465,14 @@ class _Listjobreceive extends State<Listjobreceive> {
                                             Text(
                                               data.namaPerusahaan!,
                                               style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: subHeader,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
                                               style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: body,
                                                 color: Colors.grey[600],
                                               ),
                                             ),
@@ -541,14 +559,14 @@ class _Listjobreceive extends State<Listjobreceive> {
                                             Text(
                                               data.namaPerusahaan!,
                                               style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: subHeader,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               "${data.namaPosisi} - ${data.jabatan} - ${data.tipeKerja}",
                                               style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: body,
                                                 color: Colors.grey[600],
                                               ),
                                             ),

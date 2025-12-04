@@ -1,15 +1,34 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/hrListitem.dart';
 
 class hrList extends StatefulWidget {
-  List<hrListitem>? items;
+  final List<hrListitem>? items;
+
   hrList({super.key, this.items});
+
   @override
   State<hrList> createState() => _hrList();
 }
 
 class _hrList extends State<hrList> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +56,7 @@ class _hrList extends State<hrList> {
             child: Center(
               child: Text(
                 "HRD Terdaftar".tr(),
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: header, color: Colors.white),
               ),
             ),
           ),
@@ -66,7 +85,7 @@ class _hrList extends State<hrList> {
                     alignment: Alignment.center,
                     child: Text(
                       "Data Tidak Ditemukan..".tr(),
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: header),
                     ),
                   )),
           ),

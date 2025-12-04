@@ -1,10 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/company/vacancyTableItem.dart';
 
 class Vacancytable extends StatefulWidget {
   // final CandidateItems item;
-  List<Vacancytableitem>? items;
+  final List<Vacancytableitem>? items;
   Vacancytable({super.key, this.items});
+
   @override
   State<Vacancytable> createState() => _Vacancytable();
 }
@@ -12,6 +15,22 @@ class Vacancytable extends StatefulWidget {
 class _Vacancytable extends State<Vacancytable> {
   // final CandidateItems item;
   // _Listjobreceive(this.item);
+
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +58,8 @@ class _Vacancytable extends State<Vacancytable> {
             width: double.infinity,
             child: Center(
               child: Text(
-                "Lowongan Terbuka",
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                "Lowongan Terbuka".tr(),
+                style: TextStyle(fontSize: header, color: Colors.white),
               ),
             ),
           ),
@@ -68,8 +87,8 @@ class _Vacancytable extends State<Vacancytable> {
                     height: MediaQuery.of(context).size.height * 0.2,
                     alignment: Alignment.center,
                     child: Text(
-                      "Data Tidak Ditemukan..",
-                      style: TextStyle(fontSize: 20),
+                      "Data Tidak Ditemukan..".tr(),
+                      style: TextStyle(fontSize: header),
                     ),
                   )),
           ),

@@ -1,7 +1,6 @@
 import 'dart:async';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/notification/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/notification/data/models/notificationRequest.dart';
@@ -11,7 +10,6 @@ import 'package:job_platform/features/components/notification/domain/usecases/no
 import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailBody.dart';
 import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailItems.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationDetail extends StatefulWidget {
   NotificationDetail({super.key});
@@ -172,13 +170,13 @@ class _NotificationDetail extends State<NotificationDetail> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading notification data...'),
+            Text('Loading notification data...'.tr()),
           ],
         ),
       );

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/data/models/ProsesPerekrutan.dart';
 
 class Graph1 extends StatefulWidget {
@@ -13,10 +14,20 @@ class Graph1 extends StatefulWidget {
 
 class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
 
   @override
   void initState() {
     super.initState();
+    _initializeFontSize();
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -35,35 +46,35 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
     return [
       PieChartSectionData(
         color: Colors.blue,
-        value: (widget!.item!.rekrutDiterima!.toDouble() / totalData) * 100,
+        value: (widget.item!.rekrutDiterima!.toDouble() / totalData) * 100,
         title:
-            "${((widget!.item!.rekrutDiterima!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
+            "${((widget.item!.rekrutDiterima!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
-        titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        titleStyle: TextStyle(fontSize: header, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.red,
-        value: (widget!.item!.rekrutDitolak!.toDouble() / totalData) * 100,
+        value: (widget.item!.rekrutDitolak!.toDouble() / totalData) * 100,
         title:
-            "${((widget!.item!.rekrutDitolak!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
+            "${((widget.item!.rekrutDitolak!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
-        titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        titleStyle: TextStyle(fontSize: header, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.green,
-        value: (widget!.item!.rekrutBerhasil!.toDouble() / totalData) * 100,
+        value: (widget.item!.rekrutBerhasil!.toDouble() / totalData) * 100,
         title:
-            "${((widget!.item!.rekrutBerhasil!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
+            "${((widget.item!.rekrutBerhasil!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
-        titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        titleStyle: TextStyle(fontSize: header, fontWeight: FontWeight.bold),
       ),
       PieChartSectionData(
         color: Colors.orange,
-        value: (widget!.item!.rekrutPending!.toDouble() / totalData) * 100,
+        value: (widget.item!.rekrutPending!.toDouble() / totalData) * 100,
         title:
-            "${((widget!.item!.rekrutPending!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
+            "${((widget.item!.rekrutPending!.toDouble() / totalData) * 100).toStringAsFixed(2)}%",
         radius: 50,
-        titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        titleStyle: TextStyle(fontSize: header, fontWeight: FontWeight.bold),
       ),
     ];
   }
@@ -140,7 +151,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                             "Proses Rekrut diterima".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: body),
                           ),
                         ),
                       ],
@@ -163,7 +174,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                             "Proses rekrut ditolak".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: body),
                           ),
                         ),
                       ],
@@ -186,7 +197,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                             "Proses rekrut berhasil".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: body),
                           ),
                         ),
                       ],
@@ -209,7 +220,7 @@ class _Graph1 extends State<Graph1> with SingleTickerProviderStateMixin {
                             "Proses rekrut pending".tr(),
                             softWrap: true,
                             overflow: TextOverflow.visible,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: body),
                           ),
                         ),
                       ],

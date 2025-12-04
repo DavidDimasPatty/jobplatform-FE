@@ -10,10 +10,11 @@ import 'package:job_platform/features/components/home/persentation/widgets/compa
 import 'package:responsive_framework/responsive_framework.dart';
 
 class HomepageCompanybody extends StatefulWidget {
-  List<Vacancytableitem>? items;
-  List<hrListitem>? itemsHr;
-  ProsesPerekrutan? dataPerekrutan;
-  ProsesPelamaran? dataPelamaran;
+  final List<Vacancytableitem>? items;
+  final List<hrListitem>? itemsHr;
+  final ProsesPerekrutan? dataPerekrutan;
+  final ProsesPelamaran? dataPelamaran;
+  
   HomepageCompanybody({
     super.key,
     this.items,

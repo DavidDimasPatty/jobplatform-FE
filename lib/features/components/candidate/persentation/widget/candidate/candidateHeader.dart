@@ -2,9 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class Candidateheader extends StatefulWidget {
-  ValueChanged<String> onSearchChanged;
-  VoidCallback onFilterTap;
-  TextEditingController searchController;
+  final ValueChanged<String> onSearchChanged;
+  final VoidCallback onFilterTap;
+  final TextEditingController searchController;
+  
   Candidateheader({
     super.key,
     required this.searchController,
@@ -19,7 +20,6 @@ class Candidateheader extends StatefulWidget {
 class _Candidateheader extends State<Candidateheader> {
   @override
   Widget build(BuildContext context) {
-    var mediaQueryHeight = MediaQuery.of(context).size.height;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(

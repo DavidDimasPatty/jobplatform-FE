@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 
 class Notificationitem extends StatefulWidget {
   final IconData icon;
@@ -26,6 +27,22 @@ class Notificationitem extends StatefulWidget {
 }
 
 class _Notificationitem extends State<Notificationitem> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initialize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -46,7 +63,7 @@ class _Notificationitem extends State<Notificationitem> {
 
           title: Text(
             widget.title,
-            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: header),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -55,7 +72,7 @@ class _Notificationitem extends State<Notificationitem> {
               widget.subtitle,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
-                fontSize: 12,
+                fontSize: body,
               ),
             ),
           ),

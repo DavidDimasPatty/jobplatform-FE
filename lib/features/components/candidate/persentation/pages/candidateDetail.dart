@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/careerPreferenceCandidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/certificateCandidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidateDetail/educationCandidate.dart';
@@ -44,9 +45,20 @@ class _Candidatedetail extends State<Candidatedetail> {
   // Usecase
   late ProfileUsecase _profileUseCase;
 
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
   @override
   void initState() {
     super.initState();
+    _initializeFontSize();
     _initializeUseCase();
     _loadProfileData();
   }
@@ -349,13 +361,13 @@ class _Candidatedetail extends State<Candidatedetail> {
                                     value: item,
                                     child: Text(
                                       item,
-                                      style: const TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: subHeader),
                                     ),
                                     // const SizedBox(width: 4),
                                     // Flexible(
                                     //   child: Text(
                                     //     country.code,
-                                    //     style: const TextStyle(fontSize: 14),
+                                    //     style: TextStyle(fontSize: body),
                                     //     overflow: TextOverflow.ellipsis,
                                     //   ),
                                     // ),
@@ -363,7 +375,7 @@ class _Candidatedetail extends State<Candidatedetail> {
                                     // Flexible(
                                     //   child: Text(
                                     //     country.dialCode,
-                                    //     style: const TextStyle(fontSize: 14),
+                                    //     style: TextStyle(fontSize: body),
                                     //     overflow: TextOverflow.ellipsis,
                                     //   ),
                                     // ),

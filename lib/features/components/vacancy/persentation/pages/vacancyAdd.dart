@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/vacancy/data/datasources/aut_remote_datasource.dart';
@@ -9,7 +8,6 @@ import 'package:job_platform/features/components/vacancy/domain/usecases/vacancy
 import 'package:job_platform/features/components/vacancy/data/models/vacancyRequest.dart';
 import 'package:job_platform/features/components/vacancy/data/models/vacancyResponse.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class Vacancyadd extends StatefulWidget {

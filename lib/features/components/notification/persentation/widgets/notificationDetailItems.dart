@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 
 class NotificationDetailitems extends StatefulWidget {
   final IconData icon;
@@ -8,8 +10,8 @@ class NotificationDetailitems extends StatefulWidget {
   final Color bgColor;
   final Color iconColor;
   final String about;
-  String? route;
-  bool isRead;
+  final String? route;
+  final bool isRead;
 
   NotificationDetailitems({
     super.key,
@@ -28,6 +30,22 @@ class NotificationDetailitems extends StatefulWidget {
 }
 
 class _NotificationDetailitems extends State<NotificationDetailitems> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -48,7 +66,7 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
 
           title: Text(
             widget.title,
-            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: header),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -65,8 +83,8 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
                         children: [
                           Text(
                             widget.subtitle,
-                            style: const TextStyle(
-                              fontSize: 16,
+                            style: TextStyle(
+                              fontSize: subHeader,
                               fontWeight: FontWeight.normal,
                               color: Colors.black87,
                             ),
@@ -86,7 +104,7 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
                                   ),
                                 ),
                                 onPressed: () {},
-                                label: const Text("Accept"),
+                                label: Text("Accept".tr()),
                                 icon: const Icon(Icons.check),
                               ),
                               ElevatedButton.icon(
@@ -100,7 +118,7 @@ class _NotificationDetailitems extends State<NotificationDetailitems> {
                                   ),
                                 ),
                                 onPressed: () {},
-                                label: const Text("Reject"),
+                                label: Text("Reject".tr()),
                                 icon: const Icon(Icons.close),
                               ),
                             ],

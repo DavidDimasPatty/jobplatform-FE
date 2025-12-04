@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidate/candidateBody.dart';
 import 'package:job_platform/features/components/candidate/persentation/widget/candidate/candidateHeader.dart';
@@ -37,6 +38,17 @@ class _Candidate extends State<Candidate> {
   // Loading state
   bool isLoading = true;
   String? errorMessage;
+
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
   Future<void> _loadProfileData() async {
     try {
       // setState(() {
@@ -277,7 +289,7 @@ class _Candidate extends State<Candidate> {
                       Text(
                         "Filter by Position".tr(),
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: header,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -316,7 +328,7 @@ class _Candidate extends State<Candidate> {
                       Text(
                         "Sistem Kerja".tr(),
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: header,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -363,7 +375,7 @@ class _Candidate extends State<Candidate> {
                       Text(
                         "Tipe Kerja".tr(),
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: header,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -406,7 +418,7 @@ class _Candidate extends State<Candidate> {
                   ),
                   Text(
                     "Range Gaji".tr(),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: header, fontWeight: FontWeight.bold),
                   ),
                   Row(
                     children: [
@@ -526,6 +538,7 @@ class _Candidate extends State<Candidate> {
   @override
   void initState() {
     super.initState();
+    _initializeFontSize();
     _loadProfileData();
   }
 

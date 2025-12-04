@@ -1,12 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/shared/Notification/NotificationItem.dart';
 
 class Notificationbody extends StatefulWidget {
   // final CandidateItems item;
-  List<Notificationitem> data;
-  VoidCallback toggleNotification;
+  final List<Notificationitem> data;
+  final VoidCallback toggleNotification;
 
   Notificationbody({
     super.key,
@@ -23,9 +24,20 @@ class _Notificationbody extends State<Notificationbody>
   // final CandidateItems item;
   // _Listjobreceive(this.item);
 
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initialize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
   @override
   void initState() {
     super.initState();
+    _initialize();
   }
 
   @override
@@ -60,7 +72,7 @@ class _Notificationbody extends State<Notificationbody>
                         "Notification".tr(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: header,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
@@ -97,9 +109,9 @@ class _Notificationbody extends State<Notificationbody>
                         child: Text(
                           "See More Notifications".tr(),
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: body,
                           ),
                         ),
                       ),

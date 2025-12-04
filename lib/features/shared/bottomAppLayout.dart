@@ -19,8 +19,8 @@ class BottomApplayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentState = GoRouterState.of(context);
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.blueAccent,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(25),
           topRight: Radius.circular(25),

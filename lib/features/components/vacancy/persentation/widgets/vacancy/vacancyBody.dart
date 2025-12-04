@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_platform/features/components/vacancy/persentation/widgets/vacancy/vacancyItems.dart';
@@ -47,7 +48,7 @@ class _Vacancybody extends State<Vacancybody> {
             Container(
               margin: EdgeInsets.only(left: 20, top: 20),
               child: Text(
-                "Vacancies",
+                "Vacancies".tr(),
                 textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
@@ -65,8 +66,8 @@ class _Vacancybody extends State<Vacancybody> {
                       },
                       controller: widget.searchController,
                       decoration: InputDecoration(
-                        labelText: 'Cari Vacancy',
-                        hintText: 'Masukan Vacancy',
+                        labelText: 'Cari Vacancy'.tr(),
+                        hintText: 'Masukan Vacancy'.tr(),
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50),
@@ -79,7 +80,7 @@ class _Vacancybody extends State<Vacancybody> {
                       ),
                       // initialValue: email,
                       validator: (value) =>
-                          value == null || value.isEmpty ? 'Wajib diisi' : null,
+                          value == null || value.isEmpty ? 'Wajib diisi'.tr() : null,
                     ),
                   ),
                   ElevatedButton.icon(
@@ -93,7 +94,7 @@ class _Vacancybody extends State<Vacancybody> {
                     onPressed: () {
                       context.go("/vacancyAdd");
                     },
-                    label: const Text("Add"),
+                    label: Text("Add".tr()),
                     icon: const Icon(Icons.add),
                   ),
                 ],

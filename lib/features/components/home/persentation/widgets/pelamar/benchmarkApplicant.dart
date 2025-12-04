@@ -1,14 +1,34 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
 
 class Benchmarkapplicant extends StatefulWidget {
-  List<Benchmarkitem>? items;
+  final List<Benchmarkitem>? items;
+
   Benchmarkapplicant({super.key, this.items});
+
   @override
   State<Benchmarkapplicant> createState() => _Benchmarkapplicant();
 }
 
 class _Benchmarkapplicant extends State<Benchmarkapplicant> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,8 +55,8 @@ class _Benchmarkapplicant extends State<Benchmarkapplicant> {
             width: double.infinity,
             child: Center(
               child: Text(
-                "Benchmark Profile Serupa",
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                "Benchmark Profile Serupa".tr(),
+                style: TextStyle(fontSize: header, color: Colors.white),
               ),
             ),
           ),
@@ -64,8 +84,8 @@ class _Benchmarkapplicant extends State<Benchmarkapplicant> {
                     height: MediaQuery.of(context).size.height * 0.2,
                     alignment: Alignment.center,
                     child: Text(
-                      "Data Tidak Ditemukan..",
-                      style: TextStyle(fontSize: 20),
+                      "Data Tidak Ditemukan..".tr(),
+                      style: TextStyle(fontSize: header),
                     ),
                   )),
           ),

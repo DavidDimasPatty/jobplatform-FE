@@ -1,10 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/candidate/domain/entities/candidate.dart';
 
 class Candidatecard extends StatefulWidget {
   final CandidateItems item;
+
   Candidatecard({super.key, required this.item});
 
   @override
@@ -14,6 +16,23 @@ class Candidatecard extends StatefulWidget {
 class _Candidatecard extends State<Candidatecard> {
   final CandidateItems item;
   _Candidatecard(this.item);
+
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -41,9 +60,9 @@ class _Candidatecard extends State<Candidatecard> {
                     margin: EdgeInsets.all(10),
                     child: Text(
                       "${widget.item.nama != null ? widget.item.nama : ''} (${widget.item.umur != null ? widget.item.umur : ''})",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: subHeader,
                       ),
                       textAlign: TextAlign.start,
                       maxLines: 2,
@@ -84,7 +103,7 @@ class _Candidatecard extends State<Candidatecard> {
                   Text(
                     widget.item.role ?? "Unknown".tr(),
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: body,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -95,7 +114,7 @@ class _Candidatecard extends State<Candidatecard> {
                   Text(
                     "| 3 Tahun",
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: icon,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -105,14 +124,14 @@ class _Candidatecard extends State<Candidatecard> {
                   ),
                   Text(
                     "Remote | WFO",
-                    style: TextStyle(fontSize: 12, color: Colors.black54),
+                    style: TextStyle(fontSize: icon, color: Colors.black54),
                     textAlign: TextAlign.start,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     widget.item.domisili ?? "Unknown".tr(),
-                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                    style: TextStyle(fontSize: body, color: Colors.black54),
                     textAlign: TextAlign.start,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

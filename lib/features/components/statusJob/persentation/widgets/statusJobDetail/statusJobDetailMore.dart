@@ -1,44 +1,67 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/statusJob/domain/entities/statusDetailVM.dart';
 
-class statusJobDetailMore extends StatelessWidget {
+class statusJobDetailMore extends StatefulWidget {
   final StatusDetailVM? data;
   final String? status;
 
   statusJobDetailMore({super.key, this.data, this.status});
+
+  @override
+  State<statusJobDetailMore> createState() => _StatusJobDetailState();
+}
+
+class _StatusJobDetailState extends State<statusJobDetailMore> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+
   Map<String, String> get careerDescriptions => {
-    "Salary Expectation".tr(): data != null
-        ? data?.gajiMaxNego != null && data?.gajiMin != null
-              ? "${NumberFormat('#,###').format(data?.gajiMinNego)} - ${NumberFormat('#,###').format(data?.gajiMaxNego)}"
-              : "${NumberFormat('#,###').format(data?.gajiMin)} - ${NumberFormat('#,###').format(data?.gajiMax)}"
+    "Salary Expectation".tr(): widget.data != null
+        ? widget.data?.gajiMaxNego != null && widget.data?.gajiMin != null
+              ? "${NumberFormat('#,###').format(widget.data?.gajiMinNego)} - ${NumberFormat('#,###').format(widget.data?.gajiMaxNego)}"
+              : "${NumberFormat('#,###').format(widget.data?.gajiMin)} - ${NumberFormat('#,###').format(widget.data?.gajiMax)}"
         : "Not specified".tr(),
-    "Position".tr(): data != null
-        ? data?.namaPosisi ?? "Not specified".tr()
+    "Position".tr(): widget.data != null
+        ? widget.data?.namaPosisi ?? "Not specified".tr()
         : "Not specified".tr(),
-    "Job Type".tr(): data != null
-        ? data?.tipePekerjaanNego != null
-              ? data!.tipePekerjaanNego!
-              : data?.tipePekerjaan ?? "Not specified".tr()
+    "Job Type".tr(): widget.data != null
+        ? widget.data?.tipePekerjaanNego != null
+              ? widget.data!.tipePekerjaanNego!
+              : widget.data?.tipePekerjaan ?? "Not specified".tr()
         : "Not specified".tr(),
-    "Work System".tr(): data != null
-        ? data?.sistemKerjaNego != null
-              ? data!.sistemKerjaNego!
-              : data?.sistemKerja ?? "Not specified".tr()
+    "Work System".tr(): widget.data != null
+        ? widget.data?.sistemKerjaNego != null
+              ? widget.data!.sistemKerjaNego!
+              : widget.data?.sistemKerja ?? "Not specified".tr()
         : "Not specified".tr(),
-    "Location".tr(): data != null
-        ? data?.lokasiKerja ?? "Not specified".tr()
+    "Location".tr(): widget.data != null
+        ? widget.data?.lokasiKerja ?? "Not specified".tr()
         : "Not specified".tr(),
-    "Career Level".tr(): data != null
-        ? data?.jabatan ?? "Not specified".tr()
+    "Career Level".tr(): widget.data != null
+        ? widget.data?.jabatan ?? "Not specified".tr()
         : "Not specified".tr(),
-    "Min. Exprience".tr(): data != null
-        ? "${data?.minExperience.toString()} ${"Tahun".tr()}" ??
+    "Min. Exprience".tr(): widget.data != null
+        ? "${widget.data?.minExperience.toString()} ${"Tahun".tr()}" ??
               "Not specified".tr()
         : "Not specified".tr(),
-    "Skill Required": data != null && data?.skill != null
-        ? data!.skill!.map((x) => x.nama).join(", ")
+    "Skill Required": widget.data != null && widget.data?.skill != null
+        ? widget.data!.skill!.map((x) => x.nama).join(", ")
         : "Not specified".tr(),
   };
 
@@ -84,6 +107,8 @@ class statusJobDetailMore extends StatelessWidget {
               icon: careerIcons[entry.key] ?? Icons.work,
               title: entry.key,
               description: entry.value,
+              headerSize: header,
+              subtitleSize: body,
             ),
             SizedBox(height: 10),
           ],
@@ -97,11 +122,15 @@ class CareerPreferenceCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
+  final double? headerSize;
+  final double? subtitleSize;
 
   const CareerPreferenceCard({
     required this.icon,
     required this.title,
     required this.description,
+    required this.headerSize,
+    required this.subtitleSize,
     Key? key,
   }) : super(key: key);
 
@@ -133,12 +162,12 @@ class CareerPreferenceCard extends StatelessWidget {
                 SizedBox(height: 8),
                 Text(
                   title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: headerSize ?? 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 Text(
                   description,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: subtitleSize ?? 14, color: Colors.grey[600]),
                 ),
               ],
             ),

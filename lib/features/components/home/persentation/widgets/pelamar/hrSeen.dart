@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/home/data/models/KunjunganProfile.dart';
 
 class Hrseen extends StatefulWidget {
@@ -14,9 +15,20 @@ class Hrseen extends StatefulWidget {
 class _Hrseen extends State<Hrseen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
   @override
   void initState() {
     super.initState();
+    _initializeFontSize();
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -33,7 +45,7 @@ class _Hrseen extends State<Hrseen> with SingleTickerProviderStateMixin {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: subHeader, fontWeight: FontWeight.bold),
           ),
           Expanded(
             child: LineChart(
@@ -102,7 +114,7 @@ class _Hrseen extends State<Hrseen> with SingleTickerProviderStateMixin {
             child: Center(
               child: Text(
                 "Grafik Profile Dilihat".tr(),
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: header, color: Colors.white),
               ),
             ),
           ),

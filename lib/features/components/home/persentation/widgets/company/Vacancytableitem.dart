@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 
-class Vacancytableitem extends StatelessWidget {
+class Vacancytableitem extends StatefulWidget {
   final String? url;
   final List<String>? skill;
   final String? index;
@@ -15,6 +15,27 @@ class Vacancytableitem extends StatelessWidget {
     this.subtitle,
     this.skill,
   });
+
+  @override
+  State<Vacancytableitem> createState() => _VacancytableitemState();
+}
+
+class _VacancytableitemState extends State<Vacancytableitem> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +53,17 @@ class Vacancytableitem extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  (int.parse(index!) + 1).toString(),
+                  (int.parse(widget.index!) + 1).toString(),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
-                    fontSize: 20,
+                    fontSize: header,
                   ),
                 ),
               ),
             ),
           ),
-          title: Text(title),
-          subtitle: (subtitle != null
+          title: Text(widget.title),
+          subtitle: (widget.subtitle != null
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,9 +74,9 @@ class Vacancytableitem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            subtitle ?? "",
-                            style: const TextStyle(
-                              fontSize: 16,
+                            widget.subtitle ?? "",
+                            style: TextStyle(
+                              fontSize: subHeader,
                               fontWeight: FontWeight.normal,
                               color: Colors.black87,
                             ),

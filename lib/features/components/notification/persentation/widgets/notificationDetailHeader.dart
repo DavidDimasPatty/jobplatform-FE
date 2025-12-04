@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class NotificationDetailheader extends StatefulWidget {
-  ValueChanged<String> onSearchChanged;
-  VoidCallback onFilterTap;
-  TextEditingController searchController;
+  final ValueChanged<String> onSearchChanged;
+  final VoidCallback onFilterTap;
+  final TextEditingController searchController;
+
   NotificationDetailheader({
     super.key,
     required this.searchController,
@@ -25,7 +27,7 @@ class _NotificationDetailheader extends State<NotificationDetailheader> {
           Container(
             margin: EdgeInsets.all(10),
             child: Text(
-              "Cari Notification",
+              "Cari Notifications".tr(),
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
           ),
@@ -36,7 +38,7 @@ class _NotificationDetailheader extends State<NotificationDetailheader> {
                   controller: widget.searchController,
                   onChanged: widget.onSearchChanged,
                   decoration: InputDecoration(
-                    hintText: "Search notification...",
+                    hintText: "Search notification...".tr(),
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),

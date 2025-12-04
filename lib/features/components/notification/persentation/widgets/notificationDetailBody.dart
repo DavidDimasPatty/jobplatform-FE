@@ -1,10 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/notification/persentation/widgets/notificationDetailItems.dart';
 
 class NotificationDetailbody extends StatefulWidget {
   final List<NotificationDetailitems> items;
   final VoidCallback onSearchChanged;
-  TextEditingController searchController;
+  final TextEditingController searchController;
 
   NotificationDetailbody({
     super.key,
@@ -33,7 +34,7 @@ class _NotificationDetailbody extends State<NotificationDetailbody> {
           Container(
             margin: EdgeInsets.only(left: 20, top: 20),
             child: Text(
-              "Notifications",
+              "Notifications".tr(),
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
@@ -47,8 +48,8 @@ class _NotificationDetailbody extends State<NotificationDetailbody> {
               },
               controller: widget.searchController,
               decoration: InputDecoration(
-                labelText: 'Cari Notifications',
-                hintText: 'Cari Notifications',
+                labelText: 'Cari Notifications'.tr(),
+                hintText: 'Cari Notifications'.tr(),
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),
@@ -61,7 +62,7 @@ class _NotificationDetailbody extends State<NotificationDetailbody> {
               ),
               // initialValue: email,
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  value == null || value.isEmpty ? 'Wajib diisi'.tr() : null,
             ),
           ),
           ListView.separated(

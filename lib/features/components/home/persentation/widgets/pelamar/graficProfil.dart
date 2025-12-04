@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 
 class Graficprofil extends StatefulWidget {
   final double? profileComplete;
@@ -17,6 +18,22 @@ class Graficprofil extends StatefulWidget {
 }
 
 class _Graficprofil extends State<Graficprofil> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -74,9 +91,9 @@ class _Graficprofil extends State<Graficprofil> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "${widget.username}, ${"textProfileComplete".tr()}",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: subHeader,
                     ),
                     textAlign: TextAlign.start,
                     maxLines: null,
@@ -96,8 +113,8 @@ class _Graficprofil extends State<Graficprofil> {
                 Center(
                   child: Text(
                     "${"Kelengkapan Profile".tr()} : ${widget.profileComplete ?? 0}%",
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: body,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

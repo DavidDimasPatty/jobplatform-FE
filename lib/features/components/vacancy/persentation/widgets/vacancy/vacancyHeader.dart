@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class Vacancyheader extends StatefulWidget {
-  ValueChanged<String> onSearchChanged;
-  VoidCallback onFilterTap;
-  TextEditingController searchController;
+  final ValueChanged<String> onSearchChanged;
+  final VoidCallback onFilterTap;
+  final TextEditingController searchController;
+
   Vacancyheader({
     super.key,
     required this.searchController,
@@ -18,7 +20,6 @@ class Vacancyheader extends StatefulWidget {
 class _Vacancyheader extends State<Vacancyheader> {
   @override
   Widget build(BuildContext context) {
-    var mediaQueryHeight = MediaQuery.of(context).size.height;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
@@ -26,7 +27,7 @@ class _Vacancyheader extends State<Vacancyheader> {
           Container(
             margin: EdgeInsets.all(10),
             child: Text(
-              "Cari Candidate",
+              "Cari Candidate".tr(),
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
           ),
@@ -37,7 +38,7 @@ class _Vacancyheader extends State<Vacancyheader> {
                   controller: widget.searchController,
                   onChanged: widget.onSearchChanged,
                   decoration: InputDecoration(
-                    hintText: "Search candidates...",
+                    hintText: "Search candidates...".tr(),
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),

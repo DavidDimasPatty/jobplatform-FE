@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class Benchmarkitem extends StatelessWidget {
@@ -37,11 +38,11 @@ class Benchmarkitem extends StatelessWidget {
                     ),
             ),
           ),
-          title: Text(title ?? "Unknown"),
+          title: Text(title ?? "Unknown".tr()),
           subtitle: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(subtitle ?? "Unknown")],
+            children: [Text(subtitle ?? "Unknown".tr())],
           ),
         ),
       ),

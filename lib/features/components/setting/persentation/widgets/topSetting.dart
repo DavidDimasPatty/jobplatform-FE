@@ -124,7 +124,7 @@ class topSetting extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "${nama.isEmpty ? "Unknown" : nama}",
+                              "${nama.isEmpty ? "Unknown".tr() : nama}",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: mediaQueryHeight / 30,

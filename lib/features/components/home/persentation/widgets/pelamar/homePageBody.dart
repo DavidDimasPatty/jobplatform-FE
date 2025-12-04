@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/home/data/models/KunjunganProfile.dart';
-import 'package:job_platform/features/components/home/data/models/OpenVacancy.dart';
 import 'package:job_platform/features/components/home/data/models/TawaranPekerjaan.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkApplicant.dart';
 import 'package:job_platform/features/components/home/persentation/widgets/pelamar/benchmarkItem.dart';
@@ -12,14 +11,15 @@ import 'package:job_platform/features/components/home/persentation/widgets/pelam
 import 'package:responsive_framework/responsive_framework.dart';
 
 class Homepagebody extends StatefulWidget {
-  bool? isHRD;
-  List<Benchmarkitem>? items;
-  String? photoURL;
-  double? profileComplete;
-  String? username;
-  KunjunganProfile? dataKunjunganProfile;
-  List<OpenVacancyItem>? dataVacancies;
-  List<TawaranPekerjaan>? dataTawaranPekerjaan;
+  final bool? isHRD;
+  final List<Benchmarkitem>? items;
+  final String? photoURL;
+  final double? profileComplete;
+  final String? username;
+  final KunjunganProfile? dataKunjunganProfile;
+  final List<OpenVacancyItem>? dataVacancies;
+  final List<TawaranPekerjaan>? dataTawaranPekerjaan;
+
   Homepagebody({
     super.key,
     this.items,
@@ -37,7 +37,7 @@ class Homepagebody extends StatefulWidget {
 }
 
 class _Homepagebody extends State<Homepagebody> {
-  final _searchController = TextEditingController();
+  // final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

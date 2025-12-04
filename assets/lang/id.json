@@ -386,5 +386,23 @@
     "Add To Favorites": "Tambah ke Favorit",
     "Pilih Lowongan Anda": "Pilih Lowongan Anda",
     "Unknown": "Tidak Diketahui",
-    "Cari Candicate": "Cari Kandidat"
+    "Cari Candicate": "Cari Kandidat",
+
+    "Vacancies": "Lowongan",
+    "Cari Vacancy": "Cari Lowongan",
+    "Masukan Vacancy": "Masukkan Lowongan",
+    "Vacancy Perusahaan Anda": "Lowongan Perusahaan Anda",
+    "Data Vacancy Tidak Ditemukan": "Data Lowongan Tidak Ditemukan",
+
+    "Notifications": "Notifikasi",
+    "Loading notification data...": "Memuat Notifikasi...",
+    "Cari Notifications": "Cari Notifikasi",
+    "Search notification...": "Cari Notifikasi...",
+
+    "Benchmark Profile Serupa": "Profil Benchmark Serupa",
+    "Loading...": "Memuat...",
+
+    "Carts": "Keranjang",
+    "Masukan Candidate": "Masukkan Kandidat",
+    "See Profile": "Lihat Profil"
 }

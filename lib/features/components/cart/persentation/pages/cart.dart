@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/cart/persentation/widgets/cartBody.dart';
 import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
@@ -82,13 +83,13 @@ class _Cart extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Setting data...'),
+            Text('Loading...'.tr()),
           ],
         ),
       );

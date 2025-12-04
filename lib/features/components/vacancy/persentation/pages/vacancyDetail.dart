@@ -1,14 +1,36 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/vacancy/domain/entities/vacancyData.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class VacancyDetail extends StatelessWidget {
+class VacancyDetail extends StatefulWidget {
   final VacancyData data;
 
   const VacancyDetail({super.key, required this.data});
 
+  @override
+  State<VacancyDetail> createState() => _VacancyDetailState();
+}
+
+class _VacancyDetailState extends State<VacancyDetail> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -69,9 +91,9 @@ class VacancyDetail extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '${data.gajiMin} - ${data.gajiMax}',
-                              style: const TextStyle(
-                                fontSize: 14,
+                              '${widget.data.gajiMin} - ${widget.data.gajiMax}',
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),
@@ -86,9 +108,9 @@ class VacancyDetail extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '${data.namaPosisi}',
-                              style: const TextStyle(
-                                fontSize: 14,
+                              '${widget.data.namaPosisi}',
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),
@@ -106,9 +128,9 @@ class VacancyDetail extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '${data.tipeKerja}',
-                              style: const TextStyle(
-                                fontSize: 14,
+                              '${widget.data.tipeKerja}',
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),
@@ -126,9 +148,9 @@ class VacancyDetail extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '${data.sistemKerja}',
-                              style: const TextStyle(
-                                fontSize: 14,
+                              '${widget.data.sistemKerja}',
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),
@@ -146,9 +168,9 @@ class VacancyDetail extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '${data.lokasi}',
-                              style: const TextStyle(
-                                fontSize: 14,
+                              '${widget.data.lokasi}',
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),
@@ -166,9 +188,9 @@ class VacancyDetail extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '${data.jabatan}',
-                              style: const TextStyle(
-                                fontSize: 14,
+                              '${widget.data.jabatan}',
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),

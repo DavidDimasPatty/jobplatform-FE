@@ -1,7 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 
-class statusjobitems extends StatelessWidget {
+class statusjobitems extends StatefulWidget {
   final String? url;
   final String? namaPerusahaan;
   final String? posisi;
@@ -21,9 +22,30 @@ class statusjobitems extends StatelessWidget {
   });
 
   @override
+  State<statusjobitems> createState() => _StatusJobItemState();
+}
+
+class _StatusJobItemState extends State<statusjobitems> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -41,13 +63,13 @@ class statusjobitems extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: ListTile(
-            onTap: onTap,
+            onTap: widget.onTap,
             leading: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               child: ClipOval(
-                child: url!.isNotEmpty
+                child: widget.url!.isNotEmpty
                     ? Image.network(
-                        url!,
+                        widget.url!,
                         width: 40,
                         height: 40,
                         fit: BoxFit.cover,
@@ -64,7 +86,7 @@ class statusjobitems extends StatelessWidget {
                       ),
               ),
             ),
-            title: Text(namaPerusahaan ?? ""),
+            title: Text(widget.namaPerusahaan ?? ""),
             subtitle: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,17 +97,17 @@ class statusjobitems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${posisi ?? ''}',
+                        '${widget.posisi ?? ''}',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: subHeader,
                           fontWeight: FontWeight.normal,
                           color: Colors.black87,
                         ),
                       ),
                       Text(
-                        '${jabatan ?? ''} - ${tipeKerja ?? ''}',
+                        '${widget.jabatan ?? ''} - ${widget.tipeKerja ?? ''}',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: icon,
                           fontWeight: FontWeight.normal,
                           color: Colors.black54,
                         ),
@@ -96,20 +118,20 @@ class statusjobitems extends StatelessWidget {
               ],
             ),
             trailing: Text(
-              status ?? "",
+              widget.status ?? "",
               style: TextStyle(
-                color: status == "Review".tr()
+                color: widget.status == "Review".tr()
                     ? Colors.orange
-                    : status == "Interview".tr()
+                    : widget.status == "Interview".tr()
                     ? Colors.blue
-                    : status == "Offering".tr()
+                    : widget.status == "Offering".tr()
                     ? Colors.pink
-                    : status == "Menunggu Konfirmasi".tr()
+                    : widget.status == "Menunggu Konfirmasi".tr()
                     ? Colors.indigo
-                    : status == "Close".tr()
+                    : widget.status == "Close".tr()
                     ? Colors.green
                     : Colors.red,
-                fontSize: 17,
+                fontSize: subHeader,
               ),
             ),
           ),

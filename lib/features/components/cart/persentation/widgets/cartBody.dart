@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:job_platform/features/components/cart/persentation/widgets/cartItems.dart';
 
@@ -37,7 +38,7 @@ class _Cartbody extends State<Cartbody> {
           Container(
             margin: EdgeInsets.only(left: 20, top: 20),
             child: Text(
-              "Carts",
+              "Carts".tr(),
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
@@ -48,8 +49,8 @@ class _Cartbody extends State<Cartbody> {
             child: TextFormField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Cari Carts Candidate',
-                hintText: 'Masukan Chat',
+                labelText: 'Cari Candidate'.tr(),
+                hintText: 'Masukan Candidate'.tr(),
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50),
@@ -62,7 +63,7 @@ class _Cartbody extends State<Cartbody> {
               ),
               // initialValue: email,
               validator: (value) =>
-                  value == null || value.isEmpty ? 'Wajib diisi' : null,
+                  value == null || value.isEmpty ? 'Wajib diisi'.tr() : null,
             ),
           ),
           ListView.separated(
