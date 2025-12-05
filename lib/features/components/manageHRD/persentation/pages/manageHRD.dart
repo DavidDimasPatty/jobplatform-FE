@@ -1,21 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
-import 'package:job_platform/features/components/home/persentation/widgets/pelamar/listJobReceive.dart';
 import 'package:job_platform/features/components/manageHRD/data/datasources/aut_remote_datasource.dart'
     show AuthRemoteDataSource;
 import 'package:job_platform/features/components/manageHRD/data/models/GetAllHRDTransaction.dart';
 import 'package:job_platform/features/components/manageHRD/domain/entities/HRDDataVM.dart';
 import 'package:job_platform/features/components/manageHRD/domain/entities/ManageHRDResponse.dart';
-import 'package:job_platform/features/components/manageHRD/domain/repositories/auth_repository.dart';
 import 'package:job_platform/features/components/manageHRD/domain/usecases/manageHRD_usecase.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDBody.dart';
 import 'package:job_platform/features/components/manageHRD/persentation/widgets/manageHRD/manageHRDItems.dart';
 import 'package:job_platform/features/components/manageHRD/data/repositories/auth_repository_impl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Managehrd extends StatefulWidget {
   Managehrd({super.key});
@@ -27,16 +23,20 @@ class Managehrd extends StatefulWidget {
 class _Managehrd extends State<Managehrd> {
   List<Managehrditems> dataSub = [];
   List<Managehrditems> dumpSub = [];
+
   String searchQuery = "";
   bool isLoading = true;
   String? errorMessage;
+
   final _formKey = GlobalKey<FormState>();
+
   AuthRepositoryImpl? _repoManageHRD;
   AuthRemoteDataSource? _dataSourceHRD;
   ManagehrdUsecase? _hrdUseCase;
-  final _searchController = TextEditingController();
 
+  final _searchController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
   Future<void> _loadHRD() async {
     try {
       setState(() {
@@ -94,7 +94,7 @@ class _Managehrd extends State<Managehrd> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          title: const Text("Masukkan Email"),
+          title: Text("Masukkan Email".tr()),
           content: ConstrainedBox(
             constraints: BoxConstraints(minWidth: 500, maxWidth: 500),
             child: Form(
@@ -102,18 +102,18 @@ class _Managehrd extends State<Managehrd> {
               child: TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: "Email User Terdaftar....",
+                decoration: InputDecoration(
+                  labelText: "Email User Terdaftar....".tr(),
                   hintText: "contoh@email.com",
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Email tidak boleh kosong";
+                    return "Email tidak boleh kosong".tr();
                   }
                   final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                   if (!regex.hasMatch(value)) {
-                    return "Format email tidak valid";
+                    return "Format email tidak valid".tr();
                   }
                   return null;
                 },
@@ -123,7 +123,7 @@ class _Managehrd extends State<Managehrd> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text("Batal", style: TextStyle(color: Colors.blue)),
+              child: Text("Batal".tr(), style: TextStyle(color: Colors.blue)),
             ),
             ElevatedButton(
               style: ButtonStyle(
@@ -152,7 +152,7 @@ class _Managehrd extends State<Managehrd> {
                   // );
                 }
               },
-              child: Text("Submit", style: TextStyle(color: Colors.white)),
+              child: Text("Submit".tr(), style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -170,21 +170,21 @@ class _Managehrd extends State<Managehrd> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Text(title ?? 'Konfirmasi Hapus'),
+          title: Text(title ?? 'Konfirmasi Hapus'.tr()),
           content: Text(
-            content ?? 'Apakah Anda yakin ingin menghapus HRD ini?',
+            content ?? 'Apakah Anda yakin ingin menghapus HRD ini?'.tr(),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Batal'),
+              child: Text('Batal'.tr()),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red, // tombol destruktif
               ),
-              child: const Text('Hapus'),
+              child: Text('Hapus'.tr()),
             ),
           ],
         );
@@ -213,7 +213,7 @@ class _Managehrd extends State<Managehrd> {
       if (response!.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('HRD Delete successfully!')));
+        ).showSnackBar(SnackBar(content: Text('HRD Delete successfully!'.tr())));
         setState(() {
           _loadHRD();
         });
@@ -254,7 +254,7 @@ class _Managehrd extends State<Managehrd> {
       if (response!.responseMessage == 'Sukses') {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('HRD Added successfully!')));
+        ).showSnackBar(SnackBar(content: Text('HRD Added successfully!'.tr())));
         setState(() {
           _loadHRD();
         });
@@ -314,13 +314,13 @@ class _Managehrd extends State<Managehrd> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading Setting data...'),
+            Text('Loading...'..tr()),
           ],
         ),
       );

@@ -61,6 +61,9 @@ class _Personalinfo extends State<Personalinfo> {
   final _namaController = TextEditingController();
   final _phoneController = TextEditingController();
 
+  // Service
+  final storage = StorageService();
+
   // Helper variable
   ProvinsiModel? selectedProvinsi;
   KotaModel? selectedKota;
@@ -74,6 +77,7 @@ class _Personalinfo extends State<Personalinfo> {
   String? cvFileName;
   Uint8List? avatarBytes;
   String? avatarFileName;
+  double? header, subHeader, body, icon;
 
   // Usecase Instance
   late SignupUseCase signupUseCase;
@@ -90,7 +94,15 @@ class _Personalinfo extends State<Personalinfo> {
     final profileRepository = profileRepo.AuthRepositoryImpl(profileSource);
     profileUsecase = ProfileUsecase(profileRepository);
 
+    _initializeFontSize();
     _initializeData();
+  }
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
   }
 
   Future<void> _initializeData() async {
@@ -659,7 +671,7 @@ class _Personalinfo extends State<Personalinfo> {
                                     textStyle: TextStyle(
                                       color: Colors.black,
                                       letterSpacing: 2,
-                                      fontSize: 16,
+                                      fontSize: subHeader,
                                     ),
                                   ),
                                   textAlign: TextAlign.center,
@@ -727,7 +739,7 @@ class _Personalinfo extends State<Personalinfo> {
                                       textStyle: TextStyle(
                                         color: Colors.black,
                                         letterSpacing: 2,
-                                        fontSize: 16,
+                                        fontSize: subHeader,
                                       ),
                                     ),
                                     textAlign: TextAlign.center,
@@ -848,7 +860,7 @@ class _Personalinfo extends State<Personalinfo> {
                                       textStyle: TextStyle(
                                         color: Colors.black,
                                         letterSpacing: 2,
-                                        fontSize: 16,
+                                        fontSize: subHeader,
                                       ),
                                     ),
                                     textAlign: TextAlign.center,
@@ -1000,7 +1012,7 @@ class _Personalinfo extends State<Personalinfo> {
                                     textStyle: TextStyle(
                                       color: Colors.black,
                                       letterSpacing: 2,
-                                      fontSize: 16,
+                                      fontSize: subHeader,
                                     ),
                                   ),
                                   textAlign: TextAlign.center,

@@ -6,7 +6,8 @@ class Managehrdbody extends StatefulWidget {
   final List<Managehrditems> items;
   final VoidCallback popup;
   final VoidCallback onSearchChanged;
-  TextEditingController searchController;
+  final TextEditingController searchController;
+  
   Managehrdbody({
     super.key,
     required this.items,

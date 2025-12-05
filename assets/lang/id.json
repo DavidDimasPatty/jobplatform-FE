@@ -404,5 +404,14 @@
 
     "Carts": "Keranjang",
     "Masukan Candidate": "Masukkan Kandidat",
-    "See Profile": "Lihat Profil"
+    "See Profile": "Lihat Profil",
+
+    "Masukkan Email": "Masukkan Email",
+    "Email User Terdaftar...": "Email User Terdaftar...",
+    "Format email tidak valid": "Format email tidak valid",
+    "Konfirmasi Hapus": "Konfirmasi Hapus",
+    "Apakah Anda yakin ingin menghapus HRD ini?": "Apakah Anda yakin ingin menghapus HRD ini?",
+    "Hapus": "Hapus",
+    "HRD Delete successfully!": "HRD Berhasil dihapus!",
+    "HRD Added successfully!": "HRD Berhasil ditambahkan!"
 }

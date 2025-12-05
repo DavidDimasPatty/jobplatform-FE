@@ -1,8 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:job_platform/core/utils/storage/storage_service.dart';
 
-class Managehrditems extends StatelessWidget {
+class Managehrditems extends StatefulWidget {
   final String? url;
   final String title;
   final String? subtitle;
@@ -16,6 +17,27 @@ class Managehrditems extends StatelessWidget {
     required this.status,
     required this.onDelete,
   });
+
+  @override
+  State<Managehrditems> createState() => _ManagehrditemsState();
+}
+
+class _ManagehrditemsState extends State<Managehrditems> {
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFontSize();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +66,9 @@ class Managehrditems extends StatelessWidget {
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               // padding: EdgeInsets.all(5),
               child: ClipOval(
-                child: url!.isNotEmpty
+                child: widget.url!.isNotEmpty
                     ? Image.network(
-                        url!,
+                        widget.url!,
                         width: 60,
                         height: 60,
                         fit: BoxFit.cover,
@@ -63,8 +85,8 @@ class Managehrditems extends StatelessWidget {
                       ),
               ),
             ),
-            title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: (subtitle != null
+            title: Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: (widget.subtitle != null
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,9 +97,9 @@ class Managehrditems extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              subtitle ?? "",
-                              style: const TextStyle(
-                                fontSize: 16,
+                              widget.subtitle ?? "",
+                              style: TextStyle(
+                                fontSize: subHeader,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.black87,
                               ),
@@ -95,31 +117,31 @@ class Managehrditems extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       FaIcon(
-                                        status == "Active".tr()
+                                        widget.status == "Active".tr()
                                             ? FontAwesomeIcons.peopleGroup
-                                            : status == "Inactive".tr()
+                                            : widget.status == "Inactive".tr()
                                             ? FontAwesomeIcons.timeline
-                                            : status == "Reject".tr()
+                                            : widget.status == "Reject".tr()
                                             ? FontAwesomeIcons.x
                                             : FontAwesomeIcons.circleQuestion,
-                                        color: status == "Active".tr()
+                                        color: widget.status == "Active".tr()
                                             ? Colors.blue
-                                            : status == "Inactive".tr()
+                                            : widget.status == "Inactive".tr()
                                             ? Colors.orange
-                                            : status == "Reject".tr()
+                                            : widget.status == "Reject".tr()
                                             ? Colors.red
                                             : Colors.grey,
                                       ),
                                       SizedBox(width: 8),
                                       Text(
-                                        status,
+                                        widget.status,
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          color: status == "Active".tr()
+                                          fontSize: subHeader,
+                                          color: widget.status == "Active".tr()
                                               ? Colors.blue
-                                              : status == "Inactive".tr()
+                                              : widget.status == "Inactive".tr()
                                               ? Colors.orange
-                                              : status == "Reject".tr()
+                                              : widget.status == "Reject".tr()
                                               ? Colors.red
                                               : Colors.grey,
                                         ),
@@ -137,7 +159,7 @@ class Managehrditems extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    onPressed: onDelete,
+                                    onPressed: widget.onDelete,
                                     label: Text("Delete".tr()),
                                     icon: const Icon(Icons.delete),
                                   ),
@@ -151,31 +173,31 @@ class Managehrditems extends StatelessWidget {
                                   Row(
                                     children: [
                                       FaIcon(
-                                        status == "Active".tr()
+                                        widget.status == "Active".tr()
                                             ? FontAwesomeIcons.peopleGroup
-                                            : status == "Inactive".tr()
+                                            : widget.status == "Inactive".tr()
                                             ? FontAwesomeIcons.timeline
-                                            : status == "Reject".tr()
+                                            : widget.status == "Reject".tr()
                                             ? FontAwesomeIcons.x
                                             : FontAwesomeIcons.circleQuestion,
-                                        color: status == "Active".tr()
+                                        color: widget.status == "Active".tr()
                                             ? Colors.blue
-                                            : status == "Inactive".tr()
+                                            : widget.status == "Inactive".tr()
                                             ? Colors.orange
-                                            : status == "Reject".tr()
+                                            : widget.status == "Reject".tr()
                                             ? Colors.red
                                             : Colors.grey,
                                       ),
                                       SizedBox(width: 8),
                                       Text(
-                                        status,
+                                        widget.status,
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          color: status == "Active".tr()
+                                          fontSize: subHeader,
+                                          color: widget.status == "Active".tr()
                                               ? Colors.blue
-                                              : status == "Inactive".tr()
+                                              : widget.status == "Inactive".tr()
                                               ? Colors.orange
-                                              : status == "Reject".tr()
+                                              : widget.status == "Reject".tr()
                                               ? Colors.red
                                               : Colors.grey,
                                         ),
@@ -193,7 +215,7 @@ class Managehrditems extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    onPressed: onDelete,
+                                    onPressed: widget.onDelete,
                                     label: Text("Delete".tr()),
                                     icon: const Icon(Icons.delete),
                                   ),

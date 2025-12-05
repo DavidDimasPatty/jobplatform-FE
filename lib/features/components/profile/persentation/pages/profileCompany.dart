@@ -29,6 +29,7 @@ class _ProfileCompany extends State<ProfileCompany> {
   // Data
   ProfileCompanydata? dataCompany;
   bool isPrivate = false;
+  double? header, subHeader, body, icon;
 
   // Loading state
   bool isLoading = true;
@@ -37,9 +38,13 @@ class _ProfileCompany extends State<ProfileCompany> {
   // Usecase
   late ProfileUsecase _profileUseCase;
 
+  // Service
+  final storage = StorageService();
+
   @override
   void initState() {
     super.initState();
+    _initializeFontSize();
     _initializeUseCase();
     _loadProfileData();
   }
@@ -48,6 +53,13 @@ class _ProfileCompany extends State<ProfileCompany> {
     final dataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(dataSource);
     _profileUseCase = ProfileUsecase(repository);
+  }
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
   }
 
   Future<void> _loadProfileData() async {
@@ -107,7 +119,8 @@ class _ProfileCompany extends State<ProfileCompany> {
         String? idUser = await storage.get('idCompany');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences".tr());
+        if (idUser == null)
+          throw Exception("User ID not found in preferences".tr());
 
         ProfileCompanyRequest profile = new ProfileCompanyRequest(
           idCompany: idUser,
@@ -120,7 +133,9 @@ class _ProfileCompany extends State<ProfileCompany> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Profile avatar updated successfully!'.tr())),
+            SnackBar(
+              content: Text('Profile avatar updated successfully!'.tr()),
+            ),
           );
           _loadProfileData();
         } else {
@@ -140,7 +155,9 @@ class _ProfileCompany extends State<ProfileCompany> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update profile avatar. Please try again.'.tr()),
+            content: Text(
+              'Failed to update profile avatar. Please try again.'.tr(),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -158,7 +175,8 @@ class _ProfileCompany extends State<ProfileCompany> {
       String? idUser = await storage.get('idCompany');
 
       // Ensure idUser is not null
-      if (idUser == null) throw Exception("User ID not found in preferences".tr());
+      if (idUser == null)
+        throw Exception("User ID not found in preferences".tr());
 
       ProfileRequest profile = new ProfileRequest(
         idUser: idUser,
@@ -177,7 +195,9 @@ class _ProfileCompany extends State<ProfileCompany> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile privacy. Please try again.'.tr()),
+            content: Text(
+              'Failed to edit profile privacy. Please try again.'.tr(),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -188,7 +208,9 @@ class _ProfileCompany extends State<ProfileCompany> {
       if (mounted) {
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit profile privacy. Please try again.'.tr()),
+            content: Text(
+              'Failed to edit profile privacy. Please try again.'.tr(),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -224,7 +246,10 @@ class _ProfileCompany extends State<ProfileCompany> {
               style: TextStyle(color: Colors.red),
             ),
             SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadProfileData, child: Text('Retry'.tr())),
+            ElevatedButton(
+              onPressed: _loadProfileData,
+              child: Text('Retry'.tr()),
+            ),
           ],
         ),
       );
@@ -414,7 +439,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               textStyle: TextStyle(
                                 color: Colors.black,
                                 //letterSpacing: 2,
-                                fontSize: 18,
+                                fontSize: header,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -428,7 +453,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                             style: TextStyle(
                               color: Colors.black,
                               //letterSpacing: 2,
-                              fontSize: 15,
+                              fontSize: subHeader,
                             ),
                           ),
                         ),
@@ -472,7 +497,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               textStyle: TextStyle(
                                 color: Colors.black,
                                 //letterSpacing: 2,
-                                fontSize: 18,
+                                fontSize: header,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -526,7 +551,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                                       Text(
                                         dataCompany!.benefit![index],
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: header,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -534,7 +559,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                                       Text(
                                         "Available".tr(),
                                         style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: body,
                                           color: Colors.grey[600],
                                         ),
                                       ),
@@ -586,7 +611,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               textStyle: TextStyle(
                                 color: Colors.black,
                                 //letterSpacing: 2,
-                                fontSize: 18,
+                                fontSize: header,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -604,8 +629,8 @@ class _ProfileCompany extends State<ProfileCompany> {
                             Expanded(
                               child: Text(
                                 dataCompany?.alamat ?? "",
-                                style: const TextStyle(
-                                  fontSize: 14,
+                                style: TextStyle(
+                                  fontSize: body,
                                   color: Colors.black87,
                                 ),
                               ),
@@ -619,8 +644,8 @@ class _ProfileCompany extends State<ProfileCompany> {
                             const SizedBox(width: 10),
                             Text(
                               dataCompany?.noTelp ?? "",
-                              style: const TextStyle(
-                                fontSize: 14,
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),
@@ -633,8 +658,8 @@ class _ProfileCompany extends State<ProfileCompany> {
                             const SizedBox(width: 10),
                             Text(
                               dataCompany?.email ?? "",
-                              style: const TextStyle(
-                                fontSize: 14,
+                              style: TextStyle(
+                                fontSize: body,
                                 color: Colors.black87,
                               ),
                             ),
@@ -648,8 +673,8 @@ class _ProfileCompany extends State<ProfileCompany> {
                               const SizedBox(width: 10),
                               Text(
                                 dataCompany?.domain ?? "",
-                                style: const TextStyle(
-                                  fontSize: 14,
+                                style: TextStyle(
+                                  fontSize: body,
                                   color: Colors.black87,
                                 ),
                               ),
@@ -664,7 +689,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               Text(
                                 dataCompany?.facebook ?? "",
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: body,
                                   color: Colors.black87,
                                 ),
                               ),
@@ -679,7 +704,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               Text(
                                 dataCompany?.twitter ?? "",
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: body,
                                   color: Colors.black87,
                                 ),
                               ),
@@ -697,7 +722,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               Text(
                                 dataCompany?.instagram ?? "",
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: body,
                                   color: Colors.black87,
                                 ),
                               ),
@@ -715,7 +740,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               Text(
                                 dataCompany?.linkedin ?? "",
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: body,
                                   color: Colors.black87,
                                 ),
                               ),
@@ -730,7 +755,7 @@ class _ProfileCompany extends State<ProfileCompany> {
                               Text(
                                 dataCompany?.tiktok ?? "",
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: body,
                                   color: Colors.black87,
                                 ),
                               ),

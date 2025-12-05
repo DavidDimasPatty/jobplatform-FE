@@ -47,13 +47,18 @@ class _CertificateEditState extends State<CertificateEdit> {
   bool _isLoading = false;
   DateTime? _selectedIssueDate;
   bool _hasExpiredDate = false;
+  double? header, subHeader, body, icon;
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
 
+  // Service
+  final storage = StorageService();
+
   @override
   void initState() {
     super.initState();
+    _initializeFontSize();
     _initializeUseCase();
     _getAllSkill();
     _loadData();
@@ -93,6 +98,13 @@ class _CertificateEditState extends State<CertificateEdit> {
     final dataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(dataSource);
     _profileUseCase = ProfileUsecase(repository);
+  }
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
   }
 
   Future _getAllSkill({String? name = ""}) async {
@@ -172,7 +184,8 @@ class _CertificateEditState extends State<CertificateEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences".tr());
+        if (idUser == null)
+          throw Exception("User ID not found in preferences".tr());
 
         // Format dates to 'yyyy-MM-dd'
         final issueDate = DateFormat('yyyy-MM-dd').format(
@@ -225,7 +238,9 @@ class _CertificateEditState extends State<CertificateEdit> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit certificate. Please try again.'.tr()),
+              content: Text(
+                'Failed to edit certificate. Please try again.'.tr(),
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -265,7 +280,9 @@ class _CertificateEditState extends State<CertificateEdit> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete certificate. Please try again.'.tr()),
+            content: Text(
+              'Failed to delete certificate. Please try again.'.tr(),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -612,7 +629,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                 Text(
                   'Are you sure you want to delete this certificate?'.tr(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: subHeader, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 8),
                 Container(
@@ -656,7 +673,7 @@ class _CertificateEditState extends State<CertificateEdit> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.red,
-                    fontSize: 14,
+                    fontSize: body,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

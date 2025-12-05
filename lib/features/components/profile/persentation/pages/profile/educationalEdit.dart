@@ -45,9 +45,13 @@ class _EducationalEdit extends State<EducationalEdit> {
   DateTime? startDate;
   DateTime? endDate;
   bool _stillActive = true;
+  double? header, subHeader, body, icon;
 
   // Use case instance
   late ProfileUsecase _profileUseCase;
+
+  // Service
+  final storage = StorageService();
 
   @override
   void initState() {
@@ -55,6 +59,7 @@ class _EducationalEdit extends State<EducationalEdit> {
     final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
     _profileUseCase = ProfileUsecase(repository);
+    _initializeFontSize();
     _getAllSkill();
     _loadData();
   }
@@ -72,6 +77,13 @@ class _EducationalEdit extends State<EducationalEdit> {
     if (!_stillActive) {
       endDate = data.endDate;
     }
+  }
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
   }
 
   Future<void> _pickStartDate(BuildContext context) async {
@@ -183,7 +195,8 @@ class _EducationalEdit extends State<EducationalEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences".tr());
+        if (idUser == null)
+          throw Exception("User ID not found in preferences".tr());
 
         // Map selected skills to SkillModel list
         late List<SkillModel> skill;
@@ -643,7 +656,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                 Text(
                   'Are you sure you want to delete this Education?'.tr(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: subHeader, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 8),
                 Container(
@@ -687,7 +700,7 @@ class _EducationalEdit extends State<EducationalEdit> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.red,
-                    fontSize: 14,
+                    fontSize: body,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -43,9 +43,13 @@ class _OrganizationEdit extends State<OrganizationEdit> {
   DateTime? startDate;
   DateTime? endDate;
   bool _stillActive = true;
+  double? header, subHeader, body, icon;
 
   // Usecase Instance
   late ProfileUsecase _profileUseCase;
+
+  // Service
+  final storage = StorageService();
 
   @override
   void initState() {
@@ -53,6 +57,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
     final remoteDataSource = AuthRemoteDataSource();
     final repository = AuthRepositoryImpl(remoteDataSource);
     _profileUseCase = ProfileUsecase(repository);
+    _initializeFontSize();
     _getAllSkill();
     _loadData();
   }
@@ -67,6 +72,13 @@ class _OrganizationEdit extends State<OrganizationEdit> {
     if (!_stillActive) {
       endDate = data.endDate;
     }
+  }
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
   }
 
   Future<void> _pickStartDate(BuildContext context) async {
@@ -178,7 +190,8 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         String? idUser = await storage.get('idUser');
 
         // Ensure idUser is not null
-        if (idUser == null) throw Exception("User ID not found in preferences".tr());
+        if (idUser == null)
+          throw Exception("User ID not found in preferences".tr());
 
         // Map selected skills to SkillModel list
         late List<SkillModel> skill;
@@ -217,7 +230,9 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit organization. Please try again.'.tr()),
+              content: Text(
+                'Failed to edit organization. Please try again.'.tr(),
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -228,7 +243,9 @@ class _OrganizationEdit extends State<OrganizationEdit> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit organization. Please try again.'.tr()),
+            content: Text(
+              'Failed to edit organization. Please try again.'.tr(),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -258,7 +275,9 @@ class _OrganizationEdit extends State<OrganizationEdit> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete organization. Please try again.'.tr()),
+            content: Text(
+              'Failed to delete organization. Please try again.'.tr(),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -266,7 +285,9 @@ class _OrganizationEdit extends State<OrganizationEdit> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to delete organization. Please try again.'.tr()),
+          content: Text(
+            'Failed to delete organization. Please try again.'.tr(),
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -557,7 +578,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                 Text(
                   'Are you sure you want to delete this organization?'.tr(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: subHeader, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 8),
                 Container(
@@ -599,7 +620,7 @@ class _OrganizationEdit extends State<OrganizationEdit> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.red,
-                    fontSize: 14,
+                    fontSize: body,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

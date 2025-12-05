@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:job_platform/core/utils/storage/storage_service.dart';
 import 'package:job_platform/features/components/profile/data/datasources/aut_remote_datasource.dart';
 import 'package:job_platform/features/components/profile/data/models/preferenceRequest.dart';
@@ -8,7 +8,6 @@ import 'package:job_platform/features/components/profile/data/repositories/auth_
 import 'package:job_platform/features/components/profile/domain/entities/PreferenceMV.dart';
 import 'package:job_platform/features/components/profile/domain/usecases/profile_usecase.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class Managehrdedit extends StatefulWidget {
@@ -125,13 +124,13 @@ class _Managehrdedit extends State<Managehrdedit> {
         // On success, clear the form or navigate away
         if (response.responseMessage == 'Sukses') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Preference edited successfully!')),
+            SnackBar(content: Text('Preference edited successfully!'.tr())),
           );
           Navigator.pop(context, true); // Go back to the previous screen
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to edit preference. Please try again.'),
+              content: Text('Failed to edit preference. Please try again.'.tr()),
               backgroundColor: Colors.red,
             ),
           );
@@ -141,7 +140,7 @@ class _Managehrdedit extends State<Managehrdedit> {
         // Handle errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to edit preference. Please try again.'),
+            content: Text('Failed to edit preference. Please try again.'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -180,7 +179,7 @@ class _Managehrdedit extends State<Managehrdedit> {
                     children: [
                       SizedBox(
                         child: Text(
-                          'Add Preference',
+                          'Add Preference'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 30,
@@ -194,18 +193,18 @@ class _Managehrdedit extends State<Managehrdedit> {
                         children: [
                           Expanded(
                             child: buildTextField(
-                              'Min Salary Expectation',
+                              'Min Salary Expectation'.tr(),
                               _salaryMinController,
                               Icons.attach_money,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter minimum salary';
+                                  return 'Please enter minimum salary'.tr();
                                 } else if (int.tryParse(value) == null) {
-                                  return 'Please enter a valid number';
+                                  return 'Please enter a valid number'.tr();
                                 }
                                 minSalary = int.parse(value);
                                 if (minSalary < 0) {
-                                  return 'Salary cannot be negative';
+                                  return 'Salary cannot be negative'.tr();
                                 }
                                 return null;
                               },
@@ -216,20 +215,20 @@ class _Managehrdedit extends State<Managehrdedit> {
                           SizedBox(width: 10),
                           Expanded(
                             child: buildTextField(
-                              'Max Salary Expectation',
+                              'Max Salary Expectation'.tr(),
                               _salaryMaxController,
                               Icons.attach_money,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter maximum salary';
+                                  return 'Please enter maximum salary'.tr();
                                 } else if (int.tryParse(value) == null) {
-                                  return 'Please enter a valid number';
+                                  return 'Please enter a valid number'.tr();
                                 }
                                 maxSalary = int.parse(value);
                                 if (maxSalary < 0) {
-                                  return 'Salary cannot be negative';
+                                  return 'Salary cannot be negative'.tr();
                                 } else if (maxSalary < minSalary) {
-                                  return 'Max salary must be greater than min salary';
+                                  return 'Max salary must be greater than min salary'.tr();
                                 }
                                 return null;
                               },
@@ -238,66 +237,66 @@ class _Managehrdedit extends State<Managehrdedit> {
                         ],
                       ),
                       buildTextField(
-                        'Position',
+                        'Position'.tr(),
                         _positionController,
                         Icons.business,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter position';
+                            return 'Please enter position'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Job Type',
+                        'Job Type'.tr(),
                         _jobTypeController,
                         Icons.co_present,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter job type';
+                            return 'Please enter job type'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Work System',
+                        'Work System'.tr(),
                         _workSystemController,
                         Icons.access_time,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter work system';
+                            return 'Please enter work system'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Location',
+                        'Location'.tr(),
                         _locationController,
                         Icons.location_on,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter location';
+                            return 'Please enter location'.tr();
                           }
                           return null;
                         },
                       ),
                       buildTextField(
-                        'Career Level',
+                        'Career Level'.tr(),
                         _careerLevelController,
                         Icons.trending_up,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter career level';
+                            return 'Please enter career level'.tr();
                           }
                           return null;
                         },
                       ),
                       buildDateField(
-                        'Availability',
+                        'Availability'.tr(),
                         _availabilityController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter availability';
+                            return 'Please enter availability'.tr();
                           }
                           return null;
                         },
@@ -315,7 +314,7 @@ class _Managehrdedit extends State<Managehrdedit> {
                               onPressed: _submitForm,
                               icon: Icon(Icons.check),
                               iconAlignment: IconAlignment.end,
-                              label: Text('Submit'),
+                              label: Text('Submit'.tr()),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Theme.of(
                                   context,

@@ -43,12 +43,14 @@ class _Personalinfocompany extends State<Personalinfocompany> {
   SelectDataController? selectDataController;
   List<SingleCategoryModel> benefits = [];
   List<String> selectedBenefits = [];
+
   bool isLoading = true;
   bool isLoadingKota = false;
   bool isLoadingKotaLahir = false;
   bool isLoadingProvinsi = false;
   bool isLoadingProvinsiLahir = false;
   bool isLoadingIndstry = false;
+
   final _deskripsiController = TextEditingController();
   final _alamatController = TextEditingController();
   final _namaController = TextEditingController();
@@ -61,16 +63,30 @@ class _Personalinfocompany extends State<Personalinfocompany> {
   final _tiktokController = TextEditingController();
   final _twitterController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+
   final _formKey = GlobalKey<FormState>();
+
   ProvinsiModel? selectedProvinsi;
   KotaModel? selectedKota;
   ProvinsiModel? selectedProvinsiLahir;
   KotaModel? selectedKotaLahir;
   Country? selectedCountry;
   String? selectedIndustries = "";
+
   late SignupUseCase signupUseCase;
   late ProfileUsecase profileUsecase;
+
   String? errorMessage;
+
+  final storage = StorageService();
+  double? header, subHeader, body, icon;
+
+  Future<void> _initializeFontSize() async {
+    header = await storage.get("fontSizeHead") as double;
+    subHeader = await storage.get("fontSizeSubHead") as double;
+    body = await storage.get("fontSizeBody") as double;
+    icon = await storage.get("fontSizeIcon") as double;
+  }
 
   Future<void> _loadProfileData() async {
     try {
@@ -336,6 +352,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
     final profileRepository = profileRepo.AuthRepositoryImpl(profileSource);
     profileUsecase = ProfileUsecase(profileRepository);
 
+    await _initializeFontSize();
     await _loadProfileData();
 
     await Future.wait([
@@ -563,16 +580,16 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                               children: [
                                                 Text(
                                                   country.flag,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
+                                                  style: TextStyle(
+                                                    fontSize: subHeader,
                                                   ),
                                                 ),
                                                 const SizedBox(width: 4),
                                                 Flexible(
                                                   child: Text(
                                                     country.code,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
+                                                    style: TextStyle(
+                                                      fontSize: body,
                                                     ),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -582,8 +599,8 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                                 Flexible(
                                                   child: Text(
                                                     country.dialCode,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
+                                                    style: TextStyle(
+                                                      fontSize: body,
                                                     ),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -689,7 +706,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                           textStyle: TextStyle(
                                             color: Colors.black,
                                             letterSpacing: 2,
-                                            fontSize: 16,
+                                            fontSize: subHeader,
                                           ),
                                         ),
                                         textAlign: TextAlign.center,
@@ -857,7 +874,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 letterSpacing: 2,
-                                                fontSize: 16,
+                                                fontSize: subHeader,
                                               ),
                                             ),
                                           ),
@@ -893,7 +910,7 @@ class _Personalinfocompany extends State<Personalinfocompany> {
                                     textStyle: TextStyle(
                                       color: Colors.black,
                                       letterSpacing: 2,
-                                      fontSize: 16,
+                                      fontSize: subHeader,
                                     ),
                                   ),
                                 ),
